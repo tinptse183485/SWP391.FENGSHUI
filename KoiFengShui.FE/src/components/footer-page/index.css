@@ -1,0 +1,91 @@
+.main-footer {
+    background-color: #e6f2ff;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .footer-left {
+    flex: 2;
+  }
+  
+  .footer-right {
+    flex: 1;
+  }
+  
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .footer-logo img {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+  }
+  
+  .footer-logo h3 {
+    margin: 0;
+    font-size: 18px;
+  }
+  
+  .footer-logo p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+  }
+  
+  .footer-links li {
+    display: inline;
+    margin-right: 10px;
+  }
+  
+  .footer-links a {
+    text-decoration: none;
+    color: #333;
+  }
+  
+  .service-branches {
+    margin-top: 10px;
+  }
+  
+  .footer-right h3 {
+    margin-top: 0;
+  }
+  
+  .footer-right ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .footer-right li {
+    margin-bottom: 5px;
+  }
+  
+  .footer-bottom {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+  }
+  
+  .contact-info span {
+    margin-right: 20px;
+  }
+  
+  .footer-bottom p {
+    margin: 0;
+  }

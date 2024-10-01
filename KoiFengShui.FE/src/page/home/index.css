@@ -1,0 +1,288 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f8ff;
+  margin: 0;
+  padding: 10px;
+  height: 600vh;
+}
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.website-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.website-name {
+  font-size: 24px;
+  margin: 0;
+}
+
+.website-subtitle {
+  font-size: 14px;
+  margin: 0;
+  color: #666;
+}
+
+.user-actions {
+  display: flex;
+  align-items: center;
+}
+
+.user-actions button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.calculate-btn {
+  background-color: #f0f0f0;
+}
+
+.login-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.description-bar {
+  background-color: #ffb6b6;
+  padding: 20px 40px; /* Increased padding */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.website-description {
+  margin: 0;
+  font-style: italic;
+}
+
+.main-nav ul {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.main-nav li {
+  margin: 0 10px;
+}
+
+.main-nav a {
+  text-decoration: none;
+  color: #333;
+}
+
+.main-content {
+  padding: 20px;
+}
+
+.main-image {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: cover;
+}
+
+.main-footer {
+    background-color: #e6f2ff;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .footer-left {
+    flex: 2;
+  }
+  
+  .footer-right {
+    flex: 1;
+  }
+  
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .footer-logo img {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+  }
+  
+  .footer-logo h3 {
+    margin: 0;
+    font-size: 18px;
+  }
+  
+  .footer-logo p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+  }
+  
+  .footer-links li {
+    display: inline;
+    margin-right: 10px;
+  }
+  
+  .footer-links a {
+    text-decoration: none;
+    color: #333;
+  }
+  
+  .service-branches {
+    margin-top: 10px;
+  }
+  
+  .footer-right h3 {
+    margin-top: 0;
+  }
+  
+  .footer-right ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .footer-right li {
+    margin-bottom: 5px;
+  }
+  
+  .footer-bottom {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+  }
+  
+  .contact-info span {
+    margin-right: 20px;
+  }
+  
+  .footer-bottom p {
+    margin: 0;
+  }
+  .Card {
+    border : 50px solid white;
+    border-radius:  10px;
+    box-shadow: 5px 5px 5px black;
+    padding: 20px;
+    margin: 10px; /* Adjust margin for spacing */
+    text-align: center;
+    max-width: 125px;
+    display: inline-block;
+  }
+
+  .header-img{
+    display: flex;
+    width: 100%; 
+    height: 70%;
+    align-items: center;
+  }
+
+
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+  text-align: center;
+}
+
+
+h2 {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.Card-container {
+  display: flex;
+  overflow-x: auto;
+  padding: 10px;
+  gap: 20px; /* Space between cards */
+}
+
+.Card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+  min-width: 170px;
+  height: 300px;
+  animation: slideIn 0.5s ease forwards; /* Apply animation */
+}
+
+.Card img {
+  width: 70%;
+  height: 30%;
+  border-radius: 5px;
+}
+
+.discount {
+  color: red;
+}
+.button {
+  background-color: #007bff; 
+  color: white; 
+  padding: 10px 20px; /* Khoảng cách bên trong */
+  border: none; 
+  border-radius: 5px; 
+  cursor: pointer; /* Con trỏ chuột khi di chuột qua */
+  font-size: 16px; 
+}
+.more-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.more-btn:hover {
+  background-color: #0056b3;
+}
+
+.carousel-img{
+  height: 100%;
+  width: 100%;
+}
+
+.carousel{
+  padding: 0; /* Increased padding */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
