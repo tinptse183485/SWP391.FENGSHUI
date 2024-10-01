@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import HeaderTemplate from "../../components/header-page";
 import koiImage from "./path-to-koi-image.jpg";
 import "./index.css";
@@ -17,79 +18,117 @@ const contentStyle = {
 };
 
 function Home() {
- 
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state && location.state.scrollTo) {
+      const element = document.getElementById(location.state.scrollTo);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [location]);
 
   return (
     <>
       <HeaderTemplate></HeaderTemplate>
       <div className="home-content">
         <body>
-        {/* Trending Feature */}
-        <div className="container">
-          <h2>Tính năng nổi bật</h2>
-          <div className="Card-container">
-            <div className="Card">
-              <img
-                src={KoiImage1}
-                alt="Selecting Koi fish according to your Feng Shui element"
-              ></img>
-              <a href="#">
-                {" "}
-                <h3>Tư vấn cá và hồ theo bản mệnh</h3>
-              </a>
-            </div>
-            <div className="Card">
-              <img src={koiImage} alt="Post Advertisement Function"></img>
-              <a href="#">
-                {" "}
-                <h3>Tính độ tương hợp của cá và hồ theo bản mệnh</h3>
-              </a>
-            </div>
-            <div className="Card">
-              <img src={KoiImage2} alt="Calculate compatibility"></img>
-              <a href="#">
-                {" "}
-                <h3>Đăng tin quảng cáo</h3>
-              </a>
-            </div>
-          </div>
-        </div>
-        {/* Blog */}
-        <div id="feature" className="container">
-          <h2>Blog</h2>
-          <div className="Card-container">
-            <div className="Card">
-              <img
-                src={koiImage}
-                alt="Selecting Pond according to your Feng Shui element"
-                className="img-feature"
-              ></img>
-              <a href="#">
-                {" "}
-                <h3>Selecting Koi fish according to your Feng Shui element</h3>
-              </a>
-            </div>
-            <div className="Card">
-              <img
-                src={koiImage}
-                alt="Selecting Koi fish according to your Feng Shui element"
-              ></img>
-              <a href="#">
-                {" "}
-                <h3>Selecting Koi fish according to your Feng Shui element</h3>
-              </a>
-            </div>
-            <div className="Card">
-              <img src={koiImage} alt="Post Advertisement Function"></img>
-              <a href="#">
-                {" "}
-                <h3>Selecting Koi fish according to your Feng Shui element</h3>
-              </a>
+          {/* Trending Feature */}
+          <div className="container">
+            <h2>Tính năng nổi bật</h2>
+            <div className="Card-container">
+              <div className="Card">
+                <img
+                  src={KoiImage1}
+                  alt="Selecting Koi fish according to your Feng Shui element"
+                ></img>
+                <a href="#">
+                  {" "}
+                  <h3>Tư vấn cá và hồ theo bản mệnh</h3>
+                </a>
+              </div>
+              <div className="Card">
+                <img src={koiImage} alt="Post Advertisement Function"></img>
+                <a href="#">
+                  {" "}
+                  <h3>Tính độ tương hợp của cá và hồ theo bản mệnh</h3>
+                </a>
+              </div>
+              <div className="Card">
+                <img src={KoiImage2} alt="Calculate compatibility"></img>
+                <a href="#">
+                  {" "}
+                  <h3>Đăng tin quảng cáo</h3>
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-      </body>
-      <FooterPage></FooterPage>
+          <div id="Advertisements" className="container">
+            <h2>Quảng cáo</h2>
+            <div className="Card-container">
+              <div className="Card">
+                <img
+                  src={KoiImage1}
+                  alt="Selecting Koi fish according to your Feng Shui element"
+                ></img>
+                <a href="#">
+                  {" "}
+                  <h3>Tư vấn cá và hồ theo bản mệnh</h3>
+                </a>
+              </div>
+              <div className="Card">
+                <img src={koiImage} alt="Post Advertisement Function"></img>
+                <a href="#">
+                  {" "}
+                  <h3>Tính độ tương hợp của cá và hồ theo bản mệnh</h3>
+                </a>
+              </div>
+              <div className="Card">
+                <img src={KoiImage2} alt="Calculate compatibility"></img>
+                <a href="#">
+                  {" "}
+                  <h3>Đăng tin quảng cáo</h3>
+                </a>
+              </div>
+            </div>
+          </div>
+          {/* Blog */}
+          <div  className="container">
+            <h2>Blog</h2>
+            <div className="Card-container">
+              <div className="Card">
+                <img
+                  src={koiImage}
+                  alt="Selecting Pond according to your Feng Shui element"
+                  className="img-feature"
+                ></img>
+                <a href="#">
+                  {" "}
+                  <h3>Selecting Koi fish according to your Feng Shui element</h3>
+                </a>
+              </div>
+              <div className="Card">
+                <img
+                  src={koiImage}
+                  alt="Selecting Koi fish according to your Feng Shui element"
+                ></img>
+                <a href="#">
+                  {" "}
+                  <h3>Selecting Koi fish according to your Feng Shui element</h3>
+                </a>
+              </div>
+              <div className="Card">
+                <img src={koiImage} alt="Post Advertisement Function"></img>
+                <a href="#">
+                  {" "}
+                  <h3>Selecting Koi fish according to your Feng Shui element</h3>
+                </a>
+              </div>
+            </div>
+          </div>
+        </body>
+        <FooterPage></FooterPage>
       </div>
     </>
   );

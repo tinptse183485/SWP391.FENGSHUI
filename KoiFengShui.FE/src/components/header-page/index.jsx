@@ -4,6 +4,8 @@ import koiImage from "./path-to-koi-image.jpg";
 import Header from "./Header.png";
 import Koi2 from "./Koi2.jpg";
 import { Carousel } from "antd";
+import { useNavigate } from "react-router-dom";
+
 const contentStyle = {
   height: "500px",
   color: "#fff",
@@ -11,7 +13,21 @@ const contentStyle = {
   textAlign: "center",
   background: "#364d79",
 };
+
 function HeaderTemplate() {
+  const navigate = useNavigate();
+
+  const handleScrollToAdvertisements = (event) => {
+    event.preventDefault();
+    const advertisementsSection = document.getElementById("Advertisements");
+    if (advertisementsSection) {
+      advertisementsSection.scrollIntoView({ behavior: "smooth" });
+    } else {
+      // If the section is not on the current page, navigate to home and then scroll
+      navigate("/", { state: { scrollTo: "Advertisements" } });
+    }
+  };
+
   return (
     <div>
       <div className="top-bar">
@@ -35,7 +51,7 @@ function HeaderTemplate() {
               <a href="#about">About Us</a>
             </li>
             <li>
-              <a href="#Advertisements">Quảng cáo</a>
+              <a href="#Advertisements" onClick={handleScrollToAdvertisements}>Quảng cáo</a>
             </li>
             <li>
               <a href="#blog">Blog</a>
