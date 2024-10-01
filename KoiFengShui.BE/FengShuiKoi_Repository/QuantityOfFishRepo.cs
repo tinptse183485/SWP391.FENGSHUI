@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace FengShuiKoi_Repository
 {
-    public class QuantityRepo : IQuantityRepo
+    public class QuantityOfFishRepo : IQuantityOfFishRepo
     {
-        public Quantity getQuantityByElement(string element) => QuantityDAO.Instance.getQuantityByElement(element);
+        public QuantityOfFish getQuantityByElement(string element) => QuantityOfFishDAO.Instance.getQuantityByElement(element);
         
     }
 }

@@ -10,7 +10,7 @@ namespace KoiFengShui.BE.Controllers
 	{
 		private readonly IElementService _elementService;
 
-		public ElementMutualismController( IElementService elementService)
+		public ElementMutualismController(IElementService elementService)
 		{
 			_elementService = elementService;
 		}

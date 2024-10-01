@@ -11,10 +11,10 @@ namespace KoiFengShui.BE.Controllers
 	public class KoiVarietyController : ControllerBase
 	{
 		private readonly IKoiVarietyService _koiVarietyService;
-		private readonly IQuantityService _QuantityService;
+		private readonly IQuantityOfFishService _QuantityService;
 		private readonly IElementService _elementService;
 
-		public KoiVarietyController(IKoiVarietyService koiVarietyService,IQuantityService quantityService, IElementService elementService)
+		public KoiVarietyController(IKoiVarietyService koiVarietyService, IQuantityOfFishService quantityService, IElementService elementService)
 		{
 			_koiVarietyService = koiVarietyService;
 			_QuantityService = quantityService;

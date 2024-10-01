@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FungShuiKoi_DAO\FengShuiKoi_DAO.csproj" />
+    <ProjectReference Include="..\FengShuiKoi_DAO\FengShuiKoi_DAO.csproj" />
   </ItemGroup>
 
 </Project>

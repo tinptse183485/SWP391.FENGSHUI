@@ -7,32 +7,32 @@ using System.Threading.Tasks;
 
 namespace FengShuiKoi_DAO
 {
-    public class QuantityDAO
+    public class QuantityOfFishDAO
     {
         private SWP391_FengShuiKoiConsulting_DBContext dbContext;
-        private static QuantityDAO instance = null;
+        private static QuantityOfFishDAO instance = null;
 
-        public static QuantityDAO Instance
+        public static QuantityOfFishDAO Instance
         {
             get
             {
                 //singleton design pattern
                 if (instance == null)
                 {
-                    instance = new QuantityDAO();
+                    instance = new QuantityOfFishDAO();
                 }
                 return instance;
             }
         }
 
-        public QuantityDAO()
+        public QuantityOfFishDAO()
         {
             dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
         }
 
-        public Quantity getQuantityByElement(string element)
+        public QuantityOfFish getQuantityByElement(string element)
         {
-            return dbContext.Quantities.SingleOrDefault(m => m.Element.Equals(element));
+            return dbContext.QuantityOfFishes.SingleOrDefault(m => m.Element.Equals(element));
         }
 
 

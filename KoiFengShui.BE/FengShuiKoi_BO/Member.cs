@@ -11,8 +11,8 @@ namespace FengShuiKoi_BO
             Feedbacks = new HashSet<Feedback>();
         }
 
-        public string? Name { get; set; } = null!;
-        public DateTime? Birthday { get; set; }
+        public string Name { get; set; } = null!;
+        public DateTime Birthday { get; set; }
         public string UserId { get; set; } = null!;
 
         public virtual Account User { get; set; } = null!;
