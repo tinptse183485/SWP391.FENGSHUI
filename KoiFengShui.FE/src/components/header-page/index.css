@@ -1,0 +1,122 @@
+.main-header {
+    display: flex;
+
+}
+
+.top-bar{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  margin-left: 40px;
+}
+
+.logo {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.website-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.website-name {
+  font-size: 24px;
+  margin: 0;
+}
+
+.website-subtitle {
+  font-size: 14px;
+  margin: 0;
+  color: #666;
+}
+
+.user-actions {
+  display: flex;
+  align-items: center;
+  margin-right: 60px;
+}
+
+.user-actions button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.calculate-btn {
+  background-color: #f0f0f0;
+}
+
+.login-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.description-bar {
+  background-color: #ffb6b6;
+  padding: 20px 40px; /* Increased padding */
+  display: flex;
+  align-items: center;
+
+}
+
+.website-description {
+  margin: 0;
+  font-style: italic;
+  display: flex;
+  margin-left: 90px;
+}
+
+.main-nav ul {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.main-nav li {
+  margin: 0 10px;
+}
+
+.main-nav a {
+  text-decoration: none;
+  color: #333;
+}
+
+.main-content {
+  padding: 20px;
+}
+
+.main-image {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: cover;
+}
+
+.header-img{
+  height: auto;
+  width: 100%;    
+}
+
+
+
+.carousel{
+  padding: 0; /* Increased padding */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 24.9px 80px 0 80px;
+
+}
+
+
+
