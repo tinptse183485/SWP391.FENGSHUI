@@ -47,8 +47,13 @@ namespace KoiFengShui.BE
             builder.Services.AddScoped<IMemberService, MemberService>();
             builder.Services.AddScoped<IToken, Token>();
 
+            builder.Services.AddScoped<IElementService, ElementService>();
+            builder.Services.AddScoped<IKoiVarietyService, KoiVarietyService>();
+            builder.Services.AddScoped<IQuantityOfFishService, QuantityOfFishService>();
+
             // Add CORS
             builder.Services.AddCors(options =>
+
             {
                 options.AddPolicy("AllowReactApp",
                     builder => builder.WithOrigins("http://localhost:5174")
