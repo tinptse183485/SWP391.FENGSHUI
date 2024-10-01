@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FengShuiKoi_Services
+namespace FengShuiKoi_Repository
 {
-    public interface IQuantityService
+    public interface IQuantityOfFishRepo
     {
-        public Quantity getQuantityByElement(string element);
+        public QuantityOfFish getQuantityByElement(string element);
     }
 }
