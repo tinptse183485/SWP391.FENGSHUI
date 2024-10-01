@@ -10,5 +10,7 @@ namespace FengShuiKoi_Services
         bool AddLifePlace(LifePalace lifePlace);
         bool DeleteLifePlace(string id);
         bool UpdateLifePlace(LifePalace lifePlace);
-    }
+
+		string CalculateFate(int birthYear, string Gender);
+	}
 }

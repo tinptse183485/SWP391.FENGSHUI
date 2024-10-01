@@ -15,5 +15,7 @@ namespace FengShuiKoi_Repository
         public bool DeletePointOfShape(string element, string shape) => PointOfShapeDAO.Instance.DeletePointOfShape(element, shape);
 
         public bool UpdatePointOfShape(PointOfShape pointOfShape) => PointOfShapeDAO.Instance.UpdatePointOfShape(pointOfShape);
-    }
+
+        public List<PointOfShape> GetGoodShapeByElemnet(string element) => PointOfShapeDAO.Instance.GetGoodShapeByElemnet(element);
+	}
 }

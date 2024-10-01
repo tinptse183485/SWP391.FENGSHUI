@@ -55,8 +55,19 @@ namespace FengShuiKoi_DAO
             }
             return isSuccess;
         }
+		public List<PointOfShape> GetGoodShapeByElemnet(string element)
+		{
+			List<PointOfShape> listShape = new List<PointOfShape>();
 
-        public bool DeletePointOfShape(string element, string shape)
+			foreach (PointOfShape item in this.GetPointOfShapes())
+			{
+				if (item.PointOfShape1 >= 0.75 && item.Element.Equals(element))
+					listShape.Add(item);
+			}
+
+			return listShape;
+		}
+		public bool DeletePointOfShape(string element, string shape)
         {
             bool isSuccess = false;
             PointOfShape pointOfShape = this.GetPointOfShape(element, shape);
