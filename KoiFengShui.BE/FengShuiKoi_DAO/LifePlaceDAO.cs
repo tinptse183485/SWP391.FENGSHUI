@@ -28,7 +28,7 @@ namespace FengShuiKoi_DAO
 
         public LifePalace GetLifePlaceById(string id)
         {
-            return dbContext.LifePalaces.SingleOrDefault(lp => lp.LifePalace1 == id);
+            return dbContext.LifePalaces.SingleOrDefault(lp => lp.LifePalaceId == id);
         }
 
         public List<LifePalace> GetLifePlaces()
@@ -39,7 +39,7 @@ namespace FengShuiKoi_DAO
         public bool AddLifePlace(LifePalace lifePlace)
         {
             bool isSuccess = false;
-            LifePalace existingLifePlace = this.GetLifePlaceById(lifePlace.LifePalace1);
+            LifePalace existingLifePlace = this.GetLifePlaceById(lifePlace.LifePalaceId);
             try
             {
                 if (existingLifePlace == null)

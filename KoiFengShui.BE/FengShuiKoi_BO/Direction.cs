@@ -10,7 +10,7 @@ namespace FengShuiKoi_BO
             LifePalaceDirections = new HashSet<LifePalaceDirection>();
         }
 
-        public string Direction1 { get; set; } = null!;
+        public string DirectionId { get; set; } = null!;
 
         public virtual ICollection<LifePalaceDirection> LifePalaceDirections { get; set; }
     }

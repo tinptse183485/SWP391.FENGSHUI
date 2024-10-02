@@ -28,7 +28,7 @@ namespace FengShuiKoi_DAO
 
         public Shape GetShapeById(string id)
         {
-            return dbContext.Shapes.SingleOrDefault(s => s.Shape1 == id);
+            return dbContext.Shapes.SingleOrDefault(s => s.ShapeId == id);
         }
 
         public List<Shape> GetShapes()
@@ -39,7 +39,7 @@ namespace FengShuiKoi_DAO
         public bool AddShape(Shape shape)
         {
             bool isSuccess = false;
-            Shape existingShape = this.GetShapeById(shape.Shape1);
+            Shape existingShape = this.GetShapeById(shape.ShapeId);
             try
             {
                 if (existingShape == null)

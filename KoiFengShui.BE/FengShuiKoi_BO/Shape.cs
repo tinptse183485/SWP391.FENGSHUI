@@ -10,7 +10,7 @@ namespace FengShuiKoi_BO
             PointOfShapes = new HashSet<PointOfShape>();
         }
 
-        public string Shape1 { get; set; } = null!;
+        public string ShapeId { get; set; } = null!;
         public string Image { get; set; } = null!;
 
         public virtual ICollection<PointOfShape> PointOfShapes { get; set; }

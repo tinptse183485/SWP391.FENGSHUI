@@ -28,7 +28,7 @@ namespace FengShuiKoi_DAO
 
         public PointOfShape GetPointOfShape(string element, string shape)
         {
-            return dbContext.PointOfShapes.SingleOrDefault(p => p.Element == element && p.Shape == shape);
+            return dbContext.PointOfShapes.SingleOrDefault(p => p.ElementId == element && p.ElementId == shape);
         }
 
         public List<PointOfShape> GetPointOfShapes()
@@ -39,7 +39,7 @@ namespace FengShuiKoi_DAO
         public bool AddPointOfShape(PointOfShape pointOfShape)
         {
             bool isSuccess = false;
-            PointOfShape existingPointOfShape = this.GetPointOfShape(pointOfShape.Element, pointOfShape.Shape);
+            PointOfShape existingPointOfShape = this.GetPointOfShape(pointOfShape.ElementId, pointOfShape.ElementId);
             try
             {
                 if (existingPointOfShape == null)
@@ -55,19 +55,8 @@ namespace FengShuiKoi_DAO
             }
             return isSuccess;
         }
-		public List<PointOfShape> GetGoodShapeByElemnet(string element)
-		{
-			List<PointOfShape> listShape = new List<PointOfShape>();
 
-			foreach (PointOfShape item in this.GetPointOfShapes())
-			{
-				if (item.PointOfShape1 >= 0.75 && item.Element.Equals(element))
-					listShape.Add(item);
-			}
-
-			return listShape;
-		}
-		public bool DeletePointOfShape(string element, string shape)
+        public bool DeletePointOfShape(string element, string shape)
         {
             bool isSuccess = false;
             PointOfShape pointOfShape = this.GetPointOfShape(element, shape);
@@ -102,5 +91,18 @@ namespace FengShuiKoi_DAO
             }
             return isSuccess;
         }
-    }
+
+		public List<PointOfShape> GetGoodShapeByElemnet(string element)
+		{
+			List<PointOfShape> listShape = new List<PointOfShape>();
+
+			foreach (PointOfShape item in this.GetPointOfShapes())
+			{
+				if (item.PointOfShape1 >= 0.75 && item.ElementId.Equals(element))
+					listShape.Add(item);
+			}
+
+			return listShape;
+		}
+	}
 }

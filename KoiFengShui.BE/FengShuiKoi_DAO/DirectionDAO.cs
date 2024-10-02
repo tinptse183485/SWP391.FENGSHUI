@@ -28,7 +28,7 @@ namespace FengShuiKoi_DAO
 
         public Direction GetDirectionById(string id)
         {
-            return dbContext.Directions.SingleOrDefault(d => d.Direction1 == id);
+            return dbContext.Directions.SingleOrDefault(d => d.DirectionId == id);
         }
 
         public List<Direction> GetDirections()
@@ -39,7 +39,7 @@ namespace FengShuiKoi_DAO
         public bool AddDirection(Direction direction)
         {
             bool isSuccess = false;
-            Direction existingDirection = this.GetDirectionById(direction.Direction1);
+            Direction existingDirection = this.GetDirectionById(direction.DirectionId);
             try
             {
                 if (existingDirection == null)

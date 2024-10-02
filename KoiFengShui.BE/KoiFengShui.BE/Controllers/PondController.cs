@@ -32,7 +32,7 @@ namespace KoiFengShui.BE.Controllers
 				var listShape = _pointOfShapeService.GetGoodShapeByElemnet(element);
 				foreach (PointOfShape shape in listShape)
 				{
-					Shape pond = _shapeService.GetShapeById(shape.Shape);
+					Shape pond = _shapeService.GetShapeById(shape.ShapeId);
 					if (pond != null)
 					{
 						listPond.Add(pond);
