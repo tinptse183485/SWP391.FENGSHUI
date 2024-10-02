@@ -36,6 +36,31 @@ namespace FengShuiKoi_DAO
             return dbContext.ElementColors.ToList();
         }
 
+
+        public float GetPointElementColor(string element, string color)
+        {
+            try
+            {
+
+                ElementColor existingElementColor = this.GetElementColorById(element, color);
+
+
+                if (existingElementColor != null)
+                {
+                    return (float)existingElementColor.ColorPoint;
+                }
+
+
+                return 0.0f;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception($"An error occurred while getting the color point: {ex.Message}", ex);
+            }
+        }
+
+
         public bool AddElementColor(ElementColor elementColor)
         {
             bool isSuccess = false;

@@ -36,6 +36,11 @@ namespace FengShuiKoi_DAO
         }
 
 
-    
+        public List<Element> GetElement()
+        {
+            return dbContext.Elements.ToList();
+        }
+
+
     }
 }

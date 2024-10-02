@@ -10,5 +10,8 @@ namespace FengShuiKoi_Repository
     public interface IElementRepo
     {
         public Element GetElementAndMutualism(string element);
+
+        public List<Element> GetElement();
+
     }
 }

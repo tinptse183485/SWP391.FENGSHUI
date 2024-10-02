@@ -92,17 +92,21 @@ namespace FengShuiKoi_DAO
             return isSuccess;
         }
 
-		public List<LifePalaceDirection> GetGoodDirectionByLifePalace(string LifePalace)
-		{
-			List<LifePalaceDirection> listDirection = new List<LifePalaceDirection>();
 
-			foreach (LifePalaceDirection item in this.GetLifePlaceDirections())
-			{
-				if (item.PointOfDirection == 1 && item.LifePalaceId.Equals(LifePalace))
-					listDirection.Add(item);
-			}
+        public List<LifePalaceDirection> GetGoodDirectionByLifePalace(string LifePalace)
+        {
+            List<LifePalaceDirection> listDirection = new List<LifePalaceDirection>();
 
-			return listDirection;
-		}
-	}
+            foreach (LifePalaceDirection item in this.GetLifePlaceDirections())
+            {
+                if (item.PointOfDirection == 1 && item.LifePalaceId.Equals(LifePalace))
+                    listDirection.Add(item);
+            }
+
+            return listDirection;
+        }
+    }
+
+}
+
 }

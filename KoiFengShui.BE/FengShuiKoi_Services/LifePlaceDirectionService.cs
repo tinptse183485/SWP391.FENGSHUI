@@ -23,6 +23,9 @@ namespace FengShuiKoi_Services
 
         public bool UpdateLifePlaceDirection(LifePalaceDirection lifePlaceDirection) => lifePlaceDirectionRepo.UpdateLifePlaceDirection(lifePlaceDirection);
 
+
         public List<LifePalaceDirection> GetGoodDirectionByLifePalace(string LifePalace) => lifePlaceDirectionRepo.GetGoodDirectionByLifePalace(LifePalace);
-	}
+
+    }
+
 }

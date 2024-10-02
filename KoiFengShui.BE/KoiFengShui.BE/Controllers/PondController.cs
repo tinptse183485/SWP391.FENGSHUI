@@ -2,7 +2,9 @@
 using FengShuiKoi_Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+
 using System.Reflection;
+
 
 namespace KoiFengShui.BE.Controllers
 {
@@ -17,13 +19,17 @@ namespace KoiFengShui.BE.Controllers
 		private readonly ILifePlaceDirectionService _lifePlaceDirectionService;
 		private readonly ILifePlaceService _lifePlaceService;
 		public PondController(IPointOfShapeService pointOfShapeService, IShapeService shapeService, IElementService elementService, LunarCalendarConverter lunarCalendarConverter, ILifePlaceDirectionService lifePlaceDirectionService, ILifePlaceService lifePlaceService)
+
 		{
 			_pointOfShapeService = pointOfShapeService;
 			_shapeService = shapeService;
 			_elementService = elementService;
 			_lunarCalendarConverter = lunarCalendarConverter;
+
 			_lifePlaceDirectionService = lifePlaceDirectionService;
 			_lifePlaceService = lifePlaceService;
+
+
 		}
 
 		[HttpGet("GetGoodShapeByDOB")]
@@ -52,7 +58,7 @@ namespace KoiFengShui.BE.Controllers
 		}
 
 		[HttpGet("GetGoodDirectionByDOB")]
-		public IActionResult GetDirectionOfPondByElement(string dob,string Gender)
+		public IActionResult GetDirectionOfPondByElement(string dob, string Gender)
 		{
 			List<Shape> listPond = new List<Shape>();
 			string Life_Palace = "";
@@ -82,5 +88,4 @@ namespace KoiFengShui.BE.Controllers
 
 
 	}
-
 }

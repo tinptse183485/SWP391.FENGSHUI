@@ -13,5 +13,6 @@ namespace FengShuiKoi_Repository
 
         public List<LifePalaceDirection> GetGoodDirectionByLifePalace(string LifePalace);
 
-	}
+    }
+
 }
