@@ -137,3 +137,29 @@ body{
     font-size: 16px;
     font-weight: 600;
   }
+
+  /* Shape */
+  .pond-shape-list {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .pond-shape-card {
+    cursor: pointer;
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    transition: transform 0.3s;
+  }
+  
+  .pond-shape-card img {
+    max-width: 100px;
+    height: auto;
+  }
+  
+  .pond-shape-card.selected {
+    border-color: #1890ff;
+    transform: scale(1.05);
+  }

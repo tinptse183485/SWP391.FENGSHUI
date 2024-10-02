@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Form, DatePicker, Select, Button, Radio } from "antd";
 import api from "../../config/axios";
 import { toast } from "react-toastify";
@@ -10,19 +10,36 @@ const { Option } = Select;
 
 function ComputeCompability() {
   const [form] = Form.useForm();
+
+  const [filteredFishList, setFilteredFishList] = useState([]);
+
   const [fishList, setFishList] = useState([]);
-  const [pondShapes, setPondShapes] = useState([]);
-  const [pondDirections, setPondDirections] = useState([]);
-  const [compatibilityResult, setCompatibilityResult] = useState(null);
   const [selectedFish, setSelectedFish] = useState(null);
-  const [elementFilter, setElementFilter] = useState("all");
-  const [colorFilter, setColorFilter] = useState("all");
+
+  const [pondShapes, setPondShapes] = useState([]);
+  const [selectedPondShape, setSelectedPondShape] = useState(null);
+
+  const [pondDirections, setPondDirections] = useState([]);
+
+  const [compatibilityResult, setCompatibilityResult] = useState(null);
+
   const [elements, setElements] = useState([]);
+  const [elementFilter, setElementFilter] = useState("all");
+
   const [colors, setColors] = useState([]);
+  const [colorFilter, setColorFilter] = useState("all");
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (colorFilter === "all") {
+      setFilteredFishList(fishList); // Nếu không chọn màu, hiển thị toàn bộ danh sách cá
+    } else {
+      fetchFishByColor();
+    }
+  }, [colorFilter, fishList]);
 
   const fetchData = async () => {
     try {
@@ -40,12 +57,22 @@ function ComputeCompability() {
         api.get("getColors"),
       ]);
       setFishList(fishResponse.data);
+      setFilteredFishList(fishResponse.data); // Đặt danh sách cá ban đầu
       setPondShapes(shapeResponse.data);
       setPondDirections(directionResponse.data);
       setElements(elementResponse.data);
       setColors(colorResponse.data);
     } catch (error) {
       toast.error("Error fetching data");
+    }
+  };
+
+  const fetchFishByColor = async () => {
+    try {
+      const response = await api.get(`getKoiByColor/${colorFilter}`);
+      setFilteredFishList(response.data);
+    } catch (error) {
+      toast.error("Error fetching fish by color");
     }
   };
 
@@ -61,12 +88,12 @@ function ComputeCompability() {
     }
   };
 
-  const filteredFishList = fishList.filter((fish) => {
-    return (
-      (elementFilter === "all" || fish.element === elementFilter) &&
-      (colorFilter === "all" || fish.color === colorFilter)
-    );
-  });
+  // const filteredFishList = fishList.filter((fish) => {
+  //   return (
+  //     (elementFilter === "all" || fish.element === elementFilter) &&
+  //     (colorFilter === "all" || fish.color === colorFilter)
+  //   );
+  // });
 
   return (
     <>
@@ -87,6 +114,7 @@ function ComputeCompability() {
                   ))}
                 </Select>
               </Form.Item>
+
               <Form.Item label="Màu sắc">
                 <Select value={colorFilter} onChange={setColorFilter}>
                   <Option value="all">Tất cả</Option>
@@ -99,6 +127,7 @@ function ComputeCompability() {
               </Form.Item>
             </Form>
           </div>
+
           <div className="form-compute">
             <Form
               form={form}
@@ -137,17 +166,18 @@ function ComputeCompability() {
                 <div className="fish-list">
                   {filteredFishList.map((fish) => (
                     <div
-                      key={fish.id}
+                      key={fish.koiType}
                       className={`fish-card ${
-                        selectedFish === fish.id ? "selected" : ""
+                        selectedFish === fish.koiType ? "selected" : ""
                       }`}
                       onClick={() => {
-                        setSelectedFish(fish.id);
-                        form.setFieldsValue({ selectedFish: fish.id });
+                        setSelectedFish(fish.koiType);
+                        form.setFieldsValue({ selectedFish: fish.koiType });
                       }}
                     >
-                      <img src={fish.imageUrl} alt={fish.name} />
-                      <p>{fish.name}</p>
+                      <img src={fish.image} alt={fish.koiType} />
+                      <p>{fish.koiType}</p>
+                      <p>{fish.description}</p>
                     </div>
                   ))}
                 </div>
@@ -160,13 +190,25 @@ function ComputeCompability() {
                   { required: true, message: "Vui lòng chọn hình dáng hồ" },
                 ]}
               >
-                <Select placeholder="Chọn hình dáng hồ">
+                <div className="pond-shape-list">
                   {pondShapes.map((shape) => (
-                    <Option key={shape.id} value={shape.id}>
-                      {shape.name}
-                    </Option>
+                    <div
+                      key={shape.shapeId}
+                      className={`pond-shape-card ${
+                        selectedPondShape === shape.shapeId ? "selected" : ""
+                      }`}
+                      onClick={() => {
+                        setSelectedPondShape(shape.shapeId);
+                        form.setFieldsValue({
+                          selectedPondShape: shape.shapeId,
+                        });
+                      }}
+                    >
+                      <img src={shape.image} alt={shape.shapeId} />
+                      <p>{shape.shapeId}</p>
+                    </div>
                   ))}
-                </Select>
+                </div>
               </Form.Item>
 
               <Form.Item
@@ -178,8 +220,11 @@ function ComputeCompability() {
               >
                 <Select placeholder="Chọn hướng đặt hồ">
                   {pondDirections.map((direction) => (
-                    <Option key={direction.id} value={direction.id}>
-                      {direction.name}
+                    <Option
+                      key={direction.directionId}
+                      value={direction.directionId}
+                    >
+                      {direction.directionId}
                     </Option>
                   ))}
                 </Select>
