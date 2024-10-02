@@ -2,19 +2,56 @@ import HeaderTemplate from "../../components/header-page";
 import koiImage from "./path-to-koi-image.jpg";
 import "./index.css";
 import FooterPage from "../../components/footer-page";
+import Header from "./Header.png";
+import Koi2 from "./Koi2.jpg";
 import { Carousel } from "antd";
-const contentStyle = {
-  margin: 0,
-  height: "160px",
-  color: "#fff",
-  lineHeight: "160px",
-  textAlign: "center",
-  background: "#364d79",
-};
 function Home() {
+  const contentStyle = {
+    height: "500px",
+    color: "#fff",
+    lineHeight: "500px",
+    textAlign: "center",
+    background: "#364d79",
+  };
   return (
     <>
       <HeaderTemplate></HeaderTemplate>
+      <>
+        <Carousel autoplay className="carousel">
+          <div className="first">
+            <img
+              style={contentStyle}
+              src={Header}
+              alt="header-img"
+              className="header-img"
+            />
+          </div>
+          <div>
+            <img
+              style={contentStyle}
+              src={Koi2}
+              alt="header-img"
+              className="header-img"
+            />
+          </div>
+          <div>
+            <img
+              style={contentStyle}
+              src={Koi2}
+              alt="header-img"
+              className="header-img"
+            />
+          </div>
+          <div>
+            <img
+              style={contentStyle}
+              src={Header}
+              alt="header-img"
+              className="header-img"
+            />
+          </div>
+        </Carousel>
+      </>
       <body>
         {/* Trending Feature */}
         <div className="container">

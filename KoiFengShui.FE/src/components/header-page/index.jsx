@@ -1,16 +1,7 @@
 import { Link } from "react-router-dom";
 import "./index.css";
 import koiImage from "./path-to-koi-image.jpg";
-import Header from "./Header.png";
-import Koi2 from "./Koi2.jpg";
-import { Carousel } from "antd";
-const contentStyle = {
-  height: "500px",
-  color: "#fff",
-  lineHeight: "500px",
-  textAlign: "center",
-  background: "#364d79",
-};
+
 function HeaderTemplate() {
   return (
     <div>
@@ -56,40 +47,6 @@ function HeaderTemplate() {
           </ul>
         </nav>
       </div>
-      <Carousel autoplay className="carousel">
-        <div className="first">
-          <img
-            style={contentStyle}
-            src={Header}
-            alt="header-img"
-            className="header-img"
-          />
-        </div>
-        <div>
-          <img
-            style={contentStyle}
-            src={Koi2}
-            alt="header-img"
-            className="header-img"
-          />
-        </div>
-        <div>
-          <img
-            style={contentStyle}
-            src={Koi2}
-            alt="header-img"
-            className="header-img"
-          />
-        </div>
-        <div>
-          <img
-            style={contentStyle}
-            src={Header}
-            alt="header-img"
-            className="header-img"
-          />
-        </div>
-      </Carousel>
     </div>
   );
 }

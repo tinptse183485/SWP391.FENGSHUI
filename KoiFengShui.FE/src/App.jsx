@@ -3,11 +3,12 @@ import Home from "./page/home";
 import Login from "./page/login";
 import Register from "./page/register";
 import Dashboard from "./components/dashboard";
-import Calculation from "./page/Calculation";
+import Calculation from "./page/calculation";
+import Consulting from "./page/Consulting";
 const App = () => {
   const router = createBrowserRouter([
     {
-      path: "/",
+      path: "ss",
       element: <Home />,
     },
     {
@@ -25,6 +26,10 @@ const App = () => {
     {
       path: "calculation",
       element: <Calculation />,
+    },
+    {
+      path: "/",
+      element: <Consulting />,
     },
   ]);
 

@@ -1,76 +1,20 @@
-.login-container {
-    display: flex;
-    max-width: 800px;
-    height: 600px;
-    margin: 50px auto;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  }
-  
-  .login-image-container {
-    flex: 1;
-    display: flex; /* Use flexbox for centering */
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .koi-image {
-    width: 250px;
-    height: 250px;
-    object-fit: cover;
-    border-radius: 10%;
-    border: 5%; /* Adjust border if needed */
-  }
-  
-  /* Đặt style cho container */
-  .login-form-container {
-    width:100%;
-    max-width: 400px;
-    margin:0 auto;
-    padding: 40px;
-    background-color: #f9f9f9;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    font-family: Arial, sans-serif;
-  }
-  
-  .login-form-container h1 {
-    text-align: center;
-    font-size: 24px;
-    margin-bottom: 10px;
-    color: rgb(32, 154, 224);
-
-  }
-  
-  .login-form-container p {
-    text-align: center;
-    font-size: 14px;
-    color: #666;
-  }
-.button-see{
-    color: white;
-    background-color:rgb(32, 154, 224);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-    display: flex;
-    margin: 0 auto;
-    margin-top: 100px;
+.Header-Title{
+  font-family: Arial, sans-serif;
 }
-
-.year-selection-container{
-    display: flex;
-    justify-content: center;
-    height: 100px;
-    align-items: center;
-    background-color: #f9f9f9;
+.Header-Title h1{
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #333;
 }
-
- 
+.Header-Title p{
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+}
+.formRegister{
+  height: 50%;
+}
+.datePicker{
+  width: 100%;
+}
