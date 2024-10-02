@@ -1,6 +1,7 @@
 ﻿using FengShuiKoi_BO;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,6 +38,18 @@ namespace FengShuiKoi_DAO
         public List<TypeColor> GetAllType()
         {
             return dbContext.TypeColors.ToList();
+        }
+        public List<TypeColor> GetColorsAndPercentages(string koiType)
+        {
+            List<TypeColor> list = new List<TypeColor>();
+
+            foreach (TypeColor item in this.GetAllType())
+            {
+                if (item.KoiType == koiType)
+                    list.Add(item);
+            }
+
+            return list;
         }
         public List<TypeColor> GetTypeByColor(string color)
         {

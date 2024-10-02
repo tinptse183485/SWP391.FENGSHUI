@@ -58,6 +58,7 @@ namespace KoiFengShui.BE
             builder.Services.AddScoped<IColorService, ColorService>();
             builder.Services.AddScoped <IAdsPackageService,AdsPackageService>();
             builder.Services.AddScoped<ITypeColorService, TypeColorService>();
+            builder.Services.AddScoped<IElementColorService, ElementColorService>();
 
             // Add CORS
             builder.Services.AddCors(options =>

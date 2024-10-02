@@ -22,5 +22,7 @@ namespace FengShuiKoi_Services
         public bool DeleteElementColor(string element, string color) => elementColorRepo.DeleteElementColor(element, color);
 
         public bool UpdateElementColor(ElementColor elementColor) => elementColorRepo.UpdateElementColor(elementColor);
+
+        public float GetPointElementColor(string element, string color) => elementColorRepo.GetPointElementColor(element, color);
     }
 }

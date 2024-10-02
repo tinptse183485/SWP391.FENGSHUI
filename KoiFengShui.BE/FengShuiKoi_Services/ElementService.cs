@@ -1,4 +1,5 @@
 ﻿using FengShuiKoi_BO;
+using FengShuiKoi_DAO;
 using FengShuiKoi_Repository;
 using System;
 using System.Collections.Generic;
@@ -16,8 +17,9 @@ namespace FengShuiKoi_Services
              iElementRepo = new ElementRepo();
         }
         public Element GetElementAndMutualism(string element) => iElementRepo.GetElementAndMutualism(element);
-
-		public string GetElementByBirthYear(int birthYear)
+      
+        public List<Element> GetElement() => ElementDAO.Instance.GetElement();
+        public string GetElementByBirthYear(int birthYear)
 		{
 			int lastTwoDigits = birthYear % 100;
 			int firstNumber = 0;

@@ -17,5 +17,6 @@ namespace FengShuiKoi_Services
         public TypeColor GetPercentage(string color, string type);
 
         public List<TypeColor> GetTypeByColor(string color) ;
+        public List<TypeColor> GetColorsAndPercentages(string koiType);
     }
 }
