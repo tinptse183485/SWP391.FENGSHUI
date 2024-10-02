@@ -9,15 +9,13 @@ namespace KoiFengShui.BE.Controllers
     [ApiController]
     public class DirectionController : ControllerBase
     {
-      
+
         private readonly IDirectionService _directionService;
-        
+
 
         public DirectionController(IDirectionService directionService)
         {
             _directionService = directionService;
-           
-
         }
         [HttpGet("GetAllDirection")]
         public IActionResult GetAllDirection()

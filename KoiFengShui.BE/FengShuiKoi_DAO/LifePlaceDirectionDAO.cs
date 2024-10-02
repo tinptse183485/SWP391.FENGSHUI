@@ -102,7 +102,6 @@ namespace FengShuiKoi_DAO
                 if (item.PointOfDirection == 1 && item.LifePalaceId.Equals(LifePalace))
                     listDirection.Add(item);
             }
-
             return listDirection;
         }
     }

@@ -28,7 +28,7 @@ namespace FengShuiKoi_DAO
 
         public PointOfShape GetPointOfShape(string element, string shape)
         {
-            return dbContext.PointOfShapes.SingleOrDefault(p => p.ElementId == element && p.ElementId == shape);
+            return dbContext.PointOfShapes.SingleOrDefault(p => p.ElementId == element && p.ShapeId == shape);
         }
 
         public List<PointOfShape> GetPointOfShapes()
