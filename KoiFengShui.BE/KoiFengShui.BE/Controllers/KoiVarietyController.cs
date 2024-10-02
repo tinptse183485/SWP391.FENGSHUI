@@ -21,7 +21,7 @@ namespace KoiFengShui.BE.Controllers
 			_elementService = elementService;
 		}
 
-		[HttpGet("GetListKoi")]
+		[HttpGet("GetListKoiByDOB")]
 		public IActionResult GetKoiVarietiesByElement(string dob)
 		{
 			List<KoiVariety> listKoi = new List<KoiVariety>();
@@ -42,7 +42,7 @@ namespace KoiFengShui.BE.Controllers
 			}
 		}
 
-		[HttpGet("GetQuantity")]
+		[HttpGet("GetQuantityByDOB")]
 		public IActionResult GetQuantityByElement(string dob)
 		{
 			int year = int.Parse(dob.Substring(0, 4));

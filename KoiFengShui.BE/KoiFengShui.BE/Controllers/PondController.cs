@@ -2,6 +2,7 @@
 using FengShuiKoi_Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
 
 namespace KoiFengShui.BE.Controllers
 {
@@ -13,15 +14,19 @@ namespace KoiFengShui.BE.Controllers
 		private readonly IShapeService _shapeService;
 		private readonly IElementService _elementService;
 		private readonly LunarCalendarConverter _lunarCalendarConverter;
-		public PondController(IPointOfShapeService pointOfShapeService, IShapeService shapeService, IElementService elementService, LunarCalendarConverter lunarCalendarConverter)
+		private readonly ILifePlaceDirectionService _lifePlaceDirectionService;
+		private readonly ILifePlaceService _lifePlaceService;
+		public PondController(IPointOfShapeService pointOfShapeService, IShapeService shapeService, IElementService elementService, LunarCalendarConverter lunarCalendarConverter, ILifePlaceDirectionService lifePlaceDirectionService, ILifePlaceService lifePlaceService)
 		{
 			_pointOfShapeService = pointOfShapeService;
 			_shapeService = shapeService;
 			_elementService = elementService;
 			_lunarCalendarConverter = lunarCalendarConverter;
+			_lifePlaceDirectionService = lifePlaceDirectionService;
+			_lifePlaceService = lifePlaceService;
 		}
 
-		[HttpGet("GetGoodShape")]
+		[HttpGet("GetGoodShapeByDOB")]
 		public IActionResult GetShapeOfPondByElement(string dob)
 		{
 			List<Shape> listPond = new List<Shape>();
@@ -46,8 +51,36 @@ namespace KoiFengShui.BE.Controllers
 			}
 		}
 
+		[HttpGet("GetGoodDirectionByDOB")]
+		public IActionResult GetDirectionOfPondByElement(string dob,string Gender)
+		{
+			List<Shape> listPond = new List<Shape>();
+			string Life_Palace = "";
+			try
+			{
+				int[] lunarDate = LunarCalendarConverter.ConvertSolarToLunar(dob, 7);
+				if (lunarDate == null)
+				{
+					return BadRequest("Không thể tính toán ngày âm lịch cho ngày đã nhập.");
+				}
+				else
+				{
+					int lunarYear = lunarDate[2];
+					Life_Palace = _lifePlaceService.CalculateFate(lunarYear, Gender);
+				}
+				var listdirection = _lifePlaceDirectionService.GetGoodDirectionByLifePalace(Life_Palace);
+				return Ok(listdirection);
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Internal server error: {ex.Message}");
+			}
+		}
 
-		
+
+
+
+
 	}
 
 }

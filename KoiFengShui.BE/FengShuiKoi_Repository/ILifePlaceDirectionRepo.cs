@@ -10,5 +10,8 @@ namespace FengShuiKoi_Repository
         bool AddLifePlaceDirection(LifePalaceDirection lifePlaceDirection);
         bool DeleteLifePlaceDirection(string lifePalace, string direction);
         bool UpdateLifePlaceDirection(LifePalaceDirection lifePlaceDirection);
-    }
+
+        public List<LifePalaceDirection> GetGoodDirectionByLifePalace(string LifePalace);
+
+	}
 }

@@ -56,8 +56,9 @@ namespace KoiFengShui.BE
 			builder.Services.AddScoped<ILifePlaceService, LifePlaceService>();
 
 
-			// Add CORS
-			builder.Services.AddCors(options =>
+
+		// Add CORS
+		builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowReactApp",
                     builder => builder.WithOrigins("http://localhost:5174")
