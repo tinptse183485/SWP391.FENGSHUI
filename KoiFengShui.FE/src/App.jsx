@@ -3,7 +3,7 @@ import Home from "./page/home";
 import Login from "./page/login";
 import Register from "./page/register";
 import Dashboard from "./components/dashboard";
-import Calculation from "./page/Calculation";
+import ComputeCompability from "./page/calculate-compability";
 const App = () => {
   const router = createBrowserRouter([
     {
@@ -23,8 +23,8 @@ const App = () => {
       element: <Dashboard />,
     },
     {
-      path: "calculation",
-      element: <Calculation />,
+      path: "compute",
+      element: <ComputeCompability />,
     },
   ]);
 
