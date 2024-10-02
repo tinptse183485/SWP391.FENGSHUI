@@ -98,7 +98,7 @@ namespace FengShuiKoi_DAO
 
 			foreach (PointOfShape item in this.GetPointOfShapes())
 			{
-				if (item.PointOfShape1 >= 0.75 && item.ElementId.Equals(element))
+				if (item.Point >= 0.75 && item.ElementId.Equals(element))
 					listShape.Add(item);
 			}
 

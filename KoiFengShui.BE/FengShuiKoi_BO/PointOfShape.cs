@@ -5,7 +5,7 @@ namespace FengShuiKoi_BO
 {
     public partial class PointOfShape
     {
-        public double PointOfShape1 { get; set; }
+        public double Point { get; set; }
         public string ElementId { get; set; } = null!;
         public string ShapeId { get; set; } = null!;
 
