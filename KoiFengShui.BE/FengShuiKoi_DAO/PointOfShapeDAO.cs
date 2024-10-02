@@ -28,7 +28,7 @@ namespace FengShuiKoi_DAO
 
         public PointOfShape GetPointOfShape(string element, string shape)
         {
-            return dbContext.PointOfShapes.SingleOrDefault(p => p.Element == element && p.Shape == shape);
+            return dbContext.PointOfShapes.SingleOrDefault(p => p.ElementId == element && p.ElementId == shape);
         }
 
         public List<PointOfShape> GetPointOfShapes()
@@ -39,7 +39,7 @@ namespace FengShuiKoi_DAO
         public bool AddPointOfShape(PointOfShape pointOfShape)
         {
             bool isSuccess = false;
-            PointOfShape existingPointOfShape = this.GetPointOfShape(pointOfShape.Element, pointOfShape.Shape);
+            PointOfShape existingPointOfShape = this.GetPointOfShape(pointOfShape.ElementId, pointOfShape.ElementId);
             try
             {
                 if (existingPointOfShape == null)
