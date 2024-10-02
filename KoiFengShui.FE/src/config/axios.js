@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Set config defaults when creating the instance
 const api = axios.create({
-    baseURL: 'https://localhost:7004/api/'
+    baseURL: 'https://localhost:7247/api/'
   });
 
   //làm 1 hành động lấy cái token từ phía localStorage và đẩy theo config axios trc khi call API 

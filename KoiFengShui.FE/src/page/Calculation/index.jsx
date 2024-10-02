@@ -1,21 +1,60 @@
 import "./index.css";
 import { Button, DatePicker, Form, Radio } from "antd";
 import AuthenTemplate from "../../components/authen-templates";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import api from "../../config/axios";
 import { toast } from "react-toastify";
+import { useState } from "react"; // Import useState
 
 const Calculation = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
-  const handleRegister = async (values) => {
-    //lấy cái values và submit nó xún backend
+  const [koiData, setKoiData] = useState([]);
+  const [koiQuantity, setKoiQuantity] = useState([]);
+  const [pondShape, setPondShape] = useState([]);
+  const [pondDirection, setPondDirection] = useState([]);
+
+  const handleCalculate = async (values) => {
     try {
-      const response = await api.post("Account/register", values);
-      toast.success("Successfully register new account!");
-      navigate("/login");
+      // Gọi Api để lấy danh sách cá
+      const response = await api.get("KoiVariety/GetListKoiByDOB", {
+        params: { dob: values.YOB.format("YYYY-MM-DD") },
+      });
+      toast.success("Successfully fetched Koi list");
+      console.log(response.data);
+
+      // Gọi Api để lấy số lượng cá phù hợp
+      const reponse2 = await api.get("KoiVariety/GetQuantityByDOB", {
+        params: { dob: values.YOB.format("YYYY-MM-DD") },
+      });
+      toast.success("Successfully fetched quantity of Koi");
+      console.log(reponse2.data);
+
+      // Gọi Api để lấy hình dạng hồ phù hợp
+      const reponse3 = await api.get("Pond/GetGoodShapeByDOB", {
+        params: { dob: values.YOB.format("YYYY-MM-DD") },
+      });
+      toast.success("Successfully fetched shape of Pond");
+      console.log(reponse3.data);
+
+      // Gọi Api để lấy hướng hồ phù hợp
+      const reponse4 = await api.get("Pond/GetGoodDirectionByDOB", {
+        params: { dob: values.YOB.format("YYYY-MM-DD"), gender: values.Gender },
+      });
+      toast.success("Successfully fetched direction of Pond");
+      console.log(reponse4.data);
+
+      // Navigate to consulting page with Koi data,Koi quantity, pond shape, and direction
+      navigate("/consulting", {
+        state: {
+          koiData: response.data,
+          koiQuantity: reponse2.data,
+          pondShape: reponse3.data,
+          pondDirection: reponse4.data,
+        },
+      });
     } catch (error) {
-      toast.error(error.response.data); //nơi mà backend sẽ trả về lỗi khi mà register fail
+      toast.error(error.response?.data || "Error fetching data"); // Xử lý lỗi
     }
   };
 
@@ -29,16 +68,14 @@ const Calculation = () => {
       </div>
       <Form
         form={form}
-        labelCol={{
-          span: 24,
-        }}
+        labelCol={{ span: 24 }}
         name="userForm"
         initialValues={{ remember: true }}
-        onFinish={handleRegister}
+        onFinish={handleCalculate}
       >
         <Form.Item
           label="Birthday"
-          name="Birthday"
+          name="YOB"
           rules={[{ required: true, message: "Please select your birthday!" }]}
         >
           <DatePicker format="YYYY-MM-DD" className="datePicker" />
@@ -56,12 +93,13 @@ const Calculation = () => {
             </Radio.Group>
           </Form.Item>
         </Form.Item>
+
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            See now
+          </Button>
+        </Form.Item>
       </Form>
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
-          See now
-        </Button>
-      </Form.Item>
     </AuthenTemplate>
   );
 };

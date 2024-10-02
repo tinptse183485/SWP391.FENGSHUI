@@ -1,0 +1,21 @@
+.koi-cards {
+    display: flex;
+    flex-wrap: wrap; /* Allows wrapping to the next line if needed */
+    gap: 20px; /* Space between cards */
+    justify-content: center; /* Center the cards */
+  }
+  
+  .koi-card {
+    border: 1px solid #ccc; /* Card border */
+    border-radius: 8px; /* Rounded corners */
+    padding: 16px; /* Inner padding */
+    text-align: center; /* Center text */
+    width: 200px; /* Fixed width for cards */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow effect */
+  }
+  
+  .koi-card img {
+    max-width: 100%; /* Responsive image */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 4px; /* Rounded image corners */
+  }

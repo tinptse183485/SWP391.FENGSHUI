@@ -5,10 +5,11 @@ import Register from "./page/register";
 import Dashboard from "./components/dashboard";
 import Calculation from "./page/calculation";
 import Consulting from "./page/Consulting";
-const App = () => {
+
+function App() {
   const router = createBrowserRouter([
     {
-      path: "ss",
+      path: "/",
       element: <Home />,
     },
     {
@@ -28,12 +29,12 @@ const App = () => {
       element: <Calculation />,
     },
     {
-      path: "/",
+      path: "consulting",
       element: <Consulting />,
     },
   ]);
 
   return <RouterProvider router={router} />;
-};
+}
 
 export default App;
