@@ -16,7 +16,11 @@ namespace FengShuiKoi_Services
         {
             iTypeColorRepo = new TypeColorRepo();
         }
+
+        public List<TypeColor> GetAllType() =>iTypeColorRepo.GetAllType();  
+
         public TypeColor GetPercentage(string color, string type) => iTypeColorRepo.GetPercentage(color, type);
-        
+
+        public List<TypeColor> GetTypeByColor(string color) =>iTypeColorRepo.GetTypeByColor(color);
     }
 }

@@ -55,7 +55,9 @@ namespace KoiFengShui.BE
 			builder.Services.AddScoped<ILifePlaceDirectionService, LifePlaceDirectionService>();
 			builder.Services.AddScoped<ILifePlaceService, LifePlaceService>();
             builder.Services.AddScoped<IDirectionService,DirectionService>();
-
+            builder.Services.AddScoped<IColorService, ColorService>();
+            builder.Services.AddScoped <IAdsPackageService,AdsPackageService>();
+            builder.Services.AddScoped<ITypeColorService, TypeColorService>();
 
             // Add CORS
             builder.Services.AddCors(options =>

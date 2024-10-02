@@ -34,6 +34,21 @@ namespace FengShuiKoi_DAO
         {
             return dbContext.TypeColors.SingleOrDefault(m => m.Color.Equals(color) && m.KoiType.Equals(type) );
         }
+        public List<TypeColor> GetAllType()
+        {
+            return dbContext.TypeColors.ToList();
+        }
+        public List<TypeColor> GetTypeByColor(string color)
+        {
+            List<TypeColor> listType = new List<TypeColor>();
 
+            foreach (TypeColor item in this.GetAllType())
+            {
+                if (item.ColorId == color)
+                    listType.Add(item);
+            }
+
+            return listType;
+        }
     }
 }
