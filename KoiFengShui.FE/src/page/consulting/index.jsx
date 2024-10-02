@@ -1,7 +1,10 @@
 import "./index.css";
 import HeaderTemplate from "../../components/header-page";
 import FooterPage from "../../components/footer-page";
-import { Link, useLocation } from "react-router-dom"; // Import useLocation
+import { useLocation } from "react-router-dom"; // Import useLocation
+import { Modal } from "antd"; // Import Modal from Ant Design
+import { useState } from "react"; // Import useState
+
 function Consulting() {
   const location = useLocation(); // Get location object
   const { koiData, koiQuantity, pondShape, pondDirection } = location.state || {
@@ -10,6 +13,24 @@ function Consulting() {
     pondShape: [],
     pondDirection: [],
   }; // Extract  data
+
+  const [visible, setVisible] = useState(false); // State for modal visibility
+  const [selectedKoi, setSelectedKoi] = useState(null); // State for selected koi
+  const [selectedPond, setSelectedPond] = useState(null); // State for selected pond
+
+  const showModal = (koi) => {
+    setSelectedKoi(koi); // Set selected koi
+    setVisible(true); // Show modal
+  };
+
+  const showPondModal = (pond) => {
+    setSelectedPond(pond); // Set selected pond
+    setVisible(true); // Show modal
+  };
+
+  const handleCancel = () => {
+    setVisible(false); // Hide modal
+  };
 
   return (
     <div>
@@ -23,8 +44,10 @@ function Consulting() {
             {koiData.length > 0 ? (
               koiData.map((koi) => (
                 // eslint-disable-next-line react/jsx-key
-                <div className="koi-card">
-                  <img src={koi.image} />
+                <div className="koi-card" onClick={() => showModal(koi)}>
+                  {" "}
+                  {/* Add onClick to show modal */}
+                  <div className="image"> <img  src={`/koi_image/${koi.image}`} alt={koi.image} /></div>  
                   <h3>{koi.koiType}</h3>
                 </div>
               ))
@@ -40,24 +63,10 @@ function Consulting() {
             {pondShape.length > 0 ? (
               pondShape.map((pond) => (
                 // eslint-disable-next-line react/jsx-key
-                <div className="koi-card">
-                  <img src={pond.image} />
+                <div className="koi-card" onClick={() => showPondModal(pond)}> 
+                <div className="image"> <img  src={`/pond/${pond.image}`} alt={pond.image} /></div>
                   <h3>{pond.shapeId}</h3>
-                </div>
-              ))
-            ) : (
-              <p>No pond data available</p>
-            )}
-          </div>
-          <h3>Hướng:</h3>
-          <div className="koi-pond">
-            {pondDirection.length > 0 ? (
-              pondDirection.map((pond) => (
-                // eslint-disable-next-line react/jsx-key
-                <div className="koi-card">
-                  <h3>{pond.directionId}</h3>
-                  <h3>{pond.eightMansions}</h3>
-                  <h3>{pond.description}</h3>
+                
                 </div>
               ))
             ) : (
@@ -69,6 +78,52 @@ function Consulting() {
       <footer>
         <FooterPage />
       </footer>
+      {/* Modal for displaying koi details */}
+      <Modal
+        title={selectedKoi ? selectedKoi.koiType : ""}
+        visible={visible}
+        onCancel={handleCancel}
+        footer={null}
+      >
+        {selectedKoi && (
+          <div> 
+            <img src={selectedKoi.image}/>
+            <h1>Koi Fish:</h1>
+            <h2>{selectedKoi.koiType}</h2>
+            <h3>Brief introduction:</h3>
+            <p>{selectedKoi.description}</p>
+            <h3>Suitable Feng shui:</h3>
+            <p>{selectedKoi.element}</p>
+            <h3>The suitable number of koi Fish:</h3>
+            <p>{koiQuantity.description}</p>
+          </div>
+        )}
+      </Modal>
+      {/* Modal for displaying pond details */}
+      <Modal
+        title={selectedPond ? selectedPond.shapeId : ""}
+        visible={visible}
+        onCancel={handleCancel}
+        footer={null}
+      >
+        {selectedPond && (
+          <div>
+            <img src={selectedPond.image} />
+            <h1>Pond Shape:</h1>
+            <h3>{selectedPond.shapeId}</h3>
+            {pondDirection.length > 0 && pondDirection.map((direction) => (
+              <div key={direction.directionId}>
+                <h2>description:</h2>
+                <h3>{direction.description}</h3>
+                <h2>Eight Mansions:</h2>
+                <h3>{direction.eightMansions}</h3>
+                <h2>hướng:</h2>
+                <h3>{direction.directionId}</h3>
+              </div>
+            ))}
+          </div>
+        )}
+      </Modal>
     </div>
   );
 }
