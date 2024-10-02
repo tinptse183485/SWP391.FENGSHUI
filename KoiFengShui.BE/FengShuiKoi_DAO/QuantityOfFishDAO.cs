@@ -32,7 +32,7 @@ namespace FengShuiKoi_DAO
 
         public QuantityOfFish getQuantityByElement(string element)
         {
-            return dbContext.QuantityOfFishes.SingleOrDefault(m => m.Element.Equals(element));
+            return dbContext.QuantityOfFishes.SingleOrDefault(m => m.ElementId.Equals(element));
         }
 
 

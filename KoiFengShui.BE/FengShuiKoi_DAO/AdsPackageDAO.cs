@@ -10,7 +10,7 @@ namespace FengShuiKoi_DAO
     public class AdsPackageDAO
     {
         private SWP391_FengShuiKoiConsulting_DBContext dbContext;
-        private static AdsPackageDAO instance = null;
+        private static AdsPackageDAO instance;
         public static AdsPackageDAO Instance
         {
             get

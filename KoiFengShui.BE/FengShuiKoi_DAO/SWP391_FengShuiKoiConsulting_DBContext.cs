@@ -369,7 +369,7 @@ namespace FengShuiKoi_DAO
                     .HasMaxLength(50)
                     .HasColumnName("ShapeID");
 
-                entity.Property(e => e.PointOfShape1).HasColumnName("PointOfShape");
+                entity.Property(e => e.Point).HasColumnName("Point");
 
                 entity.HasOne(d => d.Element)
                     .WithMany(p => p.PointOfShapes)
