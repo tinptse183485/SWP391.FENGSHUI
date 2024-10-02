@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, DatePicker, Select, Button } from "antd";
+import { Form, DatePicker, Select, Button, Radio } from "antd";
 import api from "../../config/axios";
 import { toast } from "react-toastify";
 import HeaderTemplate from "../../components/header-page";
@@ -15,6 +15,10 @@ function ComputeCompability() {
   const [pondDirections, setPondDirections] = useState([]);
   const [compatibilityResult, setCompatibilityResult] = useState(null);
   const [selectedFish, setSelectedFish] = useState(null);
+  const [elementFilter, setElementFilter] = useState("all");
+  const [colorFilter, setColorFilter] = useState("all");
+  const [elements, setElements] = useState([]);
+  const [colors, setColors] = useState([]);
 
   useEffect(() => {
     fetchData();
@@ -22,15 +26,24 @@ function ComputeCompability() {
 
   const fetchData = async () => {
     try {
-      const [fishResponse, shapeResponse, directionResponse] =
-        await Promise.all([
-          api.get("getKoiList"),
-          api.get("getPondShapes"),
-          api.get("getPondDirections"),
-        ]);
+      const [
+        fishResponse,
+        shapeResponse,
+        directionResponse,
+        elementResponse,
+        colorResponse,
+      ] = await Promise.all([
+        api.get("getKoiList"),
+        api.get("getPondShapes"),
+        api.get("getPondDirections"),
+        api.get("getElements"),
+        api.get("getColors"),
+      ]);
       setFishList(fishResponse.data);
       setPondShapes(shapeResponse.data);
       setPondDirections(directionResponse.data);
+      setElements(elementResponse.data);
+      setColors(colorResponse.data);
     } catch (error) {
       toast.error("Error fetching data");
     }
@@ -48,13 +61,44 @@ function ComputeCompability() {
     }
   };
 
+  const filteredFishList = fishList.filter((fish) => {
+    return (
+      (elementFilter === "all" || fish.element === elementFilter) &&
+      (colorFilter === "all" || fish.color === colorFilter)
+    );
+  });
+
   return (
     <>
       <HeaderTemplate></HeaderTemplate>
       <div className="compute-container">
-        <h1>Tính toán độ tương thích</h1>
+        <h1>Tính toán độ thích hợp</h1>
         <div className="compute-content">
-          <div className="filter">test</div>
+          <div className="filter">
+            <h3>Bộ lọc</h3>
+            <Form layout="vertical">
+              <Form.Item label="Bảng mệnh">
+                <Select value={elementFilter} onChange={setElementFilter}>
+                  <Option value="all">Tất cả</Option>
+                  {elements.map((element) => (
+                    <Option key={element.id} value={element.id}>
+                      {element.name}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+              <Form.Item label="Màu sắc">
+                <Select value={colorFilter} onChange={setColorFilter}>
+                  <Option value="all">Tất cả</Option>
+                  {colors.map((color) => (
+                    <Option key={color.id} value={color.id}>
+                      {color.name}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Form>
+          </div>
           <div className="form-compute">
             <Form
               form={form}
@@ -67,7 +111,22 @@ function ComputeCompability() {
                 label="Ngày tháng năm sinh"
                 rules={[{ required: true, message: "Vui lòng chọn ngày sinh" }]}
               >
-                <DatePicker style={{ width: "100%" }} />
+                <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
+              </Form.Item>
+
+              <Form.Item
+                label="Gender"
+                name="Gender"
+                rules={[
+                  { required: true, message: "Please select your gender!" },
+                ]}
+              >
+                <Form.Item name="Gender" noStyle>
+                  <Radio.Group>
+                    <Radio value="male">Nam</Radio>
+                    <Radio value="female">Nữ</Radio>
+                  </Radio.Group>
+                </Form.Item>
               </Form.Item>
 
               <Form.Item
@@ -76,7 +135,7 @@ function ComputeCompability() {
                 rules={[{ required: true, message: "Vui lòng chọn loại cá" }]}
               >
                 <div className="fish-list">
-                  {fishList.map((fish) => (
+                  {filteredFishList.map((fish) => (
                     <div
                       key={fish.id}
                       className={`fish-card ${
