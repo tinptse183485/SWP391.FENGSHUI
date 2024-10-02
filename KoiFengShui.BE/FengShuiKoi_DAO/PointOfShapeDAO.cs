@@ -91,5 +91,18 @@ namespace FengShuiKoi_DAO
             }
             return isSuccess;
         }
-    }
+
+		public List<PointOfShape> GetGoodShapeByElemnet(string element)
+		{
+			List<PointOfShape> listShape = new List<PointOfShape>();
+
+			foreach (PointOfShape item in this.GetPointOfShapes())
+			{
+				if (item.PointOfShape1 >= 0.75 && item.ElementId.Equals(element))
+					listShape.Add(item);
+			}
+
+			return listShape;
+		}
+	}
 }

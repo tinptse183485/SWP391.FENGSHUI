@@ -10,5 +10,6 @@ namespace FengShuiKoi_Services
     public interface IElementService
     {
         public Element GetElementAndMutualism(string element);
-    }
+		public string GetElementByBirthYear(int birthYear);
+	}
 }
