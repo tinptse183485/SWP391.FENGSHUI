@@ -21,11 +21,12 @@ namespace KoiFengShui.BE.Controllers
 		}
 
 		[HttpGet("element")]
-		public IActionResult GetElementByBirthYear(int birthYear)
+		public IActionResult GetElementByBirthYear(string dob)
 		{
-			try
+            int year = int.Parse(dob.Substring(0, 4));
+            try
 			{
-				var element = _elementService.GetElementByBirthYear(birthYear);
+				var element = _elementService.GetElementByBirthYear(year);
 				return Ok(element);
 			}
 			catch (Exception ex)
