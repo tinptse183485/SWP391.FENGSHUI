@@ -2,8 +2,8 @@ import "./index.css";
 import HeaderTemplate from "../../components/header-page";
 import FooterPage from "../../components/footer-page";
 import { useLocation } from "react-router-dom"; // Import useLocation
-import { Modal } from "antd"; // Import Modal from Ant Design
 import { useState } from "react"; // Import useState
+import { Popover } from 'antd'; // Import Popover from antd
 
 function Consulting() {
   const location = useLocation(); // Get location object
@@ -14,22 +14,60 @@ function Consulting() {
     pondDirection: [],
   }; // Extract  data
 
-  const [visible, setVisible] = useState(false); // State for modal visibility
   const [selectedKoi, setSelectedKoi] = useState(null); // State for selected koi
   const [selectedPond, setSelectedPond] = useState(null); // State for selected pond
+  const [showKoiDetails, setShowKoiDetails] = useState(false); // State for koi details visibility
+  const [showPondDetails, setShowPondDetails] = useState(false); // State for pond details visibility
+
+  const contentKoi = (koi) => (
+    <div className="popup">
+      <img src={`/koi_image/${koi.image}`} alt={koi.image} />
+      <div>
+        <h1>{koi.koiType}</h1>
+        <h3>Brief introduction:</h3>
+        <p>{koi.description}</p>
+        <h3>SUITABLE Feng shui:</h3>
+        <p>{koi.element}</p>
+        <h3>The suitable number of koi fish:</h3>
+        <p>{koiQuantity.description}</p>
+      </div>
+    </div>
+  );
+
+  const contentPond = (pond) => (
+    <div className="pond-popup">
+      <img src={`/pond/${pond.image}`} alt={pond.image} />
+      <h1>{pond.shapeId}</h1>
+      {pondDirection.length > 0 &&
+        pondDirection.map((direction) => (
+          
+            <div key={direction.directionId}>
+            <h2>description:</h2>
+            <h3>{direction.description}</h3>
+            <h2>Eight Mansions:</h2>
+            <h3>{direction.eightMansions}</h3>
+            <h2>hướng:</h2>
+            <h3>{direction.directionId}</h3>
+          </div>
+          
+          
+        ))}
+    </div>
+  );
 
   const showModal = (koi) => {
     setSelectedKoi(koi); // Set selected koi
-    setVisible(true); // Show modal
+    setShowKoiDetails(true); // Show koi details
   };
 
   const showPondModal = (pond) => {
     setSelectedPond(pond); // Set selected pond
-    setVisible(true); // Show modal
+    setShowPondDetails(true); // Show pond details
   };
 
   const handleCancel = () => {
-    setVisible(false); // Hide modal
+    setShowKoiDetails(false); // Hide koi details
+    setShowPondDetails(false); // Hide pond details
   };
 
   return (
@@ -43,13 +81,14 @@ function Consulting() {
           <div className="koi-cards">
             {koiData.length > 0 ? (
               koiData.map((koi) => (
-                // eslint-disable-next-line react/jsx-key
-                <div className="koi-card" onClick={() => showModal(koi)}>
-                  {" "}
-                  {/* Add onClick to show modal */}
-                  <div className="image"> <img  src={`/koi_image/${koi.image}`} alt={koi.image} /></div>  
-                  <h3>{koi.koiType}</h3>
-                </div>
+                <Popover content={contentKoi(koi)} title="Koi Details" trigger="click">
+                  <div className="koi-card">
+                    <div className="image">
+                      <img src={`/koi_image/${koi.image}`} alt={koi.image} />
+                    </div>
+                    <h3>{koi.koiType}</h3>
+                  </div>
+                </Popover>
               ))
             ) : (
               <p>No Koi data available</p>
@@ -62,12 +101,14 @@ function Consulting() {
           <div className="koi-pond">
             {pondShape.length > 0 ? (
               pondShape.map((pond) => (
-                // eslint-disable-next-line react/jsx-key
-                <div className="koi-card" onClick={() => showPondModal(pond)}> 
-                <div className="image"> <img  src={`/pond/${pond.image}`} alt={pond.image} /></div>
-                  <h3>{pond.shapeId}</h3>
-                
-                </div>
+                <Popover content={contentPond(pond)} title="Pond Details" trigger="click">
+                  <div className="koi-card">
+                    <div className="image">
+                      <img src={`/pond/${pond.image}`} alt={pond.image} />
+                    </div>
+                    <h3>{pond.shapeId}</h3>
+                  </div>
+                </Popover>
               ))
             ) : (
               <p>No pond data available</p>
@@ -78,40 +119,27 @@ function Consulting() {
       <footer>
         <FooterPage />
       </footer>
-      {/* Modal for displaying koi details */}
-      <Modal
-        title={selectedKoi ? selectedKoi.koiType : ""}
-        visible={visible}
-        onCancel={handleCancel}
-        footer={null}
-      >
-        {selectedKoi && (
-          <div> 
-            <img src={selectedKoi.image}/>
-            <h1>Koi Fish:</h1>
-            <h2>{selectedKoi.koiType}</h2>
-            <h3>Brief introduction:</h3>
-            <p>{selectedKoi.description}</p>
-            <h3>Suitable Feng shui:</h3>
-            <p>{selectedKoi.element}</p>
-            <h3>The suitable number of koi Fish:</h3>
-            <p>{koiQuantity.description}</p>
-          </div>
-        )}
-      </Modal>
-      {/* Modal for displaying pond details */}
-      <Modal
-        title={selectedPond ? selectedPond.shapeId : ""}
-        visible={visible}
-        onCancel={handleCancel}
-        footer={null}
-      >
-        {selectedPond && (
-          <div>
-            <img src={selectedPond.image} />
-            <h1>Pond Shape:</h1>
-            <h3>{selectedPond.shapeId}</h3>
-            {pondDirection.length > 0 && pondDirection.map((direction) => (
+      {showKoiDetails && (
+        <div className="popup">
+          <img src={`/koi_image/${selectedKoi.image}`} alt={selectedKoi.image} />
+          <h1>Koi Fish:</h1>
+          <h2>{selectedKoi.koiType}</h2>
+          <h3>Brief introduction:</h3>
+          <p>{selectedKoi.description}</p>
+          <h3>Suitable Feng shui:</h3>
+          <p>{selectedKoi.element}</p>
+          <h3>The suitable number of koi Fish:</h3>
+          <p>{koiQuantity.description}</p>
+          <button onClick={handleCancel}>Close</button> {/* Button to close details */}
+        </div>
+      )}
+      {showPondDetails && (
+        <div className="popup">
+          <img src={`/pond/${selectedPond.image}`} alt={selectedPond.image} />
+          <h1>Pond Shape:</h1>
+          <h3>{selectedPond.shapeId}</h3>
+          {pondDirection.length > 0 &&
+            pondDirection.map((direction) => (
               <div key={direction.directionId}>
                 <h2>description:</h2>
                 <h3>{direction.description}</h3>
@@ -121,9 +149,9 @@ function Consulting() {
                 <h3>{direction.directionId}</h3>
               </div>
             ))}
-          </div>
-        )}
-      </Modal>
+          <button onClick={handleCancel}>Close</button> {/* Button to close details */}
+        </div>
+      )}
     </div>
   );
 }
