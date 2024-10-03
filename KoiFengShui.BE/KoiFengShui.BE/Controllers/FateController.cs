@@ -51,7 +51,7 @@ namespace KoiFengShui.BE.Controllers
 		{
 			try
 			{
-				int[] lunarDate = LunarCalendarConverter.ConvertSolarToLunar(YOB, 7); 
+				int[] lunarDate = LunarCalendarConverter.ConvertSolarToLunar(YOB, 7);
 				if (lunarDate == null)
 				{
 					return BadRequest("Không thể tính toán ngày âm lịch cho ngày đã nhập.");

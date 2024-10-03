@@ -1,6 +1,8 @@
 ﻿using FengShuiKoi_BO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -9,16 +11,19 @@ namespace KoiFengShui.BE.TokenService
 {
 	public class Token : IToken
 	{
-		private readonly IConfiguration _config;
 		private readonly SymmetricSecurityKey _key;
+		private readonly string _issuer;
+		private readonly string _audience;
 
 		public Token(IConfiguration config)
 		{
-			_config = config;
-			var signingKey = _config["JWT:SigningKey"];
-			if (string.IsNullOrEmpty(signingKey))
+			var signingKey = Environment.GetEnvironmentVariable("JWT_SIGNING_KEY");
+			_issuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
+			_audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+
+			if (string.IsNullOrEmpty(signingKey) || string.IsNullOrEmpty(_issuer) || string.IsNullOrEmpty(_audience))
 			{
-				throw new InvalidOperationException("JWT:SigningKey is not configured in appsettings.json");
+				throw new InvalidOperationException("JWT configuration is missing in environment variables");
 			}
 			_key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingKey));
 		}
@@ -27,22 +32,25 @@ namespace KoiFengShui.BE.TokenService
 		{
 			var authClaims = new List<Claim>
 			{
-				new Claim(CustomClaimTypes.UserId, user.UserId),
-				new Claim(ClaimTypes.Email, user.Email ?? ""),
-				new Claim(CustomClaimTypes.Role, user.Role ?? "")
+				new Claim(JwtRegisteredClaimNames.Sub, user.UserId),
+				new Claim(JwtRegisteredClaimNames.Email, user.Email ?? ""),
+				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+				new Claim(CustomClaimTypes.Role, user.Role ?? ""),
+				new Claim(CustomClaimTypes.UserId, user.UserId)
 			};
 
-			var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
+			var tokenHandler = new JwtSecurityTokenHandler();
+			var tokenDescriptor = new SecurityTokenDescriptor
+			{
+				Subject = new ClaimsIdentity(authClaims),
+				Expires = DateTime.UtcNow.AddMinutes(15), // Short-lived token
+				Issuer = _issuer,
+				Audience = _audience,
+				SigningCredentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256Signature)
+			};
 
-			var tokenDescriptor = new JwtSecurityToken(
-				issuer: _config["JWT:Issuer"],
-				audience: _config["JWT:Audience"],
-				claims: authClaims,
-				expires: DateTime.Now.AddHours(1),
-				signingCredentials: creds
-			);
-
-			return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
+			var token = tokenHandler.CreateToken(tokenDescriptor);
+			return tokenHandler.WriteToken(token);
 		}
 	}
 

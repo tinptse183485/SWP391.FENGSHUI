@@ -99,52 +99,52 @@ namespace KoiFengShui.BE.Controllers
         }
 
 
-		[HttpPost("GetAveragePointOfKoiTypes")]
-		public IActionResult GetAveragePointOfKoiTypes([FromBody] List<CustomKoiTypeColor> customKoiTypes, string dob)
-		{
-			int year = int.Parse(dob.Substring(0, 4));
-			try
-			{
-				string element = _elementService.GetElementByBirthYear(year);
-				double totalScore = 0;
-				int totalQuantity = 0;
+        [HttpPost("GetAveragePointOfKoiTypes")]
+        public IActionResult GetAveragePointOfKoiTypes([FromBody] List<CustomKoiTypeColor> customKoiTypes, string dob)
+        {
+            int year = int.Parse(dob.Substring(0, 4));
+            try
+            {
+                string element = _elementService.GetElementByBirthYear(year);
+                double totalScore = 0;
+                int totalQuantity = 0;
 
-				foreach (var koiType in customKoiTypes)
-				{
-					double koiScore = 0;
-					double totalPercentage = 0;
+                foreach (var koiType in customKoiTypes)
+                {
+                    double koiScore = 0;
+                    double totalPercentage = 0;
 
-					foreach (var color in koiType.Colors)
-					{
-						var pointForColor = _elementColorService.GetPointElementColor(element, color.ColorId);
-						koiScore += pointForColor * color.Percentage;
-						totalPercentage += color.Percentage;
-					}
+                    foreach (var color in koiType.Colors)
+                    {
+                        var pointForColor = _elementColorService.GetPointElementColor(element, color.ColorId);
+                        koiScore += pointForColor * color.Percentage;
+                        totalPercentage += color.Percentage;
+                    }
 
-					if (Math.Abs(totalPercentage - 1.00) > 0.01) // Cho phép sai số nhỏ
-					{
-						return BadRequest($"Total percentage for koi type {koiType.KoiType} must be 100%");
-					}
+                    if (Math.Abs(totalPercentage - 1.00) > 0.01) // Cho phép sai số nhỏ
+                    {
+                        return BadRequest($"Total percentage for koi type {koiType.KoiType} must be 100%");
+                    }
 
-					totalScore += koiScore;
-					totalQuantity++;
-				}
+                    totalScore += koiScore;
+                    totalQuantity++;
+                }
 
-				if (totalQuantity == 0)
-				{
-					return BadRequest("No koi types provided");
-				}
+                if (totalQuantity == 0)
+                {
+                    return BadRequest("No koi types provided");
+                }
 
-				double averageScore = totalScore / totalQuantity;
-				return Ok(new { AverageScore = Math.Round(averageScore, 3) });
-			}
-			catch (Exception ex)
-			{
-				return StatusCode(500, $"Internal server error: {ex.Message}");
-			}
-		}
+                double averageScore = totalScore / totalQuantity;
+                return Ok(new { AverageScore = Math.Round(averageScore, 3) });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
 
-		[HttpGet("GetPointOfShapeByShapeIDAndDOB")]
+        [HttpGet("GetPointOfShapeByShapeIDAndDOB")]
         public IActionResult GetPointOfShapeByShapeIDAndDOB(string ShapeID, string DOB)
         {
 
@@ -168,8 +168,8 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-        [HttpGet("GetPointOfDirectionByDirectionAndDOB")]
-        public IActionResult GetPointOfDirectionByDirectionAndDOB(string Direction, string DOB, string Gender)
+        [HttpGet("GetPointOfDirectionByDirecDOBGEN")]
+        public IActionResult GetPointOfDirectionByDirecDOBGEN(string Direction, string DOB, string Gender)
         {
             string Life_Palace = "";
             try
@@ -192,6 +192,57 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+        [HttpPost("GetTheCompatibilityOfUserByListFish")]
+        public IActionResult GetTheCompatibilityOfUserByListFish([FromBody] List<CustomKoiTypeColor> customKoiTypes, string ShapeID, string Direction, string DOB, string Gender)
+        {
+            try
+            {
+                var s1Result = GetPointOfDirectionByDirecDOBGEN(Direction, DOB, Gender) as OkObjectResult;
+                var s2Result = GetPointOfShapeByShapeIDAndDOB(ShapeID, DOB) as OkObjectResult;
+                var s3Result = GetAveragePointOfKoiTypes(customKoiTypes, DOB) as OkObjectResult;
 
+                if (s1Result == null || s2Result == null || s3Result == null)
+                {
+                    return BadRequest("Không thể tính toán một hoặc nhiều thành phần của độ tương thích.");
+                }
+
+                double s1 = Convert.ToDouble(s1Result.Value);
+                double s2 = Convert.ToDouble(s2Result.Value);
+                double s3 = ((dynamic)s3Result.Value).AverageScore;
+
+                double compa = (50 * s1 + 20 * s2 + 30 * s3);
+                return Ok(new { Compatibility = Math.Round(compa, 2) });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+        [HttpPost("GetTheCompatibilityOfUserByOneFish")]
+        public IActionResult GetTheCompatibilityOfUserByOneFish(string koiType, string ShapeID, string Direction, string DOB, string Gender)
+        {
+            try
+            {
+                var s1Result = GetPointOfDirectionByDirecDOBGEN(Direction, DOB, Gender) as OkObjectResult;
+                var s2Result = GetPointOfShapeByShapeIDAndDOB(ShapeID, DOB) as OkObjectResult;
+                var s3Result = GetAttribute(koiType, DOB) as OkObjectResult;
+
+                if (s1Result == null || s2Result == null || s3Result == null)
+                {
+                    return BadRequest("Không thể tính toán một hoặc nhiều thành phần của độ tương thích.");
+                }
+
+                double s1 = Convert.ToDouble(s1Result.Value);
+                double s2 = Convert.ToDouble(s2Result.Value);
+                double s3 = Convert.ToDouble(s3Result.Value);
+
+                double compa = (50 * s1 + 20 * s2 + 30 * s3);
+                return Ok(new { Compatibility = Math.Round(compa, 2) });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }
