@@ -49,9 +49,8 @@ namespace FengShuiKoi_DAO
                     listKoi.Add(item);
             }
 
-             return listKoi;
+            return listKoi;
         }
-        
 
         public bool AddKoiVariety(KoiVariety variety)
         {

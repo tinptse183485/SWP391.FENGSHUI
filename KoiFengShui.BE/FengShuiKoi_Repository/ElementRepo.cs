@@ -11,6 +11,8 @@ namespace FengShuiKoi_Repository
     public class ElementRepo : IElementRepo
     {
         public Element GetElementAndMutualism(string element) => ElementDAO.Instance.GetElementAndMutualism(element);
-        public List<Element> GetElement() => ElementDAO.Instance.GetElement();  
+
+        public List<Element> GetElement() => ElementDAO.Instance.GetElement();
+
     }
 }

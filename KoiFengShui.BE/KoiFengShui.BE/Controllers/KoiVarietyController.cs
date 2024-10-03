@@ -2,6 +2,7 @@
 using FengShuiKoi_Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+
 using System.Linq;
 using System.Xml.Linq;
 
@@ -17,7 +18,7 @@ namespace KoiFengShui.BE.Controllers
         private readonly IColorService _colorService;
         private readonly ITypeColorService _typeColorService;
 
-        public KoiVarietyController(IKoiVarietyService koiVarietyService, IQuantityOfFishService quantityService, IElementService elementService, IColorService colorService,  ITypeColorService typeColorService)
+        public KoiVarietyController(IKoiVarietyService koiVarietyService, IQuantityOfFishService quantityService, IElementService elementService, IColorService colorService, ITypeColorService typeColorService)
         {
             _koiVarietyService = koiVarietyService;
             _QuantityService = quantityService;
@@ -25,7 +26,21 @@ namespace KoiFengShui.BE.Controllers
             _colorService = colorService;
             _typeColorService = typeColorService;
         }
-
+        [HttpGet("GetQuantityByDOB")]
+        public IActionResult GetQuantityByElement(string dob)
+        {
+            int year = int.Parse(dob.Substring(0, 4));
+            try
+            {
+                string element = _elementService.GetElementByBirthYear(year);
+                var quantity = _QuantityService.getQuantityByElement(element);
+                return Ok(quantity);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
         [HttpGet("GetListKoiByDOB")]
         public IActionResult GetKoiVarietiesByElement(string dob)
         {
@@ -47,7 +62,7 @@ namespace KoiFengShui.BE.Controllers
             }
         }
 
-       
+
         [HttpGet("GetAllKoi")]
         public IActionResult GetAllKoiVarieties()
         {
@@ -75,10 +90,10 @@ namespace KoiFengShui.BE.Controllers
 
                 foreach (TypeColor typeColor in listTypeColor)
                 {
-                   
+
                     KoiVariety koiVariety = _koiVarietyService.GetKoiVarietyByType(typeColor.KoiType);
 
-                    
+
                     if (koiVariety != null)
                     {
                         listKoi.Add(koiVariety);

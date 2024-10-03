@@ -1,5 +1,7 @@
 ﻿using FengShuiKoi_BO;
+
 using FengShuiKoi_DAO;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +13,10 @@ namespace FengShuiKoi_Services
     public interface IElementService
     {
         public Element GetElementAndMutualism(string element);
-		public string GetElementByBirthYear(int birthYear);
-       
-        public List<Element> GetElement() ;
+        public string GetElementByBirthYear(int birthYear);
+
+
+        public List<Element> GetElement();
     }
+
 }

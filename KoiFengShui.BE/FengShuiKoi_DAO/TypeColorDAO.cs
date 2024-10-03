@@ -33,8 +33,9 @@ namespace FengShuiKoi_DAO
 
         public TypeColor GetPercentage(string color, string type)
         {
-            return dbContext.TypeColors.SingleOrDefault(m => m.Color.Equals(color) && m.KoiType.Equals(type) );
+            return dbContext.TypeColors.SingleOrDefault(m => m.Color.Equals(color) && m.KoiType.Equals(type));
         }
+
         public List<TypeColor> GetAllType()
         {
             return dbContext.TypeColors.ToList();

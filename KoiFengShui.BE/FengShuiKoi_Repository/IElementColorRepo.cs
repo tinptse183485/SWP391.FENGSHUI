@@ -11,5 +11,6 @@ namespace FengShuiKoi_Repository
         bool DeleteElementColor(string element, string color);
         bool UpdateElementColor(ElementColor elementColor);
         public float GetPointElementColor(string element, string color);
+
     }
 }

@@ -36,6 +36,7 @@ namespace FengShuiKoi_DAO
             return dbContext.ElementColors.ToList();
         }
 
+
         public float GetPointElementColor(string element, string color)
         {
             try
@@ -58,6 +59,7 @@ namespace FengShuiKoi_DAO
                 throw new Exception($"An error occurred while getting the color point: {ex.Message}", ex);
             }
         }
+
 
         public bool AddElementColor(ElementColor elementColor)
         {
