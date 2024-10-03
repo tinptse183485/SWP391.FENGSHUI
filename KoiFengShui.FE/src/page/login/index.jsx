@@ -8,7 +8,9 @@ import { GoogleOutlined } from "@ant-design/icons";
 import api from "../../config/axios";
 import { toast } from "react-toastify";
 import "./index.css";
-import { GoogleLogin } from "@react-oauth/google";
+
+import { GoogleLogin } from '@react-oauth/google';
+
 import { jwtDecode } from "jwt-decode";
 
 function Login() {
@@ -19,16 +21,21 @@ function Login() {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
+      
+
       // Send Google user info to your backend
       const response = await api.post("/Account/google-login", {
         email: user.email,
         name: user.displayName,
-        googleId: user.uid,
+
+        googleId: user.uid
+
       });
 
       const { role, token, userId } = response.data;
       localStorage.setItem("token", token);
       localStorage.setItem("userId", userId);
+
 
       if (role === "ADMIN") {
         navigate("/dashboard");
@@ -64,30 +71,34 @@ function Login() {
   //lOGIN GG DEMO
   const responseGoogle = async (response) => {
     try {
-      const result = await api.post("Account/google-login", {
+
+      const result = await api.post('Account/google-login', {
         googleId: response.profileObj.googleId,
         email: response.profileObj.email,
-        name: response.profileObj.name,
+        name: response.profileObj.name
       });
-
+      
       // Xử lý response từ backend
       if (result.data.token) {
-        localStorage.setItem("token", result.data.token);
-        localStorage.setItem("userId", result.data.userId);
-        navigate(result.data.role === "ADMIN" ? "/dashboard" : "/");
+        localStorage.setItem('token', result.data.token);
+        localStorage.setItem('userId', result.data.userId);
+        navigate(result.data.role === 'ADMIN' ? '/dashboard' : '/');
       }
     } catch (error) {
-      toast.error(error.response?.data || "Đăng nhập thất bại");
+      toast.error(error.response?.data || 'Đăng nhập thất bại');
     }
   };
-  //Demo login GG
+//Demo login GG
+
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     try {
       const decoded = jwtDecode(credentialResponse.credential);
       const response = await api.post("/Account/google-login", {
         googleId: decoded.sub,
         email: decoded.email,
-        name: decoded.name,
+
+        name: decoded.name
+
       });
 
       const { role, token, userId } = response.data;
@@ -114,7 +125,9 @@ function Login() {
       <Form labelCol={{ span: 24 }} onFinish={handleLogin}>
         <Form.Item
           label="UserID"
-          name="userId"
+
+          name="UserId"
+
           rules={[
             {
               require: true,
@@ -126,7 +139,9 @@ function Login() {
         </Form.Item>
         <Form.Item
           label="Password"
-          name="password"
+
+          name="Password"
+
           rules={[
             {
               require: true,
@@ -155,7 +170,9 @@ function Login() {
         <GoogleLogin
           onSuccess={handleGoogleLoginSuccess}
           onError={() => {
-            console.log("Login Failed");
+
+            console.log('Login Failed');
+
             toast.error("Google login failed");
           }}
         />

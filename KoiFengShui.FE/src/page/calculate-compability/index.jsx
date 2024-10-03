@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+
 import { Form, DatePicker, Select, Button, Radio, Input } from "antd";
+
 import api from "../../config/axios";
 import { toast } from "react-toastify";
 import HeaderTemplate from "../../components/header-page";
@@ -32,6 +34,7 @@ function ComputeCompability() {
   useEffect(() => {
     fetchData();
   }, []);
+
 
   useEffect(() => {
     const fetchFilteredFishList = async () => {
@@ -92,6 +95,7 @@ function ComputeCompability() {
     }
   };
 
+
   const onFinish = async (values) => {
     try {
       const {
@@ -133,6 +137,7 @@ function ComputeCompability() {
     }
   };
 
+
   return (
     <>
       <HeaderTemplate />
@@ -150,18 +155,22 @@ function ComputeCompability() {
                 <Form.Item
                   name="birthdate"
                   label="Ngày tháng năm sinh"
+
                   rules={[
                     { required: true, message: "Vui lòng chọn ngày sinh" },
                   ]}
+
                 >
                   <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
                 </Form.Item>
                 <Form.Item
                   label="Gender"
                   name="Gender"
+
                   rules={[
                     { required: true, message: "Please select your gender!" },
                   ]}
+
                 >
                   <Radio.Group>
                     <Radio value="male">Nam</Radio>
@@ -170,11 +179,14 @@ function ComputeCompability() {
                 </Form.Item>
               </div>
 
+
+
               <Form.Item
                 label="Chọn loại cá"
                 name="selectedFish"
                 rules={[{ required: true, message: "Vui lòng chọn loại cá" }]}
               >
+
                 <div className="filter-section">
                   <Form layout="inline">
                     <Form.Item label="Bảng mệnh">
@@ -215,13 +227,16 @@ function ComputeCompability() {
                     </Form.Item>
                   </Form>
                 </div>
+
                 <div className="fish-list">
                   {filteredFishList.map((fish) => (
                     <div
                       key={fish.koiType}
+
                       className={`fish-card ${
                         selectedFish === fish.koiType ? "selected" : ""
                       }`}
+
                       onClick={() => {
                         if (selectedFish === fish.koiType) {
                           setSelectedFish(null);
@@ -235,10 +250,12 @@ function ComputeCompability() {
                       <img src={`/koi_image/${fish.image}`} alt={fish.image} />
                       <p>{fish.koiType}</p>
                       <div className="fish-info-box">
+
                         <img
                           src={`/koi_image/${fish.image}`}
                           alt={fish.image}
                         />
+
                       </div>
                     </div>
                   ))}
@@ -248,26 +265,32 @@ function ComputeCompability() {
               <Form.Item
                 name="selectedPondShape"
                 label="Hình dáng hồ"
+
                 rules={[
                   { required: true, message: "Vui lòng chọn hình dáng hồ" },
                 ]}
+
               >
                 <div className="pond-shape-list">
                   {pondShapes.map((shape) => (
                     <div
                       key={shape.shapeId}
+
                       className={`pond-shape-card ${
                         selectedPondShape === shape.shapeId ? "selected" : ""
                       }`}
+
                       onClick={() => {
                         if (selectedPondShape === shape.shapeId) {
                           setSelectedPondShape(null);
                           form.setFieldsValue({ selectedPondShape: null });
                         } else {
                           setSelectedPondShape(shape.shapeId);
+
                           form.setFieldsValue({
                             selectedPondShape: shape.shapeId,
                           });
+
                         }
                       }}
                     >
@@ -280,17 +303,21 @@ function ComputeCompability() {
               <Form.Item
                 name="pondDirection"
                 label="Hướng đặt hồ"
+
                 rules={[
                   { required: true, message: "Vui lòng chọn hướng đặt hồ" },
                 ]}
+
               >
                 <Select placeholder="Vui lòng chọn hướng đặt hồ">
                   <Option value="">Chọn hướng đặt hồ</Option>
                   {pondDirections.map((direction) => (
+
                     <Option
                       key={direction.directionId}
                       value={direction.directionId}
                     >
+
                       {direction.directionId}
                     </Option>
                   ))}
@@ -305,12 +332,14 @@ function ComputeCompability() {
             {compatibilityResult && (
               <div className="result-section">
                 <h2 className="result-title">Kết quả tính toán</h2>
+
                 <p className="result-score">
                   Độ tương hợp: {compatibilityResult}%
                 </p>
                 <p className="result-comment">
                   Nhận xét: {compatibilityResult.comment}
                 </p>
+
               </div>
             )}
           </div>
@@ -321,4 +350,6 @@ function ComputeCompability() {
   );
 }
 
+
 export default ComputeCompability;
+

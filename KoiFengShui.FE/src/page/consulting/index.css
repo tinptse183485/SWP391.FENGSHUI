@@ -1,0 +1,46 @@
+.Header-fish{
+  margin-top: 100px;
+}
+  .koi-cards {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 20px; 
+    justify-content: center; 
+  }
+  
+  .koi-card {
+    border: 1px solid #ccc; 
+    border-radius: 8px; 
+    padding: 16px; 
+    text-align: center; 
+    width: 200px; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .koi-card img {
+    max-width: 100%;
+    height: auto; 
+    border-radius: 4px; 
+  }
+  .image{
+    width: 50%; 
+    height: 50%; 
+    margin-left: 25%; 
+    display: flex;
+    justify-content: center; 
+  }
+.pond-shape-images{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+  .parallelogram {
+    width: 500px;
+    transform: skewX(20deg);
+  }
+  .parallelogram img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }

@@ -3,8 +3,13 @@ import Home from "./page/home";
 import Login from "./page/login";
 import Register from "./page/register";
 import Dashboard from "./components/dashboard";
-import ComputeCompability from "./page/calculate-compability";
-const App = () => {
+
+import Calculation from "./page/calculation";
+import Consulting from "./page/consulting";
+import CalculateCompability from "./page/calculate-compability";
+
+function App() {
+
   const router = createBrowserRouter([
     {
       path: "/",
@@ -23,12 +28,22 @@ const App = () => {
       element: <Dashboard />,
     },
     {
-      path: "compute",
-      element: <ComputeCompability />,
+
+      path: "calculation",
+      element: <Calculation />,
     },
+    {
+      path: "consulting",
+      element: <Consulting />,
+    },
+    {
+      path: "calculate-compability",
+      element: <CalculateCompability />,
+    }  
   ]);
 
   return <RouterProvider router={router} />;
-};
+}
+
 
 export default App;
