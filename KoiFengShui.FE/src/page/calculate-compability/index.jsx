@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Form, DatePicker, Select, Button, Radio } from "antd";
+import { Form, DatePicker, Select, Button, Radio, Modal } from "antd";
 import api from "../../config/axios";
 import { toast } from "react-toastify";
 import HeaderTemplate from "../../components/header-page";
@@ -28,6 +28,7 @@ function ComputeCompability() {
 
   const [colors, setColors] = useState([]);
   const [colorFilter, setColorFilter] = useState("all");
+
 
   useEffect(() => {
     fetchData();
@@ -113,15 +114,42 @@ function ComputeCompability() {
 
   const onFinish = async (values) => {
     try {
-      console.log(values);
-      const response = await api.post("calculateCompatibility", values);
-      toast.success("Calculation successful");
+      const {
+        birthdate,
+        Gender,
+        selectedFish,
+        selectedPondShape,
+        pondDirection,
+      } = values;
 
-      setCompatibilityResult(response.data); // Lưu kết quả vào state
+      // Chuẩn bị payload
+      const payload = {
+        koiType: selectedFish,
+        ShapeID: selectedPondShape,
+        Direction: pondDirection,
+        DOB: birthdate.format("YYYY-MM-DD"),
+        Gender: Gender,
+      };
+
+      console.log("Payload gửi đi:", payload);
+
+      // Gọi API sử dụng query params thay vì body
+      const response = await api.post(
+        `Compatibility/GetTheCompatibilityOfUserByOneFish?koiType=${payload.koiType}&ShapeID=${payload.ShapeID}&Direction=${payload.Direction}&DOB=${payload.DOB}&Gender=${payload.Gender}`
+      );
+
+      console.log("API Response:", response.data);
+
+      if (response.data) {
+        toast.success("Calculation successful");
+        setCompatibilityResult(response.data.compatibility);
+      } else {
+        toast.error("No data received from the server");
+      }
     } catch (error) {
-      toast.error("Error calculating compatibility");
-      setCompatibilityResult(null); // Reset kết quả nếu có lỗi
       console.error("API error:", error);
+      toast.error(error.response?.data || "Error calculating compatibility");
+      setCompatibilityResult(null);
     }
   };
 
@@ -132,6 +160,7 @@ function ComputeCompability() {
   //   );
   // });
 
+  
   return (
     <>
       <HeaderTemplate></HeaderTemplate>
@@ -189,8 +218,8 @@ function ComputeCompability() {
               >
                 <Form.Item name="Gender" noStyle>
                   <Radio.Group>
-                    <Radio value="male">Nam</Radio>
-                    <Radio value="female">Nữ</Radio>
+                    <Radio value="Male">Nam</Radio>
+                    <Radio value="Female">Nữ</Radio>
                   </Radio.Group>
                 </Form.Item>
               </Form.Item>
@@ -293,15 +322,15 @@ function ComputeCompability() {
                 </Button>
               </Form.Item>
             </Form>
-
             {compatibilityResult && (
-              <div className="result-section">
-                <h2>Kết quả tính toán</h2>
-                <p>Độ tương thích: {compatibilityResult.compatibilityScore}</p>
-                <p>Nhận xét: {compatibilityResult.comment}</p>
-                {/* Thêm các thông tin khác tùy theo dữ liệu API trả về */}
-              </div>
-            )}
+  <div className="result-section">
+  <h2>Kết quả tính toán</h2>
+  <p>Độ tương thích: {compatibilityResult}%</p>
+  {/* <p>Nhận xét: {compatibilityResult.comment}</p> */}
+  {/* Thêm các thông tin khác tùy theo dữ liệu API trả về */}
+</div>
+)}
+            
           </div>
         </div>
       </div>
@@ -311,3 +340,4 @@ function ComputeCompability() {
 }
 
 export default ComputeCompability;
+
