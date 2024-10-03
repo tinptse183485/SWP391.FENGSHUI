@@ -45,6 +45,10 @@ const Calculation = () => {
       toast.success("Successfully fetched direction of Pond");
       console.log(reponse4.data);
 
+      
+
+
+
       // Navigate to consulting page with Koi data,Koi quantity, pond shape, and direction
       navigate("/consulting", {
         state: {

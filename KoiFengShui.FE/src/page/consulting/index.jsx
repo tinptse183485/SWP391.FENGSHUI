@@ -80,10 +80,23 @@ function Consulting() {
           
          
           
-          <div className="pond-direction">
-            <h3>Hướng:</h3>
-            
-        </div>
+           <div className="pond-direction">
+  <h3>Hướng:</h3>
+  {pondDirection.map((pond) => (
+    <div key={pond.directionId} className="direction-info">
+      <p>+ Gia chủ cung {pond.lifePalaceId} phù hợp với hướng {Array.isArray(pond.directionId) ? pond.directionId.join(' và ') : pond.directionId} 
+           {" "}là hướng tốt {Array.isArray(pond.eightMansions) ? pond.eightMansions.join(' và ') : pond.eightMansions} theo Bát Trạch</p>
+      {pond.pointOfDirection === 1 && (
+        <p>+ {Array.isArray(pond.eightMansions) ? pond.eightMansions[0] : pond.eightMansions} (hướng Thượng Cát): Đây là hướng mang lại may mắn nhất 
+           cho chủ nhà và tạo ra khí tốt.</p>
+      )}
+      {pond.pointOfDirection === 1 && Array.isArray(pond.eightMansions) && pond.eightMansions.length > 1 && (
+        <p>+ {pond.eightMansions[1]} (hướng Thượng Cát): Đây là hướng mang lại may mắn nhất 
+           cho chủ nhà và tạo ra khí tốt.</p>
+      )}
+    </div>
+  ))}
+</div>
         </div>
       </body>
       <footer>
@@ -95,19 +108,26 @@ function Consulting() {
         visible={visible}
         onCancel={handleCancel}
         footer={null}
+        width={1000}
       >
         {selectedKoi && (
-          <div> 
-            <img style={{width:"100%"}} src={`/koi_image/${selectedKoi.image}`}/>
-            <h1>Koi Fish:</h1>
-            <h2>{selectedKoi.koiType}</h2>
-            <h3>Brief introduction:</h3>
-            <p>{selectedKoi.description}</p>
-            <h3>Suitable Feng shui:</h3>
-            <p>{selectedKoi.element}</p>
-            <h3>The suitable number of koi Fish:</h3>
-            <p>{koiQuantity.description}</p>
+          <div className="modal-content"> 
+            <div className="modal-image"> 
+               <img style={{width:"100%"}} src={`/koi_image/${selectedKoi.image}`}/>
+            </div>
+            
+            <div className="modal-text">
+            
+              <h2>{selectedKoi.koiType}</h2>
+              <h3>Giới thiệu:</h3>
+              <p>{selectedKoi.description}</p>
+              <h3>Mệnh cá:</h3>
+              <p>{selectedKoi.element}</p>
+              <h3>Số lượng :</h3>
+              <p>{koiQuantity.description}</p>
+            </div>
           </div>
+          
         )}
       </Modal>
       {/* Modal for displaying pond details */}
