@@ -22,5 +22,10 @@ namespace FengShuiKoi_Services
         public bool DeleteLifePlaceDirection(string lifePalace, string direction) => lifePlaceDirectionRepo.DeleteLifePlaceDirection(lifePalace, direction);
 
         public bool UpdateLifePlaceDirection(LifePalaceDirection lifePlaceDirection) => lifePlaceDirectionRepo.UpdateLifePlaceDirection(lifePlaceDirection);
+
+
+        public List<LifePalaceDirection> GetGoodDirectionByLifePalace(string LifePalace) => lifePlaceDirectionRepo.GetGoodDirectionByLifePalace(LifePalace);
+
     }
+
 }

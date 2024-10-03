@@ -28,7 +28,7 @@ namespace FengShuiKoi_DAO
 
         public Color GetColorById(string id)
         {
-            return dbContext.Colors.SingleOrDefault(c => c.Color1 == id);
+            return dbContext.Colors.SingleOrDefault(c => c.ColorId== id);
         }
 
         public List<Color> GetColors()
@@ -39,7 +39,7 @@ namespace FengShuiKoi_DAO
         public bool AddColor(Color color)
         {
             bool isSuccess = false;
-            Color existingColor = this.GetColorById(color.Color1);
+            Color existingColor = this.GetColorById(color.ColorId);
             try
             {
                 if (existingColor == null)

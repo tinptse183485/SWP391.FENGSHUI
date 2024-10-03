@@ -12,7 +12,7 @@ namespace FengShuiKoi_BO
             PointOfShapes = new HashSet<PointOfShape>();
         }
 
-        public string Element1 { get; set; } = null!;
+        public string ElementId { get; set; } = null!;
         public string Mutualism { get; set; } = null!;
 
         public virtual QuantityOfFish? QuantityOfFish { get; set; }

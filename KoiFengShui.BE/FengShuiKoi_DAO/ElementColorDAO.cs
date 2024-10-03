@@ -28,7 +28,7 @@ namespace FengShuiKoi_DAO
 
         public ElementColor GetElementColorById(string element, string color)
         {
-            return dbContext.ElementColors.SingleOrDefault(ec => ec.Element == element && ec.Color == color);
+            return dbContext.ElementColors.SingleOrDefault(ec => ec.ElementId == element && ec.ColorId == color);
         }
 
         public List<ElementColor> GetElementColors()
@@ -36,10 +36,35 @@ namespace FengShuiKoi_DAO
             return dbContext.ElementColors.ToList();
         }
 
+
+        public float GetPointElementColor(string element, string color)
+        {
+            try
+            {
+
+                ElementColor existingElementColor = this.GetElementColorById(element, color);
+
+
+                if (existingElementColor != null)
+                {
+                    return (float)existingElementColor.ColorPoint;
+                }
+
+
+                return 0.0f;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception($"An error occurred while getting the color point: {ex.Message}", ex);
+            }
+        }
+
+
         public bool AddElementColor(ElementColor elementColor)
         {
             bool isSuccess = false;
-            ElementColor existingElementColor = this.GetElementColorById(elementColor.Element, elementColor.Color);
+            ElementColor existingElementColor = this.GetElementColorById(elementColor.ElementId, elementColor.ColorId);
             try
             {
                 if (existingElementColor == null)

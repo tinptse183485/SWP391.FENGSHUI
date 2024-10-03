@@ -28,7 +28,7 @@ namespace FengShuiKoi_DAO
 
         public LifePalaceDirection GetLifePlaceDirectionById(string lifePalace, string direction)
         {
-            return dbContext.LifePalaceDirections.SingleOrDefault(lpd => lpd.LifePalace == lifePalace && lpd.Direction == direction);
+            return dbContext.LifePalaceDirections.SingleOrDefault(lpd => lpd.LifePalaceId == lifePalace && lpd.DirectionId == direction);
         }
 
         public List<LifePalaceDirection> GetLifePlaceDirections()
@@ -39,7 +39,7 @@ namespace FengShuiKoi_DAO
         public bool AddLifePlaceDirection(LifePalaceDirection lifePlaceDirection)
         {
             bool isSuccess = false;
-            LifePalaceDirection existingLifePlaceDirection = this.GetLifePlaceDirectionById(lifePlaceDirection.LifePalace, lifePlaceDirection.Direction);
+            LifePalaceDirection existingLifePlaceDirection = this.GetLifePlaceDirectionById(lifePlaceDirection.LifePalaceId, lifePlaceDirection.DirectionId);
             try
             {
                 if (existingLifePlaceDirection == null)
@@ -91,5 +91,19 @@ namespace FengShuiKoi_DAO
             }
             return isSuccess;
         }
+
+
+        public List<LifePalaceDirection> GetGoodDirectionByLifePalace(string LifePalace)
+        {
+            List<LifePalaceDirection> listDirection = new List<LifePalaceDirection>();
+
+            foreach (LifePalaceDirection item in this.GetLifePlaceDirections())
+            {
+                if (item.PointOfDirection == 1 && item.LifePalaceId.Equals(LifePalace))
+                    listDirection.Add(item);
+            }
+            return listDirection;
+        }
     }
+
 }

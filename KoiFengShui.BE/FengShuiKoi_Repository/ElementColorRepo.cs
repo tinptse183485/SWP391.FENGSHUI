@@ -15,5 +15,7 @@ namespace FengShuiKoi_Repository
         public bool DeleteElementColor(string element, string color) => ElementColorDAO.Instance.DeleteElementColor(element, color);
 
         public bool UpdateElementColor(ElementColor elementColor) => ElementColorDAO.Instance.UpdateElementColor(elementColor);
+
+        public float GetPointElementColor(string element, string color) => ElementColorDAO.Instance.GetPointElementColor(element, color);
     }
 }

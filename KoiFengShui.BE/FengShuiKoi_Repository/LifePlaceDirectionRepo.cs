@@ -15,5 +15,9 @@ namespace FengShuiKoi_Repository
         public bool DeleteLifePlaceDirection(string lifePalace, string direction) => LifePlaceDirectionDAO.Instance.DeleteLifePlaceDirection(lifePalace, direction);
 
         public bool UpdateLifePlaceDirection(LifePalaceDirection lifePlaceDirection) => LifePlaceDirectionDAO.Instance.UpdateLifePlaceDirection(lifePlaceDirection);
+
+
+        public List<LifePalaceDirection> GetGoodDirectionByLifePalace(string LifePalace) => LifePlaceDirectionDAO.Instance.GetGoodDirectionByLifePalace(LifePalace);
     }
+
 }

@@ -32,10 +32,15 @@ namespace FengShuiKoi_DAO
 
         public Element GetElementAndMutualism(string element)
         {
-            return dbContext.Elements.SingleOrDefault(m => m.Element1.Equals(element));
+            return dbContext.Elements.SingleOrDefault(m => m.ElementId.Equals(element));
         }
 
 
-    
+        public List<Element> GetElement()
+        {
+            return dbContext.Elements.ToList();
+        }
+
+
     }
 }

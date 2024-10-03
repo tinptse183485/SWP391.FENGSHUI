@@ -10,7 +10,9 @@ namespace FengShuiKoi_DAO
     public class AdsPackageDAO
     {
         private SWP391_FengShuiKoiConsulting_DBContext dbContext;
+
         private static AdsPackageDAO instance = null;
+
         public static AdsPackageDAO Instance
         {
             get
@@ -27,8 +29,8 @@ namespace FengShuiKoi_DAO
         {
             dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
         }
-        
-        
+
+
 
         public List<AdsPackage> GetAdsPackages()
         {
@@ -42,7 +44,7 @@ namespace FengShuiKoi_DAO
         public bool AddAdsPackage(AdsPackage ads)
         {
             bool isSuccess = false;
-            AdsPackage adsPackage = this.GetAdsPackageByAdIDRank(ads.AdId,ads.Rank);
+            AdsPackage adsPackage = this.GetAdsPackageByAdIDRank(ads.AdId, ads.Rank);
             try
             {
                 if (adsPackage == null)
@@ -82,7 +84,7 @@ namespace FengShuiKoi_DAO
         public bool DeleteAdsPackage(string AdID, string Rank)
         {
             bool isSuccess = false;
-            AdsPackage ads = this.GetAdsPackageByAdIDRank(AdID,Rank);
+            AdsPackage ads = this.GetAdsPackageByAdIDRank(AdID, Rank);
             try
             {
                 if (ads != null)

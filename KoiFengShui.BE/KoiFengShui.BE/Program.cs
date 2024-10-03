@@ -46,6 +46,19 @@ namespace KoiFengShui.BE
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IMemberService, MemberService>();
             builder.Services.AddScoped<IToken, Token>();
+            builder.Services.AddScoped<IElementService, ElementService>();
+            builder.Services.AddScoped<IKoiVarietyService, KoiVarietyService>();
+            builder.Services.AddScoped<IQuantityOfFishService, QuantityOfFishService>();
+            builder.Services.AddScoped<IPointOfShapeService, PointOfShapeService>();
+            builder.Services.AddScoped<IShapeService, ShapeService>();
+            builder.Services.AddScoped<LunarCalendarConverter>();
+            builder.Services.AddScoped<ILifePlaceDirectionService, LifePlaceDirectionService>();
+            builder.Services.AddScoped<ILifePlaceService, LifePlaceService>();
+            builder.Services.AddScoped<IDirectionService, DirectionService>();
+            builder.Services.AddScoped<IColorService, ColorService>();
+            builder.Services.AddScoped<IAdsPackageService, AdsPackageService>();
+            builder.Services.AddScoped<ITypeColorService, TypeColorService>();
+            builder.Services.AddScoped<IElementColorService, ElementColorService>();
 
             builder.Services.AddScoped<IElementService, ElementService>();
             builder.Services.AddScoped<IKoiVarietyService, KoiVarietyService>();

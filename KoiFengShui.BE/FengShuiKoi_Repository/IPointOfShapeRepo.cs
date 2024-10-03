@@ -10,5 +10,7 @@ namespace FengShuiKoi_Repository
         bool AddPointOfShape(PointOfShape pointOfShape);
         bool DeletePointOfShape(string element, string shape);
         bool UpdatePointOfShape(PointOfShape pointOfShape);
-    }
+        public List<PointOfShape> GetGoodShapeByElemnet(string element);
+
+	}
 }

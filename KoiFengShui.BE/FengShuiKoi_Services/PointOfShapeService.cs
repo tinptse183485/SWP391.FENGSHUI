@@ -22,5 +22,7 @@ namespace FengShuiKoi_Services
         public bool DeletePointOfShape(string element, string shape) => pointOfShapeRepo.DeletePointOfShape(element, shape);
 
         public bool UpdatePointOfShape(PointOfShape pointOfShape) => pointOfShapeRepo.UpdatePointOfShape(pointOfShape);
-    }
+
+		public List<PointOfShape> GetGoodShapeByElemnet(string element) => pointOfShapeRepo.GetGoodShapeByElemnet(element);
+	}
 }

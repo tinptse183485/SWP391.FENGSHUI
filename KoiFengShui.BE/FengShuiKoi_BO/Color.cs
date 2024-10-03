@@ -11,7 +11,7 @@ namespace FengShuiKoi_BO
             TypeColors = new HashSet<TypeColor>();
         }
 
-        public string Color1 { get; set; } = null!;
+        public string ColorId { get; set; } = null!;
 
         public virtual ICollection<ElementColor> ElementColors { get; set; }
         public virtual ICollection<TypeColor> TypeColors { get; set; }
