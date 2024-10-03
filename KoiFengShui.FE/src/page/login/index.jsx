@@ -8,7 +8,9 @@ import { GoogleOutlined } from "@ant-design/icons";
 import api from "../../config/axios";
 import { toast } from "react-toastify";
 import "./index.css";
+
 import { GoogleLogin } from '@react-oauth/google';
+
 import { jwtDecode } from "jwt-decode";
 
 function Login() {
@@ -18,18 +20,23 @@ function Login() {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
+
       
+
       // Send Google user info to your backend
       const response = await api.post("/Account/google-login", {
         email: user.email,
         name: user.displayName,
+
         googleId: user.uid
+
       });
 
       const { role, token, userId } = response.data;
       localStorage.setItem("token", token);
       localStorage.setItem("userId", userId);
-      
+
+
       if (role === "ADMIN") {
         navigate("/dashboard");
       } else {
@@ -64,6 +71,7 @@ function Login() {
   //lOGIN GG DEMO
   const responseGoogle = async (response) => {
     try {
+
       const result = await api.post('Account/google-login', {
         googleId: response.profileObj.googleId,
         email: response.profileObj.email,
@@ -81,19 +89,22 @@ function Login() {
     }
   };
 //Demo login GG
+
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     try {
       const decoded = jwtDecode(credentialResponse.credential);
       const response = await api.post("/Account/google-login", {
         googleId: decoded.sub,
         email: decoded.email,
+
         name: decoded.name
+
       });
 
       const { role, token, userId } = response.data;
       localStorage.setItem("token", token);
       localStorage.setItem("userId", userId);
-      
+
       if (role === "ADMIN") {
         navigate("/dashboard");
       } else {
@@ -114,7 +125,9 @@ function Login() {
       <Form labelCol={{ span: 24 }} onFinish={handleLogin}>
         <Form.Item
           label="UserID"
+
           name="UserId"
+
           rules={[
             {
               require: true,
@@ -126,7 +139,9 @@ function Login() {
         </Form.Item>
         <Form.Item
           label="Password"
+
           name="Password"
+
           rules={[
             {
               require: true,
@@ -155,7 +170,9 @@ function Login() {
         <GoogleLogin
           onSuccess={handleGoogleLoginSuccess}
           onError={() => {
+
             console.log('Login Failed');
+
             toast.error("Google login failed");
           }}
         />

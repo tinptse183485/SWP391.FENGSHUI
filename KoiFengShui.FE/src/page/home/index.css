@@ -5,6 +5,7 @@ body {
   padding-top: 60px; /* Adjust this value based on your header height */
 }
 
+
 .header-img{
   height: 450px !important;
   width: 100% !important;    
@@ -22,6 +23,7 @@ body {
   
 
 }
+
 .container {
   max-width: 1200px;
   margin: 0 auto;

@@ -34,9 +34,11 @@ function HeaderTemplate() {
         <div className="logo-container">
           <img src={koiImage} alt="Website Logo" className="logo" />
           <div className="website-info">
+
             <Link style={{textDecoration: "none"}} className="website-name" to="/">
             <h1>KOI PHONG THỦY </h1>
             </Link>
+
             <p className="website-description">
           Web phong thủy về cá Koi uy tín nhất VN
             </p>
@@ -47,9 +49,11 @@ function HeaderTemplate() {
         <nav className="main-nav">
           <ul>
             <li>
+
               <Link to="/">
               <a href="#home">Trang chủ</a>
               </Link>
+
             </li>
             <li>
               <a href="#about">About Us</a>
@@ -71,7 +75,8 @@ function HeaderTemplate() {
         </div>
       </div>
      
-      
+
+
     </div>
   );
 }

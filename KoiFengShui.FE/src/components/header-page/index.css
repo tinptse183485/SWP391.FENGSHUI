@@ -4,6 +4,8 @@
 }
 
 
+
+
 .top-bar {
   overflow: hidden;
   display: flex;
@@ -14,6 +16,8 @@
   left: 0;
   right: 0;
 
+
+
   background-color: white;
   z-index: 100;
   transition: transform 0.3s ease-in-out;
@@ -21,7 +25,9 @@
 
 .top-bar h1 {
   color: #3e3e6a;
+
   
+
 }
 
 .logo-container {
@@ -51,11 +57,13 @@
   margin: 0;
 }
 
+
 .website-name h1{
   font-size: 24px;
   margin: 0;
   
 }
+
 
 .website-subtitle {
   font-size: 14px;
@@ -156,6 +164,8 @@
   max-height: 400px;
   object-fit: cover;
 }
+
+
 
 
 
