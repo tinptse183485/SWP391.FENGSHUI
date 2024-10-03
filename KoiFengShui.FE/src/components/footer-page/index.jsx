@@ -24,12 +24,15 @@ function FooterPage() {
                 <a href="/partners">Our Partners: [Partner Logos]</a>
               </li>
             </ul>
-            <div className="service-branches">
-              <p>Service Branches:</p>
-              <p>Showroom 1: 123 ABC, District 1, Ho Chi Minh City</p>
-              <p>Showroom 2: 456 DEF, District 2, Hanoi</p>
+            <div className="contact-info">
+              <p>Phone: 0939 158 128</p>
+              <p>Email: contact@yourwebsite.com</p>
+            </div>
+            <div className="copyright">
+              <p>Copyright &copy; 2024 All rights reserved</p>
             </div>
           </div>
+
           <div className="customer-services">
             <h3>Customer services</h3>
             <ul>
@@ -40,13 +43,6 @@ function FooterPage() {
               <li>Payment policy</li>
             </ul>
           </div>
-        </div>
-        <div className="contact-info">
-          <p>Phone: 0939 158 128</p>
-          <p>Email: contact@yourwebsite.com</p>
-        </div>
-        <div className="copyright">
-          <p>Copyright &copy; 2024 All rights reserved</p>
         </div>
       </footer>
     </div>

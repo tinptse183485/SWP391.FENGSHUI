@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Form, DatePicker, Select, Button, Radio, Modal } from "antd";
+import { Form, DatePicker, Select, Button, Radio, Input } from "antd";
 import api from "../../config/axios";
 import { toast } from "react-toastify";
 import HeaderTemplate from "../../components/header-page";
@@ -29,18 +29,9 @@ function ComputeCompability() {
   const [colors, setColors] = useState([]);
   const [colorFilter, setColorFilter] = useState("all");
 
-
   useEffect(() => {
     fetchData();
   }, []);
-
-  // useEffect(() => {
-  //   if (colorFilter === "all") {
-  //     setFilteredFishList(fishList); // Nếu không chọn màu, hiển thị toàn bộ danh sách cá
-  //   } else {
-  //     fetchFishByColor();
-  //   }
-  // }, [colorFilter, fishList]);
 
   useEffect(() => {
     const fetchFilteredFishList = async () => {
@@ -101,17 +92,6 @@ function ComputeCompability() {
     }
   };
 
-  // const fetchFishByColor = async () => {
-  //   try {
-  //     const response = await api.get(
-  //       `KoiVariety/GetListKoiByColor?color=${colorFilter}`
-  //     );
-  //     setFilteredFishList(response.data);
-  //   } catch (error) {
-  //     toast.error("Error fetching fish by color");
-  //   }
-  // };
-
   const onFinish = async (values) => {
     try {
       const {
@@ -153,47 +133,12 @@ function ComputeCompability() {
     }
   };
 
-  // const filteredFishList = fishList.filter((fish) => {
-  //   return (
-  //     (elementFilter === "all" || fish.element === elementFilter) &&
-  //     (colorFilter === "all" || fish.color === colorFilter)
-  //   );
-  // });
-
-  
   return (
     <>
-      <HeaderTemplate></HeaderTemplate>
+      <HeaderTemplate />
       <div className="compute-container">
-        <h1>Tính toán độ thích hợp</h1>
+        <h1 className="page-title">Tính toán độ tương hợp</h1>
         <div className="compute-content">
-          <div className="filter">
-            <h3>Bộ lọc</h3>
-            <Form layout="vertical">
-              <Form.Item label="Bảng mệnh">
-                <Select value={elementFilter} onChange={setElementFilter}>
-                  <Option value="all">Tất cả</Option>
-                  {elements.map((element) => (
-                    <Option key={element.elementId} value={element.elementId}>
-                      {element.elementId}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
-
-              <Form.Item label="Màu sắc">
-                <Select value={colorFilter} onChange={setColorFilter}>
-                  <Option value="all">Tất cả</Option>
-                  {colors.map((color) => (
-                    <Option key={color.colorId} value={color.colorId}>
-                      {color.colorId}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Form>
-          </div>
-
           <div className="form-compute">
             <Form
               form={form}
@@ -201,34 +146,75 @@ function ComputeCompability() {
               layout="vertical"
               className="compatibility-form"
             >
-              <Form.Item
-                name="birthdate"
-                label="Ngày tháng năm sinh"
-                rules={[{ required: true, message: "Vui lòng chọn ngày sinh" }]}
-              >
-                <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
-              </Form.Item>
-
-              <Form.Item
-                label="Gender"
-                name="Gender"
-                rules={[
-                  { required: true, message: "Please select your gender!" },
-                ]}
-              >
-                <Form.Item name="Gender" noStyle>
+              <div className="birthdate-gender-row">
+                <Form.Item
+                  name="birthdate"
+                  label="Ngày tháng năm sinh"
+                  rules={[
+                    { required: true, message: "Vui lòng chọn ngày sinh" },
+                  ]}
+                >
+                  <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
+                </Form.Item>
+                <Form.Item
+                  label="Gender"
+                  name="Gender"
+                  rules={[
+                    { required: true, message: "Please select your gender!" },
+                  ]}
+                >
                   <Radio.Group>
-                    <Radio value="Male">Nam</Radio>
-                    <Radio value="Female">Nữ</Radio>
+                    <Radio value="male">Nam</Radio>
+                    <Radio value="female">Nữ</Radio>
                   </Radio.Group>
                 </Form.Item>
-              </Form.Item>
+              </div>
 
               <Form.Item
                 label="Chọn loại cá"
                 name="selectedFish"
                 rules={[{ required: true, message: "Vui lòng chọn loại cá" }]}
               >
+                <div className="filter-section">
+                  <Form layout="inline">
+                    <Form.Item label="Bảng mệnh">
+                      <Select value={elementFilter} onChange={setElementFilter}>
+                        <Option value="all">Tất cả</Option>
+                        {elements.map((element) => (
+                          <Option
+                            key={element.elementId}
+                            value={element.elementId}
+                          >
+                            {element.elementId}
+                          </Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
+                    <Form.Item label="Màu sắc">
+                      <Select value={colorFilter} onChange={setColorFilter}>
+                        <Option value="all">Tất cả</Option>
+                        {colors.map((color) => (
+                          <Option key={color.colorId} value={color.colorId}>
+                            {color.colorId}
+                          </Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
+
+                    <Form.Item label="Tên giống cá">
+                      <Input
+                        placeholder="Tìm kiếm theo tên giống cá"
+                        onChange={(e) => {
+                          const searchTerm = e.target.value.toLowerCase();
+                          const filtered = fishList.filter((fish) =>
+                            fish.koiType.toLowerCase().includes(searchTerm)
+                          );
+                          setFilteredFishList(filtered);
+                        }}
+                      />
+                    </Form.Item>
+                  </Form>
+                </div>
                 <div className="fish-list">
                   {filteredFishList.map((fish) => (
                     <div
@@ -237,26 +223,28 @@ function ComputeCompability() {
                         selectedFish === fish.koiType ? "selected" : ""
                       }`}
                       onClick={() => {
-                        // setSelectedFish(fish.koiType);
-                        // form.setFieldsValue({ selectedFish: fish.koiType });
-                        // Nếu cá đang được chọn, bỏ chọn. Nếu chưa chọn, thì chọn.
                         if (selectedFish === fish.koiType) {
-                          setSelectedFish(null); // Bỏ chọn
+                          setSelectedFish(null);
                           form.setFieldsValue({ selectedFish: null });
                         } else {
-                          setSelectedFish(fish.koiType); // Chọn cá
+                          setSelectedFish(fish.koiType);
                           form.setFieldsValue({ selectedFish: fish.koiType });
                         }
                       }}
                     >
                       <img src={`/koi_image/${fish.image}`} alt={fish.image} />
                       <p>{fish.koiType}</p>
-                      {/* <p>{fish.description}</p> */}
+                      <div className="fish-info-box">
+                        <img
+                          src={`/koi_image/${fish.image}`}
+                          alt={fish.image}
+                        />
+                      </div>
                     </div>
                   ))}
                 </div>
               </Form.Item>
-
+              {/* Add the pond shape selection here */}
               <Form.Item
                 name="selectedPondShape"
                 label="Hình dáng hồ"
@@ -272,16 +260,11 @@ function ComputeCompability() {
                         selectedPondShape === shape.shapeId ? "selected" : ""
                       }`}
                       onClick={() => {
-                        // setSelectedPondShape(shape.shapeId);
-                        // form.setFieldsValue({
-                        //   selectedPondShape: shape.shapeId,
-                        // });
-                        // Nếu hình dáng đang được chọn, bỏ chọn. Nếu chưa chọn, thì chọn.
                         if (selectedPondShape === shape.shapeId) {
-                          setSelectedPondShape(null); // Bỏ chọn
+                          setSelectedPondShape(null);
                           form.setFieldsValue({ selectedPondShape: null });
                         } else {
-                          setSelectedPondShape(shape.shapeId); // Chọn hình dáng
+                          setSelectedPondShape(shape.shapeId);
                           form.setFieldsValue({
                             selectedPondShape: shape.shapeId,
                           });
@@ -294,7 +277,6 @@ function ComputeCompability() {
                   ))}
                 </div>
               </Form.Item>
-
               <Form.Item
                 name="pondDirection"
                 label="Hướng đặt hồ"
@@ -304,7 +286,6 @@ function ComputeCompability() {
               >
                 <Select placeholder="Vui lòng chọn hướng đặt hồ">
                   <Option value="">Chọn hướng đặt hồ</Option>
-                  {/* Giá trị trống */}
                   {pondDirections.map((direction) => (
                     <Option
                       key={direction.directionId}
@@ -315,7 +296,6 @@ function ComputeCompability() {
                   ))}
                 </Select>
               </Form.Item>
-
               <Form.Item>
                 <Button type="primary" htmlType="submit">
                   Tính toán
@@ -323,21 +303,22 @@ function ComputeCompability() {
               </Form.Item>
             </Form>
             {compatibilityResult && (
-  <div className="result-section">
-  <h2>Kết quả tính toán</h2>
-  <p>Độ tương thích: {compatibilityResult}%</p>
-  {/* <p>Nhận xét: {compatibilityResult.comment}</p> */}
-  {/* Thêm các thông tin khác tùy theo dữ liệu API trả về */}
-</div>
-)}
-            
+              <div className="result-section">
+                <h2 className="result-title">Kết quả tính toán</h2>
+                <p className="result-score">
+                  Độ tương hợp: {compatibilityResult}%
+                </p>
+                <p className="result-comment">
+                  Nhận xét: {compatibilityResult.comment}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
-      <FooterPage></FooterPage>
+      <FooterPage />
     </>
   );
 }
 
 export default ComputeCompability;
-

@@ -2,11 +2,12 @@
     background-color: #e6f2ff;
     padding: 20px;
     font-family: Arial, sans-serif;
+    margin: 80px 0 0;
   }
   
   .footer-content {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
   }
   
   .footer-left {

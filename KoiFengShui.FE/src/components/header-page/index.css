@@ -3,26 +3,45 @@
 
 }
 
-.top-bar{
+.top-bar {
+  overflow: hidden;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  
+  background-color: white;
+  z-index: 100;
+  transition: transform 0.3s ease-in-out;
+}
+
+.top-bar h1 {
+  color: #3e3e6a;
 }
 
 .logo-container {
   display: flex;
   align-items: center;
+  margin-left: 20px;
 }
 
 .logo {
   width: 20px;
   height: 20px;
-  margin-right: 10px;
+  margin-right: 8px;
 }
 
 .website-info {
   display: flex;
   flex-direction: column;
+}
+
+.website-description{
+  font-size: 13px;
+  margin: 0;
 }
 
 .website-name {
@@ -39,6 +58,7 @@
 .user-actions {
   display: flex;
   align-items: center;
+  margin-right: 20px;
 }
 
 .user-actions button {
@@ -47,6 +67,8 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  
+  
 }
 
 .calculate-btn {
@@ -54,21 +76,50 @@
 }
 
 .login-btn {
-  background-color: #007bff;
-  color: white;
+  background-color: #e6f2ff;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.login-btn:hover {
+  background-color: #ff6347;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+
+.login-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.login-btn a {
+  color: #ffffff;
+  text-decoration: none;
+  display: block;
 }
 
 .description-bar {
   background-color: #ffb6b6;
   padding: 20px 40px; /* Increased padding */
   display: flex;
-  justify-content: space-between;
   align-items: center;
+
 }
 
 .website-description {
   margin: 0;
   font-style: italic;
+  display: flex;
+  margin-left: 90px;
 }
 
 .main-nav ul {
@@ -87,7 +138,7 @@
   color: #333;
 }
 
-/* .main-content {
+.main-content {
   padding: 20px;
 }
 
@@ -96,9 +147,23 @@
   height: auto;
   max-height: 400px;
   object-fit: cover;
-} */
+}
+
+.header-img{
+  height: auto;
+  width: 100%;    
+}
 
 
+
+.carousel{
+  padding: 0; /* Increased padding */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 79px 80px 0 80px;
+
+}
 
 
 
