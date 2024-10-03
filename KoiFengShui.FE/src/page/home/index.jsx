@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from "react-router-dom";
 import { useLocation } from 'react-router-dom';
 import HeaderTemplate from "../../components/header-page";
 import koiImage from "./path-to-koi-image.jpg";
@@ -32,7 +33,42 @@ function Home() {
   return (
     <>
       <HeaderTemplate></HeaderTemplate>
+      <Carousel autoplay className="carousel">
+        <div className="first">
+          <img
+            style={contentStyle}
+            src={  KoiImage1}
+            alt="header-img"
+            className="header-img"
+          />
+        </div>
+        <div>
+          <img
+            style={contentStyle}
+            src={KoiImage2}
+            alt="header-img"
+            className="header-img"
+          />
+        </div>
+        <div>
+          <img
+            style={contentStyle}
+            src={KoiImage1}
+            alt="header-img"
+            className="header-img"
+          />
+        </div>
+        <div>
+          <img
+            style={contentStyle}
+            src={KoiImage2}
+            alt="header-img"
+            className="header-img"
+          />
+        </div>
+      </Carousel>
       <div className="home-content">
+        
         <body>
           {/* Trending Feature */}
           <div className="container">
@@ -45,14 +81,18 @@ function Home() {
                 ></img>
                 <a href="#">
                   {" "}
+                  <Link to="calculation">
                   <h3>Tư vấn cá và hồ theo bản mệnh</h3>
+                  </Link>
                 </a>
               </div>
               <div className="Card">
                 <img src={koiImage} alt="Post Advertisement Function"></img>
                 <a href="#">
                   {" "}
+                  <Link to="calculate-compability">
                   <h3>Tính độ tương hợp của cá và hồ theo bản mệnh</h3>
+                  </Link>
                 </a>
               </div>
               <div className="Card">

@@ -34,7 +34,9 @@ function HeaderTemplate() {
         <div className="logo-container">
           <img src={koiImage} alt="Website Logo" className="logo" />
           <div className="website-info">
-            <h1 className="website-name">KOI PHONG THỦY</h1>
+            <Link style={{textDecoration: "none"}} className="website-name" to="/">
+            <h1>KOI PHONG THỦY </h1>
+            </Link>
             <p className="website-description">
           Web phong thủy về cá Koi uy tín nhất VN
             </p>
@@ -45,7 +47,9 @@ function HeaderTemplate() {
         <nav className="main-nav">
           <ul>
             <li>
+              <Link to="/">
               <a href="#home">Trang chủ</a>
+              </Link>
             </li>
             <li>
               <a href="#about">About Us</a>
@@ -67,40 +71,7 @@ function HeaderTemplate() {
         </div>
       </div>
      
-      <Carousel autoplay className="carousel">
-        <div className="first">
-          <img
-            style={contentStyle}
-            src={Header}
-            alt="header-img"
-            className="header-img"
-          />
-        </div>
-        <div>
-          <img
-            style={contentStyle}
-            src={Koi2}
-            alt="header-img"
-            className="header-img"
-          />
-        </div>
-        <div>
-          <img
-            style={contentStyle}
-            src={Koi2}
-            alt="header-img"
-            className="header-img"
-          />
-        </div>
-        <div>
-          <img
-            style={contentStyle}
-            src={Header}
-            alt="header-img"
-            className="header-img"
-          />
-        </div>
-      </Carousel>
+      
     </div>
   );
 }
