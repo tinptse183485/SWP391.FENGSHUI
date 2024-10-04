@@ -136,6 +136,19 @@ function ComputeCompability() {
       setCompatibilityResult(null);
     }
   };
+  function getCompatibilityComment(compatibilityResult) {
+    if (compatibilityResult < 25) {
+      return "Độ tương thích quá thấp không phù hợp với gia chủ";
+    } else if (compatibilityResult >= 25 && compatibilityResult <= 50) {
+      return "Độ tương thích không quá tốt, gia chủ nên cân nhắc";
+    } else if (compatibilityResult > 50 && compatibilityResult <= 75) {
+      return "Độ tương thích tương đối thích hợp với gia chủ";
+    } else if (compatibilityResult > 75 && compatibilityResult <= 100) {
+      return "Độ tương thích rất tốt với gia chủ, sẽ mang lại may mắn và tài lộc cho gia chủ";
+    } else {
+      return "Không rõ kết quả tương thích";
+    }
+  }
 
 
   return (
@@ -164,11 +177,11 @@ function ComputeCompability() {
                   <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
                 </Form.Item>
                 <Form.Item
-                  label="Gender"
+                  label="Giới tính"
                   name="Gender"
 
                   rules={[
-                    { required: true, message: "Please select your gender!" },
+                    { required: true, message: "Hãy chọn giới tính của bạn!" },
                   ]}
 
                 >
@@ -337,7 +350,7 @@ function ComputeCompability() {
                   Độ tương hợp: {compatibilityResult}%
                 </p>
                 <p className="result-comment">
-                  Nhận xét: {compatibilityResult.comment}
+                  Nhận xét: {getCompatibilityComment(compatibilityResult)}
                 </p>
 
               </div>
