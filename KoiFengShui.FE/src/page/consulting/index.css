@@ -11,24 +11,34 @@
   .koi-card {
     border: 1px solid #ccc; 
     border-radius: 8px; 
-    padding: 16px; 
+    padding: 10px; 
     text-align: center; 
     width: 200px; 
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: block;
+    justify-content: center;
+    
+  }
+  .element-koi{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    
+  }
+
+  .koi-card img {
+    
+    width: 160px;
+    height: 230px; 
+    border-radius: 4px; 
+    
+  }
+  .element-koi img{
+    width: 20px;
+    height: 20px;
   }
   
-  .koi-card img {
-    max-width: 100%;
-    height: auto; 
-    border-radius: 4px; 
-  }
-  .image{
-    width: 50%; 
-    height: 50%; 
-    margin-left: 25%; 
-    display: flex;
-    justify-content: center; 
-  }
 .pond-shape-images{
   display: flex;
   justify-content: center;
