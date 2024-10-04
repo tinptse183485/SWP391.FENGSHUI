@@ -29,8 +29,8 @@ namespace KoiFengShui.BE.Controllers
             _pointOfShapeService = pointOfShapeService;
             _lifePlaceDirectionService = lifePlaceDirectionService;
         }
-        [HttpGet("GetAttribute")]
-        public IActionResult GetAttribute(string koiType, string dob)
+        [HttpGet("GetPointOf1KoiTypes")]
+        public IActionResult GetPointOf1KoiTypes(string koiType, string dob)
         {
             int year = int.Parse(dob.Substring(0, 4));
 
@@ -233,7 +233,6 @@ namespace KoiFengShui.BE.Controllers
                 double s3 = Convert.ToDouble(s3Result.Value);
                 double s2 = Convert.ToDouble(s2Result.Value);
                 double s1 = ((dynamic)s1Result.Value).AverageScore;
-
                 double compa = (0.5 * s1 + 0.2 * s2 + 0.3 * s3);
                 return Ok(new { Compatibility = Math.Round(compa, 2) });
             }
@@ -356,5 +355,6 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+        
     }
 }

@@ -19,14 +19,17 @@ namespace KoiFengShui.BE.Controllers
         private readonly IElementService _elementService;
         private readonly IColorService _colorService;
         private readonly ITypeColorService _typeColorService;
+        private readonly IElementColorService _elementColorService;
 
-        public KoiVarietyController(IKoiVarietyService koiVarietyService, IQuantityOfFishService quantityService, IElementService elementService, IColorService colorService, ITypeColorService typeColorService)
+
+        public KoiVarietyController(IKoiVarietyService koiVarietyService, IQuantityOfFishService quantityService, IElementService elementService, IColorService colorService, ITypeColorService typeColorService, IElementColorService elementColorService)
         {
             _koiVarietyService = koiVarietyService;
             _QuantityService = quantityService;
             _elementService = elementService;
             _colorService = colorService;
             _typeColorService = typeColorService;
+            _elementColorService = elementColorService;
         }
         [HttpGet("GetQuantityByDOB")]
         public IActionResult GetQuantityByElement(string dob)
@@ -43,8 +46,8 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-        [HttpGet("GetListKoiByDOB")]
-        public IActionResult GetKoiVarietiesByElement(string dob)
+        [HttpGet("GetListKoiByDOBOrder")]
+        public IActionResult GetListKoiByDOBOrder(string dob)
         {
             List<KoiVariety> listKoi = new List<KoiVariety>();
             int year = int.Parse(dob.Substring(0, 4));
@@ -52,11 +55,51 @@ namespace KoiFengShui.BE.Controllers
             {
                 string element = _elementService.GetElementByBirthYear(year);
                 var mutual = _elementService.GetElementAndMutualism(element);
-                var list1 = _koiVarietyService.GetKoiVarietiesByElemnet(element);
-                listKoi.AddRange(list1);
-                var list2 = _koiVarietyService.GetKoiVarietiesByElemnet(mutual.Mutualism);
+                var list1 = _koiVarietyService.GetKoiVarietiesByElemnet(mutual.Mutualism);
+                var list2 = _koiVarietyService.GetKoiVarietiesByElemnet(element);
+                 listKoi.AddRange(list1);
                 listKoi.AddRange(list2);
                 return Ok(listKoi);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+        [HttpGet("GetListKoiByDOBOrderS1")]
+        public IActionResult GetListKoiByDOBOrderS1(string dob)
+        {
+            int year = int.Parse(dob.Substring(0, 4));
+            try
+            {
+                string element = _elementService.GetElementByBirthYear(year);
+                var mutual = _elementService.GetElementAndMutualism(element);
+                var list1 = _koiVarietyService.GetKoiVarietiesByElemnet(mutual.Mutualism);
+                var list2 = _koiVarietyService.GetKoiVarietiesByElemnet(element);
+
+                var allKoi = new List<KoiVariety>();
+                allKoi.AddRange(list1);
+                allKoi.AddRange(list2);
+
+                var scoredKoi = new List<(KoiVariety Koi, double Score)>();
+
+                foreach (var koi in allKoi)
+                {
+                    var koiColors = _typeColorService.GetColorsAndPercentages(koi.KoiType);
+                    double totalScore = 0;
+
+                    foreach (var color in koiColors)
+                    {
+                        var pointForColor = _elementColorService.GetPointElementColor(element, color.ColorId);
+                        totalScore += pointForColor * color.Percentage;
+                    }
+
+                    scoredKoi.Add((koi, totalScore));
+                }
+
+                var sortedKoi = scoredKoi.OrderByDescending(k => k.Score).Select(k => k.Koi).ToList();
+
+                return Ok(sortedKoi);
             }
             catch (Exception ex)
             {
