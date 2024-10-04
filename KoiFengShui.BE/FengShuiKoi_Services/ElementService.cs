@@ -11,10 +11,7 @@ using System.Threading.Tasks;
 
 namespace FengShuiKoi_Services
 {
-
 	public class ElementService : IElementService
-
-
 	{
 		private IElementRepo iElementRepo;
 		public ElementService()
@@ -27,8 +24,6 @@ namespace FengShuiKoi_Services
 
 		public List<Element> GetElement() => ElementDAO.Instance.GetElement();
 		public string GetElementByBirthYear(int birthYear)
-
-
 		{
 			int lastTwoDigits = birthYear % 100;
 			int firstNumber = 0;

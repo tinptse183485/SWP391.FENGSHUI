@@ -18,14 +18,14 @@ namespace KoiFengShui.BE
             builder.Services.AddSwaggerGen();
 
             // Configure JWT
-            var jwtSigningKey = builder.Configuration["JWT:SigningKey"];
-            var jwtIssuer = builder.Configuration["JWT:Issuer"];
-            var jwtAudience = builder.Configuration["JWT:Audience"];
+            var jwtSigningKey = Environment.GetEnvironmentVariable("JWT_SIGNING_KEY");
+            var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
+            var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
 
             if (string.IsNullOrEmpty(jwtSigningKey) || string.IsNullOrEmpty(jwtIssuer) || string.IsNullOrEmpty(jwtAudience))
             {
-                throw new InvalidOperationException("JWT configuration is missing or incomplete in appsettings.json");
-            }
+                throw new InvalidOperationException("JWT configuration is missing in environment variables");
+            }   
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -69,7 +69,7 @@ namespace KoiFengShui.BE
 
             {
                 options.AddPolicy("AllowReactApp",
-                    builder => builder.WithOrigins("http://localhost:5174")
+                    builder => builder.WithOrigins("http://localhost:5173")
                                       .AllowAnyMethod()
                                       .AllowAnyHeader());
             });

@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 using System.Reflection;
 
-
-
 namespace KoiFengShui.BE.Controllers
 {
 	[Route("api/[controller]")]
@@ -85,6 +83,5 @@ namespace KoiFengShui.BE.Controllers
 				return StatusCode(500, $"Internal server error: {ex.Message}");
 			}
 		}
-
 	}
 }
