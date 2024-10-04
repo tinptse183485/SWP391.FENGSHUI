@@ -45,6 +45,10 @@ const Calculation = () => {
       toast.success("Successfully fetched direction of Pond");
       console.log(reponse4.data);
 
+      
+
+
+
       // Navigate to consulting page with Koi data,Koi quantity, pond shape, and direction
       navigate("/consulting", {
         state: {
@@ -62,7 +66,7 @@ const Calculation = () => {
   return (
     <AuthenTemplate>
       <div className="Header-Title">
-        <h1>Feng Shui consulting according to your Age</h1>
+        <h1>Tư vấn cá và hồ theo tuổi của bạn</h1>
         <p>
           Hãy để chúng tôi giúp bạn cho loại cá và hỗ trợ theo năm sinh của bạn.
         </p>
@@ -75,22 +79,22 @@ const Calculation = () => {
         onFinish={handleCalculate}
       >
         <Form.Item
-          label="Birthday"
+          label="Ngày tháng năm sinh"
           name="YOB"
-          rules={[{ required: true, message: "Please select your birthday!" }]}
+          rules={[{ required: true, message: "Hãy chọn ngày sinh của bạn!" }]}
         >
           <DatePicker format="YYYY-MM-DD" className="datePicker" />
         </Form.Item>
 
         <Form.Item
-          label="Gender"
+          label="Giới tính"
           name="Gender"
-          rules={[{ required: true, message: "Please select your gender!" }]}
+          rules={[{ required: true, message: "Hãy chọn giới tính của bạn!" }]}
         >
           <Form.Item name="Gender" noStyle>
             <Radio.Group>
-              <Radio value="male">Male</Radio>
-              <Radio value="female">Female</Radio>
+              <Radio value="male">Nam</Radio>
+              <Radio value="female">Nữ</Radio>
             </Radio.Group>
           </Form.Item>
         </Form.Item>
