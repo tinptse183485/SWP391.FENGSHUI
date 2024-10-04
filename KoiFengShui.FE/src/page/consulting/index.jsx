@@ -31,6 +31,39 @@ function Consulting() {
   const handleCancel = () => {
     setVisible(false); // Hide modal
   };
+  const getElementColor = (element) => {
+  switch (element) {
+    case "Hỏa":
+      return "red";
+    case "Thủy":
+      return "blue";
+    case "Mộc":
+      return "green";
+    case "Kim":
+      return "gold";
+    case "Thổ":
+      return "brown";
+    default:
+      return "black";
+  }};
+
+  const getElementIcon = (element) => {
+    switch (element) {
+      case "Hỏa":
+        return "Hoa";
+      case "Thủy":
+        return "Thuy";
+      case "Mộc":
+        return "Moc";
+      case "Kim":
+        return "kim";
+      case "Thổ":
+        return "Tho";
+      default:
+        return "";
+    }
+  };
+
 
   return (
     <div>
@@ -38,23 +71,33 @@ function Consulting() {
         <HeaderTemplate />
       </header>
       <body>
+<div className="Guest-element">
+  <h1>Mệnh của bạn là </h1>
+</div>
+
+
         <div className="Header-fish">
           <h2>Các loại cá phù hợp</h2>
           <div className="koi-cards">
-            {koiData.length > 0 ? (
-              koiData.map((koi) => (
-                // eslint-disable-next-line react/jsx-key
-                <div className="koi-card" onClick={() => showModal(koi)}>
-                  {" "}
-                  {/* Add onClick to show modal */}
-                  <div className="image"> <img  src={`/koi_image/${koi.image}`} alt={koi.image} /></div>  
-                  <h3>{koi.koiType}</h3>
-                </div>
-              ))
-            ) : (
-              <p>No Koi data available</p>
-            )}
-          </div>
+  {koiData.length > 0 ? (
+    koiData.map((koi) => (
+      // eslint-disable-next-line react/jsx-key
+      <div className="koi-card" onClick={() => showModal(koi)}>
+        {" "}
+        <div className="image"> <img  src={`/koi_image/${koi.image}`} alt={koi.image} /></div>  
+        <h3>{koi.koiType}</h3>
+        <div className="element-koi">
+        <h3 style={{ color: getElementColor(koi.element) }}>{koi.element}</h3>
+        <img src={`/Element1/${getElementIcon(koi.element)}.png`} alt={koi.element} />
+        
+        
+        </div>
+      </div>
+    ))
+  ) : (
+    <p>No Koi data available</p>
+  )}
+</div>
         </div>
         <div className="Header-pond">
           <h2>Đặc điểm hồ phù hợp</h2>
