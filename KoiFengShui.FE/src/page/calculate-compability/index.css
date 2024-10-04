@@ -125,6 +125,7 @@ body{
     .fish-card.selected, .pond-shape-card.selected {
       border-color: #1890ff;
       background-color: #e6f7ff;
+      box-shadow: 0 0 10px rgba(24, 144, 255, 0.5);
     }
   
     .ant-btn-primary {
@@ -247,3 +248,18 @@ body{
     font-weight: 600 !important;
   }
 
+
+  .ant-modal-footer .ant-btn-primary {
+    width: 48%;
+  }
+
+  .ant-modal-footer .ant-btn-primary.ant-btn-dangerous {
+    background-color: #ff4d4f;
+    border-color: #ff4d4f;
+  }
+
+  .ant-modal-footer .ant-btn-primary.ant-btn-dangerous:hover,
+  .ant-modal-footer .ant-btn-primary.ant-btn-dangerous:focus {
+    background-color: #ff7875;
+    border-color: #ff7875;
+  }
