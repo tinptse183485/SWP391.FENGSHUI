@@ -94,7 +94,6 @@ namespace KoiFengShui.BE.Controllers
                     totalScore += pointForColor * color.Percentage.Value;
                     totalPercentage += color.Percentage.Value;
                 }
-
                 // Kiểm tra tổng phần trăm
                 if (Math.Abs(totalPercentage - 1.00) > 0.01) // Cho phép sai số nhỏ
                 {
@@ -108,7 +107,6 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-
 
         [HttpPost("GetAveragePointOfKoiTypes")]
         public IActionResult GetAveragePointOfKoiTypes([FromBody] List<CustomKoiTypeColor> customKoiTypes, string dob)
@@ -351,7 +349,6 @@ namespace KoiFengShui.BE.Controllers
                 {
                     return BadRequest("Không thể tính toán độ tương thích với dữ liệu đã cung cấp.");
                 }
-
                 return Ok(new { Compatibility = Math.Round(compa, 2) });
             }
             catch (Exception ex)

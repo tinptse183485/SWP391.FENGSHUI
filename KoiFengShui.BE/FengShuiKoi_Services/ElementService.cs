@@ -21,9 +21,9 @@ namespace FengShuiKoi_Services
 		public Element GetElementAndMutualism(string element) => iElementRepo.GetElementAndMutualism(element);
 
 
+
 		public List<Element> GetElement() => ElementDAO.Instance.GetElement();
 		public string GetElementByBirthYear(int birthYear)
-
 		{
 			int lastTwoDigits = birthYear % 100;
 			int firstNumber = 0;
@@ -73,4 +73,5 @@ namespace FengShuiKoi_Services
 			}
 		}
 	}
+
 }
