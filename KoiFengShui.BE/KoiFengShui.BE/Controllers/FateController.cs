@@ -23,8 +23,8 @@ namespace KoiFengShui.BE.Controllers
 		[HttpGet("element")]
 		public IActionResult GetElementByBirthYear(string dob)
 		{
-            int year = int.Parse(dob.Substring(0, 4));
-            try
+			int year = int.Parse(dob.Substring(0, 4));
+			try
 			{
 				var element = _elementService.GetElementByBirthYear(year);
 				return Ok(element);
@@ -52,7 +52,7 @@ namespace KoiFengShui.BE.Controllers
 		{
 			try
 			{
-				int[] lunarDate = LunarCalendarConverter.ConvertSolarToLunar(YOB, 7); 
+				int[] lunarDate = LunarCalendarConverter.ConvertSolarToLunar(YOB, 7);
 				if (lunarDate == null)
 				{
 					return BadRequest("Không thể tính toán ngày âm lịch cho ngày đã nhập.");
