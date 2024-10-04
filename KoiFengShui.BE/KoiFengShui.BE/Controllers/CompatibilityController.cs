@@ -29,8 +29,8 @@ namespace KoiFengShui.BE.Controllers
             _pointOfShapeService = pointOfShapeService;
             _lifePlaceDirectionService = lifePlaceDirectionService;
         }
-        [HttpGet("GetAttribute")]
-        public IActionResult GetAttribute(string koiType, string dob)
+        [HttpGet("GetPointOf1KoiTypes")]
+        public IActionResult GetPointOf1KoiTypes(string koiType, string dob)
         {
             int year = int.Parse(dob.Substring(0, 4));
 
@@ -67,36 +67,36 @@ namespace KoiFengShui.BE.Controllers
             public double Percentage { get; set; }
         }
 
-        [HttpGet("GetAttributeCustomColor")]
-        public IActionResult GetAttributeCustomColor([FromBody] CustomKoiTypeColor customKoiType, string dob)
-        {
-            int year = int.Parse(dob.Substring(0, 4));
+        //[HttpGet("GetAttributeCustomColor")]
+        //public IActionResult GetAttributeCustomColor([FromBody] CustomKoiTypeColor customKoiType, string dob)
+        //{
+        //    int year = int.Parse(dob.Substring(0, 4));
 
-            try
-            {
-                string element = _elementService.GetElementByBirthYear(year);
-                double totalScore = 0;
-                double totalPercentage = 0;
+        //    try
+        //    {
+        //        string element = _elementService.GetElementByBirthYear(year);
+        //        double totalScore = 0;
+        //        double totalPercentage = 0;
 
-                foreach (var color in customKoiType.Colors)
-                {
-                    var pointForColor = _elementColorService.GetPointElementColor(element, color.ColorId);
-                    totalScore += pointForColor * (color.Percentage);
-                    totalPercentage += color.Percentage;
-                }
-                // Kiểm tra tổng phần trăm
-                if (Math.Abs(totalPercentage) > 1.00) // Cho phép sai số nhỏ
-                {
-                    return BadRequest("Total percentage must be 100%");
-                }
+        //        foreach (var color in customKoiType.Colors)
+        //        {
+        //            var pointForColor = _elementColorService.GetPointElementColor(element, color.ColorId);
+        //            totalScore += pointForColor * (color.Percentage);
+        //            totalPercentage += color.Percentage;
+        //        }
+        //        // Kiểm tra tổng phần trăm
+        //        if (Math.Abs(totalPercentage) > 1.00) // Cho phép sai số nhỏ
+        //        {
+        //            return BadRequest("Total percentage must be 100%");
+        //        }
 
-                return Ok(Math.Round(totalScore, 3));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
+        //        return Ok(Math.Round(totalScore, 3));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"Internal server error: {ex.Message}");
+        //    }
+        //}
 
 
 		[HttpPost("GetAveragePointOfKoiTypes")]
@@ -197,18 +197,18 @@ namespace KoiFengShui.BE.Controllers
         {
             try
             {
-                var s1Result = GetPointOfDirectionByDirecDOBGEN(Direction, DOB, Gender) as OkObjectResult;
+                var s3Result = GetPointOfDirectionByDirecDOBGEN(Direction, DOB, Gender) as OkObjectResult;
                 var s2Result = GetPointOfShapeByShapeIDAndDOB(ShapeID, DOB) as OkObjectResult;
-                var s3Result = GetAveragePointOfKoiTypes(customKoiTypes, DOB) as OkObjectResult;
+                var s1Result = GetAveragePointOfKoiTypes(customKoiTypes, DOB) as OkObjectResult;
 
                 if (s1Result == null || s2Result == null || s3Result == null)
                 {
                     return BadRequest("Không thể tính toán một hoặc nhiều thành phần của độ tương thích.");
                 }
-
-                double s1 = Convert.ToDouble(s1Result.Value);
+                double s1 = ((dynamic)s1Result.Value).AverageScore;
+                double s3 = Convert.ToDouble(s1Result.Value);
                 double s2 = Convert.ToDouble(s2Result.Value);
-                double s3 = ((dynamic)s3Result.Value).AverageScore;
+                
 
                 double compa = (50 * s1 + 20 * s2 + 30 * s3) ;
                 return Ok(new { Compatibility = Math.Round(compa, 2) });
@@ -225,7 +225,7 @@ namespace KoiFengShui.BE.Controllers
             {
                 var s1Result = GetPointOfDirectionByDirecDOBGEN(Direction, DOB, Gender) as OkObjectResult;
                 var s2Result = GetPointOfShapeByShapeIDAndDOB(ShapeID, DOB) as OkObjectResult;
-                var s3Result = GetAttribute(koiType, DOB) as OkObjectResult;
+                var s3Result = GetPointOf1KoiTypes(koiType, DOB) as OkObjectResult;
 
                 if (s1Result == null || s2Result == null || s3Result == null)
                 {
@@ -244,5 +244,6 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+        
     }
 }

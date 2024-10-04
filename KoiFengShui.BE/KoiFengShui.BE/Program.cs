@@ -69,7 +69,7 @@ namespace KoiFengShui.BE
 
             {
                 options.AddPolicy("AllowReactApp",
-                    builder => builder.WithOrigins("http://localhost:5174")
+                    builder => builder.WithOrigins("http://localhost:5173")
                                       .AllowAnyMethod()
                                       .AllowAnyHeader());
             });
