@@ -22,11 +22,12 @@ const { Option } = Select;
 
 function ComputeCompability() {
   const [form] = Form.useForm();
+  
 
   const [filteredFishList, setFilteredFishList] = useState([]);
 
   const [fishList, setFishList] = useState([]);
-  const [selectedFish, setSelectedFish] = useState(null);
+  const [selectedFishes, setSelectedFishes] = useState([]);
 
   const [pondShapes, setPondShapes] = useState([]);
   const [selectedPondShape, setSelectedPondShape] = useState(null);
@@ -47,6 +48,7 @@ function ComputeCompability() {
   const [colorWeights, setColorWeights] = useState([]);
 
   const [allFishColorWeights, setAllFishColorWeights] = useState({});
+  const [allFishColors, setAllFishColors] = useState({});
 
   useEffect(() => {
     fetchData();
@@ -104,12 +106,14 @@ function ComputeCompability() {
         directionResponse,
         elementResponse,
         colorResponse,
+        allColorsResponse
       ] = await Promise.all([
         api.get("KoiVariety/GetAllKoi"),
         api.get("Shape/GetAllShape"),
         api.get("Direction/GetAllDirection"),
         api.get("Element/GetAllElement"),
         api.get("Color/GetAllColor"),
+        api.get("TypeColor/GetAllTypeColor")
       ]);
       setFishList(fishResponse.data);
       setFilteredFishList(fishResponse.data); // Đặt danh sách cá ban đầu
@@ -117,6 +121,22 @@ function ComputeCompability() {
       setPondDirections(directionResponse.data);
       setElements(elementResponse.data);
       setColors(colorResponse.data);
+      
+      
+      const allColors = allColorsResponse.data;
+      const fishColorsMap = {};
+      allColors.forEach(color => {
+        if (!fishColorsMap[color.koiType]) {
+          fishColorsMap[color.koiType] = [];
+        }
+        fishColorsMap[color.koiType].push({
+          colorId: color.colorId,
+          percentage: color.percentage || 0,
+          originalPercentage: color.percentage || 0  // Add this line
+        });
+      });
+      setAllFishColors(fishColorsMap);
+      
     } catch (error) {
       toast.error("Error fetching data");
     }
@@ -133,15 +153,13 @@ function ComputeCompability() {
       } = values;
 
       // Chuẩn bị payload
-      const payload = [
-        {
-          koiType: selectedFish.koiType,
-          colors: selectedFish.colors.map((color, index, array) => ({
-            colorId: color.colorId,
-            percentage: color.percentage,
-          })).filter(color => color.percentage > 0)
-        }
-      ];
+      const payload = selectedFishes.map(fish => ({
+        koiType: fish.koiType,
+        colors: fish.colors.map(color => ({
+          colorId: color.colorId,
+          percentage: color.percentage,
+        })).filter(color => color.percentage > 0)
+      }));
 
       console.log("Payload gửi đi:", payload);
 
@@ -182,6 +200,17 @@ function ComputeCompability() {
   // Hàm hiển thị modal khi người dùng chọn cá
   const showFishDetails = async (fish) => {
     try {
+     
+      
+      setSelectedFishDetail(fish);
+      setIsModalVisible(true);
+    } catch (error) {
+      console.error("Error fetching fish details:", error);
+      toast.error("Error fetching fish details");
+    }
+  };
+  const showFishColor = async (fish) => {
+    try {
       let fishColors;
       if (allFishColorWeights[fish.koiType]) {
         fishColors = allFishColorWeights[fish.koiType];
@@ -190,13 +219,11 @@ function ComputeCompability() {
         const allColors = response.data;
         fishColors = allColors.filter(color => color.koiType === fish.koiType);
       }
-      
       setSelectedFishDetail(fish);
       setColorWeights(fishColors.map(color => ({
         colorId: color.colorId,
         percentage: color.percentage || 0
       })));
-      setIsModalVisible(true);
     } catch (error) {
       console.error("Error fetching fish details:", error);
       toast.error("Error fetching fish details");
@@ -204,47 +231,100 @@ function ComputeCompability() {
   };
 
   // Hàm xử lý thay đổi tỉ trọng màu
-  const handleColorWeightChange = (index, value) => {
-    const updatedWeights = [...colorWeights];
-    updatedWeights[index] = {
-      ...updatedWeights[index],
-      percentage: Math.max(0, Math.min(1, value)) // Ensure value is between 0 and 1
-    };
-    setColorWeights(updatedWeights);
+  const handleColorWeightChange = (koiType, index, value) => {
+    setAllFishColors(prev => {
+      const updatedColors = [...prev[koiType]];
+      updatedColors[index] = {
+        ...updatedColors[index],
+        percentage: Math.max(0, Math.min(1, value))
+      };
+
+      return {
+        ...prev,
+        [koiType]: updatedColors
+      };
+    });
   };
 
   // Hàm kiểm tra tổng tỉ trọng phải là 100%
-  const validateColorWeights = () => {
-    const total = colorWeights.reduce(
-      (sum, color) => sum + color.percentage,
-      0
-    );
-    return Math.abs(total - 1) < 0.001;
-  };
-
-  const handleModalOk = () => {
-    if (validateColorWeights()) {
-      const selectedFishData = {
-        koiType: selectedFishDetail.koiType,
-        colors: colorWeights
-      };
-      form.setFieldsValue({ selectedFish: selectedFishData });
-      setSelectedFish(selectedFishData);
-      setAllFishColorWeights(prev => ({
-        ...prev,
-        [selectedFishDetail.koiType]: colorWeights
-      }));
-      setIsModalVisible(false);
+  const validateColorWeights = (koiType) => {
+    const colors = allFishColors[koiType];
+    const totalPercentage = colors.reduce((sum, color) => sum + color.percentage, 0);
+    if (Math.abs(totalPercentage - 1) < 0.01) {
+      return { valid: true, message: '' };
+    } else if (totalPercentage > 1) {
+      return { valid: false, message: 'Total percentage exceeds 100%' };
     } else {
-      toast.error("Total percentage must be 100%");
+      return { valid: false, message: 'Total percentage is less than 100%' };
     }
   };
-  
-  const handleDeselectFish = () => {
-    form.setFieldsValue({ selectedFish: null });
-    setSelectedFish(null);
-    setSelectedFishDetail(null);
-    setIsModalVisible(false);
+
+  // const handleModalOk = () => {
+  //   if (validateColorWeights()) {
+  //     const selectedFishData = {
+  //       koiType: selectedFishDetail.koiType,
+  //       colors: colorWeights
+  //     };
+  //     form.setFieldsValue({ selectedFish: selectedFishData });
+  //     setSelectedFish(selectedFishData);
+  //     setAllFishColorWeights(prev => ({
+  //       ...prev,
+  //       [selectedFishDetail.koiType]: colorWeights
+  //     }));
+  //     setIsModalVisible(false);
+  //   } else {
+  //     toast.error("Total percentage must be 100%");
+  //   }
+  // };
+  const handleResetColors = (koiType) => {
+    const originalColors = allFishColors[koiType].map(color => ({
+      ...color,
+      percentage: color.originalPercentage || 0
+    }));
+    setAllFishColors(prev => ({
+      ...prev,
+      [koiType]: originalColors
+    }));
+  };
+  // const handleDeselectFish = () => {
+  //   form.setFieldsValue({ selectedFish: null });
+  //   setSelectedFish(null);
+  //   setSelectedFishDetail(null);
+  //   setIsModalVisible(false);
+  // };
+
+  const handleSelectFish = (fish) => {
+    const validation = validateColorWeights(fish.koiType);
+    if (validation.valid) {
+      const selectedFishData = {
+        koiType: fish.koiType,
+        colors: allFishColors[fish.koiType]
+      };
+      setSelectedFishes(prev => {
+        const existingIndex = prev.findIndex(f => f.koiType === fish.koiType);
+        if (existingIndex !== -1) {
+          // If fish is already selected, remove it
+          const newSelected = prev.filter(f => f.koiType !== fish.koiType);
+          form.setFieldsValue({ selectedFishes: newSelected });
+          return newSelected;
+        } else {
+          // If fish is not selected, add it
+          const newSelected = [...prev, selectedFishData];
+          form.setFieldsValue({ selectedFishes: newSelected });
+          return newSelected;
+        }
+      });
+    } else {
+      toast.error(validation.message);
+    }
+  };
+
+  const handleRemoveFish = (fishToRemove) => {
+    setSelectedFishes(prev => {
+      const newSelected = prev.filter(fish => fish.koiType !== fishToRemove.koiType);
+      form.setFieldsValue({ selectedFishes: newSelected });
+      return newSelected;
+    });
   };
 
   return (
@@ -285,8 +365,8 @@ function ComputeCompability() {
               </div>
               <Form.Item
                 label="Chọn loại cá"
-                name="selectedFish"
-                rules={[{ required: true, message: "Vui lòng chọn loại cá" }]}
+                name="selectedFishes"
+                rules={[{ required: true, message: "Vui lòng chọn ít nhất một loại cá" }]}
               >
                 <div className="filter-section">
                   <Form layout="inline">
@@ -330,23 +410,65 @@ function ComputeCompability() {
                 </div>
 
                 
-                <div className="fish-list">
+                <div  className="fish-list">
                   {filteredFishList.map((fish) => (
                     <div 
                       key={fish.koiType} 
-                      className={`fish-card ${selectedFish?.koiType === fish.koiType ? 'selected' : ''}`}
+                      className={`fish-card ${selectedFishes.some(f => f.koiType === fish.koiType) ? 'selected' : ''}`}
                     >
-                      <img src={`/koi_image/${fish.image}`} alt={fish.image} />
+                      <img onClick={() => showFishDetails(fish)} src={`/koi_image/${fish.image}`} alt={fish.image} />
                       <p>{fish.koiType}</p>
                       <div className="fish-info-box">
                         <img src={`/koi_image/${fish.image}`} alt={fish.image} />
                       </div>
-                      <Button
-                        type="primary"
-                        onClick={() => showFishDetails(fish)}
-                      >
-                        {selectedFish?.koiType === fish.koiType ? 'Đã chọn' : 'Xem chi tiết'}
-                      </Button>
+                      {allFishColors[fish.koiType] && (
+                        <div>
+                          <h3>Điều chỉnh tỉ trọng màu</h3>
+                          {allFishColors[fish.koiType].map((color, index) => (
+                            <div
+                              key={color.colorId}
+                              style={{ marginBottom: "16px" }}
+                            >
+                              <span>{color.colorId}: </span>
+                              <Slider
+                                min={0}
+                                max={1}
+                                step={0.01}
+                                value={color.percentage}
+                                onChange={(value) =>
+                                  handleColorWeightChange(fish.koiType, index, value)
+                                }
+                              />
+                              <InputNumber
+                                min={0}
+                                max={1}
+                                step={0.01}
+                                value={color.percentage}
+                                onChange={(value) =>
+                                  handleColorWeightChange(fish.koiType, index, value)
+                                }
+                              />
+                            </div>
+                          ))}
+                          {!validateColorWeights(fish.koiType).valid && (
+                            <p style={{ color: 'red' }}>{validateColorWeights(fish.koiType).message}</p>
+                          )}
+                          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '16px' }}>
+                            <Button 
+                              type="primary" 
+                              onClick={() => handleSelectFish(fish)}
+                              disabled={!validateColorWeights(fish.koiType).valid}
+                            >
+                              {selectedFishes.some(f => f.koiType === fish.koiType) ? 'Xóa cá' : 'Chọn cá'}
+                            </Button>
+                            <Button 
+                              onClick={() => handleResetColors(fish.koiType)}
+                            >
+                              Đặt lại màu
+                            </Button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -356,17 +478,10 @@ function ComputeCompability() {
               <Modal
                 title={`Chi tiết cá ${selectedFishDetail?.koiType}`}
                 visible={isModalVisible}
-                onOk={handleModalOk}
+                // onOk={handleModalOk}
                 onCancel={() => setIsModalVisible(false)}
                 footer={[
-                  <div key="button-container" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Button key="deselect" type="primary" danger onClick={handleDeselectFish}>
-                      Bỏ chọn cá
-                    </Button>
-                    <Button key="submit" type="primary" onClick={handleModalOk}>
-                      Chọn cá
-                    </Button>
-                  </div>
+                  
                 ]}
               >
                 {selectedFishDetail && (
@@ -383,38 +498,7 @@ function ComputeCompability() {
                       {selectedFishDetail.description}
                     </p>
 
-                    <div>
-                      <h3>Điều chỉnh tỉ trọng màu</h3>
-                      {colorWeights.map((color, index) => (
-                        <div
-                          key={color.colorId}
-                          style={{ marginBottom: "16px" }}
-                        >
-                          <span>{color.colorId}: </span>
-                          <Slider
-                            min={0}
-                            max={1}
-                            step={0.01}
-                            value={color.percentage}
-                            onChange={(value) =>
-                              handleColorWeightChange(index, value)
-                            }
-                          />
-                          <InputNumber
-                            min={0}
-                            max={1}
-                            step={0.01}
-                            value={color.percentage}
-                            onChange={(value) =>
-                              handleColorWeightChange(index, value)
-                            }
-                          />
-                        </div>
-                      ))}
-                      {!validateColorWeights() && (
-        <p style={{ color: 'red' }}>Total percentage must be 100%</p>
-      )}
-                    </div>
+                    
                   </div>
                 )}
               </Modal>
