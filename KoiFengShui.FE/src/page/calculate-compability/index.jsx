@@ -416,63 +416,58 @@ function ComputeCompability() {
                       key={fish.koiType} 
                       className={`fish-card ${selectedFishes.some(f => f.koiType === fish.koiType) ? 'selected' : ''}`}
                     >
-                      <div className="fish-card-content">
-                        <div className="fish-card-info">
+                      <div className="fish-card-left">
+                        <div>
                           <img onClick={() => showFishDetails(fish)} src={`/koi_image/${fish.image}`} alt={fish.image} />
                           <p>{fish.koiType}</p>
-                          <div className="fish-info-box">
-                            <img src={`/koi_image/${fish.image}`} alt={fish.image} />
-                          </div>
-                          {allFishColors[fish.koiType] && (
-                            <div className="color-change">
-                              <h3>Điều chỉnh tỉ trọng màu</h3>
-                              {allFishColors[fish.koiType].map((color, index) => (
-                                <div
-                                  key={color.colorId}
-                                  style={{ marginBottom: "16px" }}
-                                >
-                                  <span>{color.colorId}: </span>
-                                  <Slider
-                                    min={0}
-                                    max={1}
-                                    step={0.01}
-                                    value={color.percentage}
-                                    onChange={(value) =>
-                                      handleColorWeightChange(fish.koiType, index, value)
-                                    }
-                                  />
-                                  <InputNumber
-                                    min={0}
-                                    max={1}
-                                    step={0.01}
-                                    value={color.percentage}
-                                    onChange={(value) =>
-                                      handleColorWeightChange(fish.koiType, index, value)
-                                    }
-                                  />
-                                </div>
-                              ))}
-                              {!validateColorWeights(fish.koiType).valid && (
-                                <p style={{ color: 'red' }}>{validateColorWeights(fish.koiType).message}</p>
-                              )}
-                            </div>
-                          )}
                         </div>
-                        <div className="fish-card-buttons">
-                          <Button 
-                            type="primary" 
-                            onClick={() => handleSelectFish(fish)}
-                            disabled={!validateColorWeights(fish.koiType).valid}
-                          >
-                            {selectedFishes.some(f => f.koiType === fish.koiType) ? 'Xóa cá' : 'Chọn cá'}
-                          </Button>
-                          <Button 
-                            onClick={() => handleResetColors(fish.koiType)}
-                          >
-                            Đặt lại màu
-                          </Button>
-                        </div>
+                        {/* <div className="fish-info-box">
+                          <img src={`/koi_image/${fish.image}`} alt={fish.image} />
+                        </div> */}
                       </div>
+                      <div className="fish-card-right">
+  {allFishColors[fish.koiType] && (
+    <>
+      <div style={{ minHeight: "100%", maxHeight: "100%" }}>
+        <h3>Điều chỉnh tỉ trọng màu</h3>
+        {allFishColors[fish.koiType].map((color, index) => (
+          <div key={color.colorId} style={{ marginBottom: "16px" }}>
+            <span>{color.colorId}: </span>
+            <Slider
+              min={0}
+              max={1}
+              step={0.01}
+              value={color.percentage}
+              onChange={(value) => handleColorWeightChange(fish.koiType, index, value)}
+            />
+            <InputNumber
+              min={0}
+              max={1}
+              step={0.01}
+              value={color.percentage}
+              onChange={(value) => handleColorWeightChange(fish.koiType, index, value)}
+            />
+          </div>
+        ))}
+        {!validateColorWeights(fish.koiType).valid && (
+          <p style={{ color: 'red' }}>{validateColorWeights(fish.koiType).message}</p>
+        )}
+      </div>
+      <div className="fish-card-buttons">
+        <Button 
+          type="primary" 
+          onClick={() => handleSelectFish(fish)}
+          disabled={!validateColorWeights(fish.koiType).valid}
+        >
+          {selectedFishes.some(f => f.koiType === fish.koiType) ? 'Xóa cá' : 'Chọn cá'}
+        </Button>
+        <Button onClick={() => handleResetColors(fish.koiType)}>
+          Đặt lại màu
+        </Button>
+      </div>
+    </>
+  )}
+</div>
                     </div>
                   ))}
                 </div>
@@ -489,23 +484,22 @@ function ComputeCompability() {
                 ]}
               >
                 {selectedFishDetail && (
-                  <div className="fish-detail">
-                    <img className="fish-detail-img"
-                    src={`/koi_image/${selectedFishDetail.image}`}
-                    alt={selectedFishDetail.koiType}
+                  <div className="fish-detail-modal">
+                     <img className="fish-detail-image"
+                      src={`/koi_image/${selectedFishDetail.image}`}
+                      alt={selectedFishDetail.koiType}
                     />
-                    <div className="fish-detail-information">
-                    <h1>{selectedFishDetail?.koiType}</h1>
-                    
-                    <p>
-                      <strong>Bản mệnh:</strong> {selectedFishDetail.element}
-                    </p>
-                    <p>
-                      <strong>Giới thiệu:</strong>{" "}
-                      {selectedFishDetail.description}
-                    </p>
+                    <div className="fish-detail-info">
+                      <h1>{selectedFishDetail.koiType}</h1>
+                   
+                      <p>
+                       <strong>Bản mệnh:</strong> {selectedFishDetail.element}
+                      </p>
+                      <p>
+                        <strong>Giới thiệu:</strong>{" "}
+                          {selectedFishDetail.description}
+                      </p>
                     </div>
-
                     
                   </div>
                 )}
