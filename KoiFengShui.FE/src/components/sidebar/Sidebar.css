@@ -1,0 +1,34 @@
+.ant-layout-sider {
+  min-height: 100vh;
+}
+
+.logo {
+    width: 60px; /* Đặt chiều rộng */
+    height: 60px; /* Đặt chiều cao */
+    margin: 8px;
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    border-radius: 50%; /* Tạo hình tròn */
+    overflow: hidden; /* Ẩn phần thừa nếu có */
+}
+
+.logout-container {
+  position: absolute;
+  bottom: 64px;
+  width: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+  
+}
+
+.logout-container .ant-btn {
+  width: 100%;
+}
+
+.ant-menu-item a {
+  color: inherit;
+}

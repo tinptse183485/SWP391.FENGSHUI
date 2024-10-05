@@ -1,4 +1,7 @@
-.koi-cards {
+  .Header-fish{
+  margin-top: 100px;
+  }
+  .koi-cards {
     display: flex;
     flex-wrap: wrap; 
     gap: 20px; 
@@ -6,83 +9,71 @@
   }
   
   .koi-card {
+    border: 1px solid #ccc; 
     border-radius: 8px; 
-    padding: 16px; 
+    padding: 10px; 
     text-align: center; 
-    width: 180px; /* Reduced width for smaller cards */
+    width: 200px; 
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s; /* Smooth transition for hover effect */
+    display: block;
+    justify-content: center;
+    
   }
-  
+  .element-koi{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    
+  }
+
   .koi-card img {
-    max-width: 100%;
-    height: auto; 
+    
+    width: 160px;
+    height: 230px; 
     border-radius: 4px; 
+    
+  }
+  .element-koi img{
+    width: 20px;
+    height: 20px;
+  }
+  
+.pond-shape-images{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+  .parallelogram {
+    width: 750px;
+    transform: skewX(0deg);
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  .parallelogram img{
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  .modal-content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    min-width: 800px;
+  }
+  .modal-image {
+    flex: 1;
+    height: 100%;
+  }
+  .modal-text{
+    font-size: 20px;
+    flex: 1;
   }
   
   
-  .popup {
-    background-color: white; /* Background color */
-    border: 1px solid #ccc; /* Border style */
-    border-radius: 8px; /* Rounded corners */
-    padding: 16px; /* Padding around content */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow effect */
-    display: flex; /* Flexbox for horizontal layout */
-    align-items: center; /* Center items vertically */
-    max-width: 600px; /* Maximum width for horizontal layout */
-  }
-
-  .popup img {
-    width: 100px; /* Smaller image size */
-    height: auto; /* Maintain aspect ratio */
-    border-radius: 4px; /* Rounded image corners */
-    margin-right: 16px; /* Space between image and text */
-  }
-
-  .popup h1 {
-    font-size: 24px; /* Larger title */
-    color: #ff4500; /* Title color */
-    margin: 0; /* Remove default margin */
-  }
-
-  .popup h2, .popup h3 {
-    margin: 4px 0; /* Margin for headings */
-  }
-/* Pond Popup Styles */
-.pond-popup {
-  background-color: white; /* Background color */
-  border: 1px solid #ccc; /* Border style */
-  border-radius: 8px; /* Rounded corners */
-  padding: 20px; /* Padding around content */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow effect */
-  display: flex; /* Flexbox for horizontal layout */
-  align-items: center; /* Center items vertically */
-  max-width: 600px; /* Maximum width for horizontal layout */
-}
-
-.pond-popup img {
-  width: 150px; /* Adjusted image size */
-  height: auto; /* Maintain aspect ratio */
-  border-radius: 4px; /* Rounded image corners */
-  margin-right: 20px; /* Space between image and text */
-}
-
-.pond-popup h1 {
-  font-size: 28px; /* Larger title */
-  color: #ff4500; /* Title color */
-  margin: 0; /* Remove default margin */
-}
-
-.pond-popup h2 {
-  font-size: 20px; /* Size for subheadings */
-  margin: 10px 0 5px; /* Margin for spacing */
-}
-
-.pond-popup h3 {
-  font-size: 16px; /* Size for descriptions */
-  margin: 0 0 10px; /* Margin for spacing */
-}
-
-.direction {
-  margin-bottom: 20px; /* Space between each direction */
-}

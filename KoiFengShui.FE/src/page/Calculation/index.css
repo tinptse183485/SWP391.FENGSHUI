@@ -1,9 +1,10 @@
+
 .Header-Title{
   font-family: Arial, sans-serif;
 }
 .Header-Title h1{
   text-align: center;
-  font-size: 24px;
+  font-size: 32px;
   margin-bottom: 10px;
   color: #333;
 }
@@ -18,3 +19,4 @@
 .datePicker{
   width: 100%;
 }
+
