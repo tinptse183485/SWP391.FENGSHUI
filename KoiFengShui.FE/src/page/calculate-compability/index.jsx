@@ -239,6 +239,20 @@ function ComputeCompability() {
         ...updatedColors[index],
         percentage: Math.max(0, Math.min(1, value))
       };
+      setFishPoints(prev => {
+          const newPoints = { ...prev };
+          delete newPoints[koiType];
+          return newPoints;
+        });
+
+      // Check if the fish is currently selected
+      const isSelected = selectedFishes.some(fish => fish.koiType === koiType);
+      if (isSelected) {
+        // If it's selected, remove it from selectedFishes
+        setSelectedFishes(prev => prev.filter(fish => fish.koiType !== koiType));
+        // Also remove the fish point
+        
+      }
 
       return {
         ...prev,
@@ -285,7 +299,13 @@ function ComputeCompability() {
     setAllFishColors(prev => ({
       ...prev,
       [koiType]: originalColors
+
     }));
+    setFishPoints(prev => {
+      const newPoints = { ...prev };
+      delete newPoints[koiType];
+      return newPoints;
+    });
   };
   // const handleDeselectFish = () => {
   //   form.setFieldsValue({ selectedFish: null });
@@ -333,6 +353,11 @@ function ComputeCompability() {
             // If fish is already selected, remove it
             const newSelected = prev.filter(f => f.koiType !== fish.koiType);
             form.setFieldsValue({ selectedFishes: newSelected });
+            setFishPoints(prev => {
+              const newPoints = { ...prev };
+              delete newPoints[fish.koiType];
+              return newPoints;
+            });
             return newSelected;
           } else {
             // If fish is not selected, add it
