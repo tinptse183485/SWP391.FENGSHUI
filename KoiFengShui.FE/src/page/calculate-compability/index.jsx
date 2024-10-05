@@ -28,6 +28,7 @@ function ComputeCompability() {
 
   const [fishList, setFishList] = useState([]);
   const [selectedFishes, setSelectedFishes] = useState([]);
+  const [fishPoints, setFishPoints] = useState({});
 
   const [pondShapes, setPondShapes] = useState([]);
   const [selectedPondShape, setSelectedPondShape] = useState(null);
@@ -293,27 +294,57 @@ function ComputeCompability() {
   //   setIsModalVisible(false);
   // };
 
-  const handleSelectFish = (fish) => {
+  const handleSelectFish = async (fish) => {
     const validation = validateColorWeights(fish.koiType);
     if (validation.valid) {
       const selectedFishData = {
         koiType: fish.koiType,
         colors: allFishColors[fish.koiType]
       };
-      setSelectedFishes(prev => {
-        const existingIndex = prev.findIndex(f => f.koiType === fish.koiType);
-        if (existingIndex !== -1) {
-          // If fish is already selected, remove it
-          const newSelected = prev.filter(f => f.koiType !== fish.koiType);
-          form.setFieldsValue({ selectedFishes: newSelected });
-          return newSelected;
-        } else {
-          // If fish is not selected, add it
-          const newSelected = [...prev, selectedFishData];
-          form.setFieldsValue({ selectedFishes: newSelected });
-          return newSelected;
-        }
-      });
+      
+      try {
+        // Get the DOB from the form
+        const dob = form.getFieldValue('birthdate');
+        const formattedDob = dob ? dob.format('YYYY-MM-DD') : '';
+  
+        // Prepare the payload for the API
+        const payload = {
+          koiType: fish.koiType,
+          colors: allFishColors[fish.koiType].map(color => ({
+            colorId: color.colorId,
+            percentage: color.percentage
+          }))
+        };
+  
+        // Fetch fish point from API
+        const response = await api.post('Compatibility/GetAttributeCustomColor', payload, {
+          params: { dob: formattedDob }
+        });
+        const fishPoint = response.data;
+        
+        setFishPoints(prev => ({
+          ...prev,
+          [fish.koiType]: fishPoint
+        }));
+        
+        setSelectedFishes(prev => {
+          const existingIndex = prev.findIndex(f => f.koiType === fish.koiType);
+          if (existingIndex !== -1) {
+            // If fish is already selected, remove it
+            const newSelected = prev.filter(f => f.koiType !== fish.koiType);
+            form.setFieldsValue({ selectedFishes: newSelected });
+            return newSelected;
+          } else {
+            // If fish is not selected, add it
+            const newSelected = [...prev, selectedFishData];
+            form.setFieldsValue({ selectedFishes: newSelected });
+            return newSelected;
+          }
+        });
+      } catch (error) {
+        console.error("Error fetching fish point:", error);
+        toast.error("Error fetching fish point");
+      }
     } else {
       toast.error(validation.message);
     }
@@ -420,10 +451,8 @@ function ComputeCompability() {
                         <div>
                           <img onClick={() => showFishDetails(fish)} src={`/koi_image/${fish.image}`} alt={fish.image} />
                           <p>{fish.koiType}</p>
+                          
                         </div>
-                        {/* <div className="fish-info-box">
-                          <img src={`/koi_image/${fish.image}`} alt={fish.image} />
-                        </div> */}
                       </div>
                       <div className="fish-card-right">
   {allFishColors[fish.koiType] && (
@@ -452,6 +481,9 @@ function ComputeCompability() {
         {!validateColorWeights(fish.koiType).valid && (
           <p style={{ color: 'red' }}>{validateColorWeights(fish.koiType).message}</p>
         )}
+        {fishPoints[fish.koiType] !== undefined && (
+  <p className="fish-point">Độ tương hợp: {(fishPoints[fish.koiType] * 100).toFixed(2)}%</p>
+)}
       </div>
       <div className="fish-card-buttons">
         <Button 
