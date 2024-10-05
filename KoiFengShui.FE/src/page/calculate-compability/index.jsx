@@ -416,59 +416,63 @@ function ComputeCompability() {
                       key={fish.koiType} 
                       className={`fish-card ${selectedFishes.some(f => f.koiType === fish.koiType) ? 'selected' : ''}`}
                     >
-                      <img onClick={() => showFishDetails(fish)} src={`/koi_image/${fish.image}`} alt={fish.image} />
-                      <p>{fish.koiType}</p>
-                      <div className="fish-info-box">
-                        <img src={`/koi_image/${fish.image}`} alt={fish.image} />
-                      </div>
-                      {allFishColors[fish.koiType] && (
-                        <div>
-                          <h3>Điều chỉnh tỉ trọng màu</h3>
-                          {allFishColors[fish.koiType].map((color, index) => (
-                            <div
-                              key={color.colorId}
-                              style={{ marginBottom: "16px" }}
-                            >
-                              <span>{color.colorId}: </span>
-                              <Slider
-                                min={0}
-                                max={1}
-                                step={0.01}
-                                value={color.percentage}
-                                onChange={(value) =>
-                                  handleColorWeightChange(fish.koiType, index, value)
-                                }
-                              />
-                              <InputNumber
-                                min={0}
-                                max={1}
-                                step={0.01}
-                                value={color.percentage}
-                                onChange={(value) =>
-                                  handleColorWeightChange(fish.koiType, index, value)
-                                }
-                              />
-                            </div>
-                          ))}
-                          {!validateColorWeights(fish.koiType).valid && (
-                            <p style={{ color: 'red' }}>{validateColorWeights(fish.koiType).message}</p>
-                          )}
-                          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '16px' }}>
-                            <Button 
-                              type="primary" 
-                              onClick={() => handleSelectFish(fish)}
-                              disabled={!validateColorWeights(fish.koiType).valid}
-                            >
-                              {selectedFishes.some(f => f.koiType === fish.koiType) ? 'Xóa cá' : 'Chọn cá'}
-                            </Button>
-                            <Button 
-                              onClick={() => handleResetColors(fish.koiType)}
-                            >
-                              Đặt lại màu
-                            </Button>
+                      <div className="fish-card-content">
+                        <div className="fish-card-info">
+                          <img onClick={() => showFishDetails(fish)} src={`/koi_image/${fish.image}`} alt={fish.image} />
+                          <p>{fish.koiType}</p>
+                          <div className="fish-info-box">
+                            <img src={`/koi_image/${fish.image}`} alt={fish.image} />
                           </div>
+                          {allFishColors[fish.koiType] && (
+                            <div className="color-change">
+                              <h3>Điều chỉnh tỉ trọng màu</h3>
+                              {allFishColors[fish.koiType].map((color, index) => (
+                                <div
+                                  key={color.colorId}
+                                  style={{ marginBottom: "16px" }}
+                                >
+                                  <span>{color.colorId}: </span>
+                                  <Slider
+                                    min={0}
+                                    max={1}
+                                    step={0.01}
+                                    value={color.percentage}
+                                    onChange={(value) =>
+                                      handleColorWeightChange(fish.koiType, index, value)
+                                    }
+                                  />
+                                  <InputNumber
+                                    min={0}
+                                    max={1}
+                                    step={0.01}
+                                    value={color.percentage}
+                                    onChange={(value) =>
+                                      handleColorWeightChange(fish.koiType, index, value)
+                                    }
+                                  />
+                                </div>
+                              ))}
+                              {!validateColorWeights(fish.koiType).valid && (
+                                <p style={{ color: 'red' }}>{validateColorWeights(fish.koiType).message}</p>
+                              )}
+                            </div>
+                          )}
                         </div>
-                      )}
+                        <div className="fish-card-buttons">
+                          <Button 
+                            type="primary" 
+                            onClick={() => handleSelectFish(fish)}
+                            disabled={!validateColorWeights(fish.koiType).valid}
+                          >
+                            {selectedFishes.some(f => f.koiType === fish.koiType) ? 'Xóa cá' : 'Chọn cá'}
+                          </Button>
+                          <Button 
+                            onClick={() => handleResetColors(fish.koiType)}
+                          >
+                            Đặt lại màu
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -476,7 +480,7 @@ function ComputeCompability() {
 
               {/* Hiển thị modal trong phần JSX */}
               <Modal
-                title={`Chi tiết cá ${selectedFishDetail?.koiType}`}
+               
                 visible={isModalVisible}
                 // onOk={handleModalOk}
                 onCancel={() => setIsModalVisible(false)}
@@ -485,11 +489,14 @@ function ComputeCompability() {
                 ]}
               >
                 {selectedFishDetail && (
-                  <div>
-                    <img
-                      src={`/koi_image/${selectedFishDetail.image}`}
-                      alt={selectedFishDetail.koiType}
+                  <div className="fish-detail">
+                    <img className="fish-detail-img"
+                    src={`/koi_image/${selectedFishDetail.image}`}
+                    alt={selectedFishDetail.koiType}
                     />
+                    <div className="fish-detail-information">
+                    <h1>{selectedFishDetail?.koiType}</h1>
+                    
                     <p>
                       <strong>Bản mệnh:</strong> {selectedFishDetail.element}
                     </p>
@@ -497,6 +504,7 @@ function ComputeCompability() {
                       <strong>Giới thiệu:</strong>{" "}
                       {selectedFishDetail.description}
                     </p>
+                    </div>
 
                     
                   </div>

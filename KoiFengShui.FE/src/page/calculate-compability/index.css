@@ -78,7 +78,8 @@ body{
     .fish-list, .pond-shape-list {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 15px;
+      row-gap: 40px;
+      column-gap: 15px;
       margin-top: 20px;
     }
   
@@ -88,20 +89,22 @@ body{
       padding: 15px;
       cursor: pointer;
       transition: all 0.3s ease;
-      display: block;
+      display: flex;
+      flex-direction: column;
       align-items: center;
       background-color: #ffffff;
-      height: auto;
+      height: 100%;
       position: relative;
       z-index: 1;
-      overflow: visible;
-    }
+      
+   }
   
     .fish-card img, .pond-shape-card img {
       width: 100%;
       height: 150px;
       object-fit: cover;
       border-radius: 8px;
+      flex:1;
       
     }
   
@@ -110,10 +113,12 @@ body{
       text-align: center;
       font-weight: 500;
       font-size: 14px;
-      overflow: hidden;
+      overflow: visible;
+      word-wrap: break-word;
       text-overflow: ellipsis;
-      white-space: nowrap;
+      white-space: normal;
       width: 100%;
+      
     }
   
     .fish-card:hover, .pond-shape-card:hover {
@@ -262,4 +267,53 @@ body{
   .ant-modal-footer .ant-btn-primary.ant-btn-dangerous:focus {
     background-color: #ff7875;
     border-color: #ff7875;
+  }
+
+  .fish-card-buttons {
+    text-align: center;
+    padding-top: 10px;
+  }
+  
+
+  .fish-card-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .fish-card-info {
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+
+  .fish-card-buttons {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: auto;
+    padding-top: 10px;
+  }
+
+  .fish-card-buttons button {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+  .color-change{
+    width: 100%;
+  }
+
+  .fish-detail{
+    display: flex;
+    
+  }
+  
+  .fish-detail-information{
+    flex:1;
+  }
+  .fish-detail-img{
+    height: 450px;
+    width: 200px;
+    flex:1;
   }
