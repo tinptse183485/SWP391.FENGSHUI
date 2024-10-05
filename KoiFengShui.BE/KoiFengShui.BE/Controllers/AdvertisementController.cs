@@ -14,16 +14,17 @@ namespace KoiFengShui.BE.Controllers
     {
         private readonly IPackageService _packageService;
 
-      
+        private readonly IElementService _elementService;
         private readonly IAccountService _accountService;
         private readonly IAdsPackageService _adsPackageService;
         private readonly IAdvertisementService _advertisementService;
-        public AdvertisementController(IPackageService packageService, IAdvertisementService advertisementService, IAdsPackageService adsPackageService, IAccountService accountService)
+        public AdvertisementController(IPackageService packageService, IAdvertisementService advertisementService, IAdsPackageService adsPackageService, IAccountService accountService, IElementService elementService)
         {
             _packageService = packageService;
             _adsPackageService = adsPackageService;
             _advertisementService = advertisementService;
             _accountService = accountService;
+            _elementService = elementService;
         }
 
         [HttpGet("GetAllAdvertisement")]
@@ -43,6 +44,26 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+        [HttpGet("GetAllAdvertisementByAdId")]
+        public IActionResult GetAllAdvertisementByAdId(string adId)
+        {
+            
+
+            try
+            {
+                var advertisements = _advertisementService.GetAdvertisementByAdID(adId);
+                if(advertisements == null)
+                {
+                    return BadRequest("Không tìm thấy quảng cáo");
+                }
+                
+                return Ok(advertisements);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
         private string GenerateUniqueAdId()
         {
             Random random = new Random();
@@ -50,12 +71,12 @@ namespace KoiFengShui.BE.Controllers
             return $"AD{randomNumber:D3}";
         }
         [HttpPost("AddAdvertisement")]
-        public IActionResult AddAdvertisement(AdvertisementDTO advertisementDto, string rank, string memberID, string status)
+        public IActionResult AddAdvertisement(AdvertisementDTO advertisementDto, string rank)
         {
             try
             {
                 // Validate input
-                if (string.IsNullOrWhiteSpace(rank) || string.IsNullOrWhiteSpace(memberID) || string.IsNullOrWhiteSpace(status))
+                if (string.IsNullOrWhiteSpace(rank) || string.IsNullOrWhiteSpace(advertisementDto.AdId))
                 {
                     return BadRequest("Rank, Member ID, and Status are required.");
                 }
@@ -64,12 +85,12 @@ namespace KoiFengShui.BE.Controllers
                     return BadRequest(" There not have the package. ");
 
                 }
-                if (_accountService.GetAccountByUserID(memberID) == null)
+                if (_accountService.GetAccountByUserID(advertisementDto.UserId) == null)
                 {
                     return BadRequest(" Member ID are not found. ");
 
                 }
-              
+
                 // Generate unique AdId
                 string adId = GenerateUniqueAdId();
                 int attempts = 0;
@@ -93,10 +114,10 @@ namespace KoiFengShui.BE.Controllers
                     Heading = advertisementDto.Heading?.Trim(),
                     Image = advertisementDto.Image?.Trim(),
                     Link = advertisementDto.Link?.Trim(),
-                    UserId = memberID,
+                    UserId = advertisementDto.UserId,
                     Rank = rank,
                     ElementId = "None",
-                    status = status
+                    status = advertisementDto.status,
                 };
 
                 // Add advertisement
@@ -116,6 +137,68 @@ namespace KoiFengShui.BE.Controllers
                 // Log the exception
                 Console.WriteLine($"Error occurred while adding advertisement: {ex.Message}");
                 return StatusCode(500, "Internal server error. Please try again later.");
+            }
+        }
+        [HttpPut("UpdateAdvertisement")]
+        public IActionResult UpdatePackage(AdvertisementDTO advertisement)
+        {
+            try
+            {
+                var existingAdvertisement = _advertisementService.GetAdvertisementByAdID(advertisement.AdId);
+                if (existingAdvertisement == null)
+                {
+                    return NotFound("Không tìm thấy quảng cáo");
+                }
+                if (_elementService.GetElementAndMutualism(advertisement.ElementId) == null)
+                {
+                    return BadRequest("Không tìm thấy nguyên tố phù hợp ");
+                }
+
+                existingAdvertisement.ElementId = advertisement.ElementId;
+                existingAdvertisement.status = advertisement.status;
+
+
+                bool result = _advertisementService.UpdateAdvertisement(existingAdvertisement.AdId);
+                if (result)
+                {
+                    return Ok("Cập nhật gói thành công");
+                }
+                else
+                {
+                    return BadRequest("Cập nhật gói thất bại");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+        [HttpDelete("DeleteAdvertisement/{adId}")]
+        public IActionResult DeleteAdvertisement(string adId)
+        {
+            try
+            {
+
+                var existingAdvertisement = _advertisementService.GetAdvertisementByAdID(adId);
+                if (existingAdvertisement == null)
+                {
+                    return NotFound("Không tìm thấy quảng cáo");
+                }
+
+                bool result = _advertisementService.DeleteAdvertisement(adId);
+                if (result)
+                {
+                    return Ok("Xóa quảng cáo thành công");
+                }
+                else
+                {
+                    return BadRequest("Xóa quảng cáo thất bại");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
     }

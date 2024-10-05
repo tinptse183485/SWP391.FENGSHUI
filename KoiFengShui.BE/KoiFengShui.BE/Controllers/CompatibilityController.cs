@@ -248,11 +248,9 @@ namespace KoiFengShui.BE.Controllers
             {
                 var s3Result = GetPointOfDirectionByDirecDOBGEN(Direction, DOB, Gender) as OkObjectResult;
                 var s2Result = GetPointOfShapeByShapeIDAndDOB(ShapeID, DOB) as OkObjectResult;
-<<<<<<< HEAD
+
                 var s1Result = GetPointOf1KoiTypes(koiType, DOB) as OkObjectResult;
-=======
-                var s1Result = GetAttribute(koiType, DOB) as OkObjectResult;
->>>>>>> 7968a31aaa3e543248d8c30a6772646de67c9009
+
 
                 if (s1Result == null || s2Result == null || s3Result == null)
                 {
