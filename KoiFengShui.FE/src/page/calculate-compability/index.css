@@ -123,7 +123,7 @@ body{
       display: flex;
     }
     .fish-card img, .pond-shape-card img {
-      width: 100%;
+      width: 60%;
       height: 150px;
       object-fit: cover;
       border-radius: 8px;
@@ -142,7 +142,7 @@ body{
       padding: 5px;
     }
   
-    .fish-card:hover, .pond-shape-card:hover {
+     .pond-shape-card:hover {
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
       transform: translateY(-3px);
       z-index: 1001;
@@ -447,4 +447,11 @@ body{
 
   .fish-detail-info h1 {
     margin-top: 0;
+  }
+  .pond-shape-info{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }

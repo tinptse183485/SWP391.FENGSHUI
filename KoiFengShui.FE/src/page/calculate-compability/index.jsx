@@ -51,6 +51,9 @@ function ComputeCompability() {
   const [allFishColorWeights, setAllFishColorWeights] = useState({});
   const [allFishColors, setAllFishColors] = useState({});
 
+  const [shapePoint, setShapePoint] = useState(null);
+  const [directionPoint, setDirectionPoint] = useState(null);
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -383,6 +386,67 @@ function ComputeCompability() {
     });
   };
 
+  const handleSelectPondShape = async (shapeId) => {
+    if (selectedPondShape === shapeId) {
+      setSelectedPondShape(null);
+      form.setFieldsValue({ selectedPondShape: null });
+      setShapePoint(null);
+    } else {
+      setSelectedPondShape(shapeId);
+      form.setFieldsValue({ selectedPondShape: shapeId });
+      
+      try {
+        const dob = form.getFieldValue('birthdate');
+        const formattedDob = dob ? dob.format('YYYY-MM-DD') : '';
+        
+        const response = await api.get(`Compatibility/GetPointOfShapeByShapeIDAndDOB`, {
+          params: { 
+            shapeId: shapeId,
+            dob: formattedDob
+          }
+        });
+        
+        setShapePoint(response.data);
+      } catch (error) {
+        console.error("Error fetching shape point:", error);
+        toast.error("Error fetching shape point");
+      }
+    }
+  };
+
+  const handleSelectDirection = async (direction) => {
+    setSelectedDirection(direction);
+    form.setFieldsValue({ selectedDirection: direction });
+    
+    try {
+      const dob = form.getFieldValue('birthdate');
+      const gender = form.getFieldValue('Gender');
+      const formattedDob = dob ? dob.format('YYYY-MM-DD') : '';
+      
+      if (!formattedDob || !gender) {
+        toast.error("Please select date of birth and gender first");
+        return;
+      }
+
+      console.log('Sending request with:', { Direction: direction, DOB: formattedDob, Gender: gender });
+
+      const response = await api.get(`Compatibility/GetPointOfDirectionByDirecDOBGEN`, {
+        params: { 
+          Direction: direction,
+          DOB: formattedDob,
+          Gender: gender
+        }
+      });
+      
+      console.log('Received response:', response.data);
+      
+      setDirectionPoint(response.data);
+    } catch (error) {
+      console.error("Error fetching direction point:", error);
+      toast.error("Error fetching direction point");
+    }
+  };
+
   return (
     <>
       <HeaderTemplate />
@@ -576,21 +640,15 @@ function ComputeCompability() {
                       className={`pond-shape-card ${
                         selectedPondShape === shape.shapeId ? "selected" : ""
                       }`}
-                      onClick={() => {
-                        if (selectedPondShape === shape.shapeId) {
-                          setSelectedPondShape(null);
-                          form.setFieldsValue({ selectedPondShape: null });
-                        } else {
-                          setSelectedPondShape(shape.shapeId);
-
-                          form.setFieldsValue({
-                            selectedPondShape: shape.shapeId,
-                          });
-                        }
-                      }}
+                      onClick={() => handleSelectPondShape(shape.shapeId)}
                     >
                       <img src={`/pond/${shape.image}`} alt={shape.shapeId} />
+                      <div className="pond-shape-info">
                       <p>{shape.shapeId}</p>
+                      {selectedPondShape === shape.shapeId && shapePoint !== null && (
+                        <p className="shape-point">Điểm tương hợp: {(shapePoint ).toFixed(2)}%</p>
+                      )}
+                    </div>
                     </div>
                   ))}
                 </div>
@@ -599,21 +657,23 @@ function ComputeCompability() {
                 name="pondDirection"
                 label="Hướng đặt hồ"
                 rules={[
-                  { required: true, message: "Vui lòng chọn hướng đặt hồ" },
+                  { required: true, message: "Vui lòng chọn hướng" },
                 ]}
               >
-                <Select placeholder="Vui lòng chọn hướng đặt hồ">
+                <Select onChange={(e) => handleSelectDirection(e.target.value)} onplaceholder="Vui lòng chọn hướng đặt hồ">
                   <Option value="">Chọn hướng đặt hồ</Option>
                   {pondDirections.map((direction) => (
-                    <Option
-                      key={direction.directionId}
-                      value={direction.directionId}
-                    >
+                    <Option key={direction.directionId} value={direction.directionId}>
                       {direction.directionId}
                     </Option>
                   ))}
                 </Select>
               </Form.Item>
+              {directionPoint !== null && (
+                <div className="direction-point">
+                  Điểm hướng: {(directionPoint * 100).toFixed(2)}%
+                </div>
+              )}
               <Form.Item>
                 <Button type="primary" htmlType="submit">
                   Tính toán
