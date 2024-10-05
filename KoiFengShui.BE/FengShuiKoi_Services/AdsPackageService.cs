@@ -36,6 +36,11 @@ namespace FengShuiKoi_Services
             return iAdsPackageRepo.GetAdsPackages();
         }
 
+        public List<AdsPackage> GetListAdsPackageByAdIDRank(string AdID, string Rank)
+        {
+           return iAdsPackageRepo.GetListAdsPackageByAdIDRank(AdID, Rank); 
+        }
+
         public bool UpdateAdsPackage(string AdID, string Rank)
         {
             return iAdsPackageRepo.UpdateAdsPackage(AdID, Rank);
