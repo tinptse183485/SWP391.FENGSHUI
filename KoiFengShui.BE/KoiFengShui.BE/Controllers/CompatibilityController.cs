@@ -192,7 +192,7 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-        [HttpPost("GetPointOfDirectionByDirecDOBGEN")]
+        [HttpGet("GetPointOfDirectionByDirecDOBGEN")]
         public IActionResult GetPointOfDirectionByDirecDOBGEN(string Direction, string DOB, string Gender)
         {
             string Life_Palace = "";
