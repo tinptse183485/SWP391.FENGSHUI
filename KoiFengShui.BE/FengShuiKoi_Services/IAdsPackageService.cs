@@ -11,7 +11,7 @@ namespace FengShuiKoi_Services
     {
         public AdsPackage GetAdsPackageByAdIDRank(string AdID, string Rank);
 
-
+        public List<AdsPackage> GetListAdsPackageByAdIDRank(string AdID, string Rank);
 
         public List<AdsPackage> GetAdsPackages();
         public bool AddAdsPackage(AdsPackage ads);
