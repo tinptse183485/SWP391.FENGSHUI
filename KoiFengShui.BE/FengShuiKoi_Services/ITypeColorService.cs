@@ -16,7 +16,7 @@ namespace FengShuiKoi_Services
         public List<TypeColor> GetAllType();
 
 
-
+        public TypeColor GetTypeByColorID(string colorId) ;
         public TypeColor GetPercentage(string color, string type);
 
         public List<TypeColor> GetTypeByColor(string color);

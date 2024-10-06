@@ -30,7 +30,29 @@ namespace FengShuiKoi_DAO
         {
             return dbContext.ElementColors.SingleOrDefault(ec => ec.ElementId == element && ec.ColorId == color);
         }
-
+        public ElementColor GetElementColorByColorId(string color)
+        {
+            return dbContext.ElementColors.FirstOrDefault(ec => ec.ColorId == color);
+        }
+        public bool DeleteElementColorByColorId(string color)
+        {
+            bool isSuccess = false;
+            ElementColor elementColor = this.GetElementColorByColorId( color);
+            try
+            {
+                if (elementColor != null)
+                {
+                    dbContext.ElementColors.Remove(elementColor);
+                    dbContext.SaveChanges();
+                    isSuccess = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return isSuccess;
+        }
         public List<ElementColor> GetElementColors()
         {
             return dbContext.ElementColors.ToList();

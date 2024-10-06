@@ -1,4 +1,5 @@
 ﻿using FengShuiKoi_BO;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -51,6 +52,10 @@ namespace FengShuiKoi_DAO
             }
 
             return list;
+        }
+        public TypeColor GetTypeByColorID(string colorId)
+        {
+            return dbContext.TypeColors.FirstOrDefault(tc => tc.ColorId == colorId);
         }
         public List<TypeColor> GetTypeByColor(string color)
         {

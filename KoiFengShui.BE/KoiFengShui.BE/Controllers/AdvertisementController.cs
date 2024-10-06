@@ -71,16 +71,16 @@ namespace KoiFengShui.BE.Controllers
             return $"AD{randomNumber:D3}";
         }
         [HttpPost("AddAdvertisement")]
-        public IActionResult AddAdvertisement(AdvertisementDTO advertisementDto, string rank)
+        public IActionResult AddAdvertisement(AdvertisementDTO advertisementDto)
         {
             try
             {
                 // Validate input
-                if (string.IsNullOrWhiteSpace(rank) || string.IsNullOrWhiteSpace(advertisementDto.AdId))
+                if (string.IsNullOrWhiteSpace(advertisementDto.Rank) || string.IsNullOrWhiteSpace(advertisementDto.AdId))
                 {
                     return BadRequest("Rank, Member ID, and Status are required.");
                 }
-                if (_packageService.GetPackageByRank(rank) == null)
+                if (_packageService.GetPackageByRank(advertisementDto.Rank) == null)
                 {
                     return BadRequest(" There not have the package. ");
 
@@ -115,7 +115,7 @@ namespace KoiFengShui.BE.Controllers
                     Image = advertisementDto.Image?.Trim(),
                     Link = advertisementDto.Link?.Trim(),
                     UserId = advertisementDto.UserId,
-                    Rank = rank,
+                    Rank = advertisementDto.Rank,
                     ElementId = "None",
                     status = advertisementDto.status,
                 };

@@ -1,4 +1,5 @@
 ﻿using FengShuiKoi_BO;
+using FengShuiKoi_DAO;
 using FengShuiKoi_Repository;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace FengShuiKoi_Services
 
 
         public List<TypeColor> GetAllType() => iTypeColorRepo.GetAllType();
-
+        public TypeColor GetTypeByColorID(string colorId) => iTypeColorRepo.GetTypeByColorID(colorId);
         public TypeColor GetPercentage(string color, string type) => iTypeColorRepo.GetPercentage(color, type);
 
         public List<TypeColor> GetTypeByColor(string color) => iTypeColorRepo.GetTypeByColor(color);
