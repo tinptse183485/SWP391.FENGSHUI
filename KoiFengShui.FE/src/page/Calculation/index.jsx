@@ -23,7 +23,9 @@ const Calculation = () => {
       const values = await form.validateFields();
       
       // Gọi Api để lấy danh sách cá
+
       const response = await api.get("KoiVariety/GetListKoiByDOBOrderS1", {
+
         params: { dob: values.YOB.format("YYYY-MM-DD") },
       });
       
@@ -74,7 +76,8 @@ const Calculation = () => {
       setFate(fateResponse.data || "Unknown");
       setLifePalace(lifePalaceResponse.data || "Unknown");  
       setIsFateCalculated(true);
-     
+
+
     } catch (error) {
       console.error("Error details:", error);
       toast.error(error.response?.data || "Error fetching fate and life palace data");

@@ -6,7 +6,9 @@ body{
   
   
   .compute-container {
+
       max-width: 1500px;
+
       margin: 50px auto 0;
       padding: 20px;
       background-color: #f0f8ff;
@@ -76,6 +78,7 @@ body{
     }
   
     .fish-list, .pond-shape-list {
+
       display: flex;
       flex-wrap: wrap;
       gap: 20px;
@@ -89,11 +92,13 @@ body{
       max-width: 400px;
      
       margin-bottom: 20px;
+
       border: 2px solid #e8e8e8;
       border-radius: 12px;
       padding: 15px;
       cursor: pointer;
       transition: all 0.3s ease;
+
       display: block;
       align-items: center;
       background-color: #ffffff;
@@ -128,6 +133,7 @@ body{
       object-fit: cover;
       border-radius: 8px;
       
+
     }
   
     .fish-card p, .pond-shape-card p {
@@ -137,12 +143,14 @@ body{
       font-size: 14px;
       overflow: hidden;
       text-overflow: ellipsis;
+
       white-space: wrap;
       width: 100%;
       padding: 5px;
     }
   
      .pond-shape-card:hover {
+
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
       transform: translateY(-3px);
       z-index: 1001;
@@ -151,7 +159,9 @@ body{
     .fish-card.selected, .pond-shape-card.selected {
       border-color: #1890ff;
       background-color: #e6f7ff;
+
       box-shadow: 0 0 10px rgba(24, 144, 255, 0.5);
+
     }
   
     .ant-btn-primary {
@@ -194,17 +204,20 @@ body{
       }
       
       .page-title {
+
         font-size: 1.8rem;
       }
       
       .fish-list, .pond-shape-list {
         grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+
       }
       
       .birthdate-gender-row {
         flex-direction: column;
         gap: 10px;
       }
+
       
       .filter-section {
         flex-direction: column;
@@ -286,6 +299,7 @@ body{
     width: 100%;
     left: 0;
     transform: none;
+
   }
 
   .fish-card:hover .fish-info-box {
@@ -298,8 +312,10 @@ body{
     top: 100%;
     left: 50%;
     transform: translateX(-50%);
+
     width: 300px;
     max-width: 90vw;
+
     background-color: white;
     border: 2px solid #1890ff;
     border-radius: 12px;
@@ -312,9 +328,11 @@ body{
 
   .fish-info-box img {
     width: 100%;
+
     height: auto;
     max-height: 300px;
     object-fit: contain;
+
     border-radius: 8px;
     margin-bottom: 15px;
   }
@@ -352,6 +370,7 @@ body{
     font-size: 16px !important;
     font-weight: 600 !important;
   }
+
 
 
   .ant-modal-footer .ant-btn-primary {
@@ -478,4 +497,5 @@ body{
     flex: 1;
     font-size: 16px;
   }
+
 

@@ -12,6 +12,7 @@ import {
   InputNumber,
 } from "antd";
 
+
 import api from "../../config/axios";
 import { toast } from "react-toastify";
 import HeaderTemplate from "../../components/header-page";
@@ -22,6 +23,7 @@ const { Option } = Select;
 
 function ComputeCompability() {
   const [form] = Form.useForm();
+
   
 
   const [filteredFishList, setFilteredFishList] = useState([]);
@@ -47,6 +49,7 @@ function ComputeCompability() {
 
   const [shapePoint, setShapePoint] = useState(null);
   const [directionPoint, setDirectionPoint] = useState(null);
+
 
   useEffect(() => {
     fetchData();
@@ -85,6 +88,7 @@ function ComputeCompability() {
     fetchFilteredFishList();
   }, [colorFilter, elementFilter, fishList]);
 
+
   useEffect(() => {
     if (selectedFishDetail && colorWeights) {
       form.setFieldsValue({
@@ -96,6 +100,7 @@ function ComputeCompability() {
     }
   }, [selectedFishDetail, colorWeights]);
 
+
   const fetchData = async () => {
     try {
       const [
@@ -104,14 +109,18 @@ function ComputeCompability() {
         directionResponse,
         elementResponse,
         colorResponse,
+
         allColorsResponse
+
       ] = await Promise.all([
         api.get("KoiVariety/GetAllKoi"),
         api.get("Shape/GetAllShape"),
         api.get("Direction/GetAllDirection"),
         api.get("Element/GetAllElement"),
         api.get("Color/GetAllColor"),
+
         api.get("TypeColor/GetAllTypeColor")
+
       ]);
       setFishList(fishResponse.data);
       setFilteredFishList(fishResponse.data); // Đặt danh sách cá ban đầu
@@ -119,6 +128,7 @@ function ComputeCompability() {
       setPondDirections(directionResponse.data);
       setElements(elementResponse.data);
       setColors(colorResponse.data);
+
       
       
       const allColors = allColorsResponse.data;
@@ -135,6 +145,7 @@ function ComputeCompability() {
       });
       setAllFishColors(fishColorsMap);
       
+
     } catch (error) {
       toast.error("Error fetching data");
     }
@@ -145,12 +156,12 @@ function ComputeCompability() {
       const {
         birthdate,
         Gender,
-        
         selectedPondShape,
         pondDirection,
       } = values;
 
       // Chuẩn bị payload
+
       const payload = selectedFishes.map(fish => ({
         koiType: fish.koiType,
         colors: fish.colors.map(color => ({
@@ -159,10 +170,12 @@ function ComputeCompability() {
         })).filter(color => color.percentage > 0)
       }));
 
+
       console.log("Payload gửi đi:", payload);
 
       // Gọi API sử dụng query params thay vì body
       const response = await api.post(
+
         `Compatibility/GetTheCompatibilityOfUserByListFish?ShapeID=${selectedPondShape}&Direction=${pondDirection}&DOB=${birthdate.format("YYYY-MM-DD")}&Gender=${Gender}`,
         payload
       );
@@ -174,6 +187,7 @@ function ComputeCompability() {
 
       setUserElement(response1.data);
       setUserLifePalife(response2.data);
+
       if (response.data) {
         toast.success("Calculation successful");
         setCompatibilityResult(response.data.compatibility);
@@ -187,6 +201,7 @@ function ComputeCompability() {
     }
   };
   function getCompatibilityComment(compatibilityResult) {
+
     let comment = "";
     if (compatibilityResult < 25) {
       comment+= "Độ tương thích quá thấp không phù hợp với gia chủ.";
@@ -476,6 +491,7 @@ function ComputeCompability() {
     }
   };
 
+
   return (
     <>
       <HeaderTemplate />
@@ -512,10 +528,12 @@ function ComputeCompability() {
                   </Radio.Group>
                 </Form.Item>
               </div>
+
               <Form.Item
                 label="Chọn loại cá"
                 name="selectedFishes"
                 rules={[{ required: false, message: "Vui lòng chọn ít nhất một loại cá" }]}
+
               >
                 <div className="filter-section">
                   <Form layout="inline">
@@ -618,10 +636,12 @@ function ComputeCompability() {
     </>
   )}
 </div>
+
                     </div>
                   ))}
                 </div>
               </Form.Item>
+
 
               {/* Hiển thị modal trong phần JSX */}
               <Modal
@@ -654,12 +674,15 @@ function ComputeCompability() {
                   </div>
                 )}
               </Modal>
+
               {/* Add the pond shape selection here */}
               <Form.Item
                 name="selectedPondShape"
                 label="Hình dáng hồ"
                 rules={[
+
                   { required: false, message: "Vui lòng chọn hình dáng hồ" },
+
                 ]}
               >
                 <div className="pond-shape-list">
@@ -669,6 +692,7 @@ function ComputeCompability() {
                       className={`pond-shape-card ${
                         selectedPondShape === shape.shapeId ? "selected" : ""
                       }`}
+
                       onClick={() => handleSelectPondShape(shape.shapeId)}
                     >
                       <img src={`/pond/${shape.image}`} alt={shape.shapeId} />
@@ -678,10 +702,12 @@ function ComputeCompability() {
                         <p className="shape-point">Điểm tương hợp: {(shapePoint ).toFixed(2)}%</p>
                       )}
                     </div>
+
                     </div>
                   ))}
                 </div>
               </Form.Item>
+
               <div className="pond-direction-select">
               <Form.Item
                 className="direction-select"
@@ -695,10 +721,12 @@ function ComputeCompability() {
                   <Option value="">Chọn hướng đặt hồ</Option>
                   {pondDirections.map((direction) => (
                     <Option key={direction.directionId} value={direction.directionId}>
+
                       {direction.directionId}
                     </Option>
                   ))}
                 </Select>
+
                
               </Form.Item>
               {directionPoint !== null && (
@@ -708,6 +736,7 @@ function ComputeCompability() {
               )}
               </div>
               
+
               <Form.Item>
                 <Button type="primary" htmlType="submit">
                   Tính toán
@@ -734,4 +763,6 @@ function ComputeCompability() {
   );
 }
 
+
 export default ComputeCompability;
+
