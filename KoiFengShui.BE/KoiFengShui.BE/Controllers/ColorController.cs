@@ -90,17 +90,20 @@ namespace KoiFengShui.BE.Controllers
                 {
                     return NotFound("Không tìm thấy màu tương ứng.");
                 }
+                bool result3 =false;
                 var existingElementColor = _elementColorService.GetElementColorByColorId(colorId);
                 if (existingElementColor != null)
                 {
-                    return NotFound("Màu này đang được sửa dụng để tính điểm cho mệnh.");
+                    result3 = _elementColorService.DeleteElementColorByColorId(colorId);
                 }
+                bool result2 = false;
                 var existingTypeColors = _typeColorService.GetTypeByColor(colorId);
                 if (existingTypeColors != null && existingTypeColors.Any())
                 {
-                    return BadRequest("Màu này đang được sử dụng để tính điểm cho cá.");
+                   result2 = _typeColorService.DeleteTypeColorByColorId(colorId);
                 }
                 bool result = _colorService.DeleteColor(colorId);
+                
                 if (result)
                 {
                     return Ok("Xóa Màu thành công");

@@ -34,24 +34,28 @@ namespace FengShuiKoi_DAO
         {
             return dbContext.ElementColors.FirstOrDefault(ec => ec.ColorId == color);
         }
-        public bool DeleteElementColorByColorId(string color)
+        public bool DeleteElementColorByColorId(string colorId)
         {
-            bool isSuccess = false;
-            ElementColor elementColor = this.GetElementColorByColorId( color);
             try
             {
-                if (elementColor != null)
+                var elementsToRemove = dbContext.ElementColors
+                    .Where(ec => ec.ColorId == colorId)
+                    .ToList();
+
+                if (elementsToRemove.Any())
                 {
-                    dbContext.ElementColors.Remove(elementColor);
+                    dbContext.ElementColors.RemoveRange(elementsToRemove);
                     dbContext.SaveChanges();
-                    isSuccess = true;
+                    return true;
                 }
+
+                return false;
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+
+                throw new Exception($"An error occurred while getting the color point: {ex.Message}", ex);
             }
-            return isSuccess;
         }
         public List<ElementColor> GetElementColors()
         {

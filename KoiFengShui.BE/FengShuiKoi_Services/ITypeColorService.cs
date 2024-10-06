@@ -18,7 +18,8 @@ namespace FengShuiKoi_Services
 
         public TypeColor GetTypeByColorID(string colorId) ;
         public TypeColor GetPercentage(string color, string type);
-
+        public bool DeleteTypeColorByColorId(string colorId);
+        public bool DeleteTypeColorByKoiType(string KoiType);
         public List<TypeColor> GetTypeByColor(string color);
         public List<TypeColor> GetColorsAndPercentages(string koiType);
 

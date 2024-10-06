@@ -69,5 +69,67 @@ namespace FengShuiKoi_DAO
 
             return listType;
         }
+        public bool DeleteTypeColorsByColorId(string colorId)
+        {
+            try
+            {
+                var colorsToRemove = dbContext.TypeColors
+                    .Where(tc => tc.ColorId == colorId)
+                    .ToList();
+
+                if (colorsToRemove.Any())
+                {
+                   
+                    var koiTypesToRemove = colorsToRemove.Select(tc => tc.KoiType).Distinct().ToList();
+
+                    var typeKoisToRemove = dbContext.TypeColors
+                        .Where(tk => koiTypesToRemove.Contains(tk.KoiType))
+                        .ToList();
+
+                    dbContext.TypeColors.RemoveRange(typeKoisToRemove);
+                    dbContext.TypeColors.RemoveRange(colorsToRemove);
+                    dbContext.SaveChanges();
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Đã xảy ra lỗi khi xóa màu và loại Koi: {ex.Message}", ex);
+            }
+        }
+
+        public bool DeleteTypeColorsByKoiType(string koiType)
+        {
+            try
+            {
+                var colorsToRemove = dbContext.TypeColors
+                    .Where(tc => tc.KoiType == koiType)
+                    .ToList();
+
+                if (colorsToRemove.Any())
+                {
+                    // Xóa TypeKoi liên quan
+                    var typeKoiToRemove = dbContext.TypeColors
+                        .FirstOrDefault(tk => tk.KoiType == koiType);
+
+                    if (typeKoiToRemove != null)
+                    {
+                        dbContext.TypeColors.Remove(typeKoiToRemove);
+                    }
+
+                    dbContext.TypeColors.RemoveRange(colorsToRemove);
+                    dbContext.SaveChanges();
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Đã xảy ra lỗi khi xóa màu và loại Koi: {ex.Message}", ex);
+            }
+        }
     }
 }

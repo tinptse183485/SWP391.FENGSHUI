@@ -12,7 +12,7 @@ namespace FengShuiKoi_Services
         bool DeleteElementColor(string element, string color);
         bool UpdateElementColor(ElementColor elementColor);
         public ElementColor GetElementColorByColorId(string color) ;
-
+       
         public bool DeleteElementColorByColorId(string color);
         public float GetPointElementColor(string element, string color);
     }

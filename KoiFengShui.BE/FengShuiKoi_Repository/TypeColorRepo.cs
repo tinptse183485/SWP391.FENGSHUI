@@ -19,5 +19,7 @@ namespace FengShuiKoi_Repository
         public TypeColor GetPercentage(string color, string type) => TypeColorDAO.Instance.GetPercentage(color, type);
         public TypeColor GetTypeByColorID(string colorId) => TypeColorDAO.Instance.GetTypeByColorID(colorId);
         public List<TypeColor> GetTypeByColor(string color) => TypeColorDAO.Instance.GetTypeByColor(color);
+        public bool DeleteTypeColorByColorId(string colorId) => TypeColorDAO.Instance.DeleteTypeColorsByColorId(colorId);
+        public bool DeleteTypeColorByKoiType(string KoiType) => TypeColorDAO.Instance.DeleteTypeColorsByKoiType(KoiType);
     }
 }
