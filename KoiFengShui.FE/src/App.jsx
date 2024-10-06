@@ -14,6 +14,11 @@ import Pond from "./page/Admin-page/pond";
 import Ads_list from "./page/Ads_list";
 import CreateAds from "./page/CreateAds";
 import User_Ads from "./page/User_Ads";
+import AdvertisementDetail from "./page/AdvertismentDetail";
+import VNPayPayment from './page/Payment';
+import PaymentSuccess from './page/PaymentSuccess';
+
+
 
 function App() {
 
@@ -80,6 +85,19 @@ function App() {
       path: "user-ads",
       element: <User_Ads />,
     },
+    {
+      path: "advertisement-detail/:id",
+      element: <AdvertisementDetail />,
+    },
+    {
+      path: "payment",
+      element: <VNPayPayment />,
+    },
+    {
+      path: "payment-success",
+      element: <PaymentSuccess />,
+    },
+
 
   ]);
 
