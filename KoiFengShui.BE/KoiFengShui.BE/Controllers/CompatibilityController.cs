@@ -168,7 +168,7 @@ namespace KoiFengShui.BE.Controllers
             }
         }
 
-        [HttpPost("GetPointOfShapeByShapeIDAndDOB")]
+        [HttpGet("GetPointOfShapeByShapeIDAndDOB")]
         public IActionResult GetPointOfShapeByShapeIDAndDOB(string ShapeID, string DOB)
         {
 
