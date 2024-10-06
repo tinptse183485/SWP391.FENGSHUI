@@ -8,7 +8,7 @@ function ADS() {
     heading: '',
     image: '',
     link: '',
-    userId: 'Huy', // Bạn cần cung cấp userId từ hệ thống xác thực của bạn
+    userId: localStorage.getItem("userId"), // Bạn cần cung cấp userId từ hệ thống xác thực của bạn
     rank: 'Diamond',
     elementId: 'None',
     status: 'Pending'
