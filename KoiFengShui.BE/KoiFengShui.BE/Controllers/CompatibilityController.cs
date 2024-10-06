@@ -249,7 +249,6 @@ namespace KoiFengShui.BE.Controllers
                 var s3Result = GetPointOfDirectionByDirecDOBGEN(Direction, DOB, Gender) as OkObjectResult;
                 var s2Result = GetPointOfShapeByShapeIDAndDOB(ShapeID, DOB) as OkObjectResult;
                 var s1Result = GetPointOf1KoiTypes(koiType, DOB) as OkObjectResult;
-
                 if (s1Result == null || s2Result == null || s3Result == null)
                 {
                     return BadRequest("Không thể tính toán một hoặc nhiều thành phần của độ tương thích.");

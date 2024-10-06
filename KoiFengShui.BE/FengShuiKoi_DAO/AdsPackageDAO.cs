@@ -40,7 +40,10 @@ namespace FengShuiKoi_DAO
         {
             return dbContext.AdsPackages.SingleOrDefault(m => m.AdId.Equals(AdID) && m.Rank.Equals(Rank));
         }
-
+        public List<AdsPackage> GetListAdsPackageByAdIDRank(string AdID, string Rank)
+        {
+            return dbContext.AdsPackages.Where(m => m.AdId.Equals(AdID) && m.Rank.Equals(Rank)).ToList();
+        }
         public bool AddAdsPackage(AdsPackage ads)
         {
             bool isSuccess = false;

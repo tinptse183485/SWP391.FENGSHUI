@@ -41,7 +41,9 @@ namespace FengShuiKoi_DAO
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=TINPHAMTRUNG\\MSSQL2022EXPRESS;Database=SWP391_FengShuiKoiConsulting_DB;Uid=sa;Pwd=12345;TrustServerCertificate=True;");
+
+                optionsBuilder.UseSqlServer("Server=HAUHANDSOME\\HAUHUYNH;Database=SWP391_FengShuiKoiConsulting_DB;Uid=sa;Pwd=12345;TrustServerCertificate=True;");
+
             }
         }
 
@@ -111,7 +113,7 @@ namespace FengShuiKoi_DAO
                     .HasMaxLength(50)
                     .HasColumnName("AdID");
 
-                entity.Property(e => e.Description).HasMaxLength(255);
+              
 
                 entity.Property(e => e.ElementId)
                     .HasMaxLength(50)
@@ -125,7 +127,7 @@ namespace FengShuiKoi_DAO
 
                 entity.Property(e => e.Rank).HasMaxLength(50);
 
-                entity.Property(e => e.Status)
+                entity.Property(e => e.status)
                     .HasMaxLength(10)
                     .HasColumnName("status");
 
@@ -159,7 +161,7 @@ namespace FengShuiKoi_DAO
                     .HasMaxLength(50)
                     .HasColumnName("BlogID");
 
-                entity.Property(e => e.Description).HasMaxLength(500);
+                entity.Property(e => e.Link).HasMaxLength(500);
 
                 entity.Property(e => e.Heading).HasMaxLength(255);
 

@@ -8,7 +8,7 @@ namespace FengShuiKoi_BO
         public string BlogId { get; set; } = null!;
         public string Heading { get; set; } = null!;
         public string Image { get; set; } = null!;
-        public string Description { get; set; } = null!;
+        public string Link {get; set; } = null!;
         public string Status { get; set; } = null!;
     }
 }

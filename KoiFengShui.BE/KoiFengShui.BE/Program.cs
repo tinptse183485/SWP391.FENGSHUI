@@ -63,6 +63,10 @@ namespace KoiFengShui.BE
             builder.Services.AddScoped<IElementService, ElementService>();
             builder.Services.AddScoped<IKoiVarietyService, KoiVarietyService>();
             builder.Services.AddScoped<IQuantityOfFishService, QuantityOfFishService>();
+            builder.Services.AddScoped<IPackageService, PackageService>();
+            builder.Services.AddScoped<IAdvertisementService, AdvertisementService>();
+
+
 
             // Add CORS
             builder.Services.AddCors(options =>
