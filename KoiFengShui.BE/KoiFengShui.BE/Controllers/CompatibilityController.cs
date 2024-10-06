@@ -29,7 +29,7 @@ namespace KoiFengShui.BE.Controllers
             _pointOfShapeService = pointOfShapeService;
             _lifePlaceDirectionService = lifePlaceDirectionService;
         }
-        [HttpGet("GetPointOf1KoiTypes")]
+        [HttpPost("GetPointOf1KoiTypes")]
         public IActionResult GetPointOf1KoiTypes(string koiType, string dob)
         {
             int year = int.Parse(dob.Substring(0, 4));
@@ -67,7 +67,7 @@ namespace KoiFengShui.BE.Controllers
             public double? Percentage { get; set; }
         }
 
-        [HttpGet("GetAttributeCustomColor")]
+        [HttpPost("GetAttributeCustomColor")]
         public IActionResult GetAttributeCustomColor([FromBody] CustomKoiTypeColor customKoiType, string dob)
         {
             if (customKoiType?.Colors == null || !customKoiType.Colors.Any())
@@ -168,7 +168,7 @@ namespace KoiFengShui.BE.Controllers
             }
         }
 
-        [HttpGet("GetPointOfShapeByShapeIDAndDOB")]
+        [HttpPost("GetPointOfShapeByShapeIDAndDOB")]
         public IActionResult GetPointOfShapeByShapeIDAndDOB(string ShapeID, string DOB)
         {
 
@@ -192,7 +192,7 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-        [HttpGet("GetPointOfDirectionByDirecDOBGEN")]
+        [HttpPost("GetPointOfDirectionByDirecDOBGEN")]
         public IActionResult GetPointOfDirectionByDirecDOBGEN(string Direction, string DOB, string Gender)
         {
             string Life_Palace = "";
