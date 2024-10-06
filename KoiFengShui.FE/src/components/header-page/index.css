@@ -3,9 +3,6 @@
 
 }
 
-
-
-
 .top-bar {
   overflow: hidden;
   display: flex;
@@ -165,9 +162,6 @@
   object-fit: cover;
 }
 
-
-
-
 .user-info {
   display: flex;
   align-items: center;
@@ -228,3 +222,4 @@
 .user-button .anticon {
   margin-right: 8px;
 }
+
