@@ -25,5 +25,9 @@ namespace FengShuiKoi_Services
 
 
         public float GetPointElementColor(string element, string color) => elementColorRepo.GetPointElementColor(element, color);
+
+        public ElementColor GetElementColorByColorId(string color) => elementColorRepo.GetElementColorByColorId(color);
+
+        public bool DeleteElementColorByColorId(string color) => elementColorRepo.DeleteElementColorByColorId(color);
     }
 }

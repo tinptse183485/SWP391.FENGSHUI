@@ -10,5 +10,6 @@ namespace FengShuiKoi_Repository
         bool AddShape(Shape shape);
         bool DeleteShape(string id);
         bool UpdateShape(Shape shape);
+        Shape GetShapeByImg(string img);
     }
 }

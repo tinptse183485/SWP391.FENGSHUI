@@ -12,7 +12,7 @@ namespace FengShuiKoi_Services
         {
             shapeRepo = new ShapeRepo();
         }
-
+        public Shape GetShapeByImg(string img) => shapeRepo.GetShapeByImg(img);
         public Shape GetShapeById(string id) => shapeRepo.GetShapeById(id);
 
         public List<Shape> GetShapes() => shapeRepo.GetShapes();

@@ -13,7 +13,7 @@ namespace FengShuiKoi_Repository
         public bool AddShape(Shape shape) => ShapeDAO.Instance.AddShape(shape);
 
         public bool DeleteShape(string id) => ShapeDAO.Instance.DeleteShape(id);
-
+        public Shape GetShapeByImg(string img) => ShapeDAO.Instance.GetShapeByImg(img);
         public bool UpdateShape(Shape shape) => ShapeDAO.Instance.UpdateShape(shape);
     }
 }
