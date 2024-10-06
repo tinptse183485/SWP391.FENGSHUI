@@ -4,9 +4,9 @@ import api from '../../config/axios';
 
 function ADS() {
   const [adData, setAdData] = useState({
-    adId: 'AD001',
-    heading: 'Quảng cáo 1',
-    image: 'https://example.com/image.jpg',
+    adId: '.',
+    heading: '',
+    image: '',
     link: '',
     userId: 'Huy', // Bạn cần cung cấp userId từ hệ thống xác thực của bạn
     rank: 'Diamond',
@@ -69,17 +69,17 @@ function ADS() {
         initialValue="<p>Viết nội dung quảng cáo của bạn ở đây.</p>"
         init={{
           height: 500,
-          menubar: false,
           plugins: [
-            'advlist autolink lists link image charmap print preview anchor',
-            'searchreplace visualblocks code fullscreen',
-            'insertdatetime media table paste code help wordcount'
+'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+    'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+    'insertdatetime', 'media', 'table', 'help', 'wordcount',
+    'directionality emoticons template paste textcolor colorpicker'
           ],
-          toolbar: 'undo redo | formatselect | ' +
+          toolbar: 'undo redo | blocks | ' +
             'bold italic backcolor | alignleft aligncenter ' +
             'alignright alignjustify | bullist numlist outdent indent | ' +
-            'removeformat | help',
-          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+            'removeformat | link image | help | emoticons | template', // Thêm các nút tương ứng
+          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }'
         }}
         onEditorChange={handleEditorChange}
       />

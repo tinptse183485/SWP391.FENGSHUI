@@ -63,7 +63,9 @@ function HeaderTemplate() {
               <a href="#Advertisements" onClick={handleScrollToAdvertisements}>Quảng cáo</a>
             </li>
             <li>
+              <Link to="/user-ads">
               <a href="#blog">Blog</a>
+              </Link>
             </li>
             <li>
               <a href="#contact">Liên hệ</a>

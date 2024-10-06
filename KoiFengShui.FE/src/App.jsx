@@ -12,6 +12,8 @@ import Blog from "./page/Admin-page/blog";
 import Koi from "./page/Admin-page/koi";
 import Pond from "./page/Admin-page/pond";
 import Ads_list from "./page/Ads_list";
+import CreateAds from "./page/CreateAds";
+import User_Ads from "./page/User_Ads";
 function App() {
 
   const router = createBrowserRouter([
@@ -67,6 +69,14 @@ function App() {
     {
       path: "ads-list",
       element: <Ads_list />,
+    },
+    {
+      path: "create-ads",
+      element: <CreateAds />,
+    },
+    {
+      path: "user-ads",
+      element: <User_Ads />,
     },
   ]);
 
