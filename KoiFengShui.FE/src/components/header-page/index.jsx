@@ -5,7 +5,6 @@ import Header from "./Header.png";
 import Koi2 from "./Koi2.jpg";
 import { Carousel } from "antd";
 import { useNavigate } from "react-router-dom";
-
 const contentStyle = {
   height: "500px",
   color: "#fff",
@@ -56,7 +55,9 @@ function HeaderTemplate() {
 
             </li>
             <li>
+              <Link to="/ads-list">
               <a href="#about">About Us</a>
+              </Link>
             </li>
             <li>
               <a href="#Advertisements" onClick={handleScrollToAdvertisements}>Quảng cáo</a>

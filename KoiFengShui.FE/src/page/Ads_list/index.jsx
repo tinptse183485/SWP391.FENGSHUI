@@ -1,0 +1,39 @@
+import React, { useEffect, useState } from 'react'; // Thêm useEffect và useState
+import './index.css';
+import api from "../../config/axios";
+
+const Ads_list = () => {
+  const [data, setData] = useState([]); // Khởi tạo state để lưu trữ dữ liệu
+  useEffect(() => {
+    fetchData();
+  }, []); // Chạy một lần khi component mount
+  const fetchData = async () => {
+    try {
+      const response = await api.get('Advertisement/GetAllAdvertisement'); // Thay thế 'API_URL' bằng URL thực tế
+      console.log('Fetched data:', response.data); // Kiểm tra dữ liệu nhận được
+      setData(response.data); // Lưu trữ dữ liệu vào state
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  return (
+    <div className="dashboard-container">
+      <div className="dashboard-content">
+        {data.length > 0 ? ( // Kiểm tra xem có dữ liệu không
+          data.map(item => (
+            <div key={item.adId} className="koi-item">
+            <img  src={item.image}/> {/* Hiển thị hình ảnh */}
+              <h3>{item.heading}</h3> {/* Hiển thị koiType */}
+              
+            </div>
+          ))
+        ) : (
+          <p>No data available</p> // Thông báo nếu không có dữ liệu
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Ads_list;

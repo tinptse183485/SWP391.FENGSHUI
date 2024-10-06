@@ -4,9 +4,9 @@ import api from '../../config/axios';
 
 function ADS() {
   const [adData, setAdData] = useState({
-    adId: '',
-    heading: '',
-    image: '',
+    adId: 'AD001',
+    heading: 'Quảng cáo 1',
+    image: 'https://example.com/image.jpg',
     link: '',
     userId: 'Huy', // Bạn cần cung cấp userId từ hệ thống xác thực của bạn
     rank: 'Diamond',
@@ -34,11 +34,10 @@ function ADS() {
     try {
       const response = await api.post('Advertisement/AddAdvertisement', adData);
       console.log('Response:', response.data);
-      // Lưu đường dẫn bài viết vào trường link
+      // Lưu nội dung HTML vào trường link
       setAdData(prevData => ({
         ...prevData,
-        link: location.href// Giả sử response.data.link chứa đường dẫn bài viết
-        
+        link: adData.link // Giữ nguyên nội dung HTML đã nhập
       }));
       alert('Quảng cáo đã được đăng thành công! Đường dẫn: ' + location.href);
     } catch (error) {

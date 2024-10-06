@@ -7,12 +7,11 @@ import Calculation from "./page/calculation";
 import Consulting from "./page/consulting";
 import CalculateCompability from "./page/calculate-compability";
 import User from "./page/Admin-page/User";
-import Ads from "./page/Admin-page/ads";
+import ADS from "./page/Admin-page/Ads";
 import Blog from "./page/Admin-page/blog";
 import Koi from "./page/Admin-page/koi";
 import Pond from "./page/Admin-page/pond";
-import UserAds from "./page/ADS";
-
+import Ads_list from "./page/Ads_list";
 function App() {
 
   const router = createBrowserRouter([
@@ -51,7 +50,7 @@ function App() {
     },
     {
       path: "ads",
-      element: <Ads />,
+      element: <ADS />,
     },
     {
       path: "blog",
@@ -66,10 +65,9 @@ function App() {
       element: <Pond />,
     },
     {
-      path: "user-ads",
-      element: <UserAds />,
+      path: "ads-list",
+      element: <Ads_list />,
     },
-
   ]);
 
   return <RouterProvider router={router} />;
