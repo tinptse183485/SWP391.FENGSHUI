@@ -14,6 +14,7 @@ import Pond from "./page/Admin-page/pond";
 import Ads_list from "./page/Ads_list";
 import CreateAds from "./page/CreateAds";
 import User_Ads from "./page/User_Ads";
+
 function App() {
 
   const router = createBrowserRouter([
@@ -45,6 +46,7 @@ function App() {
     {
       path: "calculate-compability",
       element: <CalculateCompability />,
+
     },
     {
       path: "user",
@@ -78,6 +80,7 @@ function App() {
       path: "user-ads",
       element: <User_Ads />,
     },
+
   ]);
 
   return <RouterProvider router={router} />;

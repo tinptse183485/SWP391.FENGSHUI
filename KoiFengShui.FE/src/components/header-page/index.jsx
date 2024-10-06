@@ -1,20 +1,47 @@
+
+import  { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./index.css";
 import koiImage from "./path-to-koi-image.jpg";
-import Header from "./Header.png";
-import Koi2 from "./Koi2.jpg";
-import { Carousel } from "antd";
+import { Button, Dropdown, Menu } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-const contentStyle = {
-  height: "500px",
-  color: "#fff",
-  lineHeight: "500px",
-  textAlign: "center",
-  background: "#364d79",
-};
+
+
 
 function HeaderTemplate() {
   const navigate = useNavigate();
+  const [userId, setUserId] = useState(null);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+
+  useEffect(() => {
+    const user = localStorage.getItem("userId");
+    if (user) {
+      setUserId(user);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("userId");
+    localStorage.removeItem("token");
+    setUserId(null);
+    navigate("/");
+  };
+
+  const handleMenuClick = (e) => {
+    if (e.key === "logout") {
+      handleLogout();
+    }
+    setDropdownVisible(false);
+  };
+
+  const menu = (
+    <Menu onClick={handleMenuClick}>
+      <Menu.Item key="logout">Logout</Menu.Item>
+    </Menu>
+  );
+
+
 
   const handleScrollToAdvertisements = (event) => {
     event.preventDefault();
@@ -55,30 +82,46 @@ function HeaderTemplate() {
 
             </li>
             <li>
+
               <Link to="/ads-list">
               <a href="#about">About Us</a>
               </Link>
+
             </li>
             <li>
               <a href="#Advertisements" onClick={handleScrollToAdvertisements}>Quảng cáo</a>
             </li>
             <li>
+
               <Link to="/user-ads">
               <a href="#blog">Blog</a>
               </Link>
+
             </li>
             <li>
               <a href="#contact">Liên hệ</a>
             </li>
           </ul>
         </nav>
-          <button className="login-btn">
+
+          {userId ? (
+            <Dropdown
+              overlay={menu}
+              visible={dropdownVisible}
+              onVisibleChange={setDropdownVisible}
+              trigger={["click"]}
+            >
+              <Button className="user-button">
+                <UserOutlined /> {userId}
+              </Button>
+            </Dropdown>
+          ) : (
+            <Button className="login-btn">
             <Link to="login">Log in / Sign up</Link>
-          </button>
+          </Button>
+          )}
         </div>
       </div>
-     
-
 
     </div>
   );
