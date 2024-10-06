@@ -168,6 +168,63 @@
 
 
 
+.user-info {
+  display: flex;
+  align-items: center;
+}
 
+.user-info span {
+  margin-right: 10px;
+  font-weight: bold;
+}
 
+.logout-btn {
+  background-color: #ff6347;
+  color: #ffffff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
 
+.logout-btn:hover {
+  background-color: #ff4500;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.logout-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.user-button {
+  background-color: #e6f2ff;
+  color: #333;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.user-button:hover {
+  background-color: #d1e8ff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.user-button .anticon {
+  margin-right: 8px;
+}
