@@ -11,6 +11,7 @@ import Ads from "./page/Admin-page/ads";
 import Blog from "./page/Admin-page/blog";
 import Koi from "./page/Admin-page/koi";
 import Pond from "./page/Admin-page/pond";
+import UserAds from "./page/ADS";
 
 function App() {
 
@@ -64,6 +65,11 @@ function App() {
       path: "pond",
       element: <Pond />,
     },
+    {
+      path: "user-ads",
+      element: <UserAds />,
+    },
+
   ]);
 
   return <RouterProvider router={router} />;

@@ -107,7 +107,9 @@ function Home() {
                 <img src={KoiImage2} alt="Calculate compatibility"></img>
                 <a href="#">
                   {" "}
+                  <Link to="user-ads">
                   <h3>Đăng tin quảng cáo</h3>
+                  </Link>
                 </a>
               </div>
             </div>
