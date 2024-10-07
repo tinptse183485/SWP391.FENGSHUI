@@ -4,6 +4,7 @@ import FooterPage from "../../components/footer-page";
 import { useLocation } from "react-router-dom"; // Import useLocation
 import { Modal } from "antd"; // Import Modal from Ant Design
 import { useState } from "react"; // Import useState
+import AdvertisementDisplay from '../../components/advertisementdisplay';
 
 function Consulting() {
   const location = useLocation(); // Get location object
@@ -13,7 +14,8 @@ function Consulting() {
     pondShape: [],
     pondDirection: [],
   }; // Extract  data
-
+  const [advertisements, setAdvertisements] = useState([]);
+  const [userElement, setUserElement] = useState(null);
   const [visible, setVisible] = useState(false); // State for modal visibility
   const [selectedKoi, setSelectedKoi] = useState(null); // State for selected koi
   const [selectedPond, setSelectedPond] = useState(null); // State for selected pond
@@ -64,7 +66,22 @@ function Consulting() {
     }
   };
 
-
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const adsResponse = await api.get('Advertisement/GetAllAdvertisement');
+        setAdvertisements(adsResponse.data);
+        
+        // Assuming you have a way to get the user's element
+        const elementResponse = await api.get('User/GetUserElement');
+        setUserElement(elementResponse.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
+    fetchData();
+  }, []);
   return (
     <div>
       <header>
@@ -172,6 +189,9 @@ function Consulting() {
           </div>
           
         )}
+         {userElement && (
+        <AdvertisementDisplay advertisements={advertisements} userElement={userElement} />
+      )}
       </Modal>
       {/* Modal for displaying pond details */}
       
