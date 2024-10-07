@@ -1,0 +1,25 @@
+.payment-result-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+   
+}
+.payment-result-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex:1;
+    width: 30%;
+}
+
+.payment-result-info {
+    width: 60%;
+    min-width: 500px;
+    align-items: start;
+}
+
+.ant-card-body {
+    margin:0;
+}
+
