@@ -42,8 +42,12 @@ namespace FengShuiKoi_DAO
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7cf1e6fb26bb4e5b558226372d63967ead51c334
                 optionsBuilder.UseSqlServer("Server=HAUHANDSOME\\HAUHUYNH;Database=SWP391_FengShuiKoiConsulting_DB;Uid=sa;Pwd=12345;TrustServerCertificate=True;");
+
             }
         }
 
