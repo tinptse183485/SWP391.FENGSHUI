@@ -29,7 +29,8 @@ const Koi = () => {
       title: "Image",
       dataIndex: "image",
       render: (image) => {
-        return <Image src={`/koi_image/${image}`} alt="" width={100}></Image>;
+        return <Image src={image} alt="" width={100}></Image>;
+        //`/koi_image/${image}`
       },
     },
     {

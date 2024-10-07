@@ -32,20 +32,21 @@ function Consulting() {
     setVisible(false); // Hide modal
   };
   const getElementColor = (element) => {
-  switch (element) {
-    case "Hỏa":
-      return "red";
-    case "Thủy":
-      return "blue";
-    case "Mộc":
-      return "green";
-    case "Kim":
-      return "gold";
-    case "Thổ":
-      return "brown";
-    default:
-      return "black";
-  }};
+    switch (element) {
+      case "Hỏa":
+        return "red";
+      case "Thủy":
+        return "blue";
+      case "Mộc":
+        return "green";
+      case "Kim":
+        return "gold";
+      case "Thổ":
+        return "brown";
+      default:
+        return "black";
+    }
+  };
 
   const getElementIcon = (element) => {
     switch (element) {
@@ -64,82 +65,105 @@ function Consulting() {
     }
   };
 
-
   return (
     <div>
       <header>
         <HeaderTemplate />
       </header>
       <body>
-<div className="Guest-element">
-  <h1>Mệnh của bạn là </h1>
-</div>
-
+        <div className="Guest-element">
+          <h1>Mệnh của bạn là </h1>
+        </div>
 
         <div className="Header-fish">
           <h2>Các loại cá phù hợp</h2>
           <div className="koi-cards">
-  {koiData.length > 0 ? (
-    koiData.map((koi) => (
-      // eslint-disable-next-line react/jsx-key
-      <div className="koi-card" onClick={() => showModal(koi)}>
-        {" "}
-        <div className="image"> <img  src={`/koi_image/${koi.image}`} alt={koi.image} /></div>  
-        <h3>{koi.koiType}</h3>
-        <div className="element-koi">
-        <h3 style={{ color: getElementColor(koi.element) }}>{koi.element}</h3>
-        <img src={`/Element1/${getElementIcon(koi.element)}.png`} alt={koi.element} />
-        
-        
-        </div>
-      </div>
-    ))
-  ) : (
-    <p>No Koi data available</p>
-  )}
-</div>
+            {koiData.length > 0 ? (
+              koiData.map((koi) => (
+                // eslint-disable-next-line react/jsx-key
+                <div className="koi-card" onClick={() => showModal(koi)}>
+                  {" "}
+                  <div className="image">
+                    {" "}
+                    <img src={koi.image} alt={koi.image} />
+                  </div>
+                  <h3>{koi.koiType}</h3>
+                  <div className="element-koi">
+                    <h3 style={{ color: getElementColor(koi.element) }}>
+                      {koi.element}
+                    </h3>
+                    <img
+                      src={`/Element1/${getElementIcon(koi.element)}.png`}
+                      alt={koi.element}
+                    />
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>No Koi data available</p>
+            )}
+          </div>
         </div>
         <div className="Header-pond">
           <h2>Đặc điểm hồ phù hợp</h2>
-          
-          <div className="pond-shape">
-          <h3>Hình dạng: {pondShape.map((pond, index) => (
-    <span key={pond.shapeId}>
-      {index > 0 && " và "} {/* Add "và" between elements, except before the first one */}
-      {pond.shapeId}
-    </span>
-  ))}</h3>
 
-          
-           <div className="pond-shape-images">
+          <div className="pond-shape">
+            <h3>
+              Hình dạng:{" "}
+              {pondShape.map((pond, index) => (
+                <span key={pond.shapeId}>
+                  {index > 0 && " và "}{" "}
+                  {/* Add "và" between elements, except before the first one */}
+                  {pond.shapeId}
+                </span>
+              ))}
+            </h3>
+
+            <div className="pond-shape-images">
               {pondShape.map((pond) => (
-                <div key={pond.shapeId} className="parallelogram" >
-                  <img src={`/pond/${pond.image}`} alt={pond.shapeId} />
-                  
+                <div key={pond.shapeId} className="parallelogram">
+                  <img src={pond.image} alt={pond.shapeId} />
                 </div>
               ))}
             </div>
-           </div>
-          
-         
-          
-           <div className="pond-direction">
-  <h3>Hướng:</h3>
-  {pondDirection.map((pond) => (
-    <div key={pond.directionId} className="direction-info">
-      <p>+ Gia chủ cung {pond.lifePalaceId} phù hợp với hướng {Array.isArray(pond.directionId) ? pond.directionId.join(' và ') : pond.directionId} 
-           {" "}là hướng tốt {Array.isArray(pond.eightMansions) ? pond.eightMansions.join(' và ') : pond.eightMansions} theo Bát Trạch</p>
-      {pond.pointOfDirection === 1 && (
-        <p>+ {Array.isArray(pond.eightMansions) ? pond.eightMansions[0] : pond.eightMansions} (hướng Thượng Cát): Đây là hướng mang lại may mắn nhất 
-           cho chủ nhà và tạo ra khí tốt.</p>
-      )}
-      {pond.pointOfDirection === 1 && Array.isArray(pond.eightMansions) && pond.eightMansions.length > 1 && (
-        <p>+ {pond.eightMansions[1]} (hướng Thượng Cát): Đây là hướng mang lại may mắn nhất 
-           cho chủ nhà và tạo ra khí tốt.</p>
-      )}
-    </div>
-  ))}
-</div>
+          </div>
+
+          <div className="pond-direction">
+            <h3>Hướng:</h3>
+            {pondDirection.map((pond) => (
+              <div key={pond.directionId} className="direction-info">
+                <p>
+                  + Gia chủ cung {pond.lifePalaceId} phù hợp với hướng{" "}
+                  {Array.isArray(pond.directionId)
+                    ? pond.directionId.join(" và ")
+                    : pond.directionId}{" "}
+                  là hướng tốt{" "}
+                  {Array.isArray(pond.eightMansions)
+                    ? pond.eightMansions.join(" và ")
+                    : pond.eightMansions}{" "}
+                  theo Bát Trạch
+                </p>
+                {pond.pointOfDirection === 1 && (
+                  <p>
+                    +{" "}
+                    {Array.isArray(pond.eightMansions)
+                      ? pond.eightMansions[0]
+                      : pond.eightMansions}{" "}
+                    (hướng Thượng Cát): Đây là hướng mang lại may mắn nhất cho
+                    chủ nhà và tạo ra khí tốt.
+                  </p>
+                )}
+                {pond.pointOfDirection === 1 &&
+                  Array.isArray(pond.eightMansions) &&
+                  pond.eightMansions.length > 1 && (
+                    <p>
+                      + {pond.eightMansions[1]} (hướng Thượng Cát): Đây là hướng
+                      mang lại may mắn nhất cho chủ nhà và tạo ra khí tốt.
+                    </p>
+                  )}
+              </div>
+            ))}
+          </div>
         </div>
       </body>
       <footer>
@@ -147,20 +171,19 @@ function Consulting() {
       </footer>
       {/* Modal for displaying koi details */}
       <Modal
-        title={selectedKoi ? "": ""}
+        title={selectedKoi ? "" : ""}
         visible={visible}
         onCancel={handleCancel}
         footer={null}
         width={1000}
       >
         {selectedKoi && (
-          <div className="modal-content"> 
-            <div className="modal-image"> 
-               <img style={{width:"100%"}} src={`/koi_image/${selectedKoi.image}`}/>
+          <div className="modal-content">
+            <div className="modal-image">
+              <img style={{ width: "100%" }} src={selectedKoi.image} />
             </div>
-            
+
             <div className="modal-text">
-            
               <h2>{selectedKoi.koiType}</h2>
               <h3>Giới thiệu:</h3>
               <p>{selectedKoi.description}</p>
@@ -170,11 +193,9 @@ function Consulting() {
               <p>{koiQuantity.description}</p>
             </div>
           </div>
-          
         )}
       </Modal>
       {/* Modal for displaying pond details */}
-      
     </div>
   );
 }

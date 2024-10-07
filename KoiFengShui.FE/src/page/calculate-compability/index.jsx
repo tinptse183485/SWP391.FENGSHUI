@@ -627,7 +627,7 @@ function ComputeCompability() {
                         <div>
                           <img
                             onClick={() => showFishDetails(fish)}
-                            src={`/koi_image/${fish.image}`}
+                            src={fish.image}
                             alt={fish.image}
                           />
                           <p>{fish.koiType}</p>
@@ -727,7 +727,7 @@ function ComputeCompability() {
                   <div className="fish-detail-modal">
                     <img
                       className="fish-detail-image"
-                      src={`/koi_image/${selectedFishDetail.image}`}
+                      src={selectedFishDetail.image}
                       alt={selectedFishDetail.koiType}
                     />
                     <div className="fish-detail-info">
@@ -762,7 +762,7 @@ function ComputeCompability() {
                       }`}
                       onClick={() => handleSelectPondShape(shape.shapeId)}
                     >
-                      <img src={`/pond/${shape.image}`} alt={shape.shapeId} />
+                      <img src={shape.image} alt={shape.shapeId} />
                       <div className="pond-shape-info">
                         <p>{shape.shapeId}</p>
                         {selectedPondShape === shape.shapeId &&
