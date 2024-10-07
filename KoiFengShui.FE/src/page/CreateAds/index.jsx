@@ -1,8 +1,10 @@
 import React, { useState, useRef } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import api from '../../config/axios';
+import { useNavigate } from 'react-router-dom';
 
 function ADS() {
+  const navigate = useNavigate();
   const [adData, setAdData] = useState({
     adId: '.',
     heading: '',
@@ -34,12 +36,12 @@ function ADS() {
     try {
       const response = await api.post('Advertisement/AddAdvertisement', adData);
       console.log('Response:', response.data);
-      // Lưu nội dung HTML vào trường link
       setAdData(prevData => ({
         ...prevData,
         link: adData.link // Giữ nguyên nội dung HTML đã nhập
       }));
       alert('Quảng cáo đã được đăng thành công! Đường dẫn: ' + location.href);
+      navigate('/payment'); // Navigate to the payment page
     } catch (error) {
       console.error('Lỗi khi đăng quảng cáo:', error);
       alert('Có lỗi xảy ra khi đăng quảng cáo. Vui lòng thử lại.');

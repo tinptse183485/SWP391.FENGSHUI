@@ -1,7 +1,19 @@
-.sidebar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: aliceblue;
-    padding: 100px;
+.container{
+  margin-top: 100px;
 }
+.Heading{
+    display: flex;
+    justify-content: space-between;
+}
+.btn-create{
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100px;
+    height: 30px;
+    
+}
+

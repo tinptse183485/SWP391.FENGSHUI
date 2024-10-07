@@ -5,8 +5,11 @@ import { Link, useLocation } from 'react-router-dom';
 import KoiImage from './koi.jpg';
 const { Sider, Content } = Layout;
 import Header_page from '../../components/header-page';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 const User_Ads = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const menuItems = [
     { label: 'Bản nháp' },
@@ -15,29 +18,38 @@ const User_Ads = () => {
     {  label: 'Đã đăng' },
     { label: 'Đã hoàn tiền' },
   ];
+  const handleCreate = () => {
+
+    navigate('/create-ads');
+  };
 
   return (
+    
     <Layout style={{ minHeight: '100vh', backgroundColor: 'white' }}>
-      <Sider style={{ backgroundColor: 'white' }}>
-        <div className="logo"> {/* Logo có thể được thêm vào đây */} 
-            <img src={KoiImage}></img>
-        </div>
-        <Menu theme="light" mode="inline" selectedKeys={[location.pathname]}>
+      <Header_page />
+      
+     
+        
+     
+      <Layout>
+        <Content style={{ margin: '16px' }}>
+          <div className='container' style={{ padding: 24, background: '#fff', minHeight: 360 }}>
+            {/* Nội dung chính của trang User_Ads sẽ nằm ở đây */}
+            <div className='Heading'>
+            <h1>Chào mừng đến với trang User Ads!</h1>
+            <button onClick={handleCreate} className='btn-create'>Tạo bản nháp</button>
+            </div>
+            <Menu className='menu' theme="light" mode="horizontal" selectedKeys={[location.pathname]}>
           {menuItems.map((item) => (
             <Menu.Item key={item.key} icon={item.icon}>
               <Link to={item.key}>{item.label}</Link>
             </Menu.Item>
           ))}
         </Menu>
-      </Sider>
-      <Layout>
-        <Content style={{ margin: '16px' }}>
-          <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-            {/* Nội dung chính của trang User_Ads sẽ nằm ở đây */}
-            <h1>Chào mừng đến với trang User Ads!</h1>
           </div>
         </Content>
       </Layout>
+      
     </Layout>
   );
 };
