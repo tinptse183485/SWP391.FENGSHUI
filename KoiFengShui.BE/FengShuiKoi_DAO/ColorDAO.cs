@@ -28,7 +28,7 @@ namespace FengShuiKoi_DAO
 
         public Color GetColorById(string id)
         {
-            return dbContext.Colors.SingleOrDefault(c => c.ColorId== id);
+            return dbContext.Colors.FirstOrDefault(c => c.ColorId== id);
         }
 
         public List<Color> GetColors()

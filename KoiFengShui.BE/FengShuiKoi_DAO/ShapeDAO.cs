@@ -28,7 +28,11 @@ namespace FengShuiKoi_DAO
 
         public Shape GetShapeById(string id)
         {
-            return dbContext.Shapes.SingleOrDefault(s => s.ShapeId == id);
+            return dbContext.Shapes.FirstOrDefault(s => s.ShapeId == id);
+        }
+        public Shape GetShapeByImg(string img)
+        {
+            return dbContext.Shapes.FirstOrDefault(s => s.Image == img);
         }
 
         public List<Shape> GetShapes()

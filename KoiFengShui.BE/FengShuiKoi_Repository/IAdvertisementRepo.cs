@@ -16,5 +16,7 @@ namespace FengShuiKoi_Repository
         public bool AddAdvertisement(Advertisement advertisement);
         public bool DeleteAdvertisement(string adID);
         public bool UpdateAdvertisement(string adID);
-    }
+        public List<Advertisement> GetAdvertisementByUserIdAndStatus(string userId, string status);
+
+	}
 }

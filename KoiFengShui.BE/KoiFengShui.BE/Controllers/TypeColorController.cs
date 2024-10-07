@@ -1,5 +1,6 @@
 ﻿using FengShuiKoi_BO;
 using FengShuiKoi_Services;
+using KoiFengShui.BE.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,7 +12,7 @@ namespace KoiFengShui.BE.Controllers
     {
         private readonly IKoiVarietyService _koiVarietyService;
         private readonly IColorService _colorService;
-        private readonly ITypeColorService _typeColorService;   
+        private readonly ITypeColorService _typeColorService;
 
         public TypeColorController(IKoiVarietyService koiVarietyService, IColorService colorService, ITypeColorService typeColorService)
         {
@@ -36,5 +37,6 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
     }
 }

@@ -30,7 +30,12 @@ namespace FengShuiKoi_Repository
             return AdvertisementDAO.Instance.GetAdvertisementByRank(Rank);
         }
 
-        public List<Advertisement> GetAdvertisements()
+		public List<Advertisement> GetAdvertisementByUserIdAndStatus(string userId, string status)
+		{
+			return AdvertisementDAO.Instance.GetAdvertisementByUserIdAndStatus(userId, status);
+		}
+
+		public List<Advertisement> GetAdvertisements()
         {
             return AdvertisementDAO.Instance.GetAdvertisements();
         }

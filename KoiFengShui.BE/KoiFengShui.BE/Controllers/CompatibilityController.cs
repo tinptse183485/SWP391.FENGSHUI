@@ -29,7 +29,7 @@ namespace KoiFengShui.BE.Controllers
             _pointOfShapeService = pointOfShapeService;
             _lifePlaceDirectionService = lifePlaceDirectionService;
         }
-        [HttpGet("GetPointOf1KoiTypes")]
+        [HttpPost("GetPointOf1KoiTypes")]
         public IActionResult GetPointOf1KoiTypes(string koiType, string dob)
         {
             int year = int.Parse(dob.Substring(0, 4));
@@ -67,7 +67,7 @@ namespace KoiFengShui.BE.Controllers
             public double? Percentage { get; set; }
         }
 
-        [HttpGet("GetAttributeCustomColor")]
+        [HttpPost("GetAttributeCustomColor")]
         public IActionResult GetAttributeCustomColor([FromBody] CustomKoiTypeColor customKoiType, string dob)
         {
             if (customKoiType?.Colors == null || !customKoiType.Colors.Any())
@@ -248,10 +248,7 @@ namespace KoiFengShui.BE.Controllers
             {
                 var s3Result = GetPointOfDirectionByDirecDOBGEN(Direction, DOB, Gender) as OkObjectResult;
                 var s2Result = GetPointOfShapeByShapeIDAndDOB(ShapeID, DOB) as OkObjectResult;
-
                 var s1Result = GetPointOf1KoiTypes(koiType, DOB) as OkObjectResult;
-
-
                 if (s1Result == null || s2Result == null || s3Result == null)
                 {
                     return BadRequest("Không thể tính toán một hoặc nhiều thành phần của độ tương thích.");
@@ -332,7 +329,7 @@ namespace KoiFengShui.BE.Controllers
                 }
                 else if (s2Result != null && s3Result != null)
                 {
-                    compa = (0.45 * s2 + 0.55 * s3);
+                    compa = (0.6 * s2 + 0.4 * s3);
                 }
                 else if (s1Result != null)
                 {

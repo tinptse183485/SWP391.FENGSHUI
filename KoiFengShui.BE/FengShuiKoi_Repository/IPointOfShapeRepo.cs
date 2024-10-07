@@ -11,6 +11,8 @@ namespace FengShuiKoi_Repository
         bool DeletePointOfShape(string element, string shape);
         bool UpdatePointOfShape(PointOfShape pointOfShape);
         public List<PointOfShape> GetGoodShapeByElemnet(string element);
+        public PointOfShape GetPointOfShapeByShapeID(string shape);
+        public bool DeletePointOfShapeByShapeID(string shapeID);
 
-	}
+    }
 }

@@ -28,7 +28,11 @@ namespace FengShuiKoi_DAO
 
         public PointOfShape GetPointOfShape(string element, string shape)
         {
-            return dbContext.PointOfShapes.SingleOrDefault(p => p.ElementId == element && p.ShapeId == shape);
+            return dbContext.PointOfShapes.FirstOrDefault(p => p.ElementId == element && p.ShapeId == shape);
+        }
+        public PointOfShape GetPointOfShapeByShapeID( string shape)
+        {
+            return dbContext.PointOfShapes.FirstOrDefault(p => p.ShapeId == shape);
         }
 
         public List<PointOfShape> GetPointOfShapes()
@@ -74,6 +78,51 @@ namespace FengShuiKoi_DAO
                 throw new Exception(ex.Message);
             }
             return isSuccess;
+        }
+        public bool DeletePointOfShapeByShapeID(string shapeID)
+        {
+            try
+            {
+                
+                var pointsToRemove = dbContext.PointOfShapes
+                    .Where(pos => pos.ShapeId == shapeID)
+                    .ToList();
+
+                if (pointsToRemove.Any())
+                {
+                    
+                    dbContext.PointOfShapes.RemoveRange(pointsToRemove);
+
+                  
+                    var shapeToRemove = dbContext.Shapes
+                        .FirstOrDefault(s => s.ShapeId == shapeID);
+
+                    if (shapeToRemove != null)
+                    {
+                        dbContext.Shapes.Remove(shapeToRemove);
+                    }
+
+                    
+                    var elementShapesToRemove = dbContext.PointOfShapes
+                        .Where(es => es.ShapeId == shapeID)
+                        .ToList();
+
+                    if (elementShapesToRemove.Any())
+                    {
+                        dbContext.PointOfShapes.RemoveRange(elementShapesToRemove);
+                    }
+
+                
+                    dbContext.SaveChanges();
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Đã xảy ra lỗi khi xóa Shape và các thực thể liên quan: {ex.Message}", ex);
+            }
         }
 
         public bool UpdatePointOfShape(PointOfShape pointOfShape)
