@@ -1,19 +1,20 @@
 import React, { useState, useRef } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
+import { Button, message } from 'antd';
 import api from '../../config/axios';
 import { useNavigate } from 'react-router-dom';
+import './index.css';
 
-function ADS() {
+function CreateAds() {
   const navigate = useNavigate();
   const [adData, setAdData] = useState({
     adId: '.',
     heading: '',
     image: '',
     link: '',
-    userId: localStorage.getItem("userId"), // Bạn cần cung cấp userId từ hệ thống xác thực của bạn
-    rank: 'Diamond',
+    userId: localStorage.getItem("userId"),
     elementId: 'None',
-    status: 'Pending'
+    status: 'Draft'
   });
   const editorRef = useRef(null);
 
@@ -28,28 +29,27 @@ function ADS() {
   const handleEditorChange = (content, editor) => {
     setAdData(prevData => ({
       ...prevData,
-      link: content // Lưu nội dung HTML vào trường link
+      link: content
     }));
   };
 
-  const handleSubmit = async () => {
+  const handleSave = async () => {
     try {
-      const response = await api.post('Advertisement/AddAdvertisement', adData);
+      const response = await api.post('Advertisement/AddAdvertisementDraft', adData);
       console.log('Response:', response.data);
-      setAdData(prevData => ({
-        ...prevData,
-        link: adData.link // Giữ nguyên nội dung HTML đã nhập
-      }));
-      alert('Quảng cáo đã được đăng thành công! Đường dẫn: ' + location.href);
-      navigate('/payment'); // Navigate to the payment page
+      message.success('Quảng cáo đã được lưu thành công!');
     } catch (error) {
       console.error('Lỗi khi đăng quảng cáo:', error);
-      alert('Có lỗi xảy ra khi đăng quảng cáo. Vui lòng thử lại.');
+      message.error('Có lỗi xảy ra khi đăng quảng cáo. Vui lòng thử lại.');
     }
   };
 
+  const handleChoosePackage = () => {
+    navigate('/choose-package');
+  };
+
   return (
-    <div>
+    <div className="ads-container">
       <h1>Đăng quảng cáo mới</h1>
       <input
         type="text"
@@ -72,24 +72,27 @@ function ADS() {
         init={{
           height: 500,
           plugins: [
-'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-    'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-    'insertdatetime', 'media', 'table', 'help', 'wordcount',
-    'directionality emoticons template paste textcolor colorpicker'
+            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+            'insertdatetime', 'media', 'table', 'help', 'wordcount',
+            'directionality emoticons template paste textcolor colorpicker'
           ],
           toolbar: 'undo redo | blocks | ' +
             'bold italic backcolor | alignleft aligncenter ' +
             'alignright alignjustify | bullist numlist outdent indent | ' +
-            'removeformat | link image | help | emoticons | template', // Thêm các nút tương ứng
+            'removeformat | link image | help | emoticons | template',
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }'
         }}
         onEditorChange={handleEditorChange}
       />
-      <button onClick={handleSubmit}>Đăng quảng cáo</button>
       
-      {/* Hiển thị nội dung quảng cáo */}
+      <div className="button-container">
+        <Button onClick={handleSave} type="primary" className="action-button save-button">Lưu bản nháp</Button>
+        <Button onClick={handleChoosePackage} type="primary" className="action-button choose-package-button">Chọn gói quảng cáo</Button>
+      </div>
+      
       {adData.link && (
-        <div>
+        <div className="ad-preview">
           <h2>Nội dung quảng cáo:</h2>
           <div dangerouslySetInnerHTML={{ __html: adData.link }} />
         </div>
@@ -98,4 +101,4 @@ function ADS() {
   );
 }
 
-export default ADS;
+export default CreateAds;

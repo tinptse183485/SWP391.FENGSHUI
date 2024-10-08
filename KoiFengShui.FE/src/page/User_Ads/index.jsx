@@ -14,10 +14,11 @@ const User_Ads = () => {
   const [advertisements, setAdvertisements] = useState([]);
   const [filteredAds, setFilteredAds] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState('all');
+  
 
   const menuItems = [
     { key: 'all', label: 'Tất cả' },
-    { key: 'draft', label: 'Bản nháp' },
+    { key: 'Draft', label: 'Bản nháp' },
     { key: 'pending', label: 'Chờ duyệt' },
     { key: 'approved', label: 'Đã duyệt' },
     { key: 'canceled', label: 'Đã hủy' },
@@ -57,6 +58,9 @@ const User_Ads = () => {
   const handleCreate = () => {
     navigate('/create-ads');
   };
+  const handleChoosePackage = () => {
+  navigate('/choose-package');
+};
 
   const columns = [
     {

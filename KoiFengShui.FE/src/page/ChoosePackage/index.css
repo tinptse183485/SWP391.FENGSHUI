@@ -1,0 +1,14 @@
+.choose-package-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .choose-package-container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .ant-form-item {
+    margin-bottom: 20px;
+  }

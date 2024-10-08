@@ -111,7 +111,7 @@ function Consulting() {
       // eslint-disable-next-line react/jsx-key
       <div className="koi-card" onClick={() => showModal(koi)}>
         {" "}
-        <div className="image"> <img  src={`/koi_image/${koi.image}`} alt={koi.image} /></div>  
+        <div className="image"> <img  src={koi.image} alt={koi.image} /></div>  
         <h3>{koi.koiType}</h3>
         <div className="element-koi">
         <h3 style={{ color: getElementColor(koi.element) }}>{koi.element}</h3>
@@ -141,7 +141,7 @@ function Consulting() {
            <div className="pond-shape-images">
               {pondShape.map((pond) => (
                 <div key={pond.shapeId} className="parallelogram" >
-                  <img src={`/pond/${pond.image}`} alt={pond.shapeId} />
+                  <img src={pond.image} alt={pond.shapeId} />
                   
                 </div>
               ))}
@@ -188,7 +188,7 @@ function Consulting() {
         {selectedKoi && (
           <div className="modal-content"> 
             <div className="modal-image"> 
-               <img style={{width:"100%", height:"auto"}} src={`/koi_image/${selectedKoi.image}`}/>
+               <img style={{width:"100%", height:"auto"}} src={selectedKoi.image}/>
             </div>
             
             <div className="modal-text">

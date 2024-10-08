@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Form, Input, Button } from 'antd';
 import api from '../../config/axios';
 import HeaderTemplate from '../../components/header-page';
+import './index.css';
 
 function VNPayPayment() {
   const [loading, setLoading] = useState(false);

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import './index.css';
+ import './index.css';
 import api from "../../config/axios";
 
 
