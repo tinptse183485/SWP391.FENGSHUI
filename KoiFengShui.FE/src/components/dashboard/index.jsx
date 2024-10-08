@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   DesktopOutlined,
   FileOutlined,
@@ -6,8 +6,9 @@ import {
   TeamOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Breadcrumb, Layout, Menu, theme } from "antd";
+import { Breadcrumb, Button, Layout, Menu, theme } from "antd";
 import { Link, Outlet } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 const { Header, Content, Footer, Sider } = Layout;
 function getItem(label, key, icon, children) {
   return {
@@ -25,6 +26,20 @@ const items = [
   getItem("Manage Pond", "pond", <PieChartOutlined />),
 ];
 const Dashboard = () => {
+  const navigate = useNavigate();
+  const [userId, setUserId] = useState(null);
+  useEffect(() => {
+    const user = localStorage.getItem("userId");
+    if (user) {
+      setUserId(user);
+    }
+  }, []);
+  const handleLogout = () => {
+    localStorage.removeItem("userId");
+    localStorage.removeItem("token");
+    setUserId(null);
+    navigate("/");
+  };
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -47,7 +62,9 @@ const Dashboard = () => {
           mode="inline"
           items={items}
         />
+        <Button onClick={handleLogout}>Log out</Button>
       </Sider>
+
       <Layout>
         <Header
           style={{
@@ -66,7 +83,7 @@ const Dashboard = () => {
             }}
           >
             <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
+            <Breadcrumb.Item>{userId}</Breadcrumb.Item>
           </Breadcrumb>
           <div
             style={{
