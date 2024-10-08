@@ -40,7 +40,10 @@ namespace FengShuiKoi_Services
         {
            return iAdsPackageRepo.GetListAdsPackageByAdID(AdID); 
         }
-
+		public List<AdsPackage> GetListAdsPackageByRank(string Rank)
+        {
+			return iAdsPackageRepo.GetListAdsPackageByRank(Rank);
+		}
 		public bool UpdateAdsPackage(AdsPackage newAdsPackage)
 		{
             return iAdsPackageRepo.UpdateAdsPackage(newAdsPackage);

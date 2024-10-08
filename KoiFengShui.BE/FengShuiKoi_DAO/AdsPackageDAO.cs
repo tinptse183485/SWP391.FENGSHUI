@@ -44,7 +44,11 @@ namespace FengShuiKoi_DAO
         {
             return dbContext.AdsPackages.Where(m => m.AdId.Equals(AdID)).ToList();
         }
-        public bool AddAdsPackage(AdsPackage ads)
+		public List<AdsPackage> GetListAdsPackageByRank(string Rank)
+		{
+			return dbContext.AdsPackages.Where(m => m.Rank.Equals(Rank)).ToList();
+		}
+		public bool AddAdsPackage(AdsPackage ads)
         {
             bool isSuccess = false;
             AdsPackage adsPackage = this.GetAdsPackageByAdIDRank(ads.AdId, ads.Rank);

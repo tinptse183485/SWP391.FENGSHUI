@@ -34,6 +34,10 @@ namespace FengShuiKoi_Repository
 		{
             return AdsPackageDAO.Instance.GetListAdsPackageByAdID(AdID);
         }
+		public List<AdsPackage> GetListAdsPackageByRank(string Rank)
+        {
+            return AdsPackageDAO.Instance.GetListAdsPackageByRank(Rank);
+		}
 		public bool UpdateAdsPackage(AdsPackage newAdsPackage)
 		{
             return AdsPackageDAO.Instance.UpdateAdsPackage(newAdsPackage);

@@ -30,11 +30,6 @@ namespace FengShuiKoi_Services
             return iAdvertisementRepo.GetAdvertisementByAdID(AdID);
         }
 
-        public List<Advertisement> GetAdvertisementByRank(string Rank)
-        {
-            return iAdvertisementRepo.GetAdvertisementByRank(Rank);
-        }
-
 		public List<Advertisement> GetAdvertisementByUserIdAndStatus(string userId, string status)
 		{
 			return iAdvertisementRepo.GetAdvertisementByUserIdAndStatus(userId, status);
