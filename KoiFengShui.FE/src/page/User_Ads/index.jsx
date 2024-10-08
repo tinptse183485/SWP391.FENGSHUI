@@ -56,7 +56,7 @@ const User_Ads = () => {
   };
 
   const handleCreate = () => {
-    navigate('/create-ads');
+    navigate('/create-ads', { state: { advertisement: null } });
   };
   const handleChoosePackage = () => {
   navigate('/choose-package');
@@ -82,8 +82,8 @@ const User_Ads = () => {
       title: 'Hành động',
       key: 'action',
       render: (_, record) => (
-        record.status === 'draft' ? (
-          <Button onClick={() => handleEditAd(record.id)}>Chỉnh sửa</Button>
+        record.status === 'Draft' ? (
+          <Button onClick={() => handleUpdateDraft(record)}>Cập nhật bản nháp</Button>
         ) : null
       ),
     },
@@ -91,6 +91,10 @@ const User_Ads = () => {
 
   const handleEditAd = (adId) => {
     navigate(`/edit-ad/${adId}`);
+  };
+
+  const handleUpdateDraft = (advertisement) => {
+    navigate('/create-ads', { state: { advertisement } });
   };
 
   return (

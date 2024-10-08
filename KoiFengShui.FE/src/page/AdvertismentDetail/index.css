@@ -1,3 +1,8 @@
 .ad-detail-container{
     margin-top: 130px;
 }
+img{
+    width: auto;
+    height: auto;
+    object-fit: cover;
+}

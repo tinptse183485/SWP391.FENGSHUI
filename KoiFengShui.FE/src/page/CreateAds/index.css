@@ -53,6 +53,12 @@
   margin-bottom: 20px;
 }
 
+.ad-preview img{
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
 .ant-card {
   height: 100%;
 }

@@ -1,11 +1,12 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { Button, message } from 'antd';
 import api from '../../config/axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './index.css';
 
 function CreateAds() {
+  const location = useLocation();
   const navigate = useNavigate();
   const [adData, setAdData] = useState({
     adId: '.',
@@ -17,6 +18,17 @@ function CreateAds() {
     status: 'Draft'
   });
   const editorRef = useRef(null);
+
+  useEffect(() => {
+    const { advertisement } = location.state || {};
+    if (advertisement) {
+      setAdData(prevData => ({
+        ...prevData,
+        ...advertisement,
+        adId: advertisement.adId || '.'
+      }));
+    }
+  }, [location]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -35,12 +47,13 @@ function CreateAds() {
 
   const handleSave = async () => {
     try {
-      const response = await api.post('Advertisement/AddAdvertisementDraft', adData);
+      const response = await api.put('Advertisement/UpdateDaftAdvertisement', adData);
       console.log('Response:', response.data);
       message.success('Quảng cáo đã được lưu thành công!');
+      navigate('/user-ads');
     } catch (error) {
-      console.error('Lỗi khi đăng quảng cáo:', error);
-      message.error('Có lỗi xảy ra khi đăng quảng cáo. Vui lòng thử lại.');
+      console.error('Error:', error);
+      message.error('Có lỗi xảy ra khi lưu quảng cáo. Vui lòng thử lại.');
     }
   };
 
@@ -50,7 +63,7 @@ function CreateAds() {
 
   return (
     <div className="ads-container">
-      <h1>Đăng quảng cáo mới</h1>
+      <h1>{adData.adId !== '.' ? 'Chỉnh sửa quảng cáo' : 'Đăng quảng cáo mới'}</h1>
       <input
         type="text"
         name="heading"
@@ -68,7 +81,7 @@ function CreateAds() {
       <Editor
         apiKey='48zvgxqbyrxhxjktp3nysk7hscrlqcz0143gyuhannv3rfv5'
         onInit={(evt, editor) => editorRef.current = editor}
-        initialValue="<p>Viết nội dung quảng cáo của bạn ở đây.</p>"
+        initialValue={adData.link || "<p>Viết nội dung quảng cáo của bạn ở đây.</p>"}
         init={{
           height: 500,
           plugins: [
@@ -87,8 +100,12 @@ function CreateAds() {
       />
       
       <div className="button-container">
-        <Button onClick={handleSave} type="primary" className="action-button save-button">Lưu bản nháp</Button>
-        <Button onClick={handleChoosePackage} type="primary" className="action-button choose-package-button">Chọn gói quảng cáo</Button>
+        <Button className="action-button save-button" onClick={handleSave}>
+          Lưu bản nháp
+        </Button>
+        <Button className="action-button" onClick={handleChoosePackage}>
+          Chọn gói quảng cáo
+        </Button>
       </div>
       
       {adData.link && (
