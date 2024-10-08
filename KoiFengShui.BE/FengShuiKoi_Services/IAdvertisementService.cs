@@ -10,7 +10,6 @@ namespace FengShuiKoi_Services
     public interface IAdvertisementService
     {
         public Advertisement GetAdvertisementByAdID(string AdID);
-        public List<Advertisement> GetAdvertisementByRank(string Rank);
         public List<Advertisement> GetAdvertisements();
         public bool AddAdvertisement(Advertisement advertisement);
         public bool DeleteAdvertisement(string adID);

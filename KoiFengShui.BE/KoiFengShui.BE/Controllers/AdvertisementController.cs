@@ -87,20 +87,12 @@ namespace KoiFengShui.BE.Controllers
             int randomNumber = random.Next(0, 1000); // Tạo số ngẫu nhiên từ 0 đến 999
             return $"AD{randomNumber:D3}";
         }
-        [HttpPost("AddAdvertisement")]
-        public IActionResult AddAdvertisement(AdvertisementDTO advertisementDto)
+        [HttpPost("AddAdvertisementDraft")]
+        public IActionResult AddAdvertisementDraft(AdvertisementDTO advertisementDto)
         {
             try
             {
                 // Validate input
-                if (string.IsNullOrWhiteSpace(advertisementDto.Rank) || string.IsNullOrWhiteSpace(advertisementDto.AdId))
-                {
-                    return BadRequest("Rank, Member ID, and Status are required.");
-                }
-                if (_packageService.GetPackageByRank(advertisementDto.Rank) == null)
-                {
-                    return BadRequest(" There not have the package. ");
-                }
                 if (_accountService.GetAccountByUserID(advertisementDto.UserId) == null)
                 {
                     return BadRequest(" Member ID are not found. ");
@@ -131,9 +123,8 @@ namespace KoiFengShui.BE.Controllers
                     Image = advertisementDto.Image?.Trim(),
                     Link = advertisementDto.Link?.Trim(),
                     UserId = advertisementDto.UserId,
-                    Rank = advertisementDto.Rank,
                     ElementId = "None",
-                    status = "draft",
+                    Status = "Draft",
                 };
 
                 // Add advertisement
@@ -157,7 +148,7 @@ namespace KoiFengShui.BE.Controllers
         }
 
         [HttpPut("UpdateAdvertisement")]
-        public IActionResult UpdateAdvertisement(AdvertisementDTO advertisement,DateTime startDate,int quantity,float total)
+        public IActionResult UpdateAdvertisement(AdvertisementDTO advertisement,string Rank,string Status,DateTime startDate,int quantity,float total)
         {
             try
             {
@@ -172,10 +163,10 @@ namespace KoiFengShui.BE.Controllers
                 }
 
                 existingAdvertisement.ElementId = advertisement.ElementId;
-                existingAdvertisement.status = advertisement.status;
+                existingAdvertisement.Status = Status;
                 bool result1 = _advertisementService.UpdateAdvertisement(existingAdvertisement.AdId);
-                AdsPackage adsPackage = _adsPackageService.GetAdsPackageByAdIDRank(advertisement.AdId, advertisement.Rank);
-                Package package = _packageService.GetPackageByRank(advertisement.Rank);
+                AdsPackage adsPackage = _adsPackageService.GetAdsPackageByAdIDRank(advertisement.AdId, Rank);
+                Package package = _packageService.GetPackageByRank(Rank);
                 adsPackage.StartDate = startDate;
                 adsPackage.ExpiredDate = startDate.AddDays(package.Duration);
 				adsPackage.Quantity = quantity;

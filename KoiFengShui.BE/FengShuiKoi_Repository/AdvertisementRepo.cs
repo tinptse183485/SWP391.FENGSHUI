@@ -25,10 +25,7 @@ namespace FengShuiKoi_Repository
             return AdvertisementDAO.Instance.GetAdvertisementByAdID(AdID);
         }
 
-        public List<Advertisement> GetAdvertisementByRank(string Rank)
-        {
-            return AdvertisementDAO.Instance.GetAdvertisementByRank(Rank);
-        }
+
 
 		public List<Advertisement> GetAdvertisementByUserIdAndStatus(string userId, string status)
 		{

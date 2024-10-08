@@ -14,7 +14,7 @@ namespace FengShuiKoi_Repository
 
 
         public List<AdsPackage> GetListAdsPackageByAdID(string AdID);
-
+        public List<AdsPackage> GetListAdsPackageByRank(string Rank);
 		public List<AdsPackage> GetAdsPackages();
         public bool AddAdsPackage(AdsPackage ads);
         public bool UpdateAdsPackage(AdsPackage newAdsPackage);
