@@ -10,6 +10,7 @@ import FooterPage from "../../components/footer-page";
 import { Carousel } from "antd";
 import KoiImage1 from "./hinh-nen-ca-chep-2k-dep-cho-may-tinh_025211326.jpg";
 import KoiImage2 from "./animals-aquatic-animal-fish-koi-fish.jpg";
+import api from "../../config/axios";
 
 const contentStyle = {
   margin: 0,
@@ -21,54 +22,41 @@ const contentStyle = {
 };
 
 function Home() {
-  const location = useLocation();
+  const [diamondAds, setDiamondAds] = useState([]);
 
   useEffect(() => {
-    if (location.state && location.state.scrollTo) {
-      const element = document.getElementById(location.state.scrollTo);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
+    const fetchAds = async () => {
+      try {
+        const response = await api.get('Advertisement/GetAllAdvertisement');
+        const filteredAds = response.data.filter(ad => ad.rank === "Diamond");
+        setDiamondAds(filteredAds);
+      } catch (error) {
+        console.error("Error fetching advertisements:", error);
       }
-    }
-  }, [location]);
+    };
+
+    fetchAds();
+  }, []);
 
   return (
     <>
       <HeaderTemplate></HeaderTemplate>
 
       <Carousel autoplay className="carousel">
-        <div className="first">
-          <img
-            style={contentStyle}
-            src={  KoiImage1}
-            alt="header-img"
-            className="header-img"
-          />
-        </div>
-        <div>
-          <img
-            style={contentStyle}
-            src={KoiImage2}
-            alt="header-img"
-            className="header-img"
-          />
-        </div>
-        <div>
-          <img
-            style={contentStyle}
-            src={KoiImage1}
-            alt="header-img"
-            className="header-img"
-          />
-        </div>
-        <div>
-          <img
-            style={contentStyle}
-            src={KoiImage2}
-            alt="header-img"
-            className="header-img"
-          />
-        </div>
+        {diamondAds.map((ad) => (
+          <div className="carousel-item" key={ad.id}>
+            <img
+              style={contentStyle}
+              src={ad.image}
+              alt={ad.heading}
+              className="header-img"
+            />
+            <div className="carousel-content">
+              <h3>{ad.heading}</h3>
+              
+            </div>
+          </div>
+        ))}
       </Carousel>
       <div className="home-content">
         
