@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import api from "../../config/axios";
 import HeaderTemplate from "../../components/header-page";
 import { Spin } from 'antd';
+import './index.css';
 
 
 function AdvertisementDetail() {
