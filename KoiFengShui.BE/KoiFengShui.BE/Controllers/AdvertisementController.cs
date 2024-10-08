@@ -44,11 +44,9 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-        [HttpGet("GetAllAdvertisementByAdId")]
-        public IActionResult GetAllAdvertisementByAdId(string adId)
+        [HttpGet("GetAdvertisementByAdId")]
+        public IActionResult GetAdvertisementByAdId(string adId)
         {
-            
-
             try
             {
                 var advertisements = _advertisementService.GetAdvertisementByAdID(adId);
@@ -64,7 +62,26 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-        private string GenerateUniqueAdId()
+
+		[HttpGet("GetAdvertisementByUserIDandStatus")]
+		public IActionResult GetAdvertisementByUserIDandStatus(string userID,string status)
+		{
+			try
+			{
+				var advertisements = _advertisementService.GetAdvertisementByUserIdAndStatus(userID, status);
+				if (advertisements == null)
+				{
+					return BadRequest("Không tìm thấy quảng cáo");
+				}
+
+				return Ok(advertisements);
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Internal server error: {ex.Message}");
+			}
+		}
+		private string GenerateUniqueAdId()
         {
             Random random = new Random();
             int randomNumber = random.Next(0, 1000); // Tạo số ngẫu nhiên từ 0 đến 999
@@ -83,7 +100,6 @@ namespace KoiFengShui.BE.Controllers
                 if (_packageService.GetPackageByRank(advertisementDto.Rank) == null)
                 {
                     return BadRequest(" There not have the package. ");
-
                 }
                 if (_accountService.GetAccountByUserID(advertisementDto.UserId) == null)
                 {
@@ -117,7 +133,7 @@ namespace KoiFengShui.BE.Controllers
                     UserId = advertisementDto.UserId,
                     Rank = advertisementDto.Rank,
                     ElementId = "None",
-                    status = advertisementDto.status,
+                    status = "draft",
                 };
 
                 // Add advertisement
@@ -139,8 +155,9 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, "Internal server error. Please try again later.");
             }
         }
+
         [HttpPut("UpdateAdvertisement")]
-        public IActionResult UpdatePackage(AdvertisementDTO advertisement)
+        public IActionResult UpdateAdvertisement(AdvertisementDTO advertisement,DateTime startDate,int quantity,float total)
         {
             try
             {
@@ -156,10 +173,16 @@ namespace KoiFengShui.BE.Controllers
 
                 existingAdvertisement.ElementId = advertisement.ElementId;
                 existingAdvertisement.status = advertisement.status;
+                bool result1 = _advertisementService.UpdateAdvertisement(existingAdvertisement.AdId);
+                AdsPackage adsPackage = _adsPackageService.GetAdsPackageByAdIDRank(advertisement.AdId, advertisement.Rank);
+                Package package = _packageService.GetPackageByRank(advertisement.Rank);
+                adsPackage.StartDate = startDate;
+                adsPackage.ExpiredDate = startDate.AddDays(package.Duration);
+				adsPackage.Quantity = quantity;
+                adsPackage.Total = total;
+                bool result2 = _adsPackageService.UpdateAdsPackage(adsPackage);
 
-
-                bool result = _advertisementService.UpdateAdvertisement(existingAdvertisement.AdId);
-                if (result)
+				if (result1)
                 {
                     return Ok("Cập nhật gói thành công");
                 }

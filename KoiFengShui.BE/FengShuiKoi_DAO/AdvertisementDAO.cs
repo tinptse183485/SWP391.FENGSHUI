@@ -38,7 +38,13 @@ namespace FengShuiKoi_DAO
                 .Where(m => m.Rank.Equals(Rank))
                 .ToList();
         }
-        public List<Advertisement> GetAdvertisements()
+		public List<Advertisement> GetAdvertisementByUserIdAndStatus(string userId,string status)
+		{
+			return dbContext.Advertisements
+				.Where(m => m.UserId.Equals(userId) && m.status.Equals(status))
+				.ToList();
+		}
+		public List<Advertisement> GetAdvertisements()
         {
             return dbContext.Advertisements.ToList();
         }

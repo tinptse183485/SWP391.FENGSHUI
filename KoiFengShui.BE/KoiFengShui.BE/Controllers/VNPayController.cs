@@ -35,7 +35,7 @@ namespace KoiFengShui.BE.Controllers
 				{ "vnp_Locale", "vn" },
 				{ "vnp_OrderInfo", $"Thanh toan don hang: {vnpayTxnRef}" },
 				{ "vnp_OrderType", "other" },
-				{ "vnp_ReturnUrl", "http://localhost:5173/api/vnpay/payment-callback" },
+				{ "vnp_ReturnUrl", "http://localhost:5173/payment-success" },
 				{ "vnp_TxnRef", vnpayTxnRef },
 				{ "vnp_BankCode", "" },
 				{ "vnp_ExpireDate", DateTime.Now.AddMinutes(15).ToString("yyyyMMddHHmmss") }
