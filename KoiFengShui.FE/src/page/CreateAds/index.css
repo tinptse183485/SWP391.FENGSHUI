@@ -4,6 +4,7 @@
   padding: 20px;
 }
 
+
 .button-container {
   display: flex;
   justify-content: space-between;
@@ -35,6 +36,7 @@
 
 .choose-package-button:hover {
   background-color: #73d13d;
+
 }
 
 .ad-preview {
@@ -42,6 +44,7 @@
   border: 1px solid #ddd;
   padding: 20px;
 }
+
 .choose-package-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -66,3 +69,4 @@
 .ant-form-item {
   margin-bottom: 20px;
 }
+

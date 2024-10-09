@@ -1,9 +1,6 @@
 body{
-
-  height: 100%;
-
+ height: 100%;
 }
-
 
 .compute-container {
 
@@ -70,6 +67,7 @@ body{
     width: 450px;
   }
 
+
   .section-title {
     font-size: 1.5rem;
     color: #1890ff;
@@ -86,6 +84,7 @@ body{
     margin-top: 20px;
   }
 
+
    .pond-shape-card {
     flex: 0 0 calc(20% - 20px);
     min-width: 400px;
@@ -94,6 +93,7 @@ body{
     margin-bottom: 20px;
 
     border: 2px solid #e8e8e8;
+
     border-radius: 12px;
     padding: 15px;
     cursor: pointer;
@@ -108,6 +108,7 @@ body{
     overflow: visible;
     display: flex;
   }
+
   .fish-card
   {
     flex: 0 0 calc(20% - 20px);
@@ -126,6 +127,7 @@ body{
     z-index: 1;
     overflow: visible;
     display: flex;
+
   }
   .fish-card img, .pond-shape-card img {
     width: 60%;
@@ -151,9 +153,11 @@ body{
 
    .pond-shape-card:hover {
 
+
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     transform: translateY(-3px);
     z-index: 1001;
+
   }
 
   .fish-card.selected, .pond-shape-card.selected {
@@ -497,5 +501,6 @@ body{
   flex: 1;
   font-size: 16px;
 }
+
 
 

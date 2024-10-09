@@ -26,6 +26,7 @@ const { Option } = Select;
 
 function ComputeCompability() {
   const [form] = Form.useForm();
+
   const [advertisements, setAdvertisements] = useState([]);
   const [filteredFishList, setFilteredFishList] = useState([]);
   const [fishList, setFishList] = useState([]);
@@ -95,8 +96,8 @@ function ComputeCompability() {
       form.setFieldsValue({
         selectedFish: {
           koiType: selectedFishDetail.koiType,
-          colors: colorWeights
-        }
+          colors: colorWeights,
+        },
       });
     }
   }, [selectedFishDetail, colorWeights]);
@@ -110,18 +111,14 @@ function ComputeCompability() {
         directionResponse,
         elementResponse,
         colorResponse,
-
         allColorsResponse
-
       ] = await Promise.all([
         api.get("KoiVariety/GetAllKoi"),
         api.get("Shape/GetAllShape"),
         api.get("Direction/GetAllDirection"),
         api.get("Element/GetAllElement"),
         api.get("Color/GetAllColor"),
-
         api.get("TypeColor/GetAllTypeColor")
-
       ]);
       setFishList(fishResponse.data);
       setFilteredFishList(fishResponse.data); // Đặt danh sách cá ban đầu
@@ -130,22 +127,19 @@ function ComputeCompability() {
       setElements(elementResponse.data);
       setColors(colorResponse.data);
 
-      
-      
       const allColors = allColorsResponse.data;
       const fishColorsMap = {};
-      allColors.forEach(color => {
+      allColors.forEach((color) => {
         if (!fishColorsMap[color.koiType]) {
           fishColorsMap[color.koiType] = [];
         }
         fishColorsMap[color.koiType].push({
           colorId: color.colorId,
           percentage: color.percentage || 0,
-          originalPercentage: color.percentage || 0  // Add this line
+          originalPercentage: color.percentage || 0, // Add this line
         });
       });
       setAllFishColors(fishColorsMap);
-      
 
     } catch (error) {
       toast.error("Error fetching data");
@@ -154,6 +148,7 @@ function ComputeCompability() {
 
   const onFinish = async (values) => {
     try {
+
       const {
         birthdate,
         Gender,
@@ -164,10 +159,12 @@ function ComputeCompability() {
       // Prepare payload
       const payload = selectedFishes.map(fish => ({
         koiType: fish.koiType,
-        colors: fish.colors.map(color => ({
-          colorId: color.colorId,
-          percentage: color.percentage,
-        })).filter(color => color.percentage > 0)
+        colors: fish.colors
+          .map((color) => ({
+            colorId: color.colorId,
+            percentage: color.percentage,
+          }))
+          .filter((color) => color.percentage > 0),
       }));
   
       console.log("Payload to be sent:", payload);
@@ -186,6 +183,7 @@ function ComputeCompability() {
   
       // Call API using query params
       const response = await api.post(
+
         `Compatibility/GetTheCompatibilityOfUser?${queryParams.toString()}`,
         payload
       );
@@ -197,7 +195,6 @@ function ComputeCompability() {
   
       setUserElement(response1.data);
       setUserLifePalife(response2.data);
-  
       if (response.data) {
         toast.success("Calculation successful");
         setCompatibilityResult(response.data.compatibility);
@@ -317,8 +314,6 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
   // Hàm hiển thị modal khi người dùng chọn cá
   const showFishDetails = async (fish) => {
     try {
-     
-      
       setSelectedFishDetail(fish);
       setIsModalVisible(true);
     } catch (error) {
@@ -334,13 +329,17 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
       } else {
         const response = await api.get(`TypeColor/GetAllTypeColor`);
         const allColors = response.data;
-        fishColors = allColors.filter(color => color.koiType === fish.koiType);
+        fishColors = allColors.filter(
+          (color) => color.koiType === fish.koiType
+        );
       }
       setSelectedFishDetail(fish);
-      setColorWeights(fishColors.map(color => ({
-        colorId: color.colorId,
-        percentage: color.percentage || 0
-      })));
+      setColorWeights(
+        fishColors.map((color) => ({
+          colorId: color.colorId,
+          percentage: color.percentage || 0,
+        }))
+      );
     } catch (error) {
       console.error("Error fetching fish details:", error);
       toast.error("Error fetching fish details");
@@ -349,30 +348,33 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
 
   // Hàm xử lý thay đổi tỉ trọng màu
   const handleColorWeightChange = (koiType, index, value) => {
-    setAllFishColors(prev => {
+    setAllFishColors((prev) => {
       const updatedColors = [...prev[koiType]];
       updatedColors[index] = {
         ...updatedColors[index],
-        percentage: Math.max(0, Math.min(1, value))
+        percentage: Math.max(0, Math.min(1, value)),
       };
-      setFishPoints(prev => {
-          const newPoints = { ...prev };
-          delete newPoints[koiType];
-          return newPoints;
-        });
+      setFishPoints((prev) => {
+        const newPoints = { ...prev };
+        delete newPoints[koiType];
+        return newPoints;
+      });
 
       // Check if the fish is currently selected
-      const isSelected = selectedFishes.some(fish => fish.koiType === koiType);
+      const isSelected = selectedFishes.some(
+        (fish) => fish.koiType === koiType
+      );
       if (isSelected) {
         // If it's selected, remove it from selectedFishes
-        setSelectedFishes(prev => prev.filter(fish => fish.koiType !== koiType));
+        setSelectedFishes((prev) =>
+          prev.filter((fish) => fish.koiType !== koiType)
+        );
         // Also remove the fish point
-        
       }
 
       return {
         ...prev,
-        [koiType]: updatedColors
+        [koiType]: updatedColors,
       };
     });
   };
@@ -380,16 +382,18 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
   // Hàm kiểm tra tổng tỉ trọng phải là 100%
   const validateColorWeights = (koiType) => {
     const colors = allFishColors[koiType];
-    const totalPercentage = colors.reduce((sum, color) => sum + color.percentage, 0);
+    const totalPercentage = colors.reduce(
+      (sum, color) => sum + color.percentage,
+      0
+    );
     if (Math.abs(totalPercentage - 1) < 0.01) {
-      return { valid: true, message: '' };
+      return { valid: true, message: "" };
     } else if (totalPercentage > 1) {
-      return { valid: false, message: 'Total percentage exceeds 100%' };
+      return { valid: false, message: "Total percentage exceeds 100%" };
     } else {
-      return { valid: false, message: 'Total percentage is less than 100%' };
+      return { valid: false, message: "Total percentage is less than 100%" };
     }
   };
-
   const AdvertisementSection = ({ ads }) => (
     <div className="advertisement-section">
       <h2>Advertisements</h2>
@@ -402,63 +406,67 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
     </div>
   );
   const handleResetColors = (koiType) => {
-    const originalColors = allFishColors[koiType].map(color => ({
+    const originalColors = allFishColors[koiType].map((color) => ({
       ...color,
-      percentage: color.originalPercentage || 0
+      percentage: color.originalPercentage || 0,
     }));
-    setAllFishColors(prev => ({
+    setAllFishColors((prev) => ({
       ...prev,
-      [koiType]: originalColors
-
+      [koiType]: originalColors,
     }));
-    setFishPoints(prev => {
+    setFishPoints((prev) => {
       const newPoints = { ...prev };
       delete newPoints[koiType];
       return newPoints;
     });
   };
 
-
   const handleSelectFish = async (fish) => {
     const validation = validateColorWeights(fish.koiType);
     if (validation.valid) {
       const selectedFishData = {
         koiType: fish.koiType,
-        colors: allFishColors[fish.koiType]
+        colors: allFishColors[fish.koiType],
       };
-      
+
       try {
         // Get the DOB from the form
-        const dob = form.getFieldValue('birthdate');
-        const formattedDob = dob ? dob.format('YYYY-MM-DD') : '';
-  
+        const dob = form.getFieldValue("birthdate");
+        const formattedDob = dob ? dob.format("YYYY-MM-DD") : "";
+
         // Prepare the payload for the API
         const payload = {
           koiType: fish.koiType,
-          colors: allFishColors[fish.koiType].map(color => ({
+          colors: allFishColors[fish.koiType].map((color) => ({
             colorId: color.colorId,
-            percentage: color.percentage
-          }))
+            percentage: color.percentage,
+          })),
         };
-  
+
         // Fetch fish point from API
-        const response = await api.post('Compatibility/GetAttributeCustomColor', payload, {
-          params: { dob: formattedDob }
-        });
+        const response = await api.post(
+          "Compatibility/GetAttributeCustomColor",
+          payload,
+          {
+            params: { dob: formattedDob },
+          }
+        );
         const fishPoint = response.data;
-        
-        setFishPoints(prev => ({
+
+        setFishPoints((prev) => ({
           ...prev,
-          [fish.koiType]: fishPoint
+          [fish.koiType]: fishPoint,
         }));
-        
-        setSelectedFishes(prev => {
-          const existingIndex = prev.findIndex(f => f.koiType === fish.koiType);
+
+        setSelectedFishes((prev) => {
+          const existingIndex = prev.findIndex(
+            (f) => f.koiType === fish.koiType
+          );
           if (existingIndex !== -1) {
             // If fish is already selected, remove it
-            const newSelected = prev.filter(f => f.koiType !== fish.koiType);
+            const newSelected = prev.filter((f) => f.koiType !== fish.koiType);
             form.setFieldsValue({ selectedFishes: newSelected });
-            setFishPoints(prev => {
+            setFishPoints((prev) => {
               const newPoints = { ...prev };
               delete newPoints[fish.koiType];
               return newPoints;
@@ -481,8 +489,10 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
   };
 
   const handleRemoveFish = (fishToRemove) => {
-    setSelectedFishes(prev => {
-      const newSelected = prev.filter(fish => fish.koiType !== fishToRemove.koiType);
+    setSelectedFishes((prev) => {
+      const newSelected = prev.filter(
+        (fish) => fish.koiType !== fishToRemove.koiType
+      );
       form.setFieldsValue({ selectedFishes: newSelected });
       return newSelected;
     });
@@ -496,18 +506,21 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
     } else {
       setSelectedPondShape(shapeId);
       form.setFieldsValue({ selectedPondShape: shapeId });
-      
+
       try {
-        const dob = form.getFieldValue('birthdate');
-        const formattedDob = dob ? dob.format('YYYY-MM-DD') : '';
-        
-        const response = await api.get(`Compatibility/GetPointOfShapeByShapeIDAndDOB`, {
-          params: { 
-            shapeId: shapeId,
-            dob: formattedDob
+        const dob = form.getFieldValue("birthdate");
+        const formattedDob = dob ? dob.format("YYYY-MM-DD") : "";
+
+        const response = await api.get(
+          `Compatibility/GetPointOfShapeByShapeIDAndDOB`,
+          {
+            params: {
+              shapeId: shapeId,
+              dob: formattedDob,
+            },
           }
-        });
-        
+        );
+
         setShapePoint(response.data);
       } catch (error) {
         console.error("Error fetching shape point:", error);
@@ -518,16 +531,17 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
 
   const handleSelectDirection = async () => {
     try {
-      const direction = form.getFieldValue('pondDirection');
-      const dob = form.getFieldValue('birthdate');
-      const gender = form.getFieldValue('Gender');
+      const direction = form.getFieldValue("pondDirection");
+      const dob = form.getFieldValue("birthdate");
+      const gender = form.getFieldValue("Gender");
 
       if (!dob || !gender) {
         toast.error("Please select date of birth and gender");
         return;
       }
 
-      const formattedDob = dob.format('YYYY-MM-DD');
+      const formattedDob = dob.format("YYYY-MM-DD");
+
 
       if (direction) {
         console.log('Sending request with:', { Direction: direction, DOB: formattedDob, Gender: gender });
@@ -596,7 +610,6 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
                 label="Chọn loại cá"
                 name="selectedFishes"
                 rules={[{ required: false, message: "Vui lòng chọn ít nhất một loại cá" }]}
-
               >
                 <div className="filter-section">
                   <Form layout="inline">
@@ -639,21 +652,28 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
                   </Form>
                 </div>
 
-                
-                <div  className="fish-list">
+                <div className="fish-list">
                   {filteredFishList.map((fish) => (
-                    <div 
-                      key={fish.koiType} 
-                      className={`fish-card ${selectedFishes.some(f => f.koiType === fish.koiType) ? 'selected' : ''}`}
+                    <div
+                      key={fish.koiType}
+                      className={`fish-card ${
+                        selectedFishes.some((f) => f.koiType === fish.koiType)
+                          ? "selected"
+                          : ""
+                      }`}
                     >
                       <div className="fish-card-left">
                         <div>
-                          <img onClick={() => showFishDetails(fish)} src={`/koi_image/${fish.image}`} alt={fish.image} />
+                          <img
+                            onClick={() => showFishDetails(fish)}
+                            src={fish.image}
+                            alt={fish.image}
+                          />
                           <p>{fish.koiType}</p>
-                          
                         </div>
                       </div>
                       <div className="fish-card-right">
+
   {allFishColors[fish.koiType] && (
     <>
       <div style={{ minHeight: "100%", maxHeight: "100%" }}>
@@ -708,32 +728,29 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
 
               {/* Hiển thị modal trong phần JSX */}
               <Modal
-               
                 visible={isModalVisible}
                 // onOk={handleModalOk}
                 onCancel={() => setIsModalVisible(false)}
-                footer={[
-                  
-                ]}
+                footer={[]}
               >
                 {selectedFishDetail && (
                   <div className="fish-detail-modal">
-                     <img className="fish-detail-image"
-                      src={`/koi_image/${selectedFishDetail.image}`}
+                    <img
+                      className="fish-detail-image"
+                      src={selectedFishDetail.image}
                       alt={selectedFishDetail.koiType}
                     />
                     <div className="fish-detail-info">
                       <h1>{selectedFishDetail.koiType}</h1>
-                   
+
                       <p>
-                       <strong>Bản mệnh:</strong> {selectedFishDetail.element}
+                        <strong>Bản mệnh:</strong> {selectedFishDetail.element}
                       </p>
                       <p>
                         <strong>Giới thiệu:</strong>{" "}
-                          {selectedFishDetail.description}
+                        {selectedFishDetail.description}
                       </p>
                     </div>
-                    
                   </div>
                 )}
               </Modal>
@@ -758,14 +775,14 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
 
                       onClick={() => handleSelectPondShape(shape.shapeId)}
                     >
-                      <img src={`/pond/${shape.image}`} alt={shape.shapeId} />
+                      <img src={shape.image} alt={shape.shapeId} />
                       <div className="pond-shape-info">
+
                       <p>{shape.shapeId}</p>
                       {selectedPondShape === shape.shapeId && shapePoint !== null && (
                         <p className="shape-point">Điểm tương hợp: {(shapePoint ).toFixed(2)}%</p>
                       )}
                     </div>
-
                     </div>
                   ))}
                 </div>
@@ -838,6 +855,5 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
     </>
   );
 }
-
 
 export default ComputeCompability;
