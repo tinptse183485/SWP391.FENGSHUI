@@ -131,5 +131,34 @@ namespace FengShuiKoi_DAO
                 throw new Exception($"Đã xảy ra lỗi khi xóa màu và loại Koi: {ex.Message}", ex);
             }
         }
+
+        public bool AddKoiTypeColor(TypeColor koiFish)
+        {
+            try
+            {
+                if (koiFish == null)
+                {
+                    return false;
+                }
+
+                var koiTypeColor = new TypeColor
+                {
+                    KoiType = koiFish.KoiType,
+                    ColorId = koiFish.ColorId,
+                    Percentage = koiFish.Percentage
+                };
+
+            
+                dbContext.TypeColors.Add(koiTypeColor);
+                dbContext.SaveChanges();
+
+                return true;
+            }
+            catch (Exception)
+            {
+           
+                return false;
+            }
+        }
     }
 }

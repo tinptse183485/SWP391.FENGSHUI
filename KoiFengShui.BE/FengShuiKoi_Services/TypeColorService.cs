@@ -25,6 +25,7 @@ namespace FengShuiKoi_Services
         public bool DeleteTypeColorByColorId(string colorId) => iTypeColorRepo.DeleteTypeColorByColorId(colorId);
         public bool DeleteTypeColorByKoiType(string KoiType) => iTypeColorRepo.DeleteTypeColorByKoiType(KoiType);
         public List<TypeColor> GetTypeByColor(string color) => iTypeColorRepo.GetTypeByColor(color);
+        public bool AddKoiTypeColor(TypeColor koiFish) => iTypeColorRepo.AddKoiTypeColor(koiFish);
         public List<TypeColor> GetColorsAndPercentages(string koiType) => iTypeColorRepo.GetColorsAndPercentages(koiType);
 
     }
