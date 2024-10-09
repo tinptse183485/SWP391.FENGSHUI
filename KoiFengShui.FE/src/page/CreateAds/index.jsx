@@ -58,7 +58,7 @@ function CreateAds() {
   };
 
   const handleChoosePackage = () => {
-    navigate('/choose-package');
+    navigate('/choose-package', { state: { adData: adData } });
   };
 
   return (

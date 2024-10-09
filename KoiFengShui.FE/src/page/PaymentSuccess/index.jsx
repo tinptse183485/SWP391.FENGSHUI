@@ -1,86 +1,52 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { message } from 'antd';
 import api from '../../config/axios';
-import { Result, Button, Card } from 'antd';
-import './index.css';
 
 const PaymentSuccess = () => {
-  const [paymentStatus, setPaymentStatus] = useState(null);
-  const [paymentInfo, setPaymentInfo] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchPaymentStatus = async () => {
-      try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const response = await api.get('VNPay/payment-callback', {
-          params: Object.fromEntries(urlParams)
-        });
-        setPaymentStatus(response.data.message === 'Thanh toán thành công' ? 'success' : 'error');
-        if (response.data.message === 'Thanh toán thành công') {
-          setPaymentInfo({
-            amount: urlParams.get('vnp_Amount'),
-            bankCode: urlParams.get('vnp_BankCode'),
-            orderInfo: urlParams.get('vnp_OrderInfo'),
-            payDate: urlParams.get('vnp_PayDate'),
-            transactionNo: urlParams.get('vnp_TransactionNo'),
+    const queryParams = new URLSearchParams(location.search);
+    const vnp_ResponseCode = queryParams.get('vnp_ResponseCode');
+    const packageInfo = JSON.parse(localStorage.getItem('pendingAdPackage'));
+
+    const handlePaymentResult = async () => {
+      if (vnp_ResponseCode === '00') {
+        try {
+          await api.put('Advertisement/UpdateAdvertisement', {
+            adId: packageInfo.adId,
+            Rank: packageInfo.rank,
+            Status: packageInfo.status,
+            startDate: packageInfo.startDate,
+            quantity: packageInfo.quantity,
+            total: packageInfo.total
           });
+          message.success('Payment successful and advertisement updated');
+          navigate('/user-ads');
+        } catch (error) {
+          console.error('Error updating advertisement:', error);
+          message.error('Payment successful but failed to update advertisement');
         }
-      } catch (error) {
-        console.error('Error fetching payment status:', error);
-        setPaymentStatus('error');
-      } finally {
-        setLoading(false);
+      } else {
+        message.error('Payment failed');
+        navigate('/choose-package');
       }
+      localStorage.removeItem('pendingAdPackage');
     };
 
-    fetchPaymentStatus();
-  }, []);
-
-  if (loading) {
-    return <div className="loading">Loading...</div>;
-  }
+    if (packageInfo) {
+      handlePaymentResult();
+    } else {
+      navigate('/choose-package');
+    }
+  }, [location, navigate]);
 
   return (
-    <div className='container'>
-    <div className="payment-result-container">
-      <div className='payment-result-content'>
-      <Result
-        status={paymentStatus}
-        title={paymentStatus === 'success' ? 'Payment Successful!' : 'Payment Failed'}
-        subTitle={
-          paymentStatus === 'success'
-            ? 'Your payment has been processed successfully.'
-            : 'There was an issue processing your payment. Please try again.'
-        }
-        
-      />
-      </div>
-      <div className='payment-result-info'>
-      {paymentStatus === 'success' && paymentInfo && (
-        <Card title="Payment Information" >
-          <p><strong>Amount:</strong> {parseInt(paymentInfo.amount) / 100} VND</p>
-          <p><strong>Bank:</strong> {paymentInfo.bankCode}</p>
-          <p><strong>Order Info:</strong> {decodeURIComponent(paymentInfo.orderInfo)}</p>
-          <p><strong>Payment Date:</strong> {paymentInfo.payDate}</p>
-          <p><strong>Transaction No:</strong> {paymentInfo.transactionNo}</p>
-        </Card>
-      )}
-
-      </div>
-      </div>
-      <Button 
-      
-            type="primary" 
-            key="console" 
-            onClick={() => navigate(paymentStatus === 'success' ? '/' : '/payment')}
-          >
-            {paymentStatus === 'success' ? 'Go to Home' : 'Try Again'}
-          </Button>
+    <div>
+      <h1>Processing payment result...</h1>
     </div>
-    
-    
   );
 };
 
