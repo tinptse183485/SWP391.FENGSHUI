@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.Metrics;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace KoiFengShui.BE.Controllers
 {
@@ -23,7 +24,7 @@ namespace KoiFengShui.BE.Controllers
             _packageService = packageService;
             _adsPackageService = adsPackageService;
             _advertisementService = advertisementService;
-            _accountService = accountService;
+            _accountService = accountService;                                                                                   
             _elementService = elementService;
         }
 
@@ -63,6 +64,28 @@ namespace KoiFengShui.BE.Controllers
             }
         }
 
+		[HttpGet("CheckAdIdExist")]
+		public IActionResult CheckAdIdExist(string adId)
+		{
+			try
+			{
+				var advertise= _advertisementService.GetAdvertisementByAdID(adId);
+                if(advertise != null)
+                {
+					return Ok("True");
+                }
+                else
+                {
+					return BadRequest("False");
+				}
+				
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Internal server error: {ex.Message}");
+			}
+		}
+
 		[HttpGet("GetAdvertisementByUserIDandStatus")]
 		public IActionResult GetAdvertisementByUserIDandStatus(string userID,string status)
 		{
@@ -81,12 +104,48 @@ namespace KoiFengShui.BE.Controllers
 				return StatusCode(500, $"Internal server error: {ex.Message}");
 			}
 		}
+
+
+		[HttpGet("GenerateAdId")]
+		public IActionResult GenerateAdId(string AdId)
+		{
+			try
+			{
+				// Kiểm tra định dạng AdId
+				string pattern = @"^AD\d{3}$";
+				if (!Regex.IsMatch(AdId, pattern))
+				{
+					string adId = GenerateUniqueAdId();
+					int attempts = 0;
+					const int maxAttempts = 10;
+
+					while (_advertisementService.GetAdvertisementByAdID(adId) != null && attempts < maxAttempts)
+					{
+						adId = GenerateUniqueAdId();
+						attempts++;
+					}
+					if (attempts == maxAttempts)
+					{
+						return StatusCode(500, "Failed to generate a unique advertisement ID. Please try again.");
+					}
+					return Ok(adId);
+				}
+				return Ok(AdId);
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Internal server error: {ex.Message}");
+			}
+		}
+
 		private string GenerateUniqueAdId()
         {
             Random random = new Random();
             int randomNumber = random.Next(0, 1000); // Tạo số ngẫu nhiên từ 0 đến 999
             return $"AD{randomNumber:D3}";
         }
+
+
         [HttpPost("AddAdvertisementDraft")]
         public IActionResult AddAdvertisementDraft(AdvertisementDTO advertisementDto)
         {
@@ -161,18 +220,26 @@ namespace KoiFengShui.BE.Controllers
                 {
                     return BadRequest("Không tìm thấy nguyên tố phù hợp ");
                 }
-
                 existingAdvertisement.ElementId = advertisement.ElementId;
                 existingAdvertisement.Status = Status;
                 bool result1 = _advertisementService.UpdateAdvertisement(existingAdvertisement.AdId);
                 AdsPackage adsPackage = _adsPackageService.GetAdsPackageByAdIDRank(advertisement.AdId, Rank);
-                Package package = _packageService.GetPackageByRank(Rank);
-                adsPackage.StartDate = startDate;
-                adsPackage.ExpiredDate = startDate.AddDays(package.Duration);
-				adsPackage.Quantity = quantity;
-                adsPackage.Total = total;
-                bool result2 = _adsPackageService.UpdateAdsPackage(adsPackage);
-
+				Package package = _packageService.GetPackageByRank(Rank);
+				if (adsPackage == null)
+                {
+                    AdsPackage newads = new AdsPackage();
+                    newads.AdId = advertisement.AdId;
+                    newads.Rank = Rank;
+                    newads.StartDate = startDate;
+                    newads.ExpiredDate = startDate.AddDays(package.Duration*quantity);
+					newads.Quantity = quantity;
+					newads.Total = total;
+                    bool result2 =_adsPackageService.AddAdsPackage(newads);
+                    if (result2)
+                    {
+						return Ok("Thêm quảng cáo thành công");
+                    }
+                }
 				if (result1)
                 {
                     return Ok("Cập nhật gói thành công");
