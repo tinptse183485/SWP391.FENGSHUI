@@ -1,19 +1,26 @@
+import { useState, useEffect } from "react"; // Update this line
 import "./index.css";
 import HeaderTemplate from "../../components/header-page";
 import FooterPage from "../../components/footer-page";
-import { useLocation } from "react-router-dom"; // Import useLocation
-import { Modal } from "antd"; // Import Modal from Ant Design
-import { useState } from "react"; // Import useState
+import { useLocation } from "react-router-dom";
+import { Modal } from "antd";
+import AdvertisementDisplay from '../../components/advertisementdisplay';
+import api from "../../config/axios";
+
+
+// ... rest of your imports
 
 function Consulting() {
   const location = useLocation(); // Get location object
-  const { koiData, koiQuantity, pondShape, pondDirection } = location.state || {
+  const { koiData, koiQuantity, pondShape, pondDirection, fate } = location.state || {
     koiData: [],
     koiQuantity: [],
     pondShape: [],
     pondDirection: [],
+    fate: null,
   }; // Extract  data
-
+  const [advertisements, setAdvertisements] = useState([]);
+  const [userElement, setUserElement] = useState(null);
   const [visible, setVisible] = useState(false); // State for modal visibility
   const [selectedKoi, setSelectedKoi] = useState(null); // State for selected koi
   const [selectedPond, setSelectedPond] = useState(null); // State for selected pond
@@ -65,6 +72,28 @@ function Consulting() {
     }
   };
 
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const adsResponse = await api.get('Advertisement/GetAllAdvertisement');
+        setAdvertisements(adsResponse.data);
+        
+        // Get user element from the location state
+        if (location.state && location.state.fate) {
+          console.log(location.state.fate);
+          setUserElement(location.state.fate);
+        } else {
+          console.error("User element not found in location state");
+          // Handle the case when user element is not available
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
+    fetchData();
+  }, [location]);
   return (
     <div>
       <header>
@@ -78,31 +107,27 @@ function Consulting() {
         <div className="Header-fish">
           <h2>Các loại cá phù hợp</h2>
           <div className="koi-cards">
-            {koiData.length > 0 ? (
-              koiData.map((koi) => (
-                // eslint-disable-next-line react/jsx-key
-                <div className="koi-card" onClick={() => showModal(koi)}>
-                  {" "}
-                  <div className="image">
-                    {" "}
-                    <img src={koi.image} alt={koi.image} />
-                  </div>
-                  <h3>{koi.koiType}</h3>
-                  <div className="element-koi">
-                    <h3 style={{ color: getElementColor(koi.element) }}>
-                      {koi.element}
-                    </h3>
-                    <img
-                      src={`/Element1/${getElementIcon(koi.element)}.png`}
-                      alt={koi.element}
-                    />
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p>No Koi data available</p>
-            )}
-          </div>
+
+  {koiData.length > 0 ? (
+    koiData.map((koi) => (
+      // eslint-disable-next-line react/jsx-key
+      <div className="koi-card" onClick={() => showModal(koi)}>
+        {" "}
+        <div className="image"> <img  src={koi.image} alt={koi.image} /></div>  
+        <h3>{koi.koiType}</h3>
+        <div className="element-koi">
+        <h3 style={{ color: getElementColor(koi.element) }}>{koi.element}</h3>
+        <img src={`/Element1/${getElementIcon(koi.element)}.png`} alt={koi.element} />
+        
+        
+        </div>
+      </div>
+    ))
+  ) : (
+    <p>No Koi data available</p>
+  )}
+</div>
+
         </div>
         <div className="Header-pond">
           <h2>Đặc điểm hồ phù hợp</h2>
@@ -121,8 +146,11 @@ function Consulting() {
 
             <div className="pond-shape-images">
               {pondShape.map((pond) => (
-                <div key={pond.shapeId} className="parallelogram">
+
+                <div key={pond.shapeId} className="parallelogram" >
                   <img src={pond.image} alt={pond.shapeId} />
+                  
+
                 </div>
               ))}
             </div>
@@ -165,10 +193,17 @@ function Consulting() {
             ))}
           </div>
         </div>
+
+        {userElement && (
+        <AdvertisementDisplay advertisements={advertisements} userElement={fate} />
+      )}
       </body>
+      
       <footer>
         <FooterPage />
       </footer>
+     
+     
       {/* Modal for displaying koi details */}
       <Modal
         title={selectedKoi ? "" : ""}
@@ -178,9 +213,11 @@ function Consulting() {
         width={1000}
       >
         {selectedKoi && (
-          <div className="modal-content">
-            <div className="modal-image">
-              <img style={{ width: "100%" }} src={selectedKoi.image} />
+
+          <div className="modal-content"> 
+            <div className="modal-image"> 
+               <img style={{width:"100%", height:"auto"}} src={selectedKoi.image}/>
+
             </div>
 
             <div className="modal-text">
@@ -194,8 +231,10 @@ function Consulting() {
             </div>
           </div>
         )}
+         
       </Modal>
       {/* Modal for displaying pond details */}
+
     </div>
   );
 }

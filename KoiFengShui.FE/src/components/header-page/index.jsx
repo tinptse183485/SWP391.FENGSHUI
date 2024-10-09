@@ -101,6 +101,32 @@ function HeaderTemplate() {
             </ul>
           </nav>
 
+
+            </li>
+            <li>
+
+              <Link to="/ads-list">
+              <a href="#about">About Us</a>
+              </Link>
+
+            </li>
+            <li>
+              <a href="#Advertisements" onClick={handleScrollToAdvertisements}>Quảng cáo</a>
+            </li>
+            <li>
+
+              <Link to="/user-ads">
+              <a href="#blog">Blog</a>
+              </Link>
+
+            </li>
+            <li>
+              <a href="#contact">Liên hệ</a>
+            </li>
+          </ul>
+        </nav>
+
+
           {userId ? (
             <Dropdown
               overlay={menu}
@@ -119,6 +145,7 @@ function HeaderTemplate() {
           )}
         </div>
       </div>
+
     </div>
   );
 }

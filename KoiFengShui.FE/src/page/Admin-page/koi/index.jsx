@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react"; // Thêm useEffect và useState
 // import "./index.css";
 import api from "../../../config/axios";
@@ -15,6 +16,7 @@ const Koi = () => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [fileList, setFileList] = useState([]);
+
 
   useEffect(() => {
     fetchData();
@@ -212,6 +214,7 @@ const Koi = () => {
           src={previewImage}
         />
       )}
+
     </div>
   );
 };

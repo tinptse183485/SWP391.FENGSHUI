@@ -7,6 +7,7 @@ import api from "../../config/axios";
 import { toast } from "react-toastify";
 import { useState } from "react"; // Import useState
 
+
 const Calculation = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
@@ -17,6 +18,7 @@ const Calculation = () => {
   const [fate, setFate] = useState(null);
   const [lifePalace, setLifePalace] = useState(null);
   const [isFateCalculated, setIsFateCalculated] = useState(false);
+
 
   const handleCalculate = async () => {
     try {
@@ -46,6 +48,10 @@ const Calculation = () => {
       const reponse4 = await api.get("Pond/GetGoodDirectionByDOB", {
         params: { dob: values.YOB.format("YYYY-MM-DD"), gender: values.Gender },
       });
+
+      const userElement = await api.get("Fate/element", {
+        params: { dob: values.YOB.format("YYYY-MM-DD") },
+      });
       
 
       // Navigate to consulting page with all data
@@ -57,6 +63,7 @@ const Calculation = () => {
           pondDirection: reponse4.data,
           fate: fate,
           lifePalace: lifePalace,
+          
         },
       });
     } catch (error) {
