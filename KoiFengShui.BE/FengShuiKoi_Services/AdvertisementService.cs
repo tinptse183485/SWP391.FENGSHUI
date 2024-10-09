@@ -1,4 +1,5 @@
 ﻿using FengShuiKoi_BO;
+using FengShuiKoi_DAO;
 using FengShuiKoi_Repository;
 using System;
 using System.Collections.Generic;
@@ -24,18 +25,18 @@ namespace FengShuiKoi_Services
         {
             return iAdvertisementRepo.DeleteAdvertisement(adID);
         }
-
+        public List<Advertisement> GetAdvertisementStatus(string status) =>iAdvertisementRepo.GetAdvertisementStatus(status);
         public Advertisement GetAdvertisementByAdID(string AdID)
         {
             return iAdvertisementRepo.GetAdvertisementByAdID(AdID);
         }
 
-        public List<Advertisement> GetAdvertisementByRank(string Rank)
-        {
-            return iAdvertisementRepo.GetAdvertisementByRank(Rank);
-        }
+		public List<Advertisement> GetAdvertisementByUserIdAndStatus(string userId, string status)
+		{
+			return iAdvertisementRepo.GetAdvertisementByUserIdAndStatus(userId, status);
+		}
 
-        public List<Advertisement> GetAdvertisements()
+		public List<Advertisement> GetAdvertisements()
         {
             return iAdvertisementRepo.GetAdvertisements();
         }

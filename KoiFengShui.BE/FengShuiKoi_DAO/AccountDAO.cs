@@ -1,4 +1,5 @@
 ﻿using FengShuiKoi_BO;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,24 +80,55 @@ namespace FengShuiKoi_DAO
 			}
 			return isSuccess;
 		}
-		public bool UpdateAccount(string id)
-		{
-			bool isSuccess = false;
-			Account acc = this.GetAccountByUserID(id);
-			try
-			{
-				if (acc != null)
-				{
-					dbContext.Entry<Account>(acc).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-					dbContext.SaveChanges();
-					isSuccess = true;
-				}
-			}
-			catch (Exception ex)
-			{
-				throw new Exception(ex.Message);
-			}
-			return isSuccess;
-		}
-	}
+        public bool UpdateAccountByAdmin(Account newAccountData)
+        {
+            try
+            {
+                var existingAccount = this.GetAccountByUserID(newAccountData.UserId);
+                if (existingAccount == null)
+                {
+                    return false;
+                }
+
+                // Update account properties
+                existingAccount.Status = newAccountData.Status;
+                existingAccount.Password = newAccountData.Password;
+                
+
+                dbContext.Entry(existingAccount).State = EntityState.Modified;
+                dbContext.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+              
+                return false;
+            }
+        }
+        public bool UpdateAccountByUser(Account newAccountData)
+        {
+            try
+            {
+                var existingAccount = this.GetAccountByUserID(newAccountData.UserId);
+                if (existingAccount == null)
+                {
+                    return false;
+                }
+
+             
+                existingAccount.Email = newAccountData.Email;
+                existingAccount.Password = newAccountData.Password;
+
+
+                dbContext.Entry(existingAccount).State = EntityState.Modified;
+                dbContext.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                return false;
+            }
+        }
+    }
 }

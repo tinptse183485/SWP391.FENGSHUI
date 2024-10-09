@@ -5,6 +5,8 @@ using KoiFengShui.BE.TokenService;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System;
+using System.Security.Principal;
+using Microsoft.EntityFrameworkCore;
 
 namespace KoiFengShui.BE.Controllers
 {
@@ -46,9 +48,131 @@ namespace KoiFengShui.BE.Controllers
 				UserId = account.UserId
 			});
 		}
+        [HttpPut("UpdateAccountUser")]
+        public IActionResult UpdateAccountUser(RegisterDTO Account)
+        {
+            try
+            {
+                var existingAccount = _accountService.GetAccountByUserID(Account.UserID);
+                if (existingAccount == null)
+                {
+                    return BadRequest("Tài khoản không tồn tại");
+                }
+
+                if (string.IsNullOrWhiteSpace(Account.Password))
+                {
+                    return BadRequest("Mật khẩu không được để trống");
+                }
+                if (string.IsNullOrWhiteSpace(Account.Email))
+                {
+                    return BadRequest("Email không được để trống");
+                }
+                if (string.IsNullOrWhiteSpace(Account.Name))
+                {
+                    return BadRequest("Tên không được để trống");
+                }
+
+                var accountWithSameEmail = _accountService.GetAccountByEmail(Account.Email);
+                if (accountWithSameEmail != null && accountWithSameEmail.UserId != Account.UserID)
+                {
+                    return BadRequest("Email đã tồn tại");
+                }
+                existingAccount.Password = Account.Password;
+                existingAccount.Email = Account.Email;
+                var existingMember = _memberService.GetMemberByUserID(Account.UserID);
+                if (existingMember != null)
+                {
+                    existingMember.Name = Account.Name;
+                    existingMember.Birthday = Account.Birthday;
+                    _memberService.UpdateMember(existingMember);
+                }
+
+                bool result = _accountService.UpdateAccountByUser(existingAccount);
+
+                if (result)
+                {
+                    return Ok("Cập nhật thành công");
+                }
+                else
+                {
+                    return BadRequest("Cập nhật thất bại");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi server: {ex.Message}");
+            }
+        }
+        [HttpPut("UpdateAccountAdmin")]
+        public IActionResult UpdateAccountAdmin(AccountDTO Account)
+        {
+            try
+            {
+                if (_accountService.GetAccountByUserID(Account.UserID) == null)
+                {
+                    return BadRequest("Tài khoản không tồn tại");
+                }
+
+                if (string.IsNullOrWhiteSpace(Account.Password))
+                {
+                    return BadRequest("Mật khẩu không được để trống");
+                }
+
+                if (string.IsNullOrWhiteSpace(Account.status))
+                {
+                    return BadRequest("Trạng thái không được để trống");
+                }
+
+                var acc = new Account
+                {
+                    UserId = Account.UserID,
+                    Password = Account.Password,
+                    Status = Account.status
+                };
+
+                bool result = _accountService.UpdateAccountByAdmin(acc);
+
+                if (result)
+                {
+                    return Ok("Cập nhật thành công");
+                }
+                else
+                {
+                    return BadRequest("Cập nhật thất bại");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi server: {ex.Message}");
+            }
+        }
 
 
-		[HttpPost("register")]
+        [HttpGet("GetAllAccountMemberInfo")]
+        public IActionResult GetAllAccountMemberInfo()
+        {
+            var accounts = _accountService.GetAllAccounts();
+            var accountInfoList = new List<RegisterDTO>();
+
+            foreach (var account in accounts)
+            {
+                var member = _memberService.GetMemberByUserID(account.UserId);
+				var accountInfo = new RegisterDTO
+				{
+					UserID = account.UserId,
+					Email = account.Email,
+					Password = account.Password,
+					Role = account.Role,
+					status = account.Status,
+					Name = member?.Name,
+                    Birthday = (DateTime)(member?.Birthday)
+                };
+                accountInfoList.Add(accountInfo);
+            }
+
+            return	Ok( accountInfoList);
+        }
+        [HttpPost("register")]
 		public IActionResult Register(RegisterDTO newAccount)
 		{
 			if (_accountService.GetAccountByUserID(newAccount.UserID) != null)

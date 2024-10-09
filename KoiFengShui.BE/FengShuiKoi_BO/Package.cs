@@ -8,7 +8,6 @@ namespace FengShuiKoi_BO
         public Package()
         {
             AdsPackages = new HashSet<AdsPackage>();
-            Advertisements = new HashSet<Advertisement>();
         }
 
         public string Rank { get; set; } = null!;
@@ -17,6 +16,5 @@ namespace FengShuiKoi_BO
         public double Price { get; set; }
 
         public virtual ICollection<AdsPackage> AdsPackages { get; set; }
-        public virtual ICollection<Advertisement> Advertisements { get; set; }
     }
 }

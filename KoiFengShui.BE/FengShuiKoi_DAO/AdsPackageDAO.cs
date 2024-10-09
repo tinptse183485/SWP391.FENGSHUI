@@ -40,11 +40,15 @@ namespace FengShuiKoi_DAO
         {
             return dbContext.AdsPackages.SingleOrDefault(m => m.AdId.Equals(AdID) && m.Rank.Equals(Rank));
         }
-        public List<AdsPackage> GetListAdsPackageByAdIDRank(string AdID, string Rank)
+        public List<AdsPackage> GetListAdsPackageByAdID(string AdID)
         {
-            return dbContext.AdsPackages.Where(m => m.AdId.Equals(AdID) && m.Rank.Equals(Rank)).ToList();
+            return dbContext.AdsPackages.Where(m => m.AdId.Equals(AdID)).ToList();
         }
-        public bool AddAdsPackage(AdsPackage ads)
+		public List<AdsPackage> GetListAdsPackageByRank(string Rank)
+		{
+			return dbContext.AdsPackages.Where(m => m.Rank.Equals(Rank)).ToList();
+		}
+		public bool AddAdsPackage(AdsPackage ads)
         {
             bool isSuccess = false;
             AdsPackage adsPackage = this.GetAdsPackageByAdIDRank(ads.AdId, ads.Rank);
@@ -64,10 +68,14 @@ namespace FengShuiKoi_DAO
             }
             return isSuccess;
         }
-        public bool UpdateAdsPackage(string AdID, string Rank)
+        public bool UpdateAdsPackage(AdsPackage newAdsPackage)
         {
             bool isSuccess = false;
-            AdsPackage ads = this.GetAdsPackageByAdIDRank(AdID, Rank);
+            AdsPackage ads = this.GetAdsPackageByAdIDRank(newAdsPackage.AdId, newAdsPackage.Rank);
+            ads.StartDate = newAdsPackage.StartDate;
+            ads.ExpiredDate = newAdsPackage.ExpiredDate;
+            ads.Quantity = newAdsPackage.Quantity;
+            ads.Total = newAdsPackage.Total;
             try
             {
                 if (ads != null)

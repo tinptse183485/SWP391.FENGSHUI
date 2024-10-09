@@ -13,7 +13,9 @@ namespace FengShuiKoi_Services
 		public Account GetAccountByUserID(string userid);
 		public List<Account> GetAllAccounts();
 		public bool AddAccount(Account account);
-		public bool UpdateAccount(string userId);
-		public bool DeleteAccount(string userId);
+        public bool UpdateAccountByAdmin(Account newAccountData);
+		public bool UpdateAccountByUser(Account newAccountData);
+
+        public bool DeleteAccount(string userId);
 	}
 }

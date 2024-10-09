@@ -13,10 +13,12 @@ namespace FengShuiKoi_Repository
         public AdsPackage GetAdsPackageByAdIDRank(string AdID, string Rank);
 
 
-        public List<AdsPackage> GetListAdsPackageByAdIDRank(string AdID, string Rank);
-        public List<AdsPackage> GetAdsPackages();
+        public List<AdsPackage> GetListAdsPackageByAdID(string AdID);
+        public List<AdsPackage> GetListAdsPackageByRank(string Rank);
+		public List<AdsPackage> GetAdsPackages();
         public bool AddAdsPackage(AdsPackage ads);
-        public bool UpdateAdsPackage(string AdID, string Rank);
-        public bool DeleteAdsPackage(string AdID, string Rank);
+        public bool UpdateAdsPackage(AdsPackage newAdsPackage);
+
+		public bool DeleteAdsPackage(string AdID, string Rank);
     }
 }

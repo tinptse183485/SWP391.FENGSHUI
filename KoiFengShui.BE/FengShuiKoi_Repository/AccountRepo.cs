@@ -19,7 +19,7 @@ namespace FengShuiKoi_Repository
 		public Account GetAccountByUserID(string userid)=> AccountDAO.Instance.GetAccountByUserID(userid);
 
 		public List<Account> GetAllAccounts()=> AccountDAO.Instance.GetAccounts();
-
-		public bool UpdateAccount(string userId) => AccountDAO.Instance.UpdateAccount(userId);
+        public bool UpdateAccountByUser(Account newAccountData) => AccountDAO.Instance.UpdateAccountByUser(newAccountData);
+        public bool UpdateAccountByAdmin(Account newAccountData) => AccountDAO.Instance.UpdateAccountByAdmin(newAccountData);
 	}
 }
