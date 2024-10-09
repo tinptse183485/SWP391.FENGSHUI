@@ -105,31 +105,31 @@ const Koi = () => {
       return;
     }
 
-    const koi = { ...values };
-
-    // Transform colors data
-    koi.colors = values.colors.map((color) => ({
-      colorId: color.colorId,
-      percentage: parseFloat(color.percentage),
-    }));
-
-    if (fileList.length > 0) {
-      const file = fileList[0];
-      console.log(file);
-      const url = await uploadFile(file.originFileObj);
-      koi.image = url;
-    }
-
     try {
       setSubmitting(true);
-      const response = await api.post("KoiVariety/CreateKoi", koi);
+      let imageUrl = "";
+      if (fileList.length > 0) {
+        const file = fileList[0].originFileObj;
+        imageUrl = await uploadFile(file);
+      }
+
+      const koi = {
+        ...values,
+        image: imageUrl,
+        colors: values.colors.map((color) => ({
+          colorId: color.colorId.toString(),
+          percentage: parseFloat(color.percentage),
+        })),
+      };
+
+      const response = await api.post("KoiVariety/AddKoiAndTypeColor", koi);
       console.log(response.data);
       toast.success("Tạo mới thành công");
       setOpenModal(false);
       form.resetFields();
       fetchData();
     } catch (err) {
-      toast.error(err.message);
+      toast.error(err.response?.data?.message || "Có lỗi xảy ra");
     } finally {
       setSubmitting(false);
     }
@@ -251,13 +251,13 @@ const Koi = () => {
           </Form.Item>
           <Form.Item label="image" name="image">
             <Upload
-              action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
               listType="picture-card"
               fileList={fileList}
               onPreview={handlePreview}
               onChange={handleChange}
+              beforeUpload={() => false} // Prevent auto upload
             >
-              {fileList.length >= 8 ? null : uploadButton}
+              {fileList.length >= 1 ? null : uploadButton}
             </Upload>
           </Form.Item>
           <Form.List name="colors">
