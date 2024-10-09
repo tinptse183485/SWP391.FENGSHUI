@@ -168,10 +168,12 @@ function Consulting() {
   ))}
 </div>
         </div>
-      </body>
-      {userElement && (
+
+        {userElement && (
         <AdvertisementDisplay advertisements={advertisements} userElement={fate} />
       )}
+      </body>
+      
       <footer>
         <FooterPage />
       </footer>

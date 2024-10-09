@@ -648,7 +648,7 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
                     >
                       <div className="fish-card-left">
                         <div>
-                          <img onClick={() => showFishDetails(fish)} src={fish.image} alt={fish.image} />
+                          <img onClick={() => showFishDetails(fish)} src={`/koi_image/${fish.image}`} alt={fish.image} />
                           <p>{fish.koiType}</p>
                           
                         </div>
@@ -719,7 +719,7 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
                 {selectedFishDetail && (
                   <div className="fish-detail-modal">
                      <img className="fish-detail-image"
-                      src={selectedFishDetail.image}
+                      src={`/koi_image/${selectedFishDetail.image}`}
                       alt={selectedFishDetail.koiType}
                     />
                     <div className="fish-detail-info">
@@ -758,7 +758,7 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
 
                       onClick={() => handleSelectPondShape(shape.shapeId)}
                     >
-                      <img src={shape.image} alt={shape.shapeId} />
+                      <img src={`/pond/${shape.image}`} alt={shape.shapeId} />
                       <div className="pond-shape-info">
                       <p>{shape.shapeId}</p>
                       {selectedPondShape === shape.shapeId && shapePoint !== null && (
