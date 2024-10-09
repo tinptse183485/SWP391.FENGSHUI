@@ -1,0 +1,38 @@
+.choose-package-container {
+    max-width: 1200px;
+    margin: 120px auto;
+    padding: 20px;
+  }
+  
+  .choose-package-container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .package-layout {
+    display: flex;
+    gap: 100px;
+  }
+  
+  .package-info-and-form {
+    flex: 4;
+    display: flex;
+    
+  }
+  
+  .package-info, .update-form {
+    background-color: white;
+    flex: 1;
+  }
+  
+  .invoice-info {
+    flex: 6;
+  }
+  
+  .ant-card {
+    margin-bottom: 20px;
+  }
+  
+  .ant-form-item {
+    margin-bottom: 20px;
+  }

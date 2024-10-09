@@ -14,10 +14,11 @@ const User_Ads = () => {
   const [advertisements, setAdvertisements] = useState([]);
   const [filteredAds, setFilteredAds] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState('all');
+  
 
   const menuItems = [
     { key: 'all', label: 'Tất cả' },
-    { key: 'draft', label: 'Bản nháp' },
+    { key: 'Draft', label: 'Bản nháp' },
     { key: 'pending', label: 'Chờ duyệt' },
     { key: 'approved', label: 'Đã duyệt' },
     { key: 'canceled', label: 'Đã hủy' },
@@ -55,8 +56,11 @@ const User_Ads = () => {
   };
 
   const handleCreate = () => {
-    navigate('/create-ads');
+    navigate('/create-ads', { state: { advertisement: null } });
   };
+  const handleChoosePackage = () => {
+  navigate('/choose-package');
+};
 
   const columns = [
     {
@@ -78,8 +82,8 @@ const User_Ads = () => {
       title: 'Hành động',
       key: 'action',
       render: (_, record) => (
-        record.status === 'draft' ? (
-          <Button onClick={() => handleEditAd(record.id)}>Chỉnh sửa</Button>
+        record.status === 'Draft' ? (
+          <Button onClick={() => handleUpdateDraft(record)}>Cập nhật bản nháp</Button>
         ) : null
       ),
     },
@@ -87,6 +91,10 @@ const User_Ads = () => {
 
   const handleEditAd = (adId) => {
     navigate(`/edit-ad/${adId}`);
+  };
+
+  const handleUpdateDraft = (advertisement) => {
+    navigate('/create-ads', { state: { advertisement } });
   };
 
   return (

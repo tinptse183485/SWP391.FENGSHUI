@@ -14,7 +14,7 @@ function AdvertisementDetail() {
   useEffect(() => {
     const fetchAdHtml = async () => {
       try {
-        const response = await api.get(`Advertisement/GetAllAdvertisementByAdId?adId=${id}`);
+        const response = await api.get(`Advertisement/GetAdvertisementByAdId?adId=${id}`);
         setAdHtml(response.data.link);
         console.log(response.data.link);
         setLoading(false);

@@ -17,6 +17,7 @@ import User_Ads from "./page/User_Ads";
 import AdvertisementDetail from "./page/AdvertismentDetail";
 import VNPayPayment from './page/Payment';
 import PaymentSuccess from './page/PaymentSuccess';
+import ChoosePackage from './page/ChoosePackage';
 
 
 
@@ -97,7 +98,10 @@ function App() {
       path: "payment-success",
       element: <PaymentSuccess />,
     },
-
+    {
+      path: "/choose-package",
+      element: <ChoosePackage />
+    }
 
   ]);
 
