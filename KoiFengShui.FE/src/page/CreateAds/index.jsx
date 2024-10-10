@@ -46,20 +46,46 @@ function CreateAds() {
   };
 
   const handleSave = async () => {
-    try {
-      const response = await api.put('Advertisement/UpdateDaftAdvertisement', adData);
-      console.log('Response:', response.data);
-      message.success('Quảng cáo đã được lưu thành công!');
-      navigate('/user-ads');
+    if (adData.adId !== '.') {
+      try {
+        const response = await api.put('Advertisement/UpdateDaftAdvertisement',adData);
+        console.log('Response:', response.data);
+        message.success('Quảng cáo đã được lưu thành công!');
+        navigate('/user-ads');
     } catch (error) {
       console.error('Error:', error);
       message.error('Có lỗi xảy ra khi lưu quảng cáo. Vui lòng thử lại.');
     }
+  } else 
+  try {
+    const response = await api.post('Advertisement/AddAdvertisementDraft', adData);
+    console.log('Response:', response.data);
+    message.success('Quảng cáo đã được lưu thành công!');
+    navigate('/user-ads');
+  } catch (error) {
+    console.error('Error:', error);
+    message.error('Có lỗi xảy ra khi lưu quảng cáo. Vui lòng thử lại.');
+  }
+};
+
+const handleChoosePackage = () => {
+  const updatedAdData = {
+    ...adData,
+    heading: adData.heading || document.querySelector('input[name="heading"]').value,
+    image: adData.image || document.querySelector('input[name="image"]').value,
+    link: adData.link || editorRef.current.getContent(),
+    userId: localStorage.getItem("userId"),
+    elementId: adData.elementId || 'None',
+    status: 'Draft'
   };
 
-  const handleChoosePackage = () => {
-    navigate('/choose-package', { state: { adData: adData } });
-  };
+  if (updatedAdData.heading && updatedAdData.image && updatedAdData.link) {
+    localStorage.setItem('adData', JSON.stringify(updatedAdData));
+    navigate('/choose-package', { state: { adData: updatedAdData } });
+  } else {
+    message.error('Vui lòng điền đầy đủ thông tin quảng cáo trước khi chọn gói.');
+  }
+};
 
   return (
     <div className="ads-container">
@@ -70,6 +96,7 @@ function CreateAds() {
         value={adData.heading}
         onChange={handleInputChange}
         placeholder="Tiêu đề quảng cáo"
+        required
       />
       <input
         type="text"
@@ -77,6 +104,7 @@ function CreateAds() {
         value={adData.image}
         onChange={handleInputChange}
         placeholder="URL hình ảnh"
+        required
       />
       <Editor
         apiKey='48zvgxqbyrxhxjktp3nysk7hscrlqcz0143gyuhannv3rfv5'

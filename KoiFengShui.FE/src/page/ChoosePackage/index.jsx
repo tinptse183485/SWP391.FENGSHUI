@@ -43,23 +43,40 @@ const ChoosePackage = () => {
   };
 
   const onFinish = async (values) => {
+    let currentAdId = adData.adId;
+  
+    if (currentAdId === '.') {
+      try {
+        const response = await api.get('Advertisement/GenerateAdId', {
+          params: { AdId: currentAdId }
+        });
+        currentAdId = response.data; // Assuming the API returns the new ID directly
+      } catch (error) {
+        console.error('Error generating new AdId:', error);
+        message.error('Failed to generate new advertisement ID');
+        return;
+      }
+    }
+  
     const packageInfo = {
-      adId: invoiceInfo.adId,
+      adId: currentAdId,
       rank: values.Rank,
       startDate: values.startDate.format('YYYY-MM-DD'),
       status: 'Pending',
       quantity: values.quantity,
       total: invoiceInfo.total
     };
-
+  
+    const updatedAdData = { ...adData, adId: currentAdId };
+  
     try {
       const response = await api.post('VNPay/create-payment', {
         amount: invoiceInfo.total,
-        
       });
-
+  
       if (response.data && response.data.paymentUrl) {
         localStorage.setItem('pendingAdPackage', JSON.stringify(packageInfo));
+        localStorage.setItem('adData', JSON.stringify(updatedAdData));
         window.location.href = response.data.paymentUrl;
       } else {
         message.error('Failed to create payment URL');
@@ -73,32 +90,58 @@ const ChoosePackage = () => {
   const handlePackageChange = (value) => {
     const selected = packages.find(pkg => pkg.rank === value);
     setSelectedPackage(selected);
-    const quantity = form.getFieldValue('quantity') || 1;
-    const total = selected ? selected.price * quantity : 0;
-    setInvoiceInfo(prev => ({
-      ...prev,
-      rank: selected.rank,
-      total
-    }));
+    if (selected) {
+      const quantity = form.getFieldValue('quantity') || 1;
+      const total = selected.price * quantity;
+      let expiredDate = 'Not set';
+      if (invoiceInfo.startDate) {
+        const startDate = dayjs(invoiceInfo.startDate, 'DD-MM-YYYY');
+        expiredDate = startDate.add(selected.duration * quantity, 'days').format('DD-MM-YYYY');
+      }
+      setInvoiceInfo(prev => ({
+        ...prev,
+        rank: selected.rank,
+        total,
+        expiredDate,
+        quantity
+      }));
+    }
   };
 
   const handleQuantityChange = (value) => {
     const selected = packages.find(pkg => pkg.rank === form.getFieldValue('Rank'));
     if (selected) {
       const total = selected.price * value;
-      setInvoiceInfo(prev => ({ ...prev, total }));
+      let startDate = invoiceInfo.startDate ? dayjs(invoiceInfo.startDate, 'DD-MM-YYYY') : null;
+      let expiredDate = 'Not set';
+      if (startDate && selected.duration) {
+        expiredDate = startDate.add(selected.duration * value, 'days').format('DD-MM-YYYY');
+      }
+      setInvoiceInfo(prev => ({ 
+        ...prev, 
+        total, 
+        expiredDate,
+        quantity: value
+      }));
     }
   };
 
   const handleDateChange = (date) => {
     if (date && selectedPackage) {
-      const formattedStartDate = dayjs(date).format('DD-MM-YYYY');
-      const expiredDate = dayjs(date).add(selectedPackage.duration, 'days');
+      const formattedStartDate = date.format('DD-MM-YYYY');
+      const quantity = form.getFieldValue('quantity') || 1;
+      const expiredDate = date.add(selectedPackage.duration * quantity, 'days');
       const formattedExpiredDate = expiredDate.format('DD-MM-YYYY');
       setInvoiceInfo(prev => ({
         ...prev,
         startDate: formattedStartDate,
         expiredDate: formattedExpiredDate
+      }));
+    } else {
+      setInvoiceInfo(prev => ({
+        ...prev,
+        startDate: date ? date.format('DD-MM-YYYY') : null,
+        expiredDate: 'Not set'
       }));
     }
   };
@@ -116,7 +159,7 @@ const ChoosePackage = () => {
                   <p><strong>Rank:</strong> {selectedPackage.rank}</p>
                   <p><strong>Price:</strong> {formatCurrency(selectedPackage.price)}</p>
                   <p><strong>Description:</strong> {selectedPackage.description}</p>
-                  <p><strong>Duration:</strong> {selectedPackage.duration} days</p>
+                  <p><strong>Duration:</strong> {selectedPackage.duration*form.getFieldValue('quantity')} ngày </p>
                 </>
               ) : (
                 <p>Select a package to view details</p>
@@ -133,7 +176,7 @@ const ChoosePackage = () => {
                 </Select>
               </Form.Item>
               <Form.Item name="startDate" label="Start Date" rules={[{ required: true }]}>
-                <DatePicker  onChange={handleDateChange} />
+                <DatePicker onChange={(date) => handleDateChange(date)} format="DD-MM-YYYY" />
               </Form.Item>
               <Form.Item name="quantity" label="Quantity" rules={[{ required: true }]}>
                 <InputNumber min={1} onChange={handleQuantityChange} />
@@ -149,7 +192,7 @@ const ChoosePackage = () => {
         </div>
         <div className="invoice-info">
           <Card title="Advertisement Invoice">
-            <p><strong>Ad ID:</strong> {invoiceInfo.adId || 'Not assigned yet'}</p>
+           
             <p><strong>Rank:</strong> {invoiceInfo.rank || 'Not selected'}</p>
             <p><strong>Start Date:</strong> {invoiceInfo.startDate || 'Not set'}</p>
             <p><strong>Expired Date:</strong> {invoiceInfo.expiredDate || 'Not set'}</p>

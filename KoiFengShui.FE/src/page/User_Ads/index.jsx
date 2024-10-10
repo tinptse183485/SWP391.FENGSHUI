@@ -19,10 +19,10 @@ const User_Ads = () => {
   const menuItems = [
     { key: 'all', label: 'Tất cả' },
     { key: 'Draft', label: 'Bản nháp' },
-    { key: 'pending', label: 'Chờ duyệt' },
-    { key: 'approved', label: 'Đã duyệt' },
-    { key: 'canceled', label: 'Đã hủy' },
-    { key: 'refunded', label: 'Đã hoàn tiền' },
+    { key: 'Pending', label: 'Chờ duyệt' },
+    { key: 'Approved', label: 'Đã duyệt' },
+    { key: 'Canceled', label: 'Đã hủy' },
+    { key: 'Refunded', label: 'Đã hoàn tiền' },
   ];
 
   useEffect(() => {
