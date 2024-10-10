@@ -104,7 +104,6 @@ namespace FengShuiKoi_DAO
         {
             try
             {
-               
                 var typeColorsToDelete = dbContext.TypeColors
                     .Where(tc => tc.KoiType == koiType)
                     .ToList();
@@ -118,13 +117,10 @@ namespace FengShuiKoi_DAO
                    
                     return true ;
                 }
-
-                
                 return false;
             }
             catch (Exception ex)
-            {
-              
+            {      
                 return false;
             }
         }
