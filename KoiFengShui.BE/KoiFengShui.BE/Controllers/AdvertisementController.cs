@@ -81,6 +81,7 @@ namespace KoiFengShui.BE.Controllers
 				return StatusCode(500, $"Internal server error: {ex.Message}");
 			}
 		}
+
         [HttpGet("GetAdvertisementByStatusAdmin")]
         public IActionResult GetAdvertisementByStatusAdmin(string status)
         {
