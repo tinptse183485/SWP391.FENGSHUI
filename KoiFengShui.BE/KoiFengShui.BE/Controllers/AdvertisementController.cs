@@ -137,8 +137,6 @@ namespace KoiFengShui.BE.Controllers
 			}
 		}
 
-		private string GenerateUniqueAdId()
-
         [HttpGet("GetAdvertisementByStatusAdmin")]
         public IActionResult GetAdvertisementByStatusAdmin(string status)
         {
