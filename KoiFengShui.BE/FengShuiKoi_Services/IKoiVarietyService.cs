@@ -19,7 +19,7 @@ namespace FengShuiKoi_Services
 
         public bool DeleteKoiVariety(string type);
 
-        public bool UpdateKoiVariety(string type);
+        public bool UpdateKoiVariety(KoiVariety updatedKoi);
 
     }
 }

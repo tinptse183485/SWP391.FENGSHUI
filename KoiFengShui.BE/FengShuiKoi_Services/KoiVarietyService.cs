@@ -29,9 +29,9 @@ namespace FengShuiKoi_Services
       
 
         public KoiVariety GetKoiVarietyByType(string type) => ikoiVarietyRepo.GetKoiVarietyByType(type);
-        
 
-        public bool UpdateKoiVariety(string type) => ikoiVarietyRepo.UpdateKoiVariety(type);
+
+        public bool UpdateKoiVariety(KoiVariety updatedKoi) => ikoiVarietyRepo.UpdateKoiVariety(updatedKoi);
         
     }
 }

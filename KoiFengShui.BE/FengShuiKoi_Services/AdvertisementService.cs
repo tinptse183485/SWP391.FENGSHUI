@@ -1,4 +1,5 @@
 ﻿using FengShuiKoi_BO;
+using FengShuiKoi_DAO;
 using FengShuiKoi_Repository;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace FengShuiKoi_Services
         {
             return iAdvertisementRepo.DeleteAdvertisement(adID);
         }
-
+        public List<Advertisement> GetAdvertisementStatus(string status) =>iAdvertisementRepo.GetAdvertisementStatus(status);
         public Advertisement GetAdvertisementByAdID(string AdID)
         {
             return iAdvertisementRepo.GetAdvertisementByAdID(AdID);

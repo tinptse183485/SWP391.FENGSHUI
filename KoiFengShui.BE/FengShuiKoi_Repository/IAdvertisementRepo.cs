@@ -1,4 +1,5 @@
 ﻿using FengShuiKoi_BO;
+using FengShuiKoi_DAO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace FengShuiKoi_Repository
         public bool DeleteAdvertisement(string adID);
         public bool UpdateAdvertisement(string adID);
         public List<Advertisement> GetAdvertisementByUserIdAndStatus(string userId, string status);
+        public List<Advertisement> GetAdvertisementStatus(string status);
 
-	}
+    }
 }
