@@ -14,7 +14,6 @@ namespace KoiFengShui.BE.Controllers
     public class AdvertisementController : ControllerBase
     {
         private readonly IPackageService _packageService;
-
         private readonly IElementService _elementService;
         private readonly IAccountService _accountService;
         private readonly IAdsPackageService _adsPackageService;
@@ -312,7 +311,16 @@ namespace KoiFengShui.BE.Controllers
                 else
                 {
                     advertise.Status = status;
-                    return Ok("Cập nhật thành công");
+                    bool check = _advertisementService.UpdateAdvertisement(advertise);
+                    if (check) 
+                    {
+						return Ok("Cập nhật thành công");
+                    }
+                    else
+                    {
+                        return BadRequest("Cập nhật thất bại");
+                    }
+                    
                 }
             }
             catch (Exception ex)

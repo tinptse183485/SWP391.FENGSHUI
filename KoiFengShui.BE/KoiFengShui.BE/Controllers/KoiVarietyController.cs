@@ -58,7 +58,7 @@ namespace KoiFengShui.BE.Controllers
                 var mutual = _elementService.GetElementAndMutualism(element);
                 var list1 = _koiVarietyService.GetKoiVarietiesByElemnet(mutual.Mutualism);
                 var list2 = _koiVarietyService.GetKoiVarietiesByElemnet(element);
-                 listKoi.AddRange(list1);
+                listKoi.AddRange(list1);
                 listKoi.AddRange(list2);
                 return Ok(listKoi);
             }
@@ -185,7 +185,7 @@ namespace KoiFengShui.BE.Controllers
         {
             try
             {
-               
+
                 if (string.IsNullOrWhiteSpace(koiFish.KoiType))
                 {
                     return BadRequest("Vui lòng nhập loại cá Koi!");
@@ -196,7 +196,7 @@ namespace KoiFengShui.BE.Controllers
                     return BadRequest("Vui lòng nhập ít nhất một màu và tỷ lệ!");
                 }
 
-                if(_elementService.GetElementAndMutualism(koiFish.Element) == null)
+                if (_elementService.GetElementAndMutualism(koiFish.Element) == null)
                 {
                     return BadRequest("Không có sinh mệnh này.");
                 }
@@ -267,7 +267,7 @@ namespace KoiFengShui.BE.Controllers
                     }
                     else
                     {
-                        
+
                         return BadRequest($"Thêm màu {color.ColorId} cho loại cá Koi thất bại.");
                     }
                 }
@@ -276,7 +276,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-               
+
                 return StatusCode(500, "Lỗi server. Vui lòng thử lại sau.");
             }
         }
@@ -403,7 +403,7 @@ namespace KoiFengShui.BE.Controllers
                 }
 
 
-                bool result =_koiVarietyService.DeleteKoiVariety((KoiType));
+                bool result = _koiVarietyService.DeleteKoiVariety((KoiType));
 
                 if (result)
                 {
