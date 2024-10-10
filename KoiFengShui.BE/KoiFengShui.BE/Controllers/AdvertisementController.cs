@@ -89,7 +89,6 @@ namespace KoiFengShui.BE.Controllers
                 {
                     return BadRequest("Không tìm thấy quảng cáo");
                 }
-
                 return Ok(advertisements);
             }
             catch (Exception ex)
@@ -237,7 +236,33 @@ namespace KoiFengShui.BE.Controllers
 			}
 		}
 
-		[HttpPost("AddAdvertisementDraft")]
+        [HttpGet("GetAdvertisementByStatusAdmin")]
+        public IActionResult GetAdvertisementByStatusAdmin(string status)
+        {
+            try
+            {
+                var advertisements = _advertisementService.GetAdvertisementStatus( status);
+                if (advertisements == null)
+                {
+                    return BadRequest("Không tìm thấy quảng cáo có trạng thái" + status);
+                }
+
+                return Ok(advertisements);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+    
+        private string GenerateUniqueAdId()
+        {
+            Random random = new Random();
+            int randomNumber = random.Next(0, 1000); // Tạo số ngẫu nhiên từ 0 đến 999
+            return $"AD{randomNumber:D3}";
+        }
+
+        [HttpPost("AddAdvertisementDraft")]
         public IActionResult AddAdvertisementDraft(AdvertisementDTO advertisementDto)
         {
             try
