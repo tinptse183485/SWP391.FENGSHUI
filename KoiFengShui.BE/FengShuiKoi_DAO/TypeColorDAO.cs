@@ -104,31 +104,28 @@ namespace FengShuiKoi_DAO
         {
             try
             {
-                var colorsToRemove = dbContext.TypeColors
+               
+                var typeColorsToDelete = dbContext.TypeColors
                     .Where(tc => tc.KoiType == koiType)
                     .ToList();
 
-                if (colorsToRemove.Any())
+                if (typeColorsToDelete.Any())
                 {
-                    // Xóa TypeKoi liên quan
-                    var typeKoiToRemove = dbContext.TypeColors
-                        .FirstOrDefault(tk => tk.KoiType == koiType);
-
-                    if (typeKoiToRemove != null)
-                    {
-                        dbContext.TypeColors.Remove(typeKoiToRemove);
-                    }
-
-                    dbContext.TypeColors.RemoveRange(colorsToRemove);
+                   
+                    dbContext.TypeColors.RemoveRange(typeColorsToDelete);
                     dbContext.SaveChanges();
-                    return true;
+
+                   
+                    return true ;
                 }
 
+                
                 return false;
             }
             catch (Exception ex)
             {
-                throw new Exception($"Đã xảy ra lỗi khi xóa màu và loại Koi: {ex.Message}", ex);
+              
+                return false;
             }
         }
 

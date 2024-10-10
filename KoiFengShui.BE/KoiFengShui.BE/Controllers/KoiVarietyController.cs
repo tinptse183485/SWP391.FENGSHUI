@@ -280,6 +280,107 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, "Lỗi server. Vui lòng thử lại sau.");
             }
         }
+        [HttpPut("UpdateKoiAndTypeColor")]
+        public IActionResult UpdateKoiAndTypeColor([FromBody] AddKoiTypeColor koiFish)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(koiFish.KoiType))
+                {
+                    return BadRequest("Vui lòng nhập loại cá Koi!");
+                }
+
+                var existingKoi = _koiVarietyService.GetKoiVarietyByType(koiFish.KoiType);
+                if (existingKoi == null)
+                {
+                    return NotFound($"Không tìm thấy loại cá Koi: {koiFish.KoiType}");
+                }
+
+                if (koiFish.Colors == null || koiFish.Colors.Count == 0)
+                {
+                    return BadRequest("Vui lòng nhập ít nhất một màu và tỷ lệ!");
+                }
+
+                if (_elementService.GetElementAndMutualism(koiFish.Element) == null)
+                {
+                    return BadRequest("Không có sinh mệnh này.");
+                }
+
+                var duplicateColorResult = CheckDuplicateColors(koiFish.Colors);
+                if (!duplicateColorResult)
+                {
+                    return BadRequest("Chỉ được chọn 1 màu 1 lần");
+                }
+
+                double totalPercentage = 0;
+                foreach (var color in koiFish.Colors)
+                {
+                    if (string.IsNullOrWhiteSpace(color.ColorId))
+                    {
+                        return BadRequest("Mã màu không được để trống.");
+                    }
+
+                    if (color.Percentage <= 0 || color.Percentage > 1)
+                    {
+                        return BadRequest($"Tỷ lệ cho màu {color.ColorId} phải lớn hơn 0 và không quá 1 (100%).");
+                    }
+
+                    totalPercentage += color.Percentage;
+
+                    if (_colorService.GetColorById(color.ColorId) == null)
+                    {
+                        return BadRequest($"Màu {color.ColorId} không tồn tại trong hệ thống.");
+                    }
+                }
+
+                if (Math.Abs(totalPercentage - 1) > 0.0001)
+                {
+                    return BadRequest($"Tổng tỷ lệ các màu phải bằng 1 (100%).");
+                }
+
+               
+                existingKoi.Image = koiFish.Image;
+                existingKoi.Description = koiFish.Description;
+                existingKoi.Element = koiFish.Element;
+
+                bool koiTypeUpdated = _koiVarietyService.UpdateKoiVariety(existingKoi);
+                if (!koiTypeUpdated)
+                {
+                    return BadRequest("Cập nhật loại cá Koi thất bại.");
+                }
+
+               
+                _typeColorService.DeleteTypeColorByKoiType(koiFish.KoiType);
+
+            
+                var updatedColors = new List<TypeColorOfFish>();
+                foreach (var color in koiFish.Colors)
+                {
+                    var koiTypeColor = new TypeColor
+                    {
+                        KoiType = existingKoi.KoiType,
+                        ColorId = color.ColorId,
+                        Percentage = color.Percentage
+                    };
+
+                    bool colorAdded = _typeColorService.AddKoiTypeColor(koiTypeColor);
+                    if (colorAdded)
+                    {
+                        updatedColors.Add(color);
+                    }
+                    else
+                    {
+                        return BadRequest($"Cập nhật màu {color.ColorId} cho loại cá Koi thất bại.");
+                    }
+                }
+
+                return Ok("Cập nhật loại cá Koi và màu sắc thành công");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Lỗi server. Vui lòng thử lại sau.");
+            }
+        }
     }
 
 }
