@@ -11,6 +11,7 @@ import {
   Upload,
   Space,
   Select,
+  Popconfirm,
 } from "antd";
 import { toast } from "react-toastify";
 import {
@@ -36,17 +37,32 @@ const Koi = () => {
   const [colorForm] = Form.useForm();
 
   useEffect(() => {
-    fetchData();
+    fetchDataAndColors();
     fetchColors();
   }, []); // Chạy một lần khi component mount
 
-  const fetchData = async () => {
+  const fetchDataAndColors = async () => {
     try {
-      const response = await api.get("KoiVariety/GetAllKoi"); // Thay thế 'API_URL' bằng URL thực tế
-      console.log("Fetched data:", response.data); // Kiểm tra dữ liệu nhận được
-      setData(response.data); // Lưu trữ dữ liệu vào state
+      const [koiResponse, colorResponse] = await Promise.all([
+        api.get("KoiVariety/GetAllKoi"),
+        api.get("TypeColor/GetAllTypeColor")
+      ]);
+
+      const koiData = koiResponse.data;
+      const colorData = colorResponse.data;
+
+      const combinedData = koiData.map(koi => {
+        const koiColors = colorData.filter(color => color.koiType === koi.koiType);
+        return {
+          ...koi,
+          colors: koiColors
+        };
+      });
+
+      setData(combinedData);
     } catch (error) {
       console.error("Error fetching data:", error);
+      toast.error("Không thể tải dữ liệu");
     }
   };
 
@@ -81,6 +97,47 @@ const Koi = () => {
     {
       title: "Description",
       dataIndex: "description",
+    },
+    {
+      title: "Colors",
+      dataIndex: "colors",
+      render: (colors) => (
+        <ul>
+          {colors.map((color, index) => (
+            <li key={index}>
+              {color.colorId}: {color.percentage.toFixed(2)}
+            </li>
+          ))}
+        </ul>
+      ),
+    },
+    {
+      title: "Action",
+      dataIndex: "koiType",
+      key: "koiType",
+      render: (koiType, category) => (
+        <>
+          {/* <Button
+            type="primary"
+            onClick={() => {
+              setOpenModal(true);
+              form.setFieldsValue(category);
+            }}
+          >
+            Edit
+          </Button> */}
+
+          <Popconfirm
+            title="Delete"
+            description="Delete?"
+            onConfirm={() => handleDelete(koiType)}
+          >
+            <Button type="primary" danger>
+              Delete
+            </Button>
+          </Popconfirm>
+        </>
+      ),
     },
   ];
 
@@ -121,13 +178,12 @@ const Koi = () => {
           percentage: parseFloat(color.percentage),
         })),
       };
-
       const response = await api.post("KoiVariety/AddKoiAndTypeColor", koi);
       console.log(response.data);
       toast.success("Tạo mới thành công");
       setOpenModal(false);
       form.resetFields();
-      fetchData();
+      fetchDataAndColors();
     } catch (err) {
       toast.error(err.response?.data?.message || "Có lỗi xảy ra");
     } finally {
