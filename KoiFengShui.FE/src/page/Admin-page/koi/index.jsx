@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"; // Thêm useEffect và useState
 // import "./index.css";
 import api from "../../../config/axios";
+
 import {
   Button,
   Form,
@@ -19,6 +20,7 @@ import {
   MinusCircleOutlined,
   PlusCircleOutlined,
 } from "@ant-design/icons";
+
 import { useForm } from "antd/es/form/Form";
 import uploadFile from "../../../utils/file";
 
@@ -33,11 +35,13 @@ const Koi = () => {
   const [previewImage, setPreviewImage] = useState("");
   const [fileList, setFileList] = useState([]);
   const [colors, setColors] = useState([]);
+
   const [colorModalVisible, setColorModalVisible] = useState(false);
   const [colorForm] = Form.useForm();
 
   useEffect(() => {
     fetchDataAndColors();
+
     fetchColors();
   }, []); // Chạy một lần khi component mount
 
@@ -71,6 +75,18 @@ const Koi = () => {
       const response = await api.get("Color/GetAllColor");
       // Chỉ lấy colorId từ dữ liệu API
       const colorIds = response.data.map((color) => color.colorId);
+      setColors(colorIds);
+    } catch (error) {
+      console.error("Error fetching colors:", error);
+      toast.error("Không thể tải danh sách màu");
+    }
+  };
+
+  const fetchColors = async () => {
+    try {
+      const response = await api.get("Color/GetAllColor");
+      // Chỉ lấy colorId từ dữ liệu API
+      const colorIds = response.data.map(color => color.colorId);
       setColors(colorIds);
     } catch (error) {
       console.error("Error fetching colors:", error);
@@ -151,10 +167,12 @@ const Koi = () => {
 
   const handleCreateKoi = async (values) => {
     // Kiểm tra tổng tỉ trọng
+
     const totalPercentage = values.colors.reduce(
       (sum, color) => sum + parseFloat(color.percentage || 0),
       0
     );
+
 
     if (Math.abs(totalPercentage - 1) > 0.001) {
       // Sử dụng sai số nhỏ để xử lý lỗi làm tròn số thập phân
@@ -164,6 +182,7 @@ const Koi = () => {
 
     try {
       setSubmitting(true);
+
       let imageUrl = "";
       if (fileList.length > 0) {
         const file = fileList[0].originFileObj;
@@ -179,17 +198,21 @@ const Koi = () => {
         })),
       };
       const response = await api.post("KoiVariety/AddKoiAndTypeColor", koi);
+
       console.log(response.data);
       toast.success("Tạo mới thành công");
       setOpenModal(false);
       form.resetFields();
       fetchDataAndColors();
     } catch (err) {
+
       toast.error(err.response?.data?.message || "Có lỗi xảy ra");
+
     } finally {
       setSubmitting(false);
     }
   };
+
 
   const handleAddColor = async (values) => {
     const formattedValues = {
@@ -320,6 +343,7 @@ const Koi = () => {
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name, ...restField }) => (
+
                   <Space
                     key={key}
                     style={{ display: "flex", marginBottom: 8 }}
@@ -335,11 +359,13 @@ const Koi = () => {
                           <Option key={colorId} value={colorId}>
                             {colorId}
                           </Option>
+
                         ))}
                       </Select>
                     </Form.Item>
                     <Form.Item
                       {...restField}
+
                       name={[name, "percentage"]}
                       rules={[
                         { required: true, message: "Nhập tỉ trọng" },
@@ -357,11 +383,13 @@ const Koi = () => {
                         step="0.01"
                         placeholder="Tỉ trọng (0-1)"
                       />
+
                     </Form.Item>
                     <MinusCircleOutlined onClick={() => remove(name)} />
                   </Space>
                 ))}
                 <Form.Item>
+
                   <Space>
                     <Button
                       type="dashed"
@@ -371,6 +399,7 @@ const Koi = () => {
                       Thêm màu
                     </Button>
                   </Space>
+
                 </Form.Item>
               </>
             )}
@@ -412,6 +441,7 @@ const Koi = () => {
               Thêm màu mới
             </Button>
           </Form.Item>
+
         </Form>
       </Modal>
 
