@@ -20,10 +20,10 @@ const User_Ads = () => {
   const menuItems = [
     { key: 'all', label: 'Tất cả' },
     { key: 'Draft', label: 'Bản nháp' },
-    { key: 'pending', label: 'Chờ duyệt' },
-    { key: 'approved', label: 'Đã duyệt' },
-    { key: 'canceled', label: 'Đã hủy' },
-    { key: 'refunded', label: 'Đã hoàn tiền' },
+    { key: 'Pending', label: 'Chờ duyệt' },
+    { key: 'Approved', label: 'Đã duyệt' },
+    { key: 'Canceled', label: 'Đã hủy' },
+    { key: 'Refunded', label: 'Đã hoàn tiền' },
   ];
 
   useEffect(() => {
@@ -105,7 +105,7 @@ const User_Ads = () => {
         <Content style={{ margin: '16px' }}>
           <div className='container' style={{ padding: 24, background: '#fff', minHeight: 360 }}>
             <div className='Heading'>
-              <h1>Chào mừng đến với trang User Ads!</h1>
+              <h1>Chào mừng đến với trang Quảng cáo của bạn!</h1>
               <button onClick={handleCreate} className='btn-create'>Tạo bản nháp</button>
             </div>
             <Menu 
