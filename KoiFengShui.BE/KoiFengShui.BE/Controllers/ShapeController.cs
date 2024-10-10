@@ -120,8 +120,6 @@ namespace KoiFengShui.BE.Controllers
                     return BadRequest("Has this img already.");
 
                 }
-
-
                 var _shape = new Shape
                 {
                     ShapeId = shape.ShapeId,

@@ -25,9 +25,9 @@ namespace FengShuiKoi_Repository
             return AdvertisementDAO.Instance.GetAdvertisementByAdID(AdID);
         }
 
+        public List<Advertisement> GetAdvertisementStatus(string status) => AdvertisementDAO.Instance.GetAdvertisementStatus(status);
 
-
-		public List<Advertisement> GetAdvertisementByUserIdAndStatus(string userId, string status)
+        public List<Advertisement> GetAdvertisementByUserIdAndStatus(string userId, string status)
 		{
 			return AdvertisementDAO.Instance.GetAdvertisementByUserIdAndStatus(userId, status);
 		}
@@ -37,9 +37,9 @@ namespace FengShuiKoi_Repository
             return AdvertisementDAO.Instance.GetAdvertisements();
         }
 
-        public bool UpdateAdvertisement(string adID)
-        {
-            return AdvertisementDAO.Instance.UpdateAdvertisement(adID);
+		public bool UpdateAdvertisement(Advertisement updatedAdvertisement)
+		{
+            return AdvertisementDAO.Instance.UpdateAdvertisement(updatedAdvertisement);
         }
     }
 }

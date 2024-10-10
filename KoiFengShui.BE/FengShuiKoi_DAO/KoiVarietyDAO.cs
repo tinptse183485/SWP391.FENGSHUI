@@ -1,5 +1,6 @@
 ﻿using FengShuiKoi_BO;
 using FungShuiKoi_DAO;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -91,24 +92,32 @@ namespace FengShuiKoi_DAO
             }
             return isSuccess;
         }
-        public bool UpdateKoiVariety(string type)
+        public bool UpdateKoiVariety(KoiVariety updatedKoi)
         {
-            bool isSuccess = false;
-            KoiVariety koi = this.GetKoiVarietyByType(type);
             try
             {
-                if (koi != null)
+                var existingKoi = dbContext.KoiVarieties.FirstOrDefault(k => k.KoiType == updatedKoi.KoiType);
+                if (existingKoi == null)
                 {
-                    dbContext.Entry<KoiVariety>(koi).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    dbContext.SaveChanges();
-                    isSuccess = true;
+                    return false; 
                 }
+
+               
+                existingKoi.Image = updatedKoi.Image;
+                existingKoi.Description = updatedKoi.Description;
+                existingKoi.Element = updatedKoi.Element;
+
+                dbContext.Entry(existingKoi).State = EntityState.Modified;
+                int affectedRows = dbContext.SaveChanges();
+
+                return affectedRows > 0;
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+             
+                Console.WriteLine($"Error updating KoiVariety: {ex.Message}");
+                return false;
             }
-            return isSuccess;
         }
     }
 }

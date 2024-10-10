@@ -13,6 +13,7 @@ namespace FengShuiKoi_Repository
 		public List<Member> GetMembers();
 		public bool AddMember(Member member);
 		public bool DeleteAccount(string id);
-		public bool UpdateMember(string id);
-	}
+		public bool UpdateMember(Member updatedMember);
+
+    }
 }
