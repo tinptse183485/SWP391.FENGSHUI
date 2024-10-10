@@ -7,6 +7,7 @@ import api from "../../config/axios";
 import { toast } from "react-toastify";
 import { useState } from "react"; // Import useState
 
+
 const Calculation = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
@@ -18,12 +19,15 @@ const Calculation = () => {
   const [lifePalace, setLifePalace] = useState(null);
   const [isFateCalculated, setIsFateCalculated] = useState(false);
 
+
   const handleCalculate = async () => {
     try {
       const values = await form.validateFields();
       
       // Gọi Api để lấy danh sách cá
-      const response = await api.get("KoiVariety/GetListKoiByDOB", {
+
+      const response = await api.get("KoiVariety/GetListKoiByDOBOrderS1", {
+
         params: { dob: values.YOB.format("YYYY-MM-DD") },
       });
       
@@ -44,6 +48,10 @@ const Calculation = () => {
       const reponse4 = await api.get("Pond/GetGoodDirectionByDOB", {
         params: { dob: values.YOB.format("YYYY-MM-DD"), gender: values.Gender },
       });
+
+      const userElement = await api.get("Fate/element", {
+        params: { dob: values.YOB.format("YYYY-MM-DD") },
+      });
       
 
       // Navigate to consulting page with all data
@@ -55,6 +63,7 @@ const Calculation = () => {
           pondDirection: reponse4.data,
           fate: fate,
           lifePalace: lifePalace,
+          
         },
       });
     } catch (error) {
@@ -74,7 +83,8 @@ const Calculation = () => {
       setFate(fateResponse.data || "Unknown");
       setLifePalace(lifePalaceResponse.data || "Unknown");  
       setIsFateCalculated(true);
-      toast.success("Successfully fetched fate and life palace");
+
+
     } catch (error) {
       console.error("Error details:", error);
       toast.error(error.response?.data || "Error fetching fate and life palace data");

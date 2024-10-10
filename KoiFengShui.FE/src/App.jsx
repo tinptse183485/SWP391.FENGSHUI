@@ -2,7 +2,9 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Home from "./page/home";
 import Login from "./page/login";
 import Register from "./page/register";
-import Dashboard from "./page/Admin-page/dashboard";
+
+// import Dashboard from "./page/Admin-page/dashboard";
+
 import Calculation from "./page/calculation";
 import Consulting from "./page/consulting";
 import CalculateCompability from "./page/calculate-compability";
@@ -14,6 +16,14 @@ import Pond from "./page/Admin-page/pond";
 import Ads_list from "./page/Ads_list";
 import CreateAds from "./page/CreateAds";
 import User_Ads from "./page/User_Ads";
+import Dashboard from "./components/dashboard";
+import AdvertisementDetail from "./page/AdvertismentDetail";
+import VNPayPayment from './page/Payment';
+import PaymentSuccess from './page/PaymentSuccess';
+import ChoosePackage from './page/ChoosePackage';
+import AdminDashboard from "./page/Admin-page/dashboard";
+
+
 function App() {
 
   const router = createBrowserRouter([
@@ -31,7 +41,33 @@ function App() {
     },
     {
       path: "dashboard",
-      element: <Dashboard />,
+      element: <Dashboard/>,
+      children: [
+        {
+          path: "AdminDashboard",
+          element: <AdminDashboard />,
+        },
+        {
+          path: "user",
+          element: <User />,
+        },
+        {
+          path: "ads",
+          element: <ADS />,
+        },
+        {
+          path: "blog",
+          element: <Blog />,
+        },
+        {
+          path: "koi",
+          element: <Koi />,
+        },
+        {
+          path: "pond",
+          element: <Pond />,
+        },
+      ],
     },
     {
 
@@ -45,27 +81,9 @@ function App() {
     {
       path: "calculate-compability",
       element: <CalculateCompability />,
+
     },
-    {
-      path: "user",
-      element: <User />,
-    },
-    {
-      path: "ads",
-      element: <ADS />,
-    },
-    {
-      path: "blog",
-      element: <Blog />,
-    },
-    {
-      path: "koi",
-      element: <Koi />,
-    },
-    {
-      path: "pond",
-      element: <Pond />,
-    },
+
     {
       path: "ads-list",
       element: <Ads_list />,
@@ -78,6 +96,25 @@ function App() {
       path: "user-ads",
       element: <User_Ads />,
     },
+
+    {
+      path: "advertisement-detail/:id",
+      element: <AdvertisementDetail />,
+    },
+    {
+      path: "payment",
+      element: <VNPayPayment />,
+    },
+    {
+      path: "payment-success",
+      element: <PaymentSuccess />,
+    },
+    {
+      path: "/choose-package",
+      element: <ChoosePackage />
+    },
+
+
   ]);
 
   return <RouterProvider router={router} />;

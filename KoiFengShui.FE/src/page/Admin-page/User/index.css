@@ -1,9 +1,22 @@
 .dashboard-container {
-    display: flex;
-  }
-  
-  .dashboard-content {
-    flex-grow: 1;
-    padding: 20px;
-  }
-  
+  display: flex;
+}
+
+.dashboard-content {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+.ant-table-wrapper {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.user-management-table {
+  margin: 10px 100px;
+}
