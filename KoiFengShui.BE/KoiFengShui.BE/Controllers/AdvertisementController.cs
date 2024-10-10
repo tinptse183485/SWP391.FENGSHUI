@@ -77,7 +77,7 @@ namespace KoiFengShui.BE.Controllers
                 }
                 else
                 {
-					return BadRequest("False");
+					return Ok("False");
 				}
 				
 			}
