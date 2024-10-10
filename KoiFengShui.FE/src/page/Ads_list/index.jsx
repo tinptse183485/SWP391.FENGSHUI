@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'; // Thêm useEffect và useState
 import './index.css';
 import api from "../../config/axios";
+
 import { useNavigate } from 'react-router-dom';
 
 const Ads_list = () => {
   const [data, setData] = useState([]); 
   // Khởi tạo state để lưu trữ dữ liệu
   const navigate = useNavigate();
+
 
   useEffect(() => {
     fetchData();
@@ -20,16 +22,20 @@ const Ads_list = () => {
       console.error('Error fetching data:', error);
     }
   };
+
   const viewAd = (adId) => {
     navigate(`/advertisement-detail/${adId}`);
   };
+
 
   return (
     <div className="dashboard-container">
       <div className="dashboard-content">
         {data.length > 0 ? ( // Kiểm tra xem có dữ liệu không
           data.map(item => (
+
             <div onClick={() => viewAd(item.adId)} key={item.adId} className="koi-item">
+
             <img  src={item.image}/> {/* Hiển thị hình ảnh */}
               <h3>{item.heading}</h3> {/* Hiển thị koiType */}
               

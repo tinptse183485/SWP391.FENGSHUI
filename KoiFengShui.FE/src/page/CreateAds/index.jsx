@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { Button, message } from 'antd';
@@ -8,11 +9,13 @@ import './index.css';
 function CreateAds() {
   const location = useLocation();
   const navigate = useNavigate();
+
   const [adData, setAdData] = useState({
     adId: '.',
     heading: '',
     image: '',
     link: '',
+
     userId: localStorage.getItem("userId"),
     elementId: 'None',
     status: 'Draft'
@@ -29,6 +32,7 @@ function CreateAds() {
     }
   }, [location.state]);
 
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setAdData(prevData => ({
@@ -40,6 +44,7 @@ function CreateAds() {
   const handleEditorChange = (content, editor) => {
     setAdData(prevData => ({
       ...prevData,
+
       link: content
     }));
   };
@@ -89,6 +94,7 @@ const handleChoosePackage = () => {
   return (
     <div className="ads-container">
       <h1>{adData.adId !== '.' ? 'Chỉnh sửa quảng cáo' : 'Đăng quảng cáo mới'}</h1>
+
       <input
         type="text"
         name="heading"
@@ -107,6 +113,7 @@ const handleChoosePackage = () => {
       />
       <Editor
         apiKey='48zvgxqbyrxhxjktp3nysk7hscrlqcz0143gyuhannv3rfv5'
+
         onInit={(evt, editor) => {
           editorRef.current = editor;
           if (adData.link) {
@@ -114,24 +121,30 @@ const handleChoosePackage = () => {
           }
         }}
         value={adData.link || "<p>Viết nội dung quảng cáo của bạn ở đây.</p>"}
+
         init={{
           height: 500,
           plugins: [
             'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
             'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
             'insertdatetime', 'media', 'table', 'help', 'wordcount',
+
             'directionality', 'emoticons', 'template', 'paste', 'textcolor', 'colorpicker'
+
           ],
           toolbar: 'undo redo | blocks | ' +
             'bold italic backcolor | alignleft aligncenter ' +
             'alignright alignjustify | bullist numlist outdent indent | ' +
+
             'removeformat | link image | help | emoticons | template | ltr rtl',
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
           directionality: 'ltr', // Đặt hướng văn bản mặc định là từ trái sang phải
           language: 'vi_VN', // Đặt ngôn ngữ là tiếng Việt
+
         }}
         onEditorChange={handleEditorChange}
       />
+
       
       <div className="button-container">
         <Button className="action-button save-button" onClick={handleSave}>
@@ -152,4 +165,6 @@ const handleChoosePackage = () => {
   );
 }
 
+
 export default CreateAds;
+
