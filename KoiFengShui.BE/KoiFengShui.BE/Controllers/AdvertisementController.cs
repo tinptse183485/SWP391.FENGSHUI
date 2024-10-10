@@ -165,7 +165,6 @@ namespace KoiFengShui.BE.Controllers
 				{
 					existingAdvertisement = _advertisementService.GetAdvertisementByAdID(advertisementDto.AdId);
 				}
-
 				if (existingAdvertisement == null)
 				{
 					// Tạo mới quảng cáo
@@ -237,6 +236,7 @@ namespace KoiFengShui.BE.Controllers
 				return StatusCode(500, "Internal server error. Please try again later.");
 			}
 		}
+
 		[HttpPost("AddAdvertisementDraft")]
         public IActionResult AddAdvertisementDraft(AdvertisementDTO advertisementDto)
         {
@@ -292,6 +292,7 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, "Internal server error. Please try again later.");
             }
         }
+
 
         [HttpPut("UpdateAdvertisementStatus")]
         public IActionResult UpdateAdvertisementStatus(string adId, string status)
