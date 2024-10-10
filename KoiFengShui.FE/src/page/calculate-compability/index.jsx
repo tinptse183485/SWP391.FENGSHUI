@@ -14,6 +14,21 @@ import {
   InputNumber,
 } from "antd";
 
+<<<<<<< HEAD
+=======
+import {
+  Form,
+  DatePicker,
+  Select,
+  Button,
+  Radio,
+  Input,
+  Modal,
+  Slider,
+  InputNumber,
+} from "antd";
+
+>>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
 
 import api from "../../config/axios";
 import { toast } from "react-toastify";
@@ -27,7 +42,12 @@ const { Option } = Select;
 function ComputeCompability() {
   const [form] = Form.useForm();
 
+<<<<<<< HEAD
   const [advertisements, setAdvertisements] = useState([]);
+=======
+  
+
+>>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
   const [filteredFishList, setFilteredFishList] = useState([]);
   const [fishList, setFishList] = useState([]);
   const [selectedFishes, setSelectedFishes] = useState([]);
@@ -96,8 +116,13 @@ function ComputeCompability() {
       form.setFieldsValue({
         selectedFish: {
           koiType: selectedFishDetail.koiType,
+<<<<<<< HEAD
           colors: colorWeights,
         },
+=======
+          colors: colorWeights
+        }
+>>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
       });
     }
   }, [selectedFishDetail, colorWeights]);
@@ -111,14 +136,26 @@ function ComputeCompability() {
         directionResponse,
         elementResponse,
         colorResponse,
+<<<<<<< HEAD
         allColorsResponse
+=======
+
+        allColorsResponse
+
+>>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
       ] = await Promise.all([
         api.get("KoiVariety/GetAllKoi"),
         api.get("Shape/GetAllShape"),
         api.get("Direction/GetAllDirection"),
         api.get("Element/GetAllElement"),
         api.get("Color/GetAllColor"),
+<<<<<<< HEAD
         api.get("TypeColor/GetAllTypeColor")
+=======
+
+        api.get("TypeColor/GetAllTypeColor")
+
+>>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
       ]);
       setFishList(fishResponse.data);
       setFilteredFishList(fishResponse.data); // Đặt danh sách cá ban đầu
@@ -127,19 +164,35 @@ function ComputeCompability() {
       setElements(elementResponse.data);
       setColors(colorResponse.data);
 
+<<<<<<< HEAD
       const allColors = allColorsResponse.data;
       const fishColorsMap = {};
       allColors.forEach((color) => {
+=======
+      
+      
+      const allColors = allColorsResponse.data;
+      const fishColorsMap = {};
+      allColors.forEach(color => {
+>>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
         if (!fishColorsMap[color.koiType]) {
           fishColorsMap[color.koiType] = [];
         }
         fishColorsMap[color.koiType].push({
           colorId: color.colorId,
           percentage: color.percentage || 0,
+<<<<<<< HEAD
           originalPercentage: color.percentage || 0, // Add this line
         });
       });
       setAllFishColors(fishColorsMap);
+=======
+          originalPercentage: color.percentage || 0  // Add this line
+        });
+      });
+      setAllFishColors(fishColorsMap);
+      
+>>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
 
     } catch (error) {
       toast.error("Error fetching data");
@@ -155,6 +208,7 @@ function ComputeCompability() {
         selectedPondShape,
         pondDirection,
       } = values;
+<<<<<<< HEAD
   
       // Prepare payload
       const payload = selectedFishes.map(fish => ({
@@ -185,6 +239,26 @@ function ComputeCompability() {
       const response = await api.post(
 
         `Compatibility/GetTheCompatibilityOfUser?${queryParams.toString()}`,
+=======
+
+      // Chuẩn bị payload
+
+      const payload = selectedFishes.map(fish => ({
+        koiType: fish.koiType,
+        colors: fish.colors.map(color => ({
+          colorId: color.colorId,
+          percentage: color.percentage,
+        })).filter(color => color.percentage > 0)
+      }));
+
+
+      console.log("Payload gửi đi:", payload);
+
+      // Gọi API sử dụng query params thay vì body
+      const response = await api.post(
+
+        `Compatibility/GetTheCompatibilityOfUserByListFish?ShapeID=${selectedPondShape}&Direction=${pondDirection}&DOB=${birthdate.format("YYYY-MM-DD")}&Gender=${Gender}`,
+>>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
         payload
       );
   
@@ -192,9 +266,16 @@ function ComputeCompability() {
       
       const response1 = await api.get(`Fate/element?dob=${birthdate.format("YYYY-MM-DD")}`);
       const response2 = await api.get(`Fate/CalculateLife_Palace?YOB=${birthdate.format("YYYY-MM-DD")}&gender=${Gender}`);
+<<<<<<< HEAD
   
       setUserElement(response1.data);
       setUserLifePalife(response2.data);
+=======
+
+      setUserElement(response1.data);
+      setUserLifePalife(response2.data);
+
+>>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
       if (response.data) {
         toast.success("Calculation successful");
         setCompatibilityResult(response.data.compatibility);
@@ -212,6 +293,7 @@ function ComputeCompability() {
       setAdvertisements([]);
     }
   };
+<<<<<<< HEAD
   function getOverallCompatibilityComment(compatibilityResult) {
     let comment = " ";
     if (compatibilityResult < 25) {
@@ -224,6 +306,71 @@ function ComputeCompability() {
       comment = "- Độ tương thích rất tốt với gia chủ, sẽ mang lại may mắn và tài lộc cho gia chủ.";
     }
     return comment;
+=======
+  function getCompatibilityComment(compatibilityResult) {
+
+    let comment = "";
+    if (compatibilityResult < 25) {
+      comment+= "Độ tương thích quá thấp không phù hợp với gia chủ.";
+    } else if (compatibilityResult >= 25 && compatibilityResult <= 50) {
+      comment+= "Độ tương thích không quá tốt, gia chủ nên cân nhắc.";
+    } else if (compatibilityResult > 50 && compatibilityResult <= 75) {
+      comment+= "Độ tương thích tương đối thích hợp với gia chủ.";
+    } else if (compatibilityResult > 75 && compatibilityResult <= 100) {
+      comment+= "Độ tương thích rất tốt với gia chủ, sẽ mang lại may mắn và tài lộc cho gia chủ.";
+    } 
+    
+      console.log(shapePoint);
+      console.log(userElement);
+      console.log(fishPoints);
+    
+    if (userElement === "Kim" && shapePoint <= 75) {
+      comment += "\n\nVới gia chủ mang mệnh Kim, hình vuông là sự lựa chọn lý tưởng, vì nó tương sinh với Thổ, tạo ra sự ổn định và bền vững. Hình tròn cũng là hình dáng tương hợp với mệnh Kim, mang lại sự hài hòa và sự phát triển. Tuy nhiên, gia chủ nên tránh hình tam giác và hình chữ nhật, vì chúng tương khắc với mệnh Kim, có thể gây ra sự bất ổn trong vận khí.";
+      } else if (userElement === "Mộc" && shapePoint <= 75) {
+      comment += "\n\nVới gia chủ mang mệnh Mộc, hình chữ nhật là sự lựa chọn phù hợp nhất, vì nó tương hợp với Mộc và thúc đẩy sự phát triển. Hình lượn sóng tượng trưng cho yếu tố Thủy, giúp tăng cường sinh khí cho Mộc nhưng gia chủ nên tránh hình tròn và hình vuông, vì chúng tương khắc với mệnh Mộc, có thể làm giảm năng lượng và sự phát triển.";
+      } else if (userElement === "Thủy" && shapePoint <= 75) {
+      comment += "\n\nVới gia chủ mang mệnh Thủy, hình tròn là lựa chọn tốt nhất, vì nó tương sinh với Kim, mang lại sự giàu có và thịnh vượng. Hình lượn sóng cũng tương hợp với Thủy, giúp duy trì sự tươi mới và dòng chảy năng lượng. Tuy nhiên, nên tránh hình vuông và hình tam giác, vì chúng tương khắc với mệnh Thủy, có thể gây rối loạn trong vận khí.";
+      } else if (userElement === "Hỏa" && shapePoint <= 75) {
+      comment += "\n\nVới gia chủ mang mệnh Hỏa, hình chữ nhật là hình dáng phù hợp nhất, vì nó tương sinh với Mộc, thúc đẩy sự phát triển và năng lượng. Hình tam giác là tương hợp, mang lại sức mạnh và sự quyết tâm nhưng gia chủ cần tránh hình lượn sóng và hình tròn, vì chúng tương khắc với mệnh Hỏa, có thể gây cản trở trong sự phát triển.";
+      } else if (userElement === "Thổ" && shapePoint <= 75) {
+      comment += "\n\nVới gia chủ mang mệnh Thổ, hình vuông là hình dáng lý tưởng, vì nó tương hợp với Thổ, giúp mang lại sự ổn định và bền vững. Hình tam giác tương sinh với Hỏa, mang lại năng lượng tích cực. Tuy nhiên, cần tránh hình lượn sóng và hình chữ nhật, vì chúng tương khắc với mệnh Thổ, có thể gây ra sự bất ổn trong vận khí.";
+      } 
+
+      if (userLifePalife === "Càn" && directionPoint <= 75) {
+        comment += "\n\nVề hướng, gia chủ có thể lựa chọn Hướng Tây hoặc Đông Bắc. Hướng Tây sẽ giúp thu hút tài lộc và sự thịnh vượng, trong khi Hướng Đông Bắc lại tạo điều kiện cho sự phát triển bền vững và ổn định trong cuộc sống. Nếu có thể, hãy bố trí không gian sống sao cho luôn nhận được ánh sáng tự nhiên từ những hướng này.";
+    } else if (userLifePalife === "Đoài" && directionPoint <= 75) {
+        comment += "\n\nHướng Tây Nam và Tây Bắc là những hướng lý tưởng cho gia chủ. Hướng Tây Nam giúp mang lại sự hòa hợp và tình cảm trong gia đình, trong khi Hướng Tây Bắc lại tạo điều kiện thuận lợi cho sự nghiệp và thành công cá nhân. Đừng quên bố trí các vật dụng phong thủy ở những hướng này để tối ưu hóa nguồn năng lượng tích cực.";
+    } else if (userLifePalife === "Cấn" && directionPoint <= 75) {
+        comment += "\n\nGia chủ có thể lựa chọn hướng Tây Nam và Tây Bắc là những hướng lý tưởng cho gia chủ. Hướng Tây Nam giúp mang lại sự hòa hợp và tình cảm trong gia đình, trong khi Hướng Tây Bắc lại tạo điều kiện thuận lợi cho sự nghiệp và thành công cá nhân. Hãy thử đặt bàn làm việc của bạn ở những vị trí này để cảm nhận sự khác biệt.";
+    } else if (userLifePalife === "Khôn" && directionPoint <= 75) {
+        comment += "\n\nHướng Tây và Đông Bắc sẽ là những lựa chọn tốt nhất cho gia chủ. Hướng Tây sẽ mang lại sự thuận lợi trong công việc và tài chính, trong khi Hướng Đông Bắc giúp tạo dựng mối quan hệ tốt đẹp và tăng cường sức khỏe. Đừng quên tạo một không gian thoải mái và yên tĩnh để thư giãn.";
+    } else if (userLifePalife === "Ly" && directionPoint <= 75) {
+        comment += "\n\nGia chủ nên chọn Hướng Đông hoặc Đông Nam. Hướng Đông không chỉ giúp gia tăng năng lượng mà còn mang lại sự khởi đầu mới trong công việc, trong khi Hướng Đông Nam giúp cải thiện tài chính và tình cảm. Cố gắng tạo không gian xanh và thoáng đãng để cảm nhận sự thư giãn.";
+    } else if (userLifePalife === "Khảm" && directionPoint <= 75) {
+        comment += "\n\nHướng Đông Nam và Đông sẽ mang lại nhiều điều tốt đẹp cho gia chủ. Hướng Đông Nam không chỉ giúp tăng cường sức khỏe mà còn thúc đẩy sự nghiệp phát triển, trong khi Hướng Đông giúp tạo ra không gian sáng tạo và đổi mới. Hãy chú ý đến ánh sáng và màu sắc trong không gian sống.";
+    } else if (userLifePalife === "Tốn" && directionPoint <= 75) {
+        comment += "\n\nGia chủ có thể chọn Hướng Bắc hoặc Nam. Hướng Bắc giúp gia tăng sự nghiệp và tài chính, trong khi Hướng Nam mang lại sự phát triển cá nhân và gia đình. Hãy thử bố trí các vật phẩm phong thủy để tối ưu hóa năng lượng ở những hướng này.";
+    } else if (userLifePalife === "Chấn" && directionPoint <= 75) {
+        comment += "\n\nHướng Nam và Bắc sẽ mang lại năng lượng tích cực cho gia chủ. Hướng Nam không chỉ thu hút sự giàu có mà còn mang lại hạnh phúc trong gia đình, trong khi Hướng Bắc giúp thúc đẩy sự nghiệp. Hãy chú ý đến việc bày trí và sắp xếp không gian sống để tối ưu hóa năng lượng từ các hướng này.";
+    }
+    const fishPoint = Object.values(fishPoints).length > 0
+    ? Object.values(fishPoints).reduce((sum, point) => sum + point, 0) / Object.values(fishPoints).length
+    : 0;
+    console.log(fishPoint);
+    if (userElement === "Mộc" && fishPoint <= 0.60) {
+      comment += "%0D%0AVới gia chủ mang mệnh Mộc, việc chọn những chú cá Koi phù hợp về màu sắc không chỉ giúp gia tăng vận khí mà còn góp phần quan trọng vào sự hài hòa, phát triển của người nuôi. Những màu sắc như xanh dương, đen, xanh đen và xanh lá cây đặc biệt phù hợp với mệnh Mộc, vì màu xanh dương, đen, xanh đen trong phong thủy đại diện cho yếu tố Thủy, mà theo quy luật ngũ hành, Thủy sinh Mộc, giúp thúc đẩy sự sinh sôi nảy nở và mang lại sự thịnh vượng. Màu xanh lá cây lại chính là màu bản mệnh của Mộc, mang đến sự tươi mới, cân bằng và phát triển bền vững, giúp gia chủ cảm nhận được sự an lành và tinh thần thoải mái.\n\n";
+    } else if (userElement === "Thủy" && fishPoint <= 0.60) {
+      comment += "%0D%0AVới gia chủ mang mệnh Thủy, việc lựa chọn những chú cá Koi có màu sắc tương hợp không chỉ giúp tăng cường vận may mà còn mang lại sự bình an, tài lộc. Các màu như xanh dương, trắng bạc, đen và xanh đen đặc biệt phù hợp với mệnh Thủy, bởi màu xanh dương đại diện cho chính bản mệnh Thủy, giúp gia tăng sự thịnh vượng. Màu trắng bạc tượng trưng cho yếu tố Kim, mà trong ngũ hành Kim sinh Thủy, giúp gia chủ thu hút được nhiều vận may và tài lộc.\n\n";
+    } else if (userElement === "Hỏa" && fishPoint <= 0.60) { 
+      comment += "\n Với gia chủ mang mệnh Hỏa, việc chọn cá Koi có màu sắc phù hợp sẽ giúp kích thích năng lượng tích cực, thúc đẩy sự may mắn và thành công. Các màu như đỏ, cam, hồng và tím là lựa chọn tuyệt vời cho mệnh Hỏa, bởi chúng tượng trưng cho ngọn lửa, sức mạnh và sự quyết tâm. Đặc biệt, việc kết hợp với những chú cá Koi có màu xanh lá cây hoặc xanh lục nhạt cũng rất có lợi cho người mệnh Hỏa. Màu xanh lá cây đại diện cho yếu tố Mộc, giúp gia tăng sức mạnh và hỗ trợ sự phát triển. Sự kết hợp này không chỉ tạo nên sự hài hòa mà còn kích thích năng lượng tích cực, giúp gia chủ đạt được thành công trong mọi lĩnh vực.\n\n"; 
+    } else if (userElement === "Thổ" && fishPoint <= 0.60) {
+      comment += "%0D%0A Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợp về màu sắc sẽ giúp ổn định vận khí và mang lại thịnh vượng lâu dài. Các màu như vàng, nâu, cam nhạt là những lựa chọn tốt cho mệnh Thổ, vì chúng đại diện cho đất, sự vững chắc và bền bỉ. Những màu sắc này giúp tăng cường yếu tố Thổ, mang lại sự ổn định, bền vững và giúp gia chủ cảm thấy an toàn trong cuộc sống. Đặc biệt, việc kết hợp với các màu sắc như đỏ hoặc cam từ mệnh Hỏa cũng rất có lợi, vì Hỏa sinh Thổ, thúc đẩy sự phát triển và mang lại nguồn năng lượng tích cực. Sự kết hợp này sẽ tạo ra sự hài hòa và hỗ trợ gia chủ trong việc đạt được thành công trong cuộc sống.\n\n";
+    } else if (userElement === "Kim" && fishPoint <= 0.60) {
+      comment += "\n\nVới gia chủ mang mệnh Kim, việc chọn cá Koi có màu trắng, bạc và vàng kim không chỉ làm tăng vận khí mà còn mang lại sự thịnh vượng và phát triển trong cuộc sống. Màu trắng là màu bản mệnh của Kim, đại diện cho sự tinh khiết và thanh thoát, trong khi màu bạc và vàng kim thể hiện sự giàu có và thành công. Bên cạnh đó, việc lựa chọn những chú cá Koi có màu vàng hoặc nâu từ mệnh Thổ cũng rất hữu ích, vì Thổ sinh Kim, giúp gia tăng tài lộc và sự thịnh vượng cho gia chủ. Sự kết hợp này sẽ tạo ra nguồn năng lượng tốt, giúp gia chủ mệnh Kim dễ dàng đạt được mục tiêu.\n\n";
+    } 
+
+    return comment; // Remove any trailing newlines
+>>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
   }
   
   function getShapeCompatibilityComment(userElement, shapePoint) {
@@ -314,6 +461,11 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
   // Hàm hiển thị modal khi người dùng chọn cá
   const showFishDetails = async (fish) => {
     try {
+<<<<<<< HEAD
+=======
+     
+      
+>>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
       setSelectedFishDetail(fish);
       setIsModalVisible(true);
     } catch (error) {
@@ -329,6 +481,7 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
       } else {
         const response = await api.get(`TypeColor/GetAllTypeColor`);
         const allColors = response.data;
+<<<<<<< HEAD
         fishColors = allColors.filter(
           (color) => color.koiType === fish.koiType
         );
@@ -340,6 +493,15 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
           percentage: color.percentage || 0,
         }))
       );
+=======
+        fishColors = allColors.filter(color => color.koiType === fish.koiType);
+      }
+      setSelectedFishDetail(fish);
+      setColorWeights(fishColors.map(color => ({
+        colorId: color.colorId,
+        percentage: color.percentage || 0
+      })));
+>>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
     } catch (error) {
       console.error("Error fetching fish details:", error);
       toast.error("Error fetching fish details");
@@ -348,6 +510,7 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
 
   // Hàm xử lý thay đổi tỉ trọng màu
   const handleColorWeightChange = (koiType, index, value) => {
+<<<<<<< HEAD
     setAllFishColors((prev) => {
       const updatedColors = [...prev[koiType]];
       updatedColors[index] = {
@@ -370,11 +533,36 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
           prev.filter((fish) => fish.koiType !== koiType)
         );
         // Also remove the fish point
+=======
+    setAllFishColors(prev => {
+      const updatedColors = [...prev[koiType]];
+      updatedColors[index] = {
+        ...updatedColors[index],
+        percentage: Math.max(0, Math.min(1, value))
+      };
+      setFishPoints(prev => {
+          const newPoints = { ...prev };
+          delete newPoints[koiType];
+          return newPoints;
+        });
+
+      // Check if the fish is currently selected
+      const isSelected = selectedFishes.some(fish => fish.koiType === koiType);
+      if (isSelected) {
+        // If it's selected, remove it from selectedFishes
+        setSelectedFishes(prev => prev.filter(fish => fish.koiType !== koiType));
+        // Also remove the fish point
+        
+>>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
       }
 
       return {
         ...prev,
+<<<<<<< HEAD
         [koiType]: updatedColors,
+=======
+        [koiType]: updatedColors
+>>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
       };
     });
   };
@@ -382,6 +570,7 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
   // Hàm kiểm tra tổng tỉ trọng phải là 100%
   const validateColorWeights = (koiType) => {
     const colors = allFishColors[koiType];
+<<<<<<< HEAD
     const totalPercentage = colors.reduce(
       (sum, color) => sum + color.percentage,
       0
@@ -415,17 +604,46 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
       [koiType]: originalColors,
     }));
     setFishPoints((prev) => {
+=======
+    const totalPercentage = colors.reduce((sum, color) => sum + color.percentage, 0);
+    if (Math.abs(totalPercentage - 1) < 0.01) {
+      return { valid: true, message: '' };
+    } else if (totalPercentage > 1) {
+      return { valid: false, message: 'Total percentage exceeds 100%' };
+    } else {
+      return { valid: false, message: 'Total percentage is less than 100%' };
+    }
+  };
+
+ 
+  const handleResetColors = (koiType) => {
+    const originalColors = allFishColors[koiType].map(color => ({
+      ...color,
+      percentage: color.originalPercentage || 0
+    }));
+    setAllFishColors(prev => ({
+      ...prev,
+      [koiType]: originalColors
+
+    }));
+    setFishPoints(prev => {
+>>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
       const newPoints = { ...prev };
       delete newPoints[koiType];
       return newPoints;
     });
   };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
   const handleSelectFish = async (fish) => {
     const validation = validateColorWeights(fish.koiType);
     if (validation.valid) {
       const selectedFishData = {
         koiType: fish.koiType,
+<<<<<<< HEAD
         colors: allFishColors[fish.koiType],
       };
 
@@ -467,6 +685,43 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
             const newSelected = prev.filter((f) => f.koiType !== fish.koiType);
             form.setFieldsValue({ selectedFishes: newSelected });
             setFishPoints((prev) => {
+=======
+        colors: allFishColors[fish.koiType]
+      };
+      
+      try {
+        // Get the DOB from the form
+        const dob = form.getFieldValue('birthdate');
+        const formattedDob = dob ? dob.format('YYYY-MM-DD') : '';
+  
+        // Prepare the payload for the API
+        const payload = {
+          koiType: fish.koiType,
+          colors: allFishColors[fish.koiType].map(color => ({
+            colorId: color.colorId,
+            percentage: color.percentage
+          }))
+        };
+  
+        // Fetch fish point from API
+        const response = await api.post('Compatibility/GetAttributeCustomColor', payload, {
+          params: { dob: formattedDob }
+        });
+        const fishPoint = response.data;
+        
+        setFishPoints(prev => ({
+          ...prev,
+          [fish.koiType]: fishPoint
+        }));
+        
+        setSelectedFishes(prev => {
+          const existingIndex = prev.findIndex(f => f.koiType === fish.koiType);
+          if (existingIndex !== -1) {
+            // If fish is already selected, remove it
+            const newSelected = prev.filter(f => f.koiType !== fish.koiType);
+            form.setFieldsValue({ selectedFishes: newSelected });
+            setFishPoints(prev => {
+>>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
               const newPoints = { ...prev };
               delete newPoints[fish.koiType];
               return newPoints;
@@ -489,10 +744,15 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
   };
 
   const handleRemoveFish = (fishToRemove) => {
+<<<<<<< HEAD
     setSelectedFishes((prev) => {
       const newSelected = prev.filter(
         (fish) => fish.koiType !== fishToRemove.koiType
       );
+=======
+    setSelectedFishes(prev => {
+      const newSelected = prev.filter(fish => fish.koiType !== fishToRemove.koiType);
+>>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
       form.setFieldsValue({ selectedFishes: newSelected });
       return newSelected;
     });
@@ -506,6 +766,7 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
     } else {
       setSelectedPondShape(shapeId);
       form.setFieldsValue({ selectedPondShape: shapeId });
+<<<<<<< HEAD
 
       try {
         const dob = form.getFieldValue("birthdate");
@@ -521,6 +782,20 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
           }
         );
 
+=======
+      
+      try {
+        const dob = form.getFieldValue('birthdate');
+        const formattedDob = dob ? dob.format('YYYY-MM-DD') : '';
+        
+        const response = await api.get(`Compatibility/GetPointOfShapeByShapeIDAndDOB`, {
+          params: { 
+            shapeId: shapeId,
+            dob: formattedDob
+          }
+        });
+        
+>>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
         setShapePoint(response.data);
       } catch (error) {
         console.error("Error fetching shape point:", error);
@@ -531,6 +806,7 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
 
   const handleSelectDirection = async () => {
     try {
+<<<<<<< HEAD
       const direction = form.getFieldValue("pondDirection");
       const dob = form.getFieldValue("birthdate");
       const gender = form.getFieldValue("Gender");
@@ -562,6 +838,34 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
       }
       
       form.setFieldsValue({ pondDirection: direction || null });
+=======
+      const direction = form.getFieldValue('pondDirection');
+      const dob = form.getFieldValue('birthdate');
+      const gender = form.getFieldValue('Gender');
+
+      if (!direction || !dob || !gender) {
+        toast.error("Please select direction, date of birth, and gender");
+        return;
+      }
+
+      const formattedDob = dob.format('YYYY-MM-DD');
+
+      console.log('Sending request with:', { Direction: direction, DOB: formattedDob, Gender: gender });
+
+      const response = await api.get(`Compatibility/GetPointOfDirectionByDirecDOBGEN`, {
+        params: { 
+          Direction: direction,
+          DOB: formattedDob,
+          Gender: gender
+        }
+      });
+      
+      console.log('Received response:', response.data);
+      
+      setDirectionPoint(response.data);
+      
+      form.setFieldsValue({ pondDirection: direction });
+>>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
     } catch (error) {
       console.error("Error fetching direction point:", error);
       toast.error("Error fetching direction point");
@@ -610,6 +914,10 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
                 label="Chọn loại cá"
                 name="selectedFishes"
                 rules={[{ required: false, message: "Vui lòng chọn ít nhất một loại cá" }]}
+<<<<<<< HEAD
+=======
+
+>>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
               >
                 <div className="filter-section">
                   <Form layout="inline">
@@ -652,8 +960,10 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
                   </Form>
                 </div>
 
-                <div className="fish-list">
+                
+                <div  className="fish-list">
                   {filteredFishList.map((fish) => (
+<<<<<<< HEAD
                     <div
                       key={fish.koiType}
                       className={`fish-card ${
@@ -674,6 +984,20 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
                       </div>
                       <div className="fish-card-right">
 
+=======
+                    <div 
+                      key={fish.koiType} 
+                      className={`fish-card ${selectedFishes.some(f => f.koiType === fish.koiType) ? 'selected' : ''}`}
+                    >
+                      <div className="fish-card-left">
+                        <div>
+                          <img onClick={() => showFishDetails(fish)} src={`/koi_image/${fish.image}`} alt={fish.image} />
+                          <p>{fish.koiType}</p>
+                          
+                        </div>
+                      </div>
+                      <div className="fish-card-right">
+>>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
   {allFishColors[fish.koiType] && (
     <>
       <div style={{ minHeight: "100%", maxHeight: "100%" }}>
@@ -728,6 +1052,7 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
 
               {/* Hiển thị modal trong phần JSX */}
               <Modal
+<<<<<<< HEAD
                 visible={isModalVisible}
                 // onOk={handleModalOk}
                 onCancel={() => setIsModalVisible(false)}
@@ -738,10 +1063,25 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
                     <img
                       className="fish-detail-image"
                       src={selectedFishDetail.image}
+=======
+               
+                visible={isModalVisible}
+                // onOk={handleModalOk}
+                onCancel={() => setIsModalVisible(false)}
+                footer={[
+                  
+                ]}
+              >
+                {selectedFishDetail && (
+                  <div className="fish-detail-modal">
+                     <img className="fish-detail-image"
+                      src={`/koi_image/${selectedFishDetail.image}`}
+>>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
                       alt={selectedFishDetail.koiType}
                     />
                     <div className="fish-detail-info">
                       <h1>{selectedFishDetail.koiType}</h1>
+<<<<<<< HEAD
 
                       <p>
                         <strong>Bản mệnh:</strong> {selectedFishDetail.element}
@@ -751,6 +1091,18 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
                         {selectedFishDetail.description}
                       </p>
                     </div>
+=======
+                   
+                      <p>
+                       <strong>Bản mệnh:</strong> {selectedFishDetail.element}
+                      </p>
+                      <p>
+                        <strong>Giới thiệu:</strong>{" "}
+                          {selectedFishDetail.description}
+                      </p>
+                    </div>
+                    
+>>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
                   </div>
                 )}
               </Modal>
@@ -775,14 +1127,23 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
 
                       onClick={() => handleSelectPondShape(shape.shapeId)}
                     >
+<<<<<<< HEAD
                       <img src={shape.image} alt={shape.shapeId} />
                       <div className="pond-shape-info">
 
+=======
+                      <img src={`/pond/${shape.image}`} alt={shape.shapeId} />
+                      <div className="pond-shape-info">
+>>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
                       <p>{shape.shapeId}</p>
                       {selectedPondShape === shape.shapeId && shapePoint !== null && (
                         <p className="shape-point">Điểm tương hợp: {(shapePoint ).toFixed(2)}%</p>
                       )}
                     </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
                     </div>
                   ))}
                 </div>
@@ -856,4 +1217,6 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
   );
 }
 
+
 export default ComputeCompability;
+
