@@ -23,6 +23,6 @@ namespace FengShuiKoi_Services
         public List<TypeColor> GetTypeByColor(string color);
         public List<TypeColor> GetColorsAndPercentages(string koiType);
         public bool AddKoiTypeColor(TypeColor koiFish);
-
+        public List<TypeColor> GetTypeByKoiType(string KoiType);
     }
 }
