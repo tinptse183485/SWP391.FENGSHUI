@@ -37,26 +37,26 @@ const ChoosePackage = () => {
       const response = await api.get('Package/GetAllPackage');
       setPackages(response.data);
     } catch (error) {
-      console.error('Error fetching packages:', error);
-      message.error('Failed to fetch packages');
+      console.error('Lỗi khi tải gói quảng cáo:', error);
+      message.error('Không thể tải gói quảng cáo');
     }
   };
 
   const onFinish = async (values) => {
     let currentAdId = adData.adId;
   
-    if (currentAdId === '.') {
-      try {
-        const response = await api.get('Advertisement/GenerateAdId', {
-          params: { AdId: currentAdId }
-        });
-        currentAdId = response.data; // Assuming the API returns the new ID directly
-      } catch (error) {
-        console.error('Error generating new AdId:', error);
-        message.error('Failed to generate new advertisement ID');
-        return;
-      }
-    }
+    // if (currentAdId === '.') {
+    //   try {
+    //     const response = await api.get('Advertisement/GenerateAdId', {
+    //       params: { AdId: currentAdId }
+    //     });
+    //     currentAdId = response.data; // Assuming the API returns the new ID directly
+    //   } catch (error) {
+    //     console.error('Error generating new AdId:', error);
+    //     message.error('Failed to generate new advertisement ID');
+    //     return;
+    //   }
+    // }
   
     const packageInfo = {
       adId: currentAdId,
@@ -79,11 +79,11 @@ const ChoosePackage = () => {
         localStorage.setItem('adData', JSON.stringify(updatedAdData));
         window.location.href = response.data.paymentUrl;
       } else {
-        message.error('Failed to create payment URL');
+        message.error('Không thể tạo URL thanh toán');
       }
     } catch (error) {
-      console.error('Error creating payment:', error);
-      message.error('Failed to initiate payment');
+      console.error('Lỗi khi tạo thanh toán:', error);
+      message.error('Không thể bắt đầu thanh toán');
     }
   };
 
@@ -147,38 +147,39 @@ const ChoosePackage = () => {
   };
 
   return (
+    <> <Header_page />
     <div className="choose-package-container">
-      <Header_page />
-      <h1>Choose Advertisement Package</h1>
+     
+      <h1>Chọn Gói Quảng Cáo</h1>
       <div className="package-layout">
         <div className="package-info-and-form">
           <div className="package-info">
-            <Card title="Package Information">
+            <Card title="Thông Tin Gói">
               {selectedPackage ? (
                 <>
-                  <p><strong>Rank:</strong> {selectedPackage.rank}</p>
-                  <p><strong>Price:</strong> {formatCurrency(selectedPackage.price)}</p>
-                  <p><strong>Description:</strong> {selectedPackage.description}</p>
-                  <p><strong>Duration:</strong> {selectedPackage.duration*form.getFieldValue('quantity')} ngày </p>
+                  <p><strong>Hạng:</strong> {selectedPackage.rank}</p>
+                  <p><strong>Giá:</strong> {formatCurrency(selectedPackage.price)}</p>
+                  <p><strong>Mô tả:</strong> {selectedPackage.description}</p>
+                  <p><strong>Thời hạn:</strong> {selectedPackage.duration * (form.getFieldValue('quantity')||1)} ngày </p>
                 </>
               ) : (
-                <p>Select a package to view details</p>
+                <p>Chọn một gói để xem chi tiết</p>
               )}
             </Card>
           </div>
           <div className="update-form">
             <Form form={form} onFinish={onFinish} layout="vertical">
-              <Form.Item name="Rank" label="Rank" rules={[{ required: true }]}>
+              <Form.Item name="Rank" label="Hạng" rules={[{ required: true }]}>
                 <Select onChange={handlePackageChange}>
                   {packages.map(pkg => (
                     <Option key={pkg.rank} value={pkg.rank}>{pkg.rank}</Option>
                   ))}
                 </Select>
               </Form.Item>
-              <Form.Item name="startDate" label="Start Date" rules={[{ required: true }]}>
+              <Form.Item name="startDate" label="Ngày Bắt Đầu" rules={[{ required: true }]}>
                 <DatePicker onChange={(date) => handleDateChange(date)} format="DD-MM-YYYY" />
               </Form.Item>
-              <Form.Item name="quantity" label="Quantity" rules={[{ required: true }]}>
+              <Form.Item name="quantity" label="Số Lượng" rules={[{ required: true }]}>
                 <InputNumber min={1} onChange={handleQuantityChange} />
               </Form.Item>
              
@@ -191,16 +192,17 @@ const ChoosePackage = () => {
           </div>
         </div>
         <div className="invoice-info">
-          <Card title="Advertisement Invoice">
+          <Card title="Hóa Đơn Quảng Cáo">
            
-            <p><strong>Rank:</strong> {invoiceInfo.rank || 'Not selected'}</p>
-            <p><strong>Start Date:</strong> {invoiceInfo.startDate || 'Not set'}</p>
-            <p><strong>Expired Date:</strong> {invoiceInfo.expiredDate || 'Not set'}</p>
-            <p><strong>Total:</strong> {formatCurrency(invoiceInfo.total)}</p>
+            <p><strong>Hạng:</strong> {invoiceInfo.rank || 'Chưa chọn'}</p>
+            <p><strong>Ngày Bắt Đầu:</strong> {invoiceInfo.startDate || 'Chưa đặt'}</p>
+            <p><strong>Ngày Hết Hạn:</strong> {invoiceInfo.expiredDate || 'Chưa đặt'}</p>
+            <p><strong>Tổng Cộng:</strong> {formatCurrency(invoiceInfo.total)}</p>
           </Card>
         </div>
       </div>
     </div>
+    </>
   );
 };
 

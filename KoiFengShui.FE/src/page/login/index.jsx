@@ -27,7 +27,6 @@ function Login() {
       const response = await api.post("/Account/google-login", {
         email: user.email,
         name: user.displayName,
-
         googleId: user.uid
 
       });

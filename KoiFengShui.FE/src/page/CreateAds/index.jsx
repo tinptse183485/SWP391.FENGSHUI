@@ -24,11 +24,10 @@ function CreateAds() {
     if (advertisement) {
       setAdData(prevData => ({
         ...prevData,
-        ...advertisement,
-        adId: advertisement.adId || '.'
+        ...advertisement
       }));
     }
-  }, [location]);
+  }, [location.state]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -46,19 +45,19 @@ function CreateAds() {
   };
 
   const handleSave = async () => {
-    if (adData.adId !== '.') {
-      try {
-        const response = await api.put('Advertisement/UpdateDaftAdvertisement',adData);
-        console.log('Response:', response.data);
-        message.success('Quảng cáo đã được lưu thành công!');
-        navigate('/user-ads');
-    } catch (error) {
-      console.error('Error:', error);
-      message.error('Có lỗi xảy ra khi lưu quảng cáo. Vui lòng thử lại.');
-    }
-  } else 
+  //   if (adData.adId !== '.') {
+  //     try {
+  //       const response = await api.put('Advertisement/UpdateDaftAdvertisement',adData);
+  //       console.log('Response:', response.data);
+  //       message.success('Quảng cáo đã được lưu thành công!');
+  //       navigate('/user-ads');
+  //   } catch (error) {
+  //     console.error('Error:', error);
+  //     message.error('Có lỗi xảy ra khi lưu quảng cáo. Vui lòng thử lại.');
+  //   }
+  // } else 
   try {
-    const response = await api.post('Advertisement/AddAdvertisementDraft', adData);
+    const response = await api.post('Advertisement/SaveAdvertisementDraft', adData);
     console.log('Response:', response.data);
     message.success('Quảng cáo đã được lưu thành công!');
     navigate('/user-ads');
@@ -108,21 +107,28 @@ const handleChoosePackage = () => {
       />
       <Editor
         apiKey='48zvgxqbyrxhxjktp3nysk7hscrlqcz0143gyuhannv3rfv5'
-        onInit={(evt, editor) => editorRef.current = editor}
-        initialValue={adData.link || "<p>Viết nội dung quảng cáo của bạn ở đây.</p>"}
+        onInit={(evt, editor) => {
+          editorRef.current = editor;
+          if (adData.link) {
+            editor.setContent(adData.link);
+          }
+        }}
+        value={adData.link || "<p>Viết nội dung quảng cáo của bạn ở đây.</p>"}
         init={{
           height: 500,
           plugins: [
             'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
             'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
             'insertdatetime', 'media', 'table', 'help', 'wordcount',
-            'directionality emoticons template paste textcolor colorpicker'
+            'directionality', 'emoticons', 'template', 'paste', 'textcolor', 'colorpicker'
           ],
           toolbar: 'undo redo | blocks | ' +
             'bold italic backcolor | alignleft aligncenter ' +
             'alignright alignjustify | bullist numlist outdent indent | ' +
-            'removeformat | link image | help | emoticons | template',
-          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }'
+            'removeformat | link image | help | emoticons | template | ltr rtl',
+          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
+          directionality: 'ltr', // Đặt hướng văn bản mặc định là từ trái sang phải
+          language: 'vi_VN', // Đặt ngôn ngữ là tiếng Việt
         }}
         onEditorChange={handleEditorChange}
       />

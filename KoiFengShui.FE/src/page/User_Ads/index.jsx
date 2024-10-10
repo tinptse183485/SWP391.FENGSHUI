@@ -104,7 +104,7 @@ const User_Ads = () => {
         <Content style={{ margin: '16px' }}>
           <div className='container' style={{ padding: 24, background: '#fff', minHeight: 360 }}>
             <div className='Heading'>
-              <h1>Chào mừng đến với trang User Ads!</h1>
+              <h1>Chào mừng đến với trang Quảng cáo của bạn!</h1>
               <button onClick={handleCreate} className='btn-create'>Tạo bản nháp</button>
             </div>
             <Menu 

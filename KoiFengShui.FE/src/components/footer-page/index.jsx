@@ -6,41 +6,25 @@ function FooterPage() {
       <footer className="main-footer">
         <div className="footer-content">
           <div className="company-info">
-            <p>&copy; 2024 Company Name</p>
-            <ul className="footer-links">
-              <li>
-                <a href="/new-products">New Products</a>
-              </li>
-              <li>
-                <a href="/special-discounts">Special Discounts</a>
-              </li>
-              <li>
-                <a href="/faq">FAQ</a>
-              </li>
-              <li>
-                <a href="/blog">Blog</a>
-              </li>
-              <li>
-                <a href="/partners">Our Partners: [Partner Logos]</a>
-              </li>
-            </ul>
+            <p>&copy; 2024 KOI PHONG THỦY</p>
+            
             <div className="contact-info">
-              <p>Phone: 0939 158 128</p>
-              <p>Email: contact@yourwebsite.com</p>
+              <p>Điện thoại: 086 8686 868</p>
+              <p>Email: koifengshui@gmail.com</p>
             </div>
             <div className="copyright">
-              <p>Copyright &copy; 2024 All rights reserved</p>
+              <p>Bản quyền &copy; 2024 Đã đăng ký bản quyền</p>
             </div>
           </div>
 
           <div className="customer-services">
-            <h3>Customer services</h3>
+            <h3>Dịch vụ khách hàng</h3>
             <ul>
-              <li>Warranty and return policy</li>
-              <li>Privacy policy</li>
-              <li>Purchase guide</li>
-              <li>Terms of use</li>
-              <li>Payment policy</li>
+              <li>Chính sách bảo hành và đổi trả</li>
+              <li>Chính sách bảo mật</li>
+              <li>Hướng dẫn mua hàng</li>
+              <li>Điều khoản sử dụng</li>
+              <li>Chính sách thanh toán</li>
             </ul>
           </div>
         </div>
