@@ -206,7 +206,29 @@ namespace KoiFengShui.BE.Controllers
             }
         }
 
-        [HttpPut("UpdateAdvertisement")]
+		[HttpPut("UpdateAdvertisementStatus")]
+		public IActionResult UpdateAdvertisementStatus(string adId, string status)
+        {
+            try
+            {
+                var advertise = _advertisementService.GetAdvertisementByAdID(adId);
+                if(advertise == null)
+                {
+                    return BadRequest("Không tìm thấy bài quảng cáo");
+                }
+                else
+                {
+                    advertise.Status = status;
+                    return Ok("Cập nhật thành công");
+                }
+            }
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Internal server error: {ex.Message}");
+			}
+		}
+
+			[HttpPut("UpdateAdvertisement")]
         public IActionResult UpdateAdvertisement(AdvertisementDTO advertisement,string Rank,string Status,DateTime startDate,int quantity,float total)
         {
             try

@@ -1,0 +1,30 @@
+const { setHeadlessWhen, setCommonPlugins } = require('@codeceptjs/configure');
+// turn on headless mode when running with HEADLESS=true environment variable
+// export HEADLESS=true && npx codeceptjs run
+setHeadlessWhen(process.env.HEADLESS);
+
+// enable all common plugins https://github.com/codeceptjs/configure#setcommonplugins
+setCommonPlugins();
+
+/** @type {CodeceptJS.MainConfig} */
+exports.config = {
+  tests: './test/*.js', // Ensure this path matches your test file location
+  output: './output',
+  helpers: {
+    REST: {
+      endpoint: 'https://localhost:7247',
+      defaultHeaders: {
+        'Content-Type': 'application/json',
+      },
+      insecure: true,
+      onRequest: (request) => {
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'; // Bỏ qua SSL tự ký
+      }
+    },
+    JSONResponse: {}
+  },
+  include: {
+    I: './steps_file.js'
+  },
+  name: 'APITest'
+}
