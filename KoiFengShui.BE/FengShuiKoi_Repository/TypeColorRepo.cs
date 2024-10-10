@@ -22,5 +22,6 @@ namespace FengShuiKoi_Repository
         public bool DeleteTypeColorByColorId(string colorId) => TypeColorDAO.Instance.DeleteTypeColorsByColorId(colorId);
         public bool AddKoiTypeColor(TypeColor koiFish) => TypeColorDAO.Instance.AddKoiTypeColor(koiFish);
         public bool DeleteTypeColorByKoiType(string KoiType) => TypeColorDAO.Instance.DeleteTypeColorsByKoiType(KoiType);
+        public List<TypeColor> GetTypeByKoiType(string KoiType) => TypeColorDAO.Instance.GetTypeByKoiType(KoiType);
     }
 }

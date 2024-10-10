@@ -69,6 +69,18 @@ namespace FengShuiKoi_DAO
 
             return listType;
         }
+        public List<TypeColor> GetTypeByKoiType(string KoiType)
+        {
+            List<TypeColor> listType = new List<TypeColor>();
+
+            foreach (TypeColor item in this.GetAllType())
+            {
+                if (item.KoiType == KoiType)
+                    listType.Add(item);
+            }
+
+            return listType;
+        }
         public bool DeleteTypeColorsByColorId(string colorId)
         {
             try
