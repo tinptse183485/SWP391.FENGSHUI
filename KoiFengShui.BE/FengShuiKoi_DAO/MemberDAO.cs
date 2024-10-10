@@ -1,5 +1,6 @@
 ﻿using FengShuiKoi_BO;
 using FengShuiKoi_DAO;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,24 +78,28 @@ namespace FungShuiKoi_DAO
 			}
 			return isSuccess;
 		}
-		public bool UpdateMember(string id)
-		{
-			bool isSuccess = false;
-			Member mem = this.GetMemberByUserID(id);
-			try
-			{
-				if (mem != null)
-				{
-					dbContext.Entry<Member>(mem).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-					dbContext.SaveChanges();
-					isSuccess = true;
-				}
-			}
-			catch (Exception ex)
-			{
-				throw new Exception(ex.Message);
-			}
-			return isSuccess;
-		}
-	}
+        public bool UpdateMember(Member updatedMember)
+        {
+            try
+            {
+                var existingMember = this.GetMemberByUserID(updatedMember.UserId);
+                if (existingMember == null)
+                {
+                    return false;
+                }
+
+                existingMember.Name = updatedMember.Name;
+                existingMember.Birthday = updatedMember.Birthday;
+ 
+                dbContext.Entry(existingMember).State = EntityState.Modified;
+                dbContext.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+               
+                return false;
+            }
+        }
+    }
 }

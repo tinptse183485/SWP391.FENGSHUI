@@ -35,9 +35,9 @@ namespace FengShuiKoi_Services
 			return iMemberRepo.GetMembers();
 		}
 
-		public bool UpdateMember(string id)
+		public bool UpdateMember(Member updatedMember)
 		{
-			return iMemberRepo.UpdateMember(id);
+			return iMemberRepo.UpdateMember(updatedMember);
 		}
 	}
 }

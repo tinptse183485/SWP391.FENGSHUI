@@ -81,7 +81,29 @@ namespace KoiFengShui.BE.Controllers
 				return StatusCode(500, $"Internal server error: {ex.Message}");
 			}
 		}
-		private string GenerateUniqueAdId()
+
+        [HttpGet("GetAdvertisementByStatusAdmin")]
+        public IActionResult GetAdvertisementByStatusAdmin(string status)
+        {
+            try
+            {
+                var advertisements = _advertisementService.GetAdvertisementStatus( status);
+                if (advertisements == null)
+                {
+                    return BadRequest("Không tìm thấy quảng cáo có trạng thái" + status);
+                }
+
+                return Ok(advertisements);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+    
+     
+      
+        private string GenerateUniqueAdId()
         {
             Random random = new Random();
             int randomNumber = random.Next(0, 1000); // Tạo số ngẫu nhiên từ 0 đến 999
@@ -144,6 +166,37 @@ namespace KoiFengShui.BE.Controllers
                 // Log the exception
                 Console.WriteLine($"Error occurred while adding advertisement: {ex.Message}");
                 return StatusCode(500, "Internal server error. Please try again later.");
+            }
+        }
+        [HttpPut("UpdateDaftAdvertisement")]
+        public IActionResult UpdateDaftAdvertisement(AdvertisementDTO advertisement)
+        {
+            try
+            {
+                var existingAdvertisement = _advertisementService.GetAdvertisementByAdID(advertisement.AdId);
+                if (existingAdvertisement == null)
+                {
+                    return NotFound("Không tìm thấy quảng cáo");
+                }
+                existingAdvertisement.Image = advertisement.Image;
+                existingAdvertisement.Heading = advertisement.Heading;
+                existingAdvertisement.Link = advertisement.Link;
+                bool result1 = _advertisementService.UpdateAdvertisement(existingAdvertisement.AdId);
+               
+               
+
+                if (result1)
+                {
+                    return Ok("Cập nhật Draft thành công");
+                }
+                else
+                {
+                    return BadRequest("Cập nhật gói thất bại");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
 
