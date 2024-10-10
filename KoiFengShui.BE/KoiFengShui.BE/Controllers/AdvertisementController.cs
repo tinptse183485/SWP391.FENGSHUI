@@ -89,7 +89,10 @@ namespace KoiFengShui.BE.Controllers
                 {
                     return BadRequest("Không tìm thấy quảng cáo");
                 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9a0fc795a3d96b1e2029a9d8e6d78c71e072d879
                 return Ok(advertisements);
             }
             catch (Exception ex)
@@ -154,90 +157,121 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-		[HttpPost("SaveAdvertisementDraft")]
-		public IActionResult SaveAdvertisementDraft(AdvertisementDTO advertisementDto)
-		{
-			try
-			{
-				// Kiểm tra xem quảng cáo đã tồn tại chưa
-				Advertisement existingAdvertisement = null;
-				if (Regex.IsMatch(advertisementDto.AdId, @"^AD\d{3}$"))
-				{
-					existingAdvertisement = _advertisementService.GetAdvertisementByAdID(advertisementDto.AdId);
-				}
+        [HttpPost("SaveAdvertisementDraft")]
+        public IActionResult SaveAdvertisementDraft(AdvertisementDTO advertisementDto)
+        {
+            try
+            {
+                // Kiểm tra xem quảng cáo đã tồn tại chưa
+                Advertisement existingAdvertisement = null;
+                if (Regex.IsMatch(advertisementDto.AdId, @"^AD\d{3}$"))
+                {
+                    existingAdvertisement = _advertisementService.GetAdvertisementByAdID(advertisementDto.AdId);
+                }
 
-				if (existingAdvertisement == null)
-				{
-					// Tạo mới quảng cáo
-					if (_accountService.GetAccountByUserID(advertisementDto.UserId) == null)
-					{
-						return BadRequest("Member ID not found.");
-					}
+<<<<<<< HEAD
+=======
+>>>>>>> 9a0fc795a3d96b1e2029a9d8e6d78c71e072d879
+                if (existingAdvertisement == null)
+                {
+                    // Tạo mới quảng cáo
+                    if (_accountService.GetAccountByUserID(advertisementDto.UserId) == null)
+                    {
+                        return BadRequest("Member ID not found.");
+                    }
 
-					string adId = GenerateUniqueAdId();
-					int attempts = 0;
-					const int maxAttempts = 10;
+                    string adId = GenerateUniqueAdId();
+                    int attempts = 0;
+                    const int maxAttempts = 10;
 
-					while (_advertisementService.GetAdvertisementByAdID(adId) != null && attempts < maxAttempts)
-					{
-						adId = GenerateUniqueAdId();
-						attempts++;
-					}
+                    while (_advertisementService.GetAdvertisementByAdID(adId) != null && attempts < maxAttempts)
+                    {
+                        adId = GenerateUniqueAdId();
+                        attempts++;
+                    }
 
-					if (attempts == maxAttempts)
-					{
-						return StatusCode(500, "Failed to generate a unique advertisement ID. Please try again.");
-					}
+                    if (attempts == maxAttempts)
+                    {
+                        return StatusCode(500, "Failed to generate a unique advertisement ID. Please try again.");
+                    }
 
-					var newAdvertisement = new Advertisement
-					{
-						AdId = adId,
-						Heading = advertisementDto.Heading?.Trim(),
-						Image = advertisementDto.Image?.Trim(),
-						Link = advertisementDto.Link?.Trim(),
-						UserId = advertisementDto.UserId,
-						ElementId = "None",
-						Status = "Draft",
-					};
+                    var newAdvertisement = new Advertisement
+                    {
+                        AdId = adId,
+                        Heading = advertisementDto.Heading?.Trim(),
+                        Image = advertisementDto.Image?.Trim(),
+                        Link = advertisementDto.Link?.Trim(),
+                        UserId = advertisementDto.UserId,
+                        ElementId = "None",
+                        Status = "Draft",
+                    };
 
-					bool result = _advertisementService.AddAdvertisement(newAdvertisement);
+                    bool result = _advertisementService.AddAdvertisement(newAdvertisement);
 
-					if (result)
-					{
-						return Ok(new { Message = "Tạo bản nháp quảng cáo thành công", AdId = adId });
-					}
-					else
-					{
-						return BadRequest("Tạo bản nháp quảng cáo thất bại");
-					}
-				}
-				else
-				{
-					// Cập nhật quảng cáo hiện có
-					existingAdvertisement.Heading = advertisementDto.Heading?.Trim();
-					existingAdvertisement.Image = advertisementDto.Image?.Trim();
-					existingAdvertisement.Link = advertisementDto.Link?.Trim();
-					existingAdvertisement.Status = "Draft";
+                    if (result)
+                    {
+                        return Ok(new { Message = "Tạo bản nháp quảng cáo thành công", AdId = adId });
+                    }
+                    else
+                    {
+                        return BadRequest("Tạo bản nháp quảng cáo thất bại");
+                    }
+                }
+                else
+                {
+                    // Cập nhật quảng cáo hiện có
+                    existingAdvertisement.Heading = advertisementDto.Heading?.Trim();
+                    existingAdvertisement.Image = advertisementDto.Image?.Trim();
+                    existingAdvertisement.Link = advertisementDto.Link?.Trim();
+                    existingAdvertisement.Status = "Draft";
 
-					bool result = _advertisementService.UpdateAdvertisement(existingAdvertisement);
+                    bool result = _advertisementService.UpdateAdvertisement(existingAdvertisement);
 
-					if (result)
-					{
-						return Ok("Cập nhật bản nháp quảng cáo thành công");
-					}
-					else
-					{
-						return BadRequest("Cập nhật bản nháp quảng cáo thất bại");
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine($"Error occurred while saving advertisement draft: {ex.Message}");
-				return StatusCode(500, "Internal server error. Please try again later.");
-			}
-		}
-		[HttpPost("AddAdvertisementDraft")]
+                    if (result)
+                    {
+                        return Ok("Cập nhật bản nháp quảng cáo thành công");
+                    }
+                    else
+                    {
+                        return BadRequest("Cập nhật bản nháp quảng cáo thất bại");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error occurred while saving advertisement draft: {ex.Message}");
+                return StatusCode(500, "Internal server error. Please try again later.");
+            }
+        }
+
+
+        [HttpGet("GetAdvertisementByStatusAdmin")]
+        public IActionResult GetAdvertisementByStatusAdmin(string status)
+        {
+            try
+            {
+                var advertisements = _advertisementService.GetAdvertisementStatus(status);
+                if (advertisements == null)
+                {
+                    return BadRequest("Không tìm thấy quảng cáo có trạng thái" + status);
+                }
+
+                return Ok(advertisements);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        private string GenerateUniqueAdId()
+        {
+            Random random = new Random();
+            int randomNumber = random.Next(0, 1000); // Tạo số ngẫu nhiên từ 0 đến 999
+            return $"AD{randomNumber:D3}";
+        }
+
+        [HttpPost("AddAdvertisementDraft")]
         public IActionResult AddAdvertisementDraft(AdvertisementDTO advertisementDto)
         {
             try
@@ -394,99 +428,99 @@ namespace KoiFengShui.BE.Controllers
             }
         }
 
-		[HttpPost("CreateAdvertisement")]
-		public IActionResult CreateAdvertisement(AdvertisementDTO advertisement, string Rank, DateTime startDate, int quantity, float total)
-		{
-			try
-			{
-				Advertisement existingAdvertisement = null;
-				bool isNewAd = !Regex.IsMatch(advertisement.AdId ?? "", @"^AD\d{3}$");
+        [HttpPost("CreateAdvertisement")]
+        public IActionResult CreateAdvertisement(AdvertisementDTO advertisement, string Rank, DateTime startDate, int quantity, float total)
+        {
+            try
+            {
+                Advertisement existingAdvertisement = null;
+                bool isNewAd = !Regex.IsMatch(advertisement.AdId ?? "", @"^AD\d{3}$");
 
-				if (!isNewAd)
-				{
-					existingAdvertisement = _advertisementService.GetAdvertisementByAdID(advertisement.AdId);
-					if (existingAdvertisement == null)
-					{
-						return NotFound("Không tìm thấy bản nháp quảng cáo");
-					}
-				}
+                if (!isNewAd)
+                {
+                    existingAdvertisement = _advertisementService.GetAdvertisementByAdID(advertisement.AdId);
+                    if (existingAdvertisement == null)
+                    {
+                        return NotFound("Không tìm thấy bản nháp quảng cáo");
+                    }
+                }
 
-				if (_elementService.GetElementAndMutualism(advertisement.ElementId) == null)
-				{
-					return BadRequest("Không tìm thấy nguyên tố phù hợp");
-				}
+                if (_elementService.GetElementAndMutualism(advertisement.ElementId) == null)
+                {
+                    return BadRequest("Không tìm thấy nguyên tố phù hợp");
+                }
 
-				Advertisement newAd;
-				if (isNewAd)
-				{
-					string newAdId = GenerateUniqueAdId();
-					newAd = new Advertisement
-					{
-						AdId = newAdId,
-						UserId = advertisement.UserId,
-						Heading = advertisement.Heading,
-						Image = advertisement.Image,
-						Link = advertisement.Link,
-						ElementId = "None",
-						Status = "Pending"
-					};
-				}
-				else
-				{
-					newAd = existingAdvertisement;
-					newAd.Heading = advertisement.Heading;
-					newAd.Image = advertisement.Image;
-					newAd.Link = advertisement.Link;
-					newAd.ElementId = "None";
-					newAd.Status = "Pending";
-				}
+                Advertisement newAd;
+                if (isNewAd)
+                {
+                    string newAdId = GenerateUniqueAdId();
+                    newAd = new Advertisement
+                    {
+                        AdId = newAdId,
+                        UserId = advertisement.UserId,
+                        Heading = advertisement.Heading,
+                        Image = advertisement.Image,
+                        Link = advertisement.Link,
+                        ElementId = "None",
+                        Status = "Pending"
+                    };
+                }
+                else
+                {
+                    newAd = existingAdvertisement;
+                    newAd.Heading = advertisement.Heading;
+                    newAd.Image = advertisement.Image;
+                    newAd.Link = advertisement.Link;
+                    newAd.ElementId = "None";
+                    newAd.Status = "Pending";
+                }
 
-				bool result;
-				if (isNewAd)
-				{
-					result = _advertisementService.AddAdvertisement(newAd);
-				}
-				else
-				{
-					result = _advertisementService.UpdateAdvertisement(newAd);
-				}
+                bool result;
+                if (isNewAd)
+                {
+                    result = _advertisementService.AddAdvertisement(newAd);
+                }
+                else
+                {
+                    result = _advertisementService.UpdateAdvertisement(newAd);
+                }
 
-				if (!result)
-				{
-					return BadRequest("Tạo quảng cáo thất bại");
-				}
+                if (!result)
+                {
+                    return BadRequest("Tạo quảng cáo thất bại");
+                }
 
-				Package package = _packageService.GetPackageByRank(Rank);
-				if (package == null)
-				{
-					return BadRequest("Không tìm thấy gói quảng cáo phù hợp");
-				}
+                Package package = _packageService.GetPackageByRank(Rank);
+                if (package == null)
+                {
+                    return BadRequest("Không tìm thấy gói quảng cáo phù hợp");
+                }
 
-				AdsPackage newAdsPackage = new AdsPackage
-				{
-					AdId = newAd.AdId,
-					Rank = Rank,
-					StartDate = startDate,
-					ExpiredDate = startDate.AddDays(package.Duration * quantity),
-					Quantity = quantity,
-					Total = total
-				};
+                AdsPackage newAdsPackage = new AdsPackage
+                {
+                    AdId = newAd.AdId,
+                    Rank = Rank,
+                    StartDate = startDate,
+                    ExpiredDate = startDate.AddDays(package.Duration * quantity),
+                    Quantity = quantity,
+                    Total = total
+                };
 
-				bool adsPackageResult = _adsPackageService.AddAdsPackage(newAdsPackage);
-				if (!adsPackageResult)
-				{
-					return BadRequest("Thêm gói quảng cáo thất bại");
-				}
+                bool adsPackageResult = _adsPackageService.AddAdsPackage(newAdsPackage);
+                if (!adsPackageResult)
+                {
+                    return BadRequest("Thêm gói quảng cáo thất bại");
+                }
 
-				return Ok(new { Message = "Tạo quảng cáo thành công", AdId = newAd.AdId });
-			}
-			catch (Exception ex)
-			{
-				return StatusCode(500, $"Internal server error: {ex.Message}");
-			}
-		}
+                return Ok(new { Message = "Tạo quảng cáo thành công", AdId = newAd.AdId });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
 
-		[HttpDelete("DeleteAdvertisement/{adId}")]
+        [HttpDelete("DeleteAdvertisement/{adId}")]
         public IActionResult DeleteAdvertisement(string adId)
         {
             try

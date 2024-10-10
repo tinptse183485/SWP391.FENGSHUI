@@ -19,5 +19,6 @@ namespace FengShuiKoi_Repository
         public bool DeleteTypeColorByColorId(string colorId);
         public bool DeleteTypeColorByKoiType(string KoiType);
         public bool AddKoiTypeColor(TypeColor koiFish);
+        public List<TypeColor> GetTypeByKoiType(string KoiType);
     }
 }
