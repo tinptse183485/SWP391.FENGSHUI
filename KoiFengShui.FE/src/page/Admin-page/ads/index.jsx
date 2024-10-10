@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import Sidebar from '../../../components/sidebar/Sidebar';
-import api from '../../../config/axios';
-import { Table, Button, message, Image, Typography, Space } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import Sidebar from "../../../components/sidebar/Sidebar";
+import api from "../../../config/axios";
+import { Table, Button, message, Image, Typography, Space } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const { Text } = Typography;
 
@@ -18,46 +18,50 @@ const Ads = () => {
   }, []);
   const handleUpdateStatus = async (adId, status) => {
     try {
-      await api.put(`Advertisement/UpdateAdvertisementStatus?adId=${adId}&status=${status}`);
-      message.success(`Đã cập nhật trạng thái thành của bài quảng cáo ${adId} thành ${status}`);
+      await api.put(
+        `Advertisement/UpdateAdvertisementStatus?adId=${adId}&status=${status}`
+      );
+      message.success(
+        `Đã cập nhật trạng thái thành của bài quảng cáo ${adId} thành ${status}`
+      );
       fetchData(); // Tải lại dữ liệu sau khi cập nhật
     } catch (error) {
-      message.error('Có lỗi xảy ra khi cập nhật trạng thái');
+      message.error("Có lỗi xảy ra khi cập nhật trạng thái");
     }
   };
 
   const columns = [
     {
-      title: 'AdID',
-      dataIndex: 'adId',
-      key: 'adId',
+      title: "AdID",
+      dataIndex: "adId",
+      key: "adId",
       render: (text) => <Text strong>{text}</Text>,
     },
     {
-      title: 'Tiêu đề',
-      dataIndex: 'heading',
-      key: 'heading',
+      title: "Tiêu đề",
+      dataIndex: "heading",
+      key: "heading",
       ellipsis: true,
     },
     {
-      title: 'Hình ảnh',
-      dataIndex: 'image',
-      key: 'image',
+      title: "Hình ảnh",
+      dataIndex: "image",
+      key: "image",
       render: (image) => (
         <Image
           src={image}
           alt="Ad"
           width={80}
           height={80}
-          style={{ objectFit: 'cover', borderRadius: '4px' }}
+          style={{ objectFit: "cover", borderRadius: "4px" }}
         />
       ),
     },
     {
-      title: 'Nội dung',
-      key: 'content',
+      title: "Nội dung",
+      key: "content",
       render: (_, record) => (
-        <Button 
+        <Button
           type="link"
           onClick={() => navigate(`/advertisement-detail/${record.adId}`)}
         >
@@ -66,13 +70,18 @@ const Ads = () => {
       ),
     },
     {
-      title: 'Trạng thái',
-      dataIndex: 'status',
-      key: 'status',
+      title: "Trạng thái",
+      dataIndex: "status",
+      key: "status",
       render: (status) => (
         <Text
           style={{
-            color: status === 'Approve' ? '#52c41a' : status === 'Refunded' ? '#faad14' : '#f5222d',
+            color:
+              status === "Approve"
+                ? "#52c41a"
+                : status === "Refunded"
+                ? "#faad14"
+                : "#f5222d",
           }}
         >
           {status}
@@ -80,31 +89,31 @@ const Ads = () => {
       ),
     },
     {
-      title: 'Action',
-      key: 'action',
+      title: "Action",
+      key: "action",
       width: 200,
       render: (_, record) => (
         <Space size="small" direction="vertical">
-          <Button 
-            type="primary" 
-            onClick={() => handleUpdateStatus(record.adId, 'Approve')}
-            disabled={record.status === 'Approve'}
+          <Button
+            type="primary"
+            onClick={() => handleUpdateStatus(record.adId, "Approve")}
+            disabled={record.status === "Approve"}
           >
             Phê duyệt
           </Button>
-          {record.status === 'Cancel' ? (
-            <Button 
-            type="primary" 
-            danger
-              onClick={() => handleUpdateStatus(record.adId, 'Refunded')}
+          {record.status === "Cancel" ? (
+            <Button
+              type="primary"
+              danger
+              onClick={() => handleUpdateStatus(record.adId, "Refunded")}
             >
               Hoàn trả
             </Button>
           ) : (
-            <Button 
-            type="primary" 
-            danger
-              onClick={() => handleUpdateStatus(record.adId, 'Cancel')}
+            <Button
+              type="primary"
+              danger
+              onClick={() => handleUpdateStatus(record.adId, "Cancel")}
             >
               Hủy bỏ
             </Button>
@@ -115,10 +124,7 @@ const Ads = () => {
   ];
   return (
     <div className="dashboard-container">
-      <Table 
-        dataSource={data} 
-        columns={columns} 
-      />
+      <Table dataSource={data} columns={columns} />
     </div>
   );
 };
