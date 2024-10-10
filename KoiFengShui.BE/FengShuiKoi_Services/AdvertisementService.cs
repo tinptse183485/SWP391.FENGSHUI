@@ -41,9 +41,9 @@ namespace FengShuiKoi_Services
             return iAdvertisementRepo.GetAdvertisements();
         }
 
-        public bool UpdateAdvertisement(string adID)
-        {
-            return iAdvertisementRepo.UpdateAdvertisement(adID);
+		public bool UpdateAdvertisement(Advertisement updatedAdvertisement)
+		{
+            return iAdvertisementRepo.UpdateAdvertisement(updatedAdvertisement);
         }
     }
 }

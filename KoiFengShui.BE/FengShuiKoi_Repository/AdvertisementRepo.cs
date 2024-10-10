@@ -37,9 +37,9 @@ namespace FengShuiKoi_Repository
             return AdvertisementDAO.Instance.GetAdvertisements();
         }
 
-        public bool UpdateAdvertisement(string adID)
-        {
-            return AdvertisementDAO.Instance.UpdateAdvertisement(adID);
+		public bool UpdateAdvertisement(Advertisement updatedAdvertisement)
+		{
+            return AdvertisementDAO.Instance.UpdateAdvertisement(updatedAdvertisement);
         }
     }
 }
