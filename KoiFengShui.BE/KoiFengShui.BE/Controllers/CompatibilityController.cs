@@ -329,7 +329,7 @@ namespace KoiFengShui.BE.Controllers
                 }
                 else if (s2Result != null && s3Result != null)
                 {
-                    compa = (0.45 * s2 + 0.55 * s3);
+                    compa = (0.6 * s2 + 0.4 * s3);
                 }
                 else if (s1Result != null)
                 {

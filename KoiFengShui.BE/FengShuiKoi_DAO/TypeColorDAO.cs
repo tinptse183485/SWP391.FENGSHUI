@@ -69,6 +69,18 @@ namespace FengShuiKoi_DAO
 
             return listType;
         }
+        public List<TypeColor> GetTypeByKoiType(string KoiType)
+        {
+            List<TypeColor> listType = new List<TypeColor>();
+
+            foreach (TypeColor item in this.GetAllType())
+            {
+                if (item.KoiType == KoiType)
+                    listType.Add(item);
+            }
+
+            return listType;
+        }
         public bool DeleteTypeColorsByColorId(string colorId)
         {
             try
@@ -104,31 +116,53 @@ namespace FengShuiKoi_DAO
         {
             try
             {
-                var colorsToRemove = dbContext.TypeColors
+                var typeColorsToDelete = dbContext.TypeColors
                     .Where(tc => tc.KoiType == koiType)
                     .ToList();
 
-                if (colorsToRemove.Any())
+                if (typeColorsToDelete.Any())
                 {
-                    // Xóa TypeKoi liên quan
-                    var typeKoiToRemove = dbContext.TypeColors
-                        .FirstOrDefault(tk => tk.KoiType == koiType);
-
-                    if (typeKoiToRemove != null)
-                    {
-                        dbContext.TypeColors.Remove(typeKoiToRemove);
-                    }
-
-                    dbContext.TypeColors.RemoveRange(colorsToRemove);
+                   
+                    dbContext.TypeColors.RemoveRange(typeColorsToDelete);
                     dbContext.SaveChanges();
-                    return true;
-                }
 
+                   
+                    return true ;
+                }
                 return false;
             }
             catch (Exception ex)
+            {      
+                return false;
+            }
+        }
+
+        public bool AddKoiTypeColor(TypeColor koiFish)
+        {
+            try
             {
-                throw new Exception($"Đã xảy ra lỗi khi xóa màu và loại Koi: {ex.Message}", ex);
+                if (koiFish == null)
+                {
+                    return false;
+                }
+
+                var koiTypeColor = new TypeColor
+                {
+                    KoiType = koiFish.KoiType,
+                    ColorId = koiFish.ColorId,
+                    Percentage = koiFish.Percentage
+                };
+
+            
+                dbContext.TypeColors.Add(koiTypeColor);
+                dbContext.SaveChanges();
+
+                return true;
+            }
+            catch (Exception)
+            {
+           
+                return false;
             }
         }
     }

@@ -123,28 +123,28 @@ namespace KoiFengShui.BE.Controllers
         {
             try
             {
-                List<AdsPackage> listAdsPackage = new List<AdsPackage>();
-                List<Advertisement> listAdvertisements = _advertisementService.GetAdvertisementByRank(rank);
+                List<Advertisement> listAdsvertisement = new List<Advertisement>();
+                List<AdsPackage> ListAdsPackage = _adsPackageService.GetListAdsPackageByRank(rank);
 
-                foreach (var advertisement in listAdvertisements)
+                foreach (var advertisement in ListAdsPackage)
                 {
-                    AdsPackage adsPackage = _adsPackageService.GetAdsPackageByAdIDRank(advertisement.AdId, rank);
-                    if (adsPackage != null)
+                    Advertisement advertise = _advertisementService.GetAdvertisementByAdID(advertisement.AdId);
+                    if (advertise != null)
                     {
-                        listAdsPackage.Add(adsPackage); 
+                        listAdsvertisement.Add(advertise); 
                     }   
                 }
-                IActionResult expirationCheck = CheckPackageExpiration(listAdsPackage);
+                IActionResult expirationCheck = CheckPackageExpiration(ListAdsPackage);
                 if (expirationCheck != null)
                 {
                     return expirationCheck;
                 }else
                 {
-                    foreach(var ads in listAdsPackage)
+                    foreach(var ads in ListAdsPackage)
                     {
                         _adsPackageService.DeleteAdsPackage(ads.AdId, rank);
                     }
-                    foreach (var advertise in listAdvertisements)
+                    foreach (var advertise in listAdsvertisement)
                     {
                         _advertisementService.DeleteAdvertisement(advertise.AdId);
                     }
