@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"; // Thêm useEffect và useState
 // import "./index.css";
 import api from "../../../config/axios";
+
 import {
   Button,
   Form,
@@ -11,6 +12,7 @@ import {
   Upload,
   Space,
   Select,
+  Popconfirm,
 } from "antd";
 import { toast } from "react-toastify";
 import {
@@ -18,6 +20,7 @@ import {
   MinusCircleOutlined,
   PlusCircleOutlined,
 } from "@ant-design/icons";
+
 import { useForm } from "antd/es/form/Form";
 import uploadFile from "../../../utils/file";
 
@@ -32,21 +35,39 @@ const Koi = () => {
   const [previewImage, setPreviewImage] = useState("");
   const [fileList, setFileList] = useState([]);
   const [colors, setColors] = useState([]);
+
   const [colorModalVisible, setColorModalVisible] = useState(false);
   const [colorForm] = Form.useForm();
 
   useEffect(() => {
-    fetchData();
+    fetchDataAndColors();
     fetchColors();
   }, []); // Chạy một lần khi component mount
 
-  const fetchData = async () => {
+  const fetchDataAndColors = async () => {
     try {
-      const response = await api.get("KoiVariety/GetAllKoi"); // Thay thế 'API_URL' bằng URL thực tế
-      console.log("Fetched data:", response.data); // Kiểm tra dữ liệu nhận được
-      setData(response.data); // Lưu trữ dữ liệu vào state
+      const [koiResponse, colorResponse] = await Promise.all([
+        api.get("KoiVariety/GetAllKoi"),
+        api.get("TypeColor/GetAllTypeColor"),
+      ]);
+
+      const koiData = koiResponse.data;
+      const colorData = colorResponse.data;
+
+      const combinedData = koiData.map((koi) => {
+        const koiColors = colorData.filter(
+          (color) => color.koiType === koi.koiType
+        );
+        return {
+          ...koi,
+          colors: koiColors,
+        };
+      });
+
+      setData(combinedData);
     } catch (error) {
       console.error("Error fetching data:", error);
+      toast.error("Không thể tải dữ liệu");
     }
   };
 
@@ -82,6 +103,47 @@ const Koi = () => {
       title: "Description",
       dataIndex: "description",
     },
+    {
+      title: "Colors",
+      dataIndex: "colors",
+      render: (colors) => (
+        <ul>
+          {colors.map((color, index) => (
+            <li key={index}>
+              {color.colorId}: {color.percentage.toFixed(2)}
+            </li>
+          ))}
+        </ul>
+      ),
+    },
+    {
+      title: "Action",
+      dataIndex: "koiType",
+      key: "koiType",
+      render: (koiType, category) => (
+        <>
+          {/* <Button
+            type="primary"
+            onClick={() => {
+              setOpenModal(true);
+              form.setFieldsValue(category);
+            }}
+          >
+            Edit
+          </Button> */}
+
+          <Popconfirm
+            title="Delete"
+            description="Delete?"
+            onConfirm={() => handleDelete(koiType)}
+          >
+            <Button type="primary" danger>
+              Delete
+            </Button>
+          </Popconfirm>
+        </>
+      ),
+    },
   ];
 
   const handleOpenModal = () => {
@@ -94,6 +156,7 @@ const Koi = () => {
 
   const handleCreateKoi = async (values) => {
     // Kiểm tra tổng tỉ trọng
+
     const totalPercentage = values.colors.reduce(
       (sum, color) => sum + parseFloat(color.percentage || 0),
       0
@@ -105,31 +168,32 @@ const Koi = () => {
       return;
     }
 
-    const koi = { ...values };
-
-    // Transform colors data
-    koi.colors = values.colors.map((color) => ({
-      colorId: color.colorId,
-      percentage: parseFloat(color.percentage),
-    }));
-
-    if (fileList.length > 0) {
-      const file = fileList[0];
-      console.log(file);
-      const url = await uploadFile(file.originFileObj);
-      koi.image = url;
-    }
-
     try {
       setSubmitting(true);
-      const response = await api.post("KoiVariety/CreateKoi", koi);
+
+      let imageUrl = "";
+      if (fileList.length > 0) {
+        const file = fileList[0].originFileObj;
+        imageUrl = await uploadFile(file);
+      }
+
+      const koi = {
+        ...values,
+        image: imageUrl,
+        colors: values.colors.map((color) => ({
+          colorId: color.colorId.toString(),
+          percentage: parseFloat(color.percentage),
+        })),
+      };
+      const response = await api.post("KoiVariety/AddKoiAndTypeColor", koi);
+
       console.log(response.data);
       toast.success("Tạo mới thành công");
       setOpenModal(false);
       form.resetFields();
-      fetchData();
+      fetchDataAndColors();
     } catch (err) {
-      toast.error(err.message);
+      toast.error(err.response?.data?.message || "Có lỗi xảy ra");
     } finally {
       setSubmitting(false);
     }
@@ -251,13 +315,13 @@ const Koi = () => {
           </Form.Item>
           <Form.Item label="image" name="image">
             <Upload
-              action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
               listType="picture-card"
               fileList={fileList}
               onPreview={handlePreview}
               onChange={handleChange}
+              beforeUpload={() => false} // Prevent auto upload
             >
-              {fileList.length >= 8 ? null : uploadButton}
+              {fileList.length >= 1 ? null : uploadButton}
             </Upload>
           </Form.Item>
           <Form.List name="colors">

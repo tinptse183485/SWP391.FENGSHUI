@@ -16,16 +16,15 @@ import Pond from "./page/Admin-page/pond";
 import Ads_list from "./page/Ads_list";
 import CreateAds from "./page/CreateAds";
 import User_Ads from "./page/User_Ads";
-<<<<<<< HEAD
 import Dashboard from "./components/dashboard";
+import AdminDashboard from "./page/Admin-page/dashboard";
 import AdvertisementDetail from "./page/AdvertismentDetail";
 import VNPayPayment from './page/Payment';
 import PaymentSuccess from './page/PaymentSuccess';
 import ChoosePackage from './page/ChoosePackage';
-import AdminDashboard from "./page/Admin-page/dashboard";
 
-=======
->>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
+
+
 
 function App() {
 
@@ -54,6 +53,7 @@ function App() {
           path: "user",
           element: <User />,
         },
+        
         {
           path: "ads",
           element: <ADS />,
@@ -100,7 +100,6 @@ function App() {
       element: <User_Ads />,
     },
 
-<<<<<<< HEAD
     {
       path: "advertisement-detail/:id",
       element: <AdvertisementDetail />,
@@ -116,11 +115,9 @@ function App() {
     {
       path: "/choose-package",
       element: <ChoosePackage />
-    },
+    }
 
 
-=======
->>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
   ]);
 
   return <RouterProvider router={router} />;

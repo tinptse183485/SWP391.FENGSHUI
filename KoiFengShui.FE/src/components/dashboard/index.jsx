@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { useEffect, useState } from "react";
 import {
   DesktopOutlined,
@@ -109,10 +108,4 @@ const Dashboard = () => {
     </Layout>
   );
 };
-=======
-function Dashboard() {
-  return <div>Dashboard</div>;
-}
-
->>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
 export default Dashboard;

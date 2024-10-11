@@ -1,20 +1,10 @@
-<<<<<<< HEAD
 import { useState, useEffect } from "react";
-=======
-
-import  { useState, useEffect } from "react";
->>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
 import { Link } from "react-router-dom";
 import "./index.css";
 import koiImage from "./path-to-koi-image.jpg";
 import { Button, Dropdown, Menu } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-<<<<<<< HEAD
-=======
-
-
->>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
 
 function HeaderTemplate() {
   const navigate = useNavigate();
@@ -47,11 +37,6 @@ function HeaderTemplate() {
       <Menu.Item key="logout">Logout</Menu.Item>
     </Menu>
   );
-<<<<<<< HEAD
-=======
-
-
->>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
 
   const handleScrollToAdvertisements = (event) => {
     event.preventDefault();
@@ -116,37 +101,6 @@ function HeaderTemplate() {
             </ul>
           </nav>
 
-<<<<<<< HEAD
-=======
-              <Link to="/">
-              <a href="#home">Trang chủ</a>
-              </Link>
-
-            </li>
-            <li>
-
-              <Link to="/ads-list">
-              <a href="#about">About Us</a>
-              </Link>
-
-            </li>
-            <li>
-              <a href="#Advertisements" onClick={handleScrollToAdvertisements}>Quảng cáo</a>
-            </li>
-            <li>
-
-              <Link to="/user-ads">
-              <a href="#blog">Blog</a>
-              </Link>
-
-            </li>
-            <li>
-              <a href="#contact">Liên hệ</a>
-            </li>
-          </ul>
-        </nav>
-
->>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
           {userId ? (
             <Dropdown
               overlay={menu}
@@ -160,20 +114,11 @@ function HeaderTemplate() {
             </Dropdown>
           ) : (
             <Button className="login-btn">
-<<<<<<< HEAD
               <Link to="login">Log in / Sign up</Link>
             </Button>
           )}
         </div>
       </div>
-=======
-            <Link to="login">Log in / Sign up</Link>
-          </Button>
-          )}
-        </div>
-      </div>
-
->>>>>>> a21a9d7812688128b7b244473b2e0e44a23f3f0e
     </div>
   );
 }
