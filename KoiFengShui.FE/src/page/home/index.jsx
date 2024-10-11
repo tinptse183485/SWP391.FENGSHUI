@@ -41,17 +41,15 @@ function Home() {
   useEffect(() => {
     const fetchAds = async () => {
       try {
-        const response = await api.get('Advertisement/GetAllAdvertisement');
-        const filteredAds = response.data.reduce((acc, ad) => {
-          if (ad.rank === "Diamond") {
-            acc.diamond.push(ad);
-          } else if (ad.rank === "Gold") {
-            acc.gold.push(ad);
-          }
-          return acc;
-        }, { diamond: [], gold: [] });
+        const [diamondResponse, goldResponse] = await Promise.all([
+          api.get('Advertisement/GetAdvertisementByRank', { params: { rank: 'Diamond' } }),
+          api.get('Advertisement/GetAdvertisementByRank', { params: { rank: 'Gold' } })
+        ]);
         
-        setAdvertisements(filteredAds);
+        setAdvertisements({
+          diamond: diamondResponse.data,
+          gold: goldResponse.data
+        });
       } catch (error) {
         console.error("Error fetching advertisements:", error);
       }
