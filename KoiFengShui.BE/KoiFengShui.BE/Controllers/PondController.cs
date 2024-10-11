@@ -1,5 +1,5 @@
 
-﻿using FengShuiKoi_BO;
+using FengShuiKoi_BO;
 using FengShuiKoi_Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -54,7 +54,7 @@ namespace KoiFengShui.BE.Controllers
 			}
 			catch (Exception ex)
 			{
-				return StatusCode(500, $"Internal server error: {ex.Message}");
+				return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
 			}
 		}
 
@@ -80,7 +80,7 @@ namespace KoiFengShui.BE.Controllers
 			}
 			catch (Exception ex)
 			{
-				return StatusCode(500, $"Internal server error: {ex.Message}");
+				return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
 			}
 		}
 	}

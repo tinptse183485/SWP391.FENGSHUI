@@ -27,6 +27,7 @@ namespace FengShuiKoi_Services
         public List<TypeColor> GetTypeByColor(string color) => iTypeColorRepo.GetTypeByColor(color);
         public bool AddKoiTypeColor(TypeColor koiFish) => iTypeColorRepo.AddKoiTypeColor(koiFish);
         public List<TypeColor> GetColorsAndPercentages(string koiType) => iTypeColorRepo.GetColorsAndPercentages(koiType);
+        public List<TypeColor> GetTypeByKoiType(string KoiType) => iTypeColorRepo.GetTypeByKoiType(KoiType);
 
     }
 }

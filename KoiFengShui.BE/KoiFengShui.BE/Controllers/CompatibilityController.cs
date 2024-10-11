@@ -52,7 +52,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
         public class CustomKoiTypeColor
@@ -72,7 +72,7 @@ namespace KoiFengShui.BE.Controllers
         {
             if (customKoiType?.Colors == null || !customKoiType.Colors.Any())
             {
-                return BadRequest("Invalid CustomKoiType data");
+                return BadRequest("Dữ liệu CustomKoiType không hợp lệ");
             }
 
             int year = int.Parse(dob.Substring(0, 4));
@@ -97,14 +97,14 @@ namespace KoiFengShui.BE.Controllers
                 // Kiểm tra tổng phần trăm
                 if (Math.Abs(totalPercentage - 1.00) > 0.01) // Cho phép sai số nhỏ
                 {
-                    return BadRequest("Total percentage must be 100%");
+                    return BadRequest("Tổng phần trăm phải là 100%");
                 }
 
                 return Ok(Math.Round(totalScore, 3));
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
 
@@ -113,7 +113,7 @@ namespace KoiFengShui.BE.Controllers
         {
             if (customKoiTypes == null || !customKoiTypes.Any())
             {
-                return BadRequest("No koi types provided");
+                return BadRequest("Không có loại cá Koi nào được cung cấp");
             }
 
             int year = int.Parse(dob.Substring(0, 4));
@@ -139,7 +139,6 @@ namespace KoiFengShui.BE.Controllers
                         {
                             continue;
                         }
-
                         var pointForColor = _elementColorService.GetPointElementColor(element, color.ColorId);
                         koiScore += pointForColor * color.Percentage.Value;
                         totalPercentage += color.Percentage.Value;
@@ -147,7 +146,7 @@ namespace KoiFengShui.BE.Controllers
 
                     if (Math.Abs(totalPercentage - 1.00) > 0.01) // Cho phép sai số nhỏ
                     {
-                        return BadRequest($"Total percentage for koi type {koiType.KoiType ?? "Unknown"} must be 100%");
+                        return BadRequest($"Tổng phần trăm cho loại cá Koi {koiType.KoiType ?? "Không xác định"} phải là 100%");
                     }
 
                     totalScore += koiScore;
@@ -156,15 +155,15 @@ namespace KoiFengShui.BE.Controllers
 
                 if (totalQuantity == 0)
                 {
-                    return BadRequest("No valid koi types provided");
+                    return BadRequest("Không có loại cá Koi hợp lệ nào được cung cấp");
                 }
 
                 double averageScore = totalScore / totalQuantity;
-                return Ok(new { AverageScore = Math.Round(averageScore, 3)*100 });
+                return Ok(new { AverageScore = Math.Round(averageScore, 3) * 100 });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
 
@@ -179,17 +178,17 @@ namespace KoiFengShui.BE.Controllers
                 PointOfShape shape = _pointOfShapeService.GetPointOfShape(element, ShapeID);
                 if (shape != null)
                 {
-                    return Ok(shape.Point *100);
+                    return Ok(shape.Point * 100);
                 }
                 else
                 {
-                    return BadRequest("Không tìm thấy !");
+                    return NotFound("Không tìm thấy hình dạng phù hợp.");
                 }
 
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
         [HttpGet("GetPointOfDirectionByDirecDOBGEN")]
@@ -209,11 +208,11 @@ namespace KoiFengShui.BE.Controllers
                     Life_Palace = _lifePlaceService.CalculateFate(lunarYear, Gender);
                 }
                 var point = _lifePlaceDirectionService.GetLifePlaceDirectionById(Life_Palace, Direction);
-                return Ok(point.PointOfDirection *100);
+                return Ok(point.PointOfDirection * 100);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
         [HttpPost("GetTheCompatibilityOfUserByListFish")]
@@ -238,7 +237,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
         [HttpPost("GetTheCompatibilityOfUserByOneFish")]
@@ -263,7 +262,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
 
@@ -317,7 +316,7 @@ namespace KoiFengShui.BE.Controllers
                 double compa;
                 if (s1Result != null && s2Result != null && s3Result != null)
                 {
-                    compa = (0.5 * s1 + 0.2 * s2 + 0.3 * s3) ;
+                    compa = (0.5 * s1 + 0.2 * s2 + 0.3 * s3);
                 }
                 else if (s1Result != null && s3Result != null)
                 {
@@ -351,9 +350,9 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
-        
+
     }
 }

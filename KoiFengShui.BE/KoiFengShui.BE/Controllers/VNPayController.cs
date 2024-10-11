@@ -88,7 +88,7 @@ namespace KoiFengShui.BE.Controllers
 			}
 			else
 			{
-				return BadRequest(new { Message = "Invalid signature" });
+				return BadRequest(new { Message = "Chữ ký không hợp lệ" });
 			}
 		}
 

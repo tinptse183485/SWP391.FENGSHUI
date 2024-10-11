@@ -44,7 +44,7 @@ namespace FengShuiKoi_DAO
                 .Where(m => m.Status.Equals(status))
                 .ToList();
         }
-        public List<Advertisement> GetAdvertisements()
+		public List<Advertisement> GetAdvertisements()
         {
             return dbContext.Advertisements.ToList();
         }

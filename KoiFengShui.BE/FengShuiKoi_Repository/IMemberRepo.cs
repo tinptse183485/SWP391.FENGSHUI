@@ -14,6 +14,8 @@ namespace FengShuiKoi_Repository
 		public bool AddMember(Member member);
 		public bool DeleteAccount(string id);
 		public bool UpdateMember(Member updatedMember);
+		public Dictionary<string, int> GetUsersByAgeGroup();
 
-    }
+
+	}
 }

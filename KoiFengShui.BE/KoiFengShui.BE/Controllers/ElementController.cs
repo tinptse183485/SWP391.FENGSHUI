@@ -12,7 +12,7 @@ namespace KoiFengShui.BE.Controllers
         private readonly IElementService _elementService;
         public ElementController(IElementService elementService)
         {
-              _elementService = elementService; 
+            _elementService = elementService;
         }
         [HttpGet("GetAllElement")]
         public IActionResult GetAllElement()
@@ -28,7 +28,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
     }

@@ -14,29 +14,29 @@ namespace KoiFengShui.BE.Controllers
         private readonly IPointOfShapeService _pointOfShapeService;
         private readonly IShapeService _shapeService;
         private readonly IElementService _elementService;
-       
+
         public ShapeController(IPointOfShapeService pointOfShapeService, IShapeService shapeService, IElementService elementService)
         {
             _pointOfShapeService = pointOfShapeService;
             _shapeService = shapeService;
             _elementService = elementService;
-            
+
         }
         [HttpGet("GetAllShape")]
         public IActionResult GetAllShape()
         {
             List<Shape> listShape = new List<Shape>();
-            
+
             try
             {
 
                 listShape = _shapeService.GetShapes();
-               
+
                 return Ok(listShape);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
         [HttpGet("GetShapeById")]
@@ -49,14 +49,14 @@ namespace KoiFengShui.BE.Controllers
                 var shape = _shapeService.GetShapeById(shapeID);
                 if (shapeID == null)
                 {
-                    return BadRequest("Không tìm thấy quảng cáo");
+                    return NotFound("Không tìm thấy quảng cáo");
                 }
 
                 return Ok(shape);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
         [HttpPut("UpdateShape")]
@@ -71,10 +71,10 @@ namespace KoiFengShui.BE.Controllers
                 }
                 if (shape.Image == "" || shape.Image == null)
                 {
-                    return BadRequest("Please input image.");
+                    return BadRequest("Vui lòng nhập hình ảnh.");
 
                 }
-               
+
 
                 existingShape.Image = shape.Image;
 
@@ -91,7 +91,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
         [HttpPost("AddShape")]
@@ -101,23 +101,23 @@ namespace KoiFengShui.BE.Controllers
             {
                 if (shape.ShapeId == null || shape.ShapeId == "")
                 {
-                    return BadRequest("Please input the shape !");
+                    return BadRequest("Vui lòng nhập hình dạng.");
 
                 }
 
-                if (shape.Image == ""|| shape.Image == null)
+                if (shape.Image == "" || shape.Image == null)
                 {
-                    return BadRequest("Please input image.");
+                    return BadRequest("Vui lòng nhập hình ảnh.");
 
                 }
                 if (_shapeService.GetShapeById(shape.ShapeId) != null)
                 {
-                    return BadRequest("Has this shape already.");
+                    return BadRequest("Hình dạng này đã tồn tại.");
 
                 }
                 if (_shapeService.GetShapeByImg(shape.Image) != null)
                 {
-                    return BadRequest("Has this img already.");
+                    return BadRequest("Hình ảnh này đã tồn tại.");
 
                 }
                 var _shape = new Shape
@@ -139,7 +139,7 @@ namespace KoiFengShui.BE.Controllers
             catch (Exception ex)
             {
 
-                return StatusCode(500, "Internal server error. Please try again later.");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
         [HttpDelete("DeleteShape/{ShapeId}")]
@@ -167,7 +167,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Lỗi máy chủ nội bộ: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
     }

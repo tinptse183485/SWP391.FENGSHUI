@@ -26,6 +26,46 @@ namespace FungShuiKoi_DAO
 				return instance;
 			}
 		}
+		public Dictionary<string, int> GetUsersByAgeGroup()
+		{
+			try
+			{
+				var now = DateTime.Now;
+				var members = dbContext.Members.AsNoTracking().ToList();
+
+				var result = new Dictionary<string, int>
+				{
+					{"Dưới 18", 0},
+					{"18-29", 0},
+					{"30-49", 0},
+					{"50+", 0}
+				};
+
+				foreach (var member in members)
+				{
+					if (member.Birthday == null) continue;
+
+					int age = now.Year - member.Birthday.Year;
+					if (now.Month < member.Birthday.Month || (now.Month == member.Birthday.Month && now.Day < member.Birthday.Day))
+					{
+						age--;
+					}
+
+					if (age < 18) result["Dưới 18"]++;
+					else if (age < 30) result["18-29"]++;
+					else if (age < 50) result["30-49"]++;
+					else result["50+"]++;
+				}
+				return result;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Lỗi trong GetUsersByAgeGroup: {ex.Message}");
+				return new Dictionary<string, int>();
+			}
+		}
+
+
 		public MemberDAO()
 		{
 			dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
@@ -78,28 +118,28 @@ namespace FungShuiKoi_DAO
 			}
 			return isSuccess;
 		}
-        public bool UpdateMember(Member updatedMember)
-        {
-            try
-            {
-                var existingMember = this.GetMemberByUserID(updatedMember.UserId);
-                if (existingMember == null)
-                {
-                    return false;
-                }
+		public bool UpdateMember(Member updatedMember)
+		{
+			try
+			{
+				var existingMember = this.GetMemberByUserID(updatedMember.UserId);
+				if (existingMember == null)
+				{
+					return false;
+				}
 
-                existingMember.Name = updatedMember.Name;
-                existingMember.Birthday = updatedMember.Birthday;
- 
-                dbContext.Entry(existingMember).State = EntityState.Modified;
-                dbContext.SaveChanges();
-                return true;
-            }
-            catch (Exception ex)
-            {
-               
-                return false;
-            }
-        }
-    }
+				existingMember.Name = updatedMember.Name;
+				existingMember.Birthday = updatedMember.Birthday;
+
+				dbContext.Entry(existingMember).State = EntityState.Modified;
+				dbContext.SaveChanges();
+				return true;
+			}
+			catch (Exception ex)
+			{
+
+				return false;
+			}
+		}
+	}
 }

@@ -1,4 +1,5 @@
 ﻿using FengShuiKoi_BO;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,29 @@ namespace FengShuiKoi_DAO
             dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
         }
 
+        public Dictionary<string, double> GetRevenueByPackage()
+        {
+            try
+            {
+                var adsPackages = dbContext.AdsPackages.AsNoTracking().ToList();
+                var revenueByPackage = new Dictionary<string, double>();
+
+                foreach (var package in adsPackages)
+                {
+                    if (!revenueByPackage.ContainsKey(package.Rank))
+                    {
+                        revenueByPackage[package.Rank] = 0;
+                    }
+                    revenueByPackage[package.Rank] += package.Total;
+                }
+                return revenueByPackage;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Lỗi trong GetRevenueByPackage: {ex.Message}");
+                return new Dictionary<string, double>();
+            }
+        }
 
 
         public List<AdsPackage> GetAdsPackages()
@@ -44,11 +68,11 @@ namespace FengShuiKoi_DAO
         {
             return dbContext.AdsPackages.Where(m => m.AdId.Equals(AdID)).ToList();
         }
-		public List<AdsPackage> GetListAdsPackageByRank(string Rank)
-		{
-			return dbContext.AdsPackages.Where(m => m.Rank.Equals(Rank)).ToList();
-		}
-		public bool AddAdsPackage(AdsPackage ads)
+        public List<AdsPackage> GetListAdsPackageByRank(string Rank)
+        {
+            return dbContext.AdsPackages.Where(m => m.Rank.Equals(Rank)).ToList();
+        }
+        public bool AddAdsPackage(AdsPackage ads)
         {
             bool isSuccess = false;
             AdsPackage adsPackage = this.GetAdsPackageByAdIDRank(ads.AdId, ads.Rank);
