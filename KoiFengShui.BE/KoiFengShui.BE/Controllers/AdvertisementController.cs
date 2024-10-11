@@ -264,11 +264,6 @@ namespace KoiFengShui.BE.Controllers
             }
         }
 
-
-      
-
-      
-
         [HttpPost("AddAdvertisementDraft")]
         public IActionResult AddAdvertisementDraft(AdvertisementDTO advertisementDto)
         {
