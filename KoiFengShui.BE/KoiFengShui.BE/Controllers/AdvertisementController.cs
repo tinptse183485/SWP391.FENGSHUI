@@ -88,7 +88,6 @@ namespace KoiFengShui.BE.Controllers
                 {
                     return BadRequest("Không tìm thấy quảng cáo");
                 }
-
                 return Ok(advertisements);
             }
             catch (Exception ex)
@@ -246,7 +245,6 @@ namespace KoiFengShui.BE.Controllers
                     existingAdvertisement.Status = "Draft";
 
                     bool result = _advertisementService.UpdateAdvertisement(existingAdvertisement);
-
                     if (result)
                     {
                         return Ok("Cập nhật bản nháp quảng cáo thành công");
