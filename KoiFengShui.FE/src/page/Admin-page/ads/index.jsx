@@ -77,7 +77,7 @@ const Ads = () => {
         <Text
           style={{
             color:
-              status === "Approve"
+              status === "Approved"
                 ? "#52c41a"
                 : status === "Refunded"
                 ? "#faad14"
@@ -96,12 +96,12 @@ const Ads = () => {
         <Space size="small" direction="vertical">
           <Button
             type="primary"
-            onClick={() => handleUpdateStatus(record.adId, "Approve")}
-            disabled={record.status === "Approve"}
+            onClick={() => handleUpdateStatus(record.adId, "Approved")}
+            disabled={record.status === "Approved"}
           >
             Phê duyệt
           </Button>
-          {record.status === "Cancel" ? (
+          {record.status === "Canceled" ? (
             <Button
               type="primary"
               danger
@@ -113,7 +113,7 @@ const Ads = () => {
             <Button
               type="primary"
               danger
-              onClick={() => handleUpdateStatus(record.adId, "Cancel")}
+              onClick={() => handleUpdateStatus(record.adId, "Canceled")}
             >
               Hủy bỏ
             </Button>
