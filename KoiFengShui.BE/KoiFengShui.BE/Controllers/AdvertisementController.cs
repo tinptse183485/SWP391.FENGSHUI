@@ -124,34 +124,7 @@ namespace KoiFengShui.BE.Controllers
             }
         }
 
-		[HttpGet("GetAdvertisementByRank")]
-		public IActionResult GetAdvertisementByRank(string rank)
-		{
-            List<Advertisement> listAd = new List<Advertisement>();
-			try
-			{
-                List<AdsPackage> list = _adsPackageService.GetListAdsPackageByRank(rank);
-				foreach(AdsPackage ad in list)
-                {
-                    if(ad.StartDate <= DateTime.Now && ad.ExpiredDate>= DateTime.Now)
-                    {
-                        listAd.Add(_advertisementService.GetAdvertisementByAdID(ad.AdId));
-                    }
-                }
-				if (listAd == null)
-				{
-					return BadRequest("Không tìm thấy quảng cáo");
-				}
-
-				return Ok(listAd);
-			}
-			catch (Exception ex)
-			{
-				return StatusCode(500, $"Internal server error: {ex.Message}");
-			}
-		}
-
-		[HttpGet("GenerateAdId")]
+	[HttpGet("GenerateAdId")]
         public IActionResult GenerateAdId(string AdId)
         {
             try
