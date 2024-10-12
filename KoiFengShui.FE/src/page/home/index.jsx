@@ -27,7 +27,7 @@ function Home() {
     diamond: [],
     gold: []
   });
-
+  const [blogs, setBlogs] = useState([]);
   const [adIndex, setAdIndex] = useState(0);
 
   const showPrevious = () => {
@@ -41,21 +41,30 @@ function Home() {
   useEffect(() => {
     const fetchAds = async () => {
       try {
-        const response = await api.get('Advertisement/GetAllAdvertisement');
-        const filteredAds = response.data.reduce((acc, ad) => {
-          if (ad.rank === "Diamond") {
-            acc.diamond.push(ad);
-          } else if (ad.rank === "Gold") {
-            acc.gold.push(ad);
-          }
-          return acc;
-        }, { diamond: [], gold: [] });
+        const [diamondResponse, goldResponse] = await Promise.all([
+          api.get('Advertisement/GetAdvertisementByRank', { params: { rank: 'Diamond' } }),
+          api.get('Advertisement/GetAdvertisementByRank', { params: { rank: 'Gold' } })
+        ]);
         
-        setAdvertisements(filteredAds);
+        setAdvertisements({
+          diamond: diamondResponse.data,
+          gold: goldResponse.data
+        });
       } catch (error) {
         console.error("Error fetching advertisements:", error);
       }
     };
+    const fetchBlogs = async () => {
+      try {
+        const response = await api.get('Blog/GetAllBlog');
+        setBlogs(response.data.slice(0, 3)); // Get first 3 blogs
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      }
+    };
+
+    fetchBlogs();
+
 
     fetchAds();
   }, []);
@@ -166,39 +175,28 @@ function Home() {
             </div>
           </div>
           {/* Blog */}
-          <div  className="container">
-            <h2>Blog</h2>
-            <div className="Card-container">
-              <div className="Card">
-                <img
-                  src={koiImage}
-                  alt="Selecting Pond according to your Feng Shui element"
-                  className="img-feature"
-                ></img>
-                <a href="#">
-                  {" "}
-                  <h3>Selecting Koi fish according to your Feng Shui element</h3>
-                </a>
-              </div>
-              <div className="Card">
-                <img
-                  src={koiImage}
-                  alt="Selecting Koi fish according to your Feng Shui element"
-                ></img>
-                <a href="#">
-                  {" "}
-                  <h3>Selecting Koi fish according to your Feng Shui element</h3>
-                </a>
-              </div>
-              <div className="Card">
-                <img src={koiImage} alt="Post Advertisement Function"></img>
-                <a href="#">
-                  {" "}
-                  <h3>Selecting Koi fish according to your Feng Shui element</h3>
-                </a>
-              </div>
+          <div className="container">
+        <h2>Blog</h2>
+        <div className="Card-container">
+          {blogs.map((blog) => (
+            <div className="Card" key={blog.id}>
+              <img
+                src={blog.image}
+                alt={blog.heading}
+                className="img-feature"
+              />
+              <Link to={`/blog/${blog.id}`}>
+                <h3>{blog.heading}</h3>
+              </Link>
             </div>
-          </div>
+          ))}
+        </div>
+        <div className="view-all-blogs-container">
+          <Link to="/blogs-list" className="view-all-blogs-btn">
+            View All Blogs
+          </Link>
+        </div>
+      </div>
         </body>
         <FooterPage></FooterPage>
       </div>

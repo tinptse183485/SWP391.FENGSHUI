@@ -20,7 +20,7 @@
 }
 
 .pond-item img {
-  width: 200px; /* Chiều rộng hình ảnh */
+  width: 150px; /* Chiều rộng hình ảnh */
   height: 200px; /* Chiều cao hình ảnh */
   object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
   border-radius: 4px; /* Bo góc cho hình ảnh */
