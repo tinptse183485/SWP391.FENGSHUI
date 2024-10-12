@@ -86,17 +86,6 @@ const Koi = () => {
     }
   };
 
-  const fetchColors = async () => {
-    try {
-      const response = await api.get("Color/GetAllColor");
-      // Chỉ lấy colorId từ dữ liệu API
-      const colorIds = response.data.map(color => color.colorId);
-      setColors(colorIds);
-    } catch (error) {
-      console.error("Error fetching colors:", error);
-      toast.error("Không thể tải danh sách màu");
-    }
-  };
 
   const columns = [
     {
@@ -227,8 +216,6 @@ const Koi = () => {
           percentage: parseFloat(color.percentage),
         })),
       };
-<<<<<<< HEAD
-
       if (isEditing) {
         await api.put("KoiVariety/UpdateKoiAndTypeColor", koiData);
         toast.success("Cập nhật thành công");
@@ -236,13 +223,6 @@ const Koi = () => {
         await api.post("KoiVariety/AddKoiAndTypeColor", koiData);
         toast.success("Tạo mới thành công");
       }
-
-=======
-      const response = await api.post("KoiVariety/AddKoiAndTypeColor", koi);
-
-      console.log(response.data);
-      toast.success("Tạo mới thành công");
->>>>>>> 8f3f48f4b5ce0ec07f85c10f62ee15bf0550f3d8
       setOpenModal(false);
       form.resetFields();
       fetchDataAndColors();
