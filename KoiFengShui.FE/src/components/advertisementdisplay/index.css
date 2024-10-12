@@ -4,6 +4,9 @@
  
   
 }
+.ant-card-body{
+  padding: 0 !important;
+}
 
 /* Bottom right text */
 
@@ -24,7 +27,7 @@ justify-content: center;
 width: 40%;
 margin-bottom: 20px;
 overflow: hidden;
-padding: 0; /* Remove default Card padding */
+padding: 0 !important; 
 }
 
 .image-container {

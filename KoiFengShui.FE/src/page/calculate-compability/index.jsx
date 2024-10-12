@@ -664,11 +664,9 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
                     >
                       <div className="fish-card-left">
                         <div>
-                          <img
-                            onClick={() => showFishDetails(fish)}
-                            src={fish.image}
-                            alt={fish.image}
-                          />
+
+                          <img onClick={() => showFishDetails(fish)} src={fish.image} alt={fish.image} />
+
                           <p>{fish.koiType}</p>
                         </div>
                       </div>
@@ -688,7 +686,7 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
               value={color.percentage}
               onChange={(value) => handleColorWeightChange(fish.koiType, index, value)}
             />
-            <InputNumber
+            <InputNumber 
               min={0}
               max={1}
               step={0.01}

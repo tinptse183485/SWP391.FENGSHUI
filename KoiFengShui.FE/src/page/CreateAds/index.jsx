@@ -27,11 +27,10 @@ function CreateAds() {
     if (advertisement) {
       setAdData(prevData => ({
         ...prevData,
-        ...advertisement,
-        adId: advertisement.adId || '.'
+        ...advertisement
       }));
     }
-  }, [location]);
+  }, [location.state]);
 
 
   const handleInputChange = (e) => {
@@ -51,20 +50,46 @@ function CreateAds() {
   };
 
   const handleSave = async () => {
-    try {
-      const response = await api.put('Advertisement/UpdateDaftAdvertisement', adData);
-      console.log('Response:', response.data);
-      message.success('Quảng cáo đã được lưu thành công!');
-      navigate('/user-ads');
-    } catch (error) {
-      console.error('Error:', error);
-      message.error('Có lỗi xảy ra khi lưu quảng cáo. Vui lòng thử lại.');
-    }
+  //   if (adData.adId !== '.') {
+  //     try {
+  //       const response = await api.put('Advertisement/UpdateDaftAdvertisement',adData);
+  //       console.log('Response:', response.data);
+  //       message.success('Quảng cáo đã được lưu thành công!');
+  //       navigate('/user-ads');
+  //   } catch (error) {
+  //     console.error('Error:', error);
+  //     message.error('Có lỗi xảy ra khi lưu quảng cáo. Vui lòng thử lại.');
+  //   }
+  // } else 
+  try {
+    const response = await api.post('Advertisement/SaveAdvertisementDraft', adData);
+    console.log('Response:', response.data);
+    message.success('Quảng cáo đã được lưu thành công!');
+    navigate('/user-ads');
+  } catch (error) {
+    console.error('Error:', error);
+    message.error('Có lỗi xảy ra khi lưu quảng cáo. Vui lòng thử lại.');
+  }
+};
+
+const handleChoosePackage = () => {
+  const updatedAdData = {
+    ...adData,
+    heading: adData.heading || document.querySelector('input[name="heading"]').value,
+    image: adData.image || document.querySelector('input[name="image"]').value,
+    link: adData.link || editorRef.current.getContent(),
+    userId: localStorage.getItem("userId"),
+    elementId: adData.elementId || 'None',
+    status: 'Draft'
   };
 
-  const handleChoosePackage = () => {
-    navigate('/choose-package');
-  };
+  if (updatedAdData.heading && updatedAdData.image && updatedAdData.link) {
+    localStorage.setItem('adData', JSON.stringify(updatedAdData));
+    navigate('/choose-package', { state: { adData: updatedAdData } });
+  } else {
+    message.error('Vui lòng điền đầy đủ thông tin quảng cáo trước khi chọn gói.');
+  }
+};
 
   return (
     <div className="ads-container">
@@ -76,6 +101,7 @@ function CreateAds() {
         value={adData.heading}
         onChange={handleInputChange}
         placeholder="Tiêu đề quảng cáo"
+        required
       />
       <input
         type="text"
@@ -83,28 +109,38 @@ function CreateAds() {
         value={adData.image}
         onChange={handleInputChange}
         placeholder="URL hình ảnh"
+        required
       />
       <Editor
         apiKey='48zvgxqbyrxhxjktp3nysk7hscrlqcz0143gyuhannv3rfv5'
-        onInit={(evt, editor) => editorRef.current = editor}
 
-        initialValue={adData.link || "<p>Viết nội dung quảng cáo của bạn ở đây.</p>"}
+        onInit={(evt, editor) => {
+          editorRef.current = editor;
+          if (adData.link) {
+            editor.setContent(adData.link);
+          }
+        }}
+        value={adData.link || "<p>Viết nội dung quảng cáo của bạn ở đây.</p>"}
+
         init={{
           height: 500,
           plugins: [
             'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
             'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
             'insertdatetime', 'media', 'table', 'help', 'wordcount',
-            'directionality emoticons template paste textcolor colorpicker'
+
+            'directionality', 'emoticons', 'template', 'paste', 'textcolor', 'colorpicker'
 
           ],
           toolbar: 'undo redo | blocks | ' +
             'bold italic backcolor | alignleft aligncenter ' +
             'alignright alignjustify | bullist numlist outdent indent | ' +
 
-            'removeformat | link image | help | emoticons | template',
+            'removeformat | link image | help | emoticons | template | ltr rtl',
+          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
+          directionality: 'ltr', // Đặt hướng văn bản mặc định là từ trái sang phải
+          language: 'vi_VN', // Đặt ngôn ngữ là tiếng Việt
 
-          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }'
         }}
         onEditorChange={handleEditorChange}
       />
