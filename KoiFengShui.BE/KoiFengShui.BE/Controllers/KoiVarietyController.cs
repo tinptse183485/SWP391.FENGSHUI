@@ -44,7 +44,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
         [HttpGet("GetListKoiByDOBOrder")]
@@ -64,7 +64,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
         [HttpGet("GetListKoiByDOBOrderS1")]
@@ -104,7 +104,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
 
@@ -123,7 +123,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
         [HttpGet("GetListKoiByColor")]
@@ -150,7 +150,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
 
         }
@@ -276,8 +276,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-
-                return StatusCode(500, "Lỗi server. Vui lòng thử lại sau.");
+                return StatusCode(500, "Lỗi máy chủ. Vui lòng thử lại sau.");
             }
         }
         [HttpPut("UpdateKoiAndTypeColor")]
@@ -378,7 +377,46 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Lỗi server. Vui lòng thử lại sau.");
+                return StatusCode(500, "Lỗi máy chủ. Vui lòng thử lại sau.");
+            }
+        }
+        [HttpDelete("DeleteKoiAndTypeColor/{KoiType}")]
+        public IActionResult DeleteKoiAndTypeColor(string KoiType)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(KoiType))
+                {
+                    return BadRequest("Vui lòng điền loại cá");
+                }
+
+                var existingKoi = _koiVarietyService.GetKoiVarietyByType(KoiType);
+                if (existingKoi == null)
+                {
+                    return NotFound("Không tìm thấy cá tương ứng.");
+                }
+                var existingTypeColorPoint = _typeColorService.GetTypeByKoiType(KoiType);
+                if (existingTypeColorPoint?.Any() == true)
+                {
+                    _typeColorService.DeleteTypeColorByKoiType(KoiType);
+                }
+
+
+                bool result = _koiVarietyService.DeleteKoiVariety((KoiType));
+
+                if (result)
+                {
+                    return Ok($"Xóa cá Koi {KoiType} và các màu liên quan thành công");
+                }
+                else
+                {
+                    return BadRequest($"Xóa cá Koi {KoiType} thất bại");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
         [HttpDelete("DeleteKoiAndTypeColor/{KoiType}")]

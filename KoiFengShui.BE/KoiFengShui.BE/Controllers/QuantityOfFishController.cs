@@ -11,14 +11,14 @@ namespace KoiFengShui.BE.Controllers
         private readonly IKoiVarietyService _koiVarietyService;
         private readonly IQuantityOfFishService _QuantityService;
         private readonly IElementService _elementService;
-      
+
 
         public QuantityOfFishController(IKoiVarietyService koiVarietyService, IQuantityOfFishService quantityService, IElementService elementService)
         {
             _koiVarietyService = koiVarietyService;
             _QuantityService = quantityService;
             _elementService = elementService;
-           
+
         }
         [HttpGet("GetQuantityOfFishByDOB")]
         public IActionResult GetQuantityByElement(string dob)
@@ -32,7 +32,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
     }

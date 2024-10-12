@@ -18,7 +18,7 @@ namespace FengShuiKoi_Repository
 		public List<AdsPackage> GetAdsPackages();
         public bool AddAdsPackage(AdsPackage ads);
         public bool UpdateAdsPackage(AdsPackage newAdsPackage);
-
+        public Dictionary<string, double> GetRevenueByPackage();
 		public bool DeleteAdsPackage(string AdID, string Rank);
     }
 }

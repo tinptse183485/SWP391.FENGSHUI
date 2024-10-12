@@ -19,5 +19,6 @@ namespace FengShuiKoi_Repository
 		public List<Member> GetMembers()=> MemberDAO.Instance.GetMembers();
 
         public bool UpdateMember(Member updatedMember) => MemberDAO.Instance.UpdateMember(updatedMember);
+		public Dictionary<string, int> GetUsersByAgeGroup() => MemberDAO.Instance.GetUsersByAgeGroup();
 	}
 }

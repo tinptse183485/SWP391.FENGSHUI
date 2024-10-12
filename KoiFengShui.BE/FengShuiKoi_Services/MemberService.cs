@@ -39,5 +39,9 @@ namespace FengShuiKoi_Services
 		{
 			return iMemberRepo.UpdateMember(updatedMember);
 		}
+		public Dictionary<string, int> GetUsersByAgeGroup()
+		{
+			return iMemberRepo.GetUsersByAgeGroup();
+		}
 	}
 }

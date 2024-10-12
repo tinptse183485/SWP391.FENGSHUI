@@ -37,7 +37,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
         [HttpGet("GetAdvertisementByAdId")]
@@ -54,7 +54,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
 
@@ -75,7 +75,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
         [HttpGet("GetAdvertisementByUserIDandStatus")]
@@ -93,7 +93,34 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi server: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetAdvertisementByRank")]
+        public IActionResult GetAdvertisementByRank(string rank)
+        {
+            List<Advertisement> listAd = new List<Advertisement>();
+            try
+            {
+                List<AdsPackage> list = _adsPackageService.GetListAdsPackageByRank(rank);
+                foreach (AdsPackage ad in list)
+                {
+                    if (ad.StartDate <= DateTime.Now && ad.ExpiredDate >= DateTime.Now)
+                    {
+                        listAd.Add(_advertisementService.GetAdvertisementByAdID(ad.AdId));
+                    }
+                }
+                if (listAd == null)
+                {
+                    return BadRequest("Không tìm thấy quảng cáo");
+                }
+
+                return Ok(listAd);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
 
@@ -144,7 +171,7 @@ namespace KoiFengShui.BE.Controllers
                     }
                     if (attempts == maxAttempts)
                     {
-                        return StatusCode(500, "Failed to generate a unique advertisement ID. Please try again.");
+                        return StatusCode(500, "Không tạo được ID quảng cáo. Vui lòng thử lại.");
                     }
                     return Ok(adId);
                 }
@@ -152,7 +179,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
 
@@ -177,7 +204,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
         [HttpPost("SaveAdvertisementDraft")]
@@ -197,7 +224,7 @@ namespace KoiFengShui.BE.Controllers
                     // Tạo mới quảng cáo
                     if (_accountService.GetAccountByUserID(advertisementDto.UserId) == null)
                     {
-                        return BadRequest("Member ID not found.");
+                        return BadRequest("Không tìm thấy ID của người dùng.");
                     }
 
                     string adId = GenerateUniqueAdId();
@@ -212,7 +239,7 @@ namespace KoiFengShui.BE.Controllers
 
                     if (attempts == maxAttempts)
                     {
-                        return StatusCode(500, "Failed to generate a unique advertisement ID. Please try again.");
+                        return StatusCode(500, "Không tạo được ID quảng cáo. Vui lòng thử lại.");
                     }
 
                     var newAdvertisement = new Advertisement
@@ -246,7 +273,6 @@ namespace KoiFengShui.BE.Controllers
                     existingAdvertisement.Status = "Draft";
 
                     bool result = _advertisementService.UpdateAdvertisement(existingAdvertisement);
-
                     if (result)
                     {
                         return Ok("Cập nhật bản nháp quảng cáo thành công");
@@ -259,8 +285,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error occurred while saving advertisement draft: {ex.Message}");
-                return StatusCode(500, "Internal server error. Please try again later.");
+                return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
 
@@ -272,7 +297,7 @@ namespace KoiFengShui.BE.Controllers
                 // Validate input
                 if (_accountService.GetAccountByUserID(advertisementDto.UserId) == null)
                 {
-                    return BadRequest(" Member ID are not found. ");
+                    return BadRequest(" Không tìm thấy ID của người dùng. ");
                 }
                 // Generate unique AdId
                 string adId = GenerateUniqueAdId();
@@ -287,7 +312,7 @@ namespace KoiFengShui.BE.Controllers
 
                 if (attempts == maxAttempts)
                 {
-                    return StatusCode(500, "Failed to generate a unique advertisement ID. Please try again.");
+                    return StatusCode(500, "Không tạo được ID quảng cáo. Vui lòng thử lại.");
                 }
                 // Create new Advertisement object
                 var advertisement = new Advertisement
@@ -314,9 +339,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                // Log the exception
-                Console.WriteLine($"Error occurred while adding advertisement: {ex.Message}");
-                return StatusCode(500, "Internal server error. Please try again later.");
+                return StatusCode(500, "Lỗi server. Vui lòng thử lại.");
             }
         }
 
@@ -334,20 +357,19 @@ namespace KoiFengShui.BE.Controllers
                 {
                     advertise.Status = status;
                     bool check = _advertisementService.UpdateAdvertisement(advertise);
-                    if (check) 
+                    if (check)
                     {
-						return Ok("Cập nhật thành công");
+                        return Ok("Cập nhật thành công");
                     }
                     else
                     {
                         return BadRequest("Cập nhật thất bại");
                     }
-                    
                 }
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
 
@@ -377,7 +399,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
 
@@ -426,7 +448,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
 
@@ -518,7 +540,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
 
@@ -547,7 +569,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
     }
