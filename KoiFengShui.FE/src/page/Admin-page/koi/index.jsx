@@ -43,6 +43,7 @@ const Koi = () => {
 
   useEffect(() => {
     fetchDataAndColors();
+
     fetchColors();
   }, []); // Chạy một lần khi component mount
 
@@ -78,6 +79,18 @@ const Koi = () => {
       const response = await api.get("Color/GetAllColor");
       // Chỉ lấy colorId từ dữ liệu API
       const colorIds = response.data.map((color) => color.colorId);
+      setColors(colorIds);
+    } catch (error) {
+      console.error("Error fetching colors:", error);
+      toast.error("Không thể tải danh sách màu");
+    }
+  };
+
+  const fetchColors = async () => {
+    try {
+      const response = await api.get("Color/GetAllColor");
+      // Chỉ lấy colorId từ dữ liệu API
+      const colorIds = response.data.map(color => color.colorId);
       setColors(colorIds);
     } catch (error) {
       console.error("Error fetching colors:", error);
@@ -183,10 +196,12 @@ const Koi = () => {
 
   const handleSubmit = async (values) => {
     // Kiểm tra tổng tỉ trọng
+
     const totalPercentage = values.colors.reduce(
       (sum, color) => sum + parseFloat(color.percentage || 0),
       0
     );
+
 
     if (Math.abs(totalPercentage - 1) > 0.001) {
       toast.error("Tổng tỉ trọng màu phải bằng 1");
@@ -212,6 +227,7 @@ const Koi = () => {
           percentage: parseFloat(color.percentage),
         })),
       };
+<<<<<<< HEAD
 
       if (isEditing) {
         await api.put("KoiVariety/UpdateKoiAndTypeColor", koiData);
@@ -221,17 +237,26 @@ const Koi = () => {
         toast.success("Tạo mới thành công");
       }
 
+=======
+      const response = await api.post("KoiVariety/AddKoiAndTypeColor", koi);
+
+      console.log(response.data);
+      toast.success("Tạo mới thành công");
+>>>>>>> 8f3f48f4b5ce0ec07f85c10f62ee15bf0550f3d8
       setOpenModal(false);
       form.resetFields();
       fetchDataAndColors();
       setEditingKoi(null);
       setIsEditing(false);
     } catch (err) {
+
       toast.error(err.response?.data?.message || "Có lỗi xảy ra");
+
     } finally {
       setSubmitting(false);
     }
   };
+
 
   const handleAddColor = async (values) => {
     const formattedValues = {
@@ -367,6 +392,7 @@ const Koi = () => {
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name, ...restField }) => (
+
                   <Space
                     key={key}
                     style={{ display: "flex", marginBottom: 8 }}
@@ -382,11 +408,13 @@ const Koi = () => {
                           <Option key={colorId} value={colorId}>
                             {colorId}
                           </Option>
+
                         ))}
                       </Select>
                     </Form.Item>
                     <Form.Item
                       {...restField}
+
                       name={[name, "percentage"]}
                       rules={[
                         { required: true, message: "Nhập tỉ trọng" },
@@ -404,11 +432,13 @@ const Koi = () => {
                         step="0.01"
                         placeholder="Tỉ trọng (0-1)"
                       />
+
                     </Form.Item>
                     <MinusCircleOutlined onClick={() => remove(name)} />
                   </Space>
                 ))}
                 <Form.Item>
+
                   <Space>
                     <Button
                       type="dashed"
@@ -418,6 +448,7 @@ const Koi = () => {
                       Thêm màu
                     </Button>
                   </Space>
+
                 </Form.Item>
               </>
             )}
@@ -459,6 +490,7 @@ const Koi = () => {
               Thêm màu mới
             </Button>
           </Form.Item>
+
         </Form>
       </Modal>
 
