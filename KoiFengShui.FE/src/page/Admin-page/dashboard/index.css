@@ -1,8 +1,69 @@
-.dashboard-container {
-  display: flex;
+
+body {
+  font-family: Arial, sans-serif; /* Đặt font chữ cho toàn bộ trang */
+  background-color: #f4f4f4; /* Màu nền trang */
+  margin: 0; /* Bỏ margin mặc định */
+  padding: 0; /* Bỏ padding mặc định */
 }
 
-.dashboard-content {
-  flex-grow: 1;
+.dashboard-container {
+  display: flex;
+  flex-direction: column; /* Đặt chiều dọc cho container */
+  align-items: center; /* Căn giữa các phần tử */
   padding: 20px;
+}
+
+h2 {
+  text-align: center; /* Căn giữa tiêu đề chính */
+  color: #333; /* Màu chữ tiêu đề */
+  margin-bottom: 40px; /* Khoảng cách dưới tiêu đề */
+}
+
+/* Bố cục cho các thẻ tổng quan */
+.overview-cards {
+  display: flex;
+  justify-content: space-between; /* Căn giữa các thẻ */
+  margin-bottom: 20px; /* Khoảng cách dưới các thẻ */
+  width: 100%; /* Chiếm toàn bộ chiều rộng */
+  max-width: 1200px; /* Giới hạn chiều rộng tối đa */
+}
+
+.overview-card {
+  background-color: #007bff; /* Màu nền */
+  color: white; /* Màu chữ */
+  padding: 20px; /* Khoảng cách bên trong */
+  border-radius: 8px; /* Bo góc */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Đổ bóng */
+  flex: 1; /* Chiếm không gian đều nhau */
+  margin: 0 10px; /* Khoảng cách giữa các thẻ */
+  text-align: center; /* Căn giữa nội dung */
+}
+
+.overview-card h3 {
+  margin: 0; /* Bỏ khoảng cách mặc định */
+  font-size: 1.5em; /* Kích thước chữ tiêu đề */
+}
+
+.overview-card p {
+  font-size: 2em; /* Kích thước chữ cho tổng doanh thu */
+  font-weight: bold; /* Đậm chữ */
+}
+
+/* Bố cục cho các biểu đồ */
+.chart-container {
+  display: flex; /* Sắp xếp các biểu đồ theo hàng ngang */
+  justify-content: space-between; /* Căn giữa các biểu đồ */
+  width:50%; /* Chiếm toàn bộ chiều rộng */
+  max-width: 1200px; /* Giới hạn chiều rộng tối đa */
+  margin-bottom: 20px; /* Khoảng cách dưới biểu đồ */
+}
+
+.chart-container > div {
+  flex: 1; /* Chiếm không gian đều nhau cho mỗi biểu đồ */
+  margin: 0 10px; /* Khoảng cách giữa các biểu đồ */
+}
+
+.chart-container p {
+  text-align: center; /* Căn giữa thông báo loading */
+  color: #666; /* Màu chữ thông báo */
 }
