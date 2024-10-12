@@ -20,8 +20,12 @@ namespace FengShuiKoi_Services
         {
             return iAdsPackageRepo.AddAdsPackage(ads);
         }
+		public Dictionary<string, double> GetRevenueByPackage()
+        {
+            return iAdsPackageRepo.GetRevenueByPackage();
+        }
 
-        public bool DeleteAdsPackage(string AdID, string Rank)
+		public bool DeleteAdsPackage(string AdID, string Rank)
         {
             return iAdsPackageRepo.DeleteAdsPackage(AdID, Rank);
         }

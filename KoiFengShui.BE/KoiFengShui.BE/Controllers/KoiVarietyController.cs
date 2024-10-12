@@ -44,7 +44,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
         [HttpGet("GetListKoiByDOBOrder")]
@@ -58,13 +58,13 @@ namespace KoiFengShui.BE.Controllers
                 var mutual = _elementService.GetElementAndMutualism(element);
                 var list1 = _koiVarietyService.GetKoiVarietiesByElemnet(mutual.Mutualism);
                 var list2 = _koiVarietyService.GetKoiVarietiesByElemnet(element);
-                 listKoi.AddRange(list1);
+                listKoi.AddRange(list1);
                 listKoi.AddRange(list2);
                 return Ok(listKoi);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
         [HttpGet("GetListKoiByDOBOrderS1")]
@@ -104,7 +104,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
 
@@ -123,7 +123,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
         [HttpGet("GetListKoiByColor")]
@@ -150,7 +150,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
 
         }
@@ -185,7 +185,7 @@ namespace KoiFengShui.BE.Controllers
         {
             try
             {
-               
+
                 if (string.IsNullOrWhiteSpace(koiFish.KoiType))
                 {
                     return BadRequest("Vui lòng nhập loại cá Koi!");
@@ -196,7 +196,7 @@ namespace KoiFengShui.BE.Controllers
                     return BadRequest("Vui lòng nhập ít nhất một màu và tỷ lệ!");
                 }
 
-                if(_elementService.GetElementAndMutualism(koiFish.Element) == null)
+                if (_elementService.GetElementAndMutualism(koiFish.Element) == null)
                 {
                     return BadRequest("Không có sinh mệnh này.");
                 }
@@ -267,7 +267,7 @@ namespace KoiFengShui.BE.Controllers
                     }
                     else
                     {
-                        
+
                         return BadRequest($"Thêm màu {color.ColorId} cho loại cá Koi thất bại.");
                     }
                 }
@@ -276,8 +276,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-               
-                return StatusCode(500, "Lỗi server. Vui lòng thử lại sau.");
+                return StatusCode(500, "Lỗi máy chủ. Vui lòng thử lại sau.");
             }
         }
         [HttpPut("UpdateKoiAndTypeColor")]
@@ -378,7 +377,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Lỗi server. Vui lòng thử lại sau.");
+                return StatusCode(500, "Lỗi máy chủ. Vui lòng thử lại sau.");
             }
         }
         [HttpDelete("DeleteKoiAndTypeColor/{KoiType}")]
@@ -403,7 +402,7 @@ namespace KoiFengShui.BE.Controllers
                 }
 
 
-                bool result =_koiVarietyService.DeleteKoiVariety((KoiType));
+                bool result = _koiVarietyService.DeleteKoiVariety((KoiType));
 
                 if (result)
                 {
@@ -417,9 +416,8 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
     }
-
 }

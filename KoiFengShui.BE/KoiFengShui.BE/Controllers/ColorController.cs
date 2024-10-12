@@ -38,9 +38,10 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
+        
         public class Element_Color
         {
             public string ColorID { get; set; }
@@ -164,7 +165,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
     }

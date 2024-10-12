@@ -14,13 +14,13 @@ namespace KoiFengShui.BE.Controllers
         private readonly IPackageService _packageService;
         private readonly IAdsPackageService _adsPackageService;
         private readonly IAdvertisementService _advertisementService;
-        public PackageController(IPackageService packageService,IAdvertisementService advertisementService, IAdsPackageService adsPackageService)
+        public PackageController(IPackageService packageService, IAdvertisementService advertisementService, IAdsPackageService adsPackageService)
         {
             _packageService = packageService;
             _adsPackageService = adsPackageService;
             _advertisementService = advertisementService;
         }
-        
+
         [HttpGet("GetAllPackage")]
         public IActionResult GetAllPackage()
         {
@@ -35,7 +35,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
         [HttpPost("AddPackage")]
@@ -69,7 +69,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
 
@@ -84,7 +84,7 @@ namespace KoiFengShui.BE.Controllers
                     return NotFound("Không tìm thấy gói phù hợp");
                 }
 
-                
+
                 existingPackage.Duration = packageDto.Duration;
                 existingPackage.Description = packageDto.Description;
                 existingPackage.Price = packageDto.Price;
@@ -101,7 +101,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
         private IActionResult CheckPackageExpiration(List<AdsPackage> listAdsPackage)
@@ -112,7 +112,7 @@ namespace KoiFengShui.BE.Controllers
             {
                 if (ads.ExpiredDate > currentTime)
                 {
-                    return BadRequest("Failed to delete package because it contains ads that have not expired yet");
+                    return BadRequest("Không thể xóa gói vì nó chứa các tin đăng chưa hết hạn");
                 }
             }
 
@@ -131,16 +131,17 @@ namespace KoiFengShui.BE.Controllers
                     Advertisement advertise = _advertisementService.GetAdvertisementByAdID(advertisement.AdId);
                     if (advertise != null)
                     {
-                        listAdsvertisement.Add(advertise); 
-                    }   
+                        listAdsvertisement.Add(advertise);
+                    }
                 }
                 IActionResult expirationCheck = CheckPackageExpiration(ListAdsPackage);
                 if (expirationCheck != null)
                 {
                     return expirationCheck;
-                }else
+                }
+                else
                 {
-                    foreach(var ads in ListAdsPackage)
+                    foreach (var ads in ListAdsPackage)
                     {
                         _adsPackageService.DeleteAdsPackage(ads.AdId, rank);
                     }
@@ -151,18 +152,18 @@ namespace KoiFengShui.BE.Controllers
                     bool result = _packageService.DeletePackage(rank);
                     if (result)
                     {
-                        return Ok("Package deleted successfully");
+                        return Ok("Xóa gói thành công");
                     }
                     else
                     {
-                        return BadRequest("Failed to delete package");
+                        return BadRequest("Xóa gói thất bại");
                     }
                 }
-               
+
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
     }

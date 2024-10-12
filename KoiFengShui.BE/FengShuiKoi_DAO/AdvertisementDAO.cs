@@ -44,7 +44,7 @@ namespace FengShuiKoi_DAO
                 .Where(m => m.Status.Equals(status))
                 .ToList();
         }
-        public List<Advertisement> GetAdvertisements()
+		public List<Advertisement> GetAdvertisements()
         {
             return dbContext.Advertisements.ToList();
         }
@@ -87,25 +87,30 @@ namespace FengShuiKoi_DAO
             }
             return isSuccess;
         }
-        public bool UpdateAdvertisement(string adid)
-        {
-            bool isSuccess = false;
-            Advertisement advertisement = this.GetAdvertisementByAdID(adid);
-            try
-            {
-                if (advertisement != null)
-                {
-                    dbContext.Entry<Advertisement>(advertisement).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    dbContext.SaveChanges();
-                    isSuccess = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            return isSuccess;
-        }
-    }
+		public bool UpdateAdvertisement(Advertisement updatedAdvertisement)
+		{
+			bool isSuccess = false;
+			Advertisement advertisement = this.GetAdvertisementByAdID(updatedAdvertisement.AdId);
+			try
+			{
+				if (advertisement != null)
+				{
+					advertisement.Heading = updatedAdvertisement.Heading;
+					advertisement.Image = updatedAdvertisement.Image;
+					advertisement.Link = updatedAdvertisement.Link;
+					advertisement.Status = updatedAdvertisement.Status;
+					advertisement.ElementId = updatedAdvertisement.ElementId;
+					dbContext.Entry(advertisement).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+					dbContext.SaveChanges();
+					isSuccess = true;
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message);
+			}
+			return isSuccess;
+		}
+	}
 }
 

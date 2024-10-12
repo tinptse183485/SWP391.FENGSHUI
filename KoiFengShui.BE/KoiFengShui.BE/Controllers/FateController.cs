@@ -31,7 +31,7 @@ namespace KoiFengShui.BE.Controllers
 			}
 			catch (Exception ex)
 			{
-				return StatusCode(500, $"Internal server error: {ex.Message}");
+				return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
 			}
 		}
 		[HttpGet("Mutualism")]
@@ -44,7 +44,7 @@ namespace KoiFengShui.BE.Controllers
 			}
 			catch (Exception ex)
 			{
-				return StatusCode(500, $"Internal server error: {ex.Message}");
+				return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
 			}
 		}
 		[HttpGet("ConvertToLunar")]
@@ -61,7 +61,7 @@ namespace KoiFengShui.BE.Controllers
 			}
 			catch (Exception ex)
 			{
-				return StatusCode(500, $"Internal server error: {ex.Message}");
+				return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
 			}
 		}
 
@@ -83,7 +83,7 @@ namespace KoiFengShui.BE.Controllers
 			}
 			catch (Exception ex)
 			{
-				return StatusCode(500, $"Internal server error: {ex.Message}");
+				return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
 			}
 		}
 

@@ -104,6 +104,33 @@ namespace FengShuiKoi_DAO
             }
             return listDirection;
         }
+
+        public List<(string EightMansions, string Description)> GetEightMansionsAndDescriptions()
+            {
+          
+            List<string> sortOrder = new List<string>
+    {
+        "Sinh khí", "Thiên y", "Diên niên", "Phục vị",
+        "Tuyệt mệnh", "Ngũ quỷ", "Lục sát", "Họa hại"
+    };
+
+           
+            Dictionary<string, string> uniquePairs = new Dictionary<string, string>();
+
+            foreach (LifePalaceDirection item in this.GetLifePlaceDirections())
+            {
+               
+                uniquePairs[item.EightMansions] = item.Description;
+                if (uniquePairs.Count == 8)
+                    break;
+            }
+
+            
+            return sortOrder
+                .Where(mansion => uniquePairs.ContainsKey(mansion))
+                .Select(mansion => (mansion, uniquePairs[mansion]))
+                .ToList();
+        }
     }
 
 }
