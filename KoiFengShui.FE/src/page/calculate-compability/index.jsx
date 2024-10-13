@@ -60,7 +60,13 @@ function ComputeCompability() {
           Gender: gender
         }
       });
-      setUserInfo(userInfoResponse.data);
+      setUserLifePalife(userInfoResponse.data);
+      const userElementResponse = await api.get('Fate/element', {
+        params: {
+          DOB: birthdate.format("YYYY-MM-DD")
+        }
+      });
+      setUserElement(userElementResponse.data);
     } catch (error) {
       console.error("Error fetching user info:", error);
       toast.error("Error fetching user info");
@@ -170,14 +176,7 @@ function ComputeCompability() {
         pondDirection,
       } = values;
 
-      // Fetch user's fate and life_palace
-      const userInfoResponse = await api.get('Calculation/GetUserElement', {
-        params: {
-          DOB: birthdate.format("YYYY-MM-DD"),
-          Gender: Gender
-        }
-      });
-      setUserInfo(userInfoResponse.data);
+     
 
       // Prepare payload
       const payload = selectedFishes.map(fish => ({
@@ -206,7 +205,7 @@ function ComputeCompability() {
 
       // Call API using query params
       const response = await api.post(
-        `Calculation/CalculateCompatibility?${queryParams.toString()}`,
+        `Compatibility/GetTheCompatibilityOfUser?${queryParams.toString()}`,
         payload
       );
 
@@ -640,11 +639,11 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
                     <Radio value="female">Nữ</Radio>
                   </Radio.Group>
                 </Form.Item>
-                {userInfo && (
+                {userElement && userLifePalife && (
   <div className="user-info-section">
     <h2 className="user-info-title">Thông tin người dùng</h2>
-    <p><strong>Mệnh:</strong> {userInfo.fate}</p>
-    <p><strong>Cung mệnh:</strong> {userInfo.lifePalace}</p>
+    <p><strong>Mệnh:</strong> {userElement}</p>
+    <p><strong>Cung mệnh:</strong> {userLifePalife}</p>
   </div>
 )}
               </div>
