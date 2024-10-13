@@ -106,8 +106,10 @@ function Consulting() {
       </header>
       <body>
         <div className="Guest-element">
+
           <h1>Mệnh của bạn là {userElement} </h1>
           <h1>Cung mệnh của bạn là {lifePalace} </h1> 
+
         </div>
 
         <div className="Header-fish">

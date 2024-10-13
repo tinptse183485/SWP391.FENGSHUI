@@ -169,6 +169,7 @@ function ComputeCompability() {
 
   const onFinish = async (values) => {
     try {
+
       const {
         birthdate,
         Gender,
@@ -205,6 +206,7 @@ function ComputeCompability() {
 
       // Call API using query params
       const response = await api.post(
+
         `Compatibility/GetTheCompatibilityOfUser?${queryParams.toString()}`,
         payload
       );

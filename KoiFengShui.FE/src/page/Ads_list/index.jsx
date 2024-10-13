@@ -2,11 +2,17 @@ import React, { useEffect, useState } from 'react'; // Thêm useEffect và useSt
 import { Link } from 'react-router-dom';
 import './index.css';
 import api from "../../config/axios";
+
 import HeaderTemplate from '../../components/header-page';
+
+
+import { useNavigate } from 'react-router-dom';
+
 
 const Ads_list = () => {
   const [ads, setAds] = useState([]);
   const [featuredAd, setFeaturedAd] = useState(null);
+
 
   useEffect(() => {
     fetchData();
@@ -24,7 +30,10 @@ const Ads_list = () => {
     }
   };
 
+
+
   return (
+
     <>
       <HeaderTemplate />
       <div className="ads-container">
@@ -37,6 +46,7 @@ const Ads_list = () => {
               <h2 className="featured-ad-title">{featuredAd.heading}</h2>
               <p className="featured-ad-description">{featuredAd.description}</p>
               <Link to={`/advertisement-detail/${featuredAd.adId}`} className="view-details-btn">View Details</Link>
+
             </div>
           </div>
         )}

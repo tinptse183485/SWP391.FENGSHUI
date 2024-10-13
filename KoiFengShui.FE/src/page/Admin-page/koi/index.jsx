@@ -38,16 +38,19 @@ const Koi = () => {
 
   const [colorModalVisible, setColorModalVisible] = useState(false);
   const [colorForm] = Form.useForm();
+
   const [editingKoi, setEditingKoi] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     fetchDataAndColors();
 
+
     fetchColors();
   }, []); // Chạy một lần khi component mount
 
   const fetchDataAndColors = async () => {
+
     try {
       const [koiResponse, colorResponse] = await Promise.all([
         api.get("KoiVariety/GetAllKoi"),
@@ -87,6 +90,7 @@ const Koi = () => {
   };
 
 
+
   const columns = [
     {
       title: "Koi Type",
@@ -124,6 +128,7 @@ const Koi = () => {
       title: "Action",
       dataIndex: "koiType",
       key: "koiType",
+
       render: (_, koi) => (
         <>
           <Button
@@ -137,6 +142,7 @@ const Koi = () => {
             title="Xóa cá Koi"
             description="Bạn có chắc muốn xóa loại cá này?"
             onConfirm={() => handleDeleteKoi(koi.koiType)}
+
           >
             <Button type="primary" danger>
               Delete
@@ -146,6 +152,7 @@ const Koi = () => {
       ),
     },
   ];
+
 
   const handleDeleteKoi = async (koiType) => {
     try {
@@ -160,12 +167,14 @@ const Koi = () => {
     setIsEditing(false);
     form.resetFields();
     setFileList([]);
+
     setOpenModal(true);
   };
 
   const handleCloseModal = () => {
     setOpenModal(false);
   };
+
 
   const handleEdit = (koi) => {
     setIsEditing(true);
@@ -184,6 +193,7 @@ const Koi = () => {
   };
 
   const handleSubmit = async (values) => {
+
     // Kiểm tra tổng tỉ trọng
 
     const totalPercentage = values.colors.reduce(
@@ -192,7 +202,9 @@ const Koi = () => {
     );
 
 
+
     if (Math.abs(totalPercentage - 1) > 0.001) {
+
       toast.error("Tổng tỉ trọng màu phải bằng 1");
       return;
     }
@@ -201,6 +213,7 @@ const Koi = () => {
       setSubmitting(true);
 
       let imageUrl = "";
+
       if (fileList.length > 0 && fileList[0].originFileObj) {
         const file = fileList[0].originFileObj;
         imageUrl = await uploadFile(file);
@@ -209,6 +222,7 @@ const Koi = () => {
       }
 
       const koiData = {
+
         ...values,
         image: imageUrl,
         colors: values.colors.map((color) => ({
@@ -216,6 +230,7 @@ const Koi = () => {
           percentage: parseFloat(color.percentage),
         })),
       };
+
       if (isEditing) {
         await api.put("KoiVariety/UpdateKoiAndTypeColor", koiData);
         toast.success("Cập nhật thành công");
@@ -232,10 +247,13 @@ const Koi = () => {
 
       toast.error(err.response?.data?.message || "Có lỗi xảy ra");
 
+
     } finally {
       setSubmitting(false);
     }
   };
+
+
 
 
   const handleAddColor = async (values) => {
@@ -310,6 +328,7 @@ const Koi = () => {
       <Modal
         confirmLoading={submitting}
         onOk={() => form.submit()}
+
         title={isEditing ? "Chỉnh sửa cá Koi" : "Tạo một giống cá Koi mới"}
         open={openModal}
         onCancel={() => {
@@ -320,6 +339,7 @@ const Koi = () => {
         }}
       >
         <Form onFinish={handleSubmit} form={form}>
+
           <Form.Item
             label="Giống cá Koi"
             name="koiType"
