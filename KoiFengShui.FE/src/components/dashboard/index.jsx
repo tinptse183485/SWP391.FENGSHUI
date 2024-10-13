@@ -5,10 +5,13 @@ import {
   PieChartOutlined,
   TeamOutlined,
   UserOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
 import { Breadcrumb, Button, Layout, Menu, theme } from "antd";
 import { Link, Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import KoiImage from './koi.jpg';
+import "./index.css";
 const { Header, Content, Footer, Sider } = Layout;
 function getItem(label, key, icon, children) {
   return {
@@ -49,6 +52,7 @@ const Dashboard = () => {
     <Layout
       style={{
         minHeight: "100vh",
+        
       }}
     >
       <Sider
@@ -56,14 +60,35 @@ const Dashboard = () => {
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
       >
+        <div className="logo">
+        {collapsed ? (
+          <img src={KoiImage} alt="Logo" />
+        ) : (
+            <img src={KoiImage} alt="Logo" />
+        )}
+      </div>
         <div className="demo-logo-vertical" />
+        
         <Menu
           theme="dark"
           defaultSelectedKeys={["1"]}
           mode="inline"
           items={items}
+          style={{
+            marginTop: "50px",
+          }}
         />
-        <Button onClick={handleLogout}>Log out</Button>
+        
+        <Button
+        style={{
+          marginTop: "100px",
+        }}
+          type="primary"
+          icon={<LogoutOutlined />}
+          onClick={handleLogout}
+        >
+          {collapsed ? "" : "Logout"}
+        </Button>
       </Sider>
 
       <Layout>
@@ -102,7 +127,6 @@ const Dashboard = () => {
             textAlign: "center",
           }}
         >
-          Ant Design ©{new Date().getFullYear()} Created by Ant UED
         </Footer>
       </Layout>
     </Layout>
