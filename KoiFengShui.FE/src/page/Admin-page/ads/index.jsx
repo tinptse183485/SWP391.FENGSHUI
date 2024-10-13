@@ -123,6 +123,7 @@ const Ads = () => {
   ];
   return (
     <div className="dashboard-container">
+      <h2>Manage Advertisement</h2>
       <Table dataSource={data} columns={columns} />
     </div>
   );

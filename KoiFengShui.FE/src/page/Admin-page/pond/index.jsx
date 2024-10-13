@@ -22,6 +22,7 @@ const Pond = () => {
 
   return (
     <div className="dashboard-container">
+      <h2>Manage Pond</h2>
       <div className="dashboard-content">
         {data.length > 0 ? ( // Kiểm tra xem có dữ liệu không
           data.map((item) => (
