@@ -39,12 +39,18 @@ const Koi = () => {
   const [colorModalVisible, setColorModalVisible] = useState(false);
   const [colorForm] = Form.useForm();
 
+  const [editingKoi, setEditingKoi] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+
   useEffect(() => {
     fetchDataAndColors();
+
+
     fetchColors();
   }, []); // Chạy một lần khi component mount
 
   const fetchDataAndColors = async () => {
+
     try {
       const [koiResponse, colorResponse] = await Promise.all([
         api.get("KoiVariety/GetAllKoi"),
@@ -83,6 +89,8 @@ const Koi = () => {
     }
   };
 
+
+
   const columns = [
     {
       title: "Koi Type",
@@ -120,22 +128,21 @@ const Koi = () => {
       title: "Action",
       dataIndex: "koiType",
       key: "koiType",
-      render: (koiType, category) => (
+
+      render: (_, koi) => (
         <>
-          {/* <Button
+          <Button
             type="primary"
-            onClick={() => {
-              setOpenModal(true);
-              form.setFieldsValue(category);
-            }}
+            onClick={() => handleEdit(koi)}
           >
             Edit
-          </Button> */}
+          </Button>
 
           <Popconfirm
-            title="Delete"
-            description="Delete?"
-            onConfirm={() => handleDelete(koiType)}
+            title="Xóa cá Koi"
+            description="Bạn có chắc muốn xóa loại cá này?"
+            onConfirm={() => handleDeleteKoi(koi.koiType)}
+
           >
             <Button type="primary" danger>
               Delete
@@ -146,7 +153,21 @@ const Koi = () => {
     },
   ];
 
+
+  const handleDeleteKoi = async (koiType) => {
+    try {
+      const response = await api.delete(`KoiVariety/DeleteKoiAndTypeColor/${koiType}`);
+      toast.success(response.data);
+      fetchDataAndColors();
+    } catch (error) {
+      toast.error(error.response.data);
+    }
+  };
   const handleOpenModal = () => {
+    setIsEditing(false);
+    form.resetFields();
+    setFileList([]);
+
     setOpenModal(true);
   };
 
@@ -154,7 +175,25 @@ const Koi = () => {
     setOpenModal(false);
   };
 
-  const handleCreateKoi = async (values) => {
+
+  const handleEdit = (koi) => {
+    setIsEditing(true);
+    setEditingKoi(koi);
+    form.setFieldsValue({
+      koiType: koi.koiType,
+      element: koi.element,
+      description: koi.description,
+      colors: koi.colors.map(color => ({
+        colorId: color.colorId,
+        percentage: color.percentage
+      }))
+    });
+    setFileList(koi.image ? [{ url: koi.image, uid: '-1', name: 'image.png' }] : []);
+    setOpenModal(true);
+  };
+
+  const handleSubmit = async (values) => {
+
     // Kiểm tra tổng tỉ trọng
 
     const totalPercentage = values.colors.reduce(
@@ -162,8 +201,10 @@ const Koi = () => {
       0
     );
 
+
+
     if (Math.abs(totalPercentage - 1) > 0.001) {
-      // Sử dụng sai số nhỏ để xử lý lỗi làm tròn số thập phân
+
       toast.error("Tổng tỉ trọng màu phải bằng 1");
       return;
     }
@@ -172,12 +213,16 @@ const Koi = () => {
       setSubmitting(true);
 
       let imageUrl = "";
-      if (fileList.length > 0) {
+
+      if (fileList.length > 0 && fileList[0].originFileObj) {
         const file = fileList[0].originFileObj;
         imageUrl = await uploadFile(file);
+      } else if (isEditing && editingKoi.image) {
+        imageUrl = editingKoi.image;
       }
 
-      const koi = {
+      const koiData = {
+
         ...values,
         image: imageUrl,
         colors: values.colors.map((color) => ({
@@ -185,19 +230,31 @@ const Koi = () => {
           percentage: parseFloat(color.percentage),
         })),
       };
-      const response = await api.post("KoiVariety/AddKoiAndTypeColor", koi);
 
-      console.log(response.data);
-      toast.success("Tạo mới thành công");
+      if (isEditing) {
+        await api.put("KoiVariety/UpdateKoiAndTypeColor", koiData);
+        toast.success("Cập nhật thành công");
+      } else {
+        await api.post("KoiVariety/AddKoiAndTypeColor", koiData);
+        toast.success("Tạo mới thành công");
+      }
       setOpenModal(false);
       form.resetFields();
       fetchDataAndColors();
+      setEditingKoi(null);
+      setIsEditing(false);
     } catch (err) {
+
       toast.error(err.response?.data?.message || "Có lỗi xảy ra");
+
+
     } finally {
       setSubmitting(false);
     }
   };
+
+
+
 
   const handleAddColor = async (values) => {
     const formattedValues = {
@@ -271,11 +328,18 @@ const Koi = () => {
       <Modal
         confirmLoading={submitting}
         onOk={() => form.submit()}
-        title="Tạo một giống cá Koi mới"
+
+        title={isEditing ? "Chỉnh sửa cá Koi" : "Tạo một giống cá Koi mới"}
         open={openModal}
-        onCancel={handleCloseModal}
+        onCancel={() => {
+          handleCloseModal();
+          setEditingKoi(null);
+          setIsEditing(false);
+          form.resetFields();
+        }}
       >
-        <Form onFinish={handleCreateKoi} form={form}>
+        <Form onFinish={handleSubmit} form={form}>
+
           <Form.Item
             label="Giống cá Koi"
             name="koiType"
@@ -328,6 +392,7 @@ const Koi = () => {
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name, ...restField }) => (
+
                   <Space
                     key={key}
                     style={{ display: "flex", marginBottom: 8 }}
@@ -343,11 +408,13 @@ const Koi = () => {
                           <Option key={colorId} value={colorId}>
                             {colorId}
                           </Option>
+
                         ))}
                       </Select>
                     </Form.Item>
                     <Form.Item
                       {...restField}
+
                       name={[name, "percentage"]}
                       rules={[
                         { required: true, message: "Nhập tỉ trọng" },
@@ -365,11 +432,13 @@ const Koi = () => {
                         step="0.01"
                         placeholder="Tỉ trọng (0-1)"
                       />
+
                     </Form.Item>
                     <MinusCircleOutlined onClick={() => remove(name)} />
                   </Space>
                 ))}
                 <Form.Item>
+
                   <Space>
                     <Button
                       type="dashed"
@@ -379,6 +448,7 @@ const Koi = () => {
                       Thêm màu
                     </Button>
                   </Space>
+
                 </Form.Item>
               </>
             )}
@@ -420,6 +490,7 @@ const Koi = () => {
               Thêm màu mới
             </Button>
           </Form.Item>
+
         </Form>
       </Modal>
 

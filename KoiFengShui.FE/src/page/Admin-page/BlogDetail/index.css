@@ -1,0 +1,17 @@
+.blog-detail-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.blog-detail-container h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.blog-detail-container img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+}
+

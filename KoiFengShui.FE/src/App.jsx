@@ -23,6 +23,10 @@ import AdvertisementDetail from "./page/AdvertismentDetail";
 import VNPayPayment from './page/Payment';
 import PaymentSuccess from './page/PaymentSuccess';
 import ChoosePackage from './page/ChoosePackage';
+import CreateBlog from "./page/Admin-page/CreateBlog";
+import BlogDetail from "./page/Admin-page/BlogDetail";
+import BlogList from "./page/Blogs-list";
+
 
 
 
@@ -59,6 +63,12 @@ function App() {
           element: <Blog />,
         },
         {
+
+          path: "create-blog",
+          element: <CreateBlog />,
+        },
+        {
+
           path: "koi",
           element: <Koi />,
         },
@@ -84,6 +94,12 @@ function App() {
     },
 
     {
+      path: "blogs-list",
+      element: <BlogList />,
+    },
+
+
+    {
       path: "ads-list",
       element: <Ads_list />,
     },
@@ -107,6 +123,10 @@ function App() {
     {
       path: "payment-success",
       element: <PaymentSuccess />,
+    },
+    {
+      path: "blog-detail/:id",
+      element: <BlogDetail />,
     },
     {
       path: "/choose-package",
