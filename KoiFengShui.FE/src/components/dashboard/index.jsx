@@ -75,14 +75,18 @@ const Dashboard = () => {
           mode="inline"
           items={items}
           style={{
-            marginTop: "50px",
+            marginTop: "80px",
+            padding: '16px 0', 
+          }}
+          itemStyle={{
+            margin: '16px 0', // Thêm khoảng cách giữa các item
           }}
         />
         
         <Button
-        style={{
-          marginTop: "100px",
-        }}
+          style={{
+            marginTop: "80px",
+          }}
           type="primary"
           icon={<LogoutOutlined />}
           onClick={handleLogout}

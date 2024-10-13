@@ -9,6 +9,8 @@ const User = () => {
   const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editingUser, setEditingUser] = useState(null); // New state for editing
+  const [searchUserID, setSearchUserID] = useState(""); // Thêm state cho tìm kiếm UserID
+  const [searchRole, setSearchRole] = useState(""); // Thêm state cho tìm kiếm Role
 
   useEffect(() => {   
     fetchUserData();
@@ -119,14 +121,45 @@ const User = () => {
     },
   ];
 
+  const filteredUserData = userData.filter(user => 
+    user.userID.toString().includes(searchUserID) && // Lọc theo UserID
+    (searchRole ? user.role === searchRole : true) // Lọc theo Role nếu có
+  );
+
   return (
     <div className="dashboard-container">
+      <h2>Manage User</h2>
       <div className="dashboard-content">
-        <h2>User Management</h2>
+        
+        <div className="search-container"> {/* Thêm container cho ô tìm kiếm */}
+          <div className="search-select-container">
+            <h3>Search by Role: </h3>
+            <Select 
+              className="search-select" // Thêm lớp cho ô chọn Role
+            placeholder="Filter:" 
+            value={searchRole} 
+            onChange={(value) => setSearchRole(value)} 
+          >
+            <Option value="">All</Option>
+            <Option value="Admin">Admin</Option>
+            <Option value="Member">Member</Option>
+            </Select>
+          </div>
+          <div className="search-input-container">
+            <h3>Search by UserID: </h3>
+            <Input 
+              className="search-input" // Thêm lớp cho ô tìm kiếm UserID
+            placeholder="Search UserID" 
+            value={searchUserID} 
+            onChange={(e) => setSearchUserID(e.target.value)} 
+              style={{ height: '30px' }}
+            />
+          </div>
+        </div>
         <div className="user-management-table">
           <Table
             columns={columns}
-            dataSource={userData}
+            dataSource={filteredUserData}
             rowKey="userID"
             loading={loading}
             scroll={{ x: true }}
