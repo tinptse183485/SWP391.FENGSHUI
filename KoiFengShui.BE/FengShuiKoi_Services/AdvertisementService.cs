@@ -29,10 +29,15 @@ namespace FengShuiKoi_Services
             return await iAdvertisementRepo.GetAdvertisementByAdID(AdID);
         }
 
+
         public async Task<List<Advertisement>> GetAdvertisementByUserIdAndStatus(string userId, string status)
         {
             return await iAdvertisementRepo.GetAdvertisementByUserIdAndStatus(userId, status);
         }
+
+		public List<Advertisement> GetAdvertisementByUserID(string userdID) => iAdvertisementRepo.GetAdvertisementByUserID(userdID);
+		
+
 
         public async Task<List<Advertisement>> GetAdvertisements()
         {
@@ -43,5 +48,18 @@ namespace FengShuiKoi_Services
         {
             return await iAdvertisementRepo.UpdateAdvertisement(updatedAdvertisement);
         }
-    }
+
+
+		public void UpdateExpiredAdvertisements()
+		{
+			var expiredAds = iAdvertisementRepo.GetExpiredAdvertisements();
+			foreach (var ad in expiredAds)
+			{
+				ad.Status = "Expired";
+				iAdvertisementRepo.UpdateAdvertisement(ad);
+			}
+		}
+
+	}
 }
+

@@ -26,7 +26,7 @@ namespace KoiFengShui.BE
             if (string.IsNullOrEmpty(jwtSigningKey) || string.IsNullOrEmpty(jwtIssuer) || string.IsNullOrEmpty(jwtAudience))
             {
                 throw new InvalidOperationException("JWT configuration is missing in environment variables");
-            }   
+            }
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -66,8 +66,7 @@ namespace KoiFengShui.BE
             builder.Services.AddScoped<IQuantityOfFishService, QuantityOfFishService>();
             builder.Services.AddScoped<IPackageService, PackageService>();
             builder.Services.AddScoped<IAdvertisementService, AdvertisementService>();
-
-
+            builder.Services.AddHostedService<AdvertisementExpirationService>();
 
             // Add CORS
             builder.Services.AddCors(options =>
