@@ -16,7 +16,7 @@ namespace FengShuiKoi_Services
         public LifePalaceDirection GetLifePlaceDirectionById(string lifePalace, string direction) => lifePlaceDirectionRepo.GetLifePlaceDirectionById(lifePalace, direction);
 
         public List<LifePalaceDirection> GetLifePlaceDirections() => lifePlaceDirectionRepo.GetLifePlaceDirections();
-
+        public List<(string EightMansions, string Description)> GetEightMansionsAndDescriptions() => lifePlaceDirectionRepo.GetEightMansionsAndDescriptions();
         public bool AddLifePlaceDirection(LifePalaceDirection lifePlaceDirection) => lifePlaceDirectionRepo.AddLifePlaceDirection(lifePlaceDirection);
 
         public bool DeleteLifePlaceDirection(string lifePalace, string direction) => lifePlaceDirectionRepo.DeleteLifePlaceDirection(lifePalace, direction);

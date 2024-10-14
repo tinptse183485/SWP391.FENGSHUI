@@ -14,12 +14,11 @@ namespace FengShuiKoi_Repository
 
         public bool DeleteBlog(string BlogID) ;
 
-       
-
-        public Blog GetAccountByUserID(string BlogID) ;
+        public string GetLastBlogId();
+        public bool UpdateBlog(Blog Blog);  
+        public Blog GetBlogByID(string BlogID) ;
 
         public List<Blog> GetBlogs() ;
-
-        public bool UpdateBlog(string BlogID);
+        
     }
 }

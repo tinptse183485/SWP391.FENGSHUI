@@ -57,6 +57,7 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
+
 		[HttpGet("GetAdvertisementByUserId")]
 		public IActionResult GetAdvertisementByUserId(string  UserId)
 		{
@@ -141,6 +142,7 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
+
 
 		[HttpGet("GenerateAdId")]
         public IActionResult GenerateAdId(string AdId)
