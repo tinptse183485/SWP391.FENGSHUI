@@ -56,14 +56,7 @@ const User = () => {
       title: "Password",
       dataIndex: "password",
       key: "password",
-      render: (text, record) => (
-        editingUser?.userID === record.userID ? (
-          <Input
-            value={editingUser.password}
-            onChange={(e) => setEditingUser({ ...editingUser, password: e.target.value })}
-          />
-        ) : text
-      ),
+      render: () => '***',
     },
     {
       title: "Name",

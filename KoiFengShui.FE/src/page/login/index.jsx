@@ -21,8 +21,6 @@ function Login() {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      
-
       // Send Google user info to your backend
       const response = await api.post("/Account/google-login", {
         email: user.email,
@@ -34,6 +32,7 @@ function Login() {
       const { role, token, userId } = response.data;
       localStorage.setItem("token", token);
       localStorage.setItem("userId", userId);
+      localStorage.setItem("role", role);
 
 
       if (role === "ADMIN") {
@@ -53,6 +52,7 @@ function Login() {
       const { role, token, userId } = response.data;
       localStorage.setItem("token", token);
       localStorage.setItem("userId", userId);
+      localStorage.setItem("role", role);
       if (role === "Admin") {
         navigate("/dashboard");
       } else {
@@ -118,7 +118,7 @@ function Login() {
   return (
     <AuthenTemplate>
       <div className="login-header">
-        <h1>Welcome to Koi Hên Xui !</h1>
+        <h1>KOI PHONG THỦY !</h1>
         <p>Đăng nhập để tiếp tục</p>
       </div>
       <Form labelCol={{ span: 24 }} onFinish={handleLogin}>

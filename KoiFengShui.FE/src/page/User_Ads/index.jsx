@@ -3,9 +3,8 @@ import "./index.css";
 import { Layout, Menu, Table, Button } from "antd";
 import { Link, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import Header_page from "../../components/header-page";
 import api from "../../config/axios";
-
+import HeaderTemplate from "../../components/header-page";
 const { Content } = Layout;
 
 const User_Ads = () => {
@@ -23,6 +22,7 @@ const User_Ads = () => {
     { key: "Canceled", label: "Đã hủy" },
     { key: "Refunded", label: "Đã hoàn tiền" },
   ];
+  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     fetchAdvertisements();
@@ -34,7 +34,7 @@ const User_Ads = () => {
 
   const fetchAdvertisements = async () => {
     try {
-      const response = await api.get("Advertisement/GetAllAdvertisement"); // Replace with your actual API endpoint
+      const response = await api.get(`Advertisement/GetAdvertisementByUserId?UserId=${userId}`); // Replace with your actual API endpoint
       setAdvertisements(response.data);
     } catch (error) {
       console.error("Error fetching advertisements:", error);
@@ -98,12 +98,16 @@ const User_Ads = () => {
   };
 
   return (
+
+    <>
+    <HeaderTemplate/>
     <Layout style={{ minHeight: "100vh", backgroundColor: "white" }}>
-      <Header_page />
+      
       <Layout>
         <Content style={{ margin: "16px" }}>
           <div
-            className="container"
+            className="container-ads"
+
             style={{ padding: 24, background: "#fff", minHeight: 360 }}
           >
             <div className="Heading">
@@ -128,6 +132,7 @@ const User_Ads = () => {
         </Content>
       </Layout>
     </Layout>
+    </>
   );
 };
 
