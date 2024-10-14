@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react"; // Thêm useEffect và useState
-// import "./index.css";
 import api from "../../../config/axios";
-
 import {
   Button,
   Form,
@@ -38,10 +36,8 @@ const Koi = () => {
 
   const [colorModalVisible, setColorModalVisible] = useState(false);
   const [colorForm] = Form.useForm();
-
   const [editingKoi, setEditingKoi] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-
   useEffect(() => {
     fetchDataAndColors();
 
@@ -89,30 +85,29 @@ const Koi = () => {
     }
   };
 
-
-
   const columns = [
     {
-      title: "Koi Type",
+      title: "Giống cá Koi",
       dataIndex: "koiType",
     },
     {
-      title: "Image",
+      title: "Hình ảnh",
       dataIndex: "image",
       render: (image) => {
         return <Image src={image} alt="" width={100}></Image>;
       },
     },
     {
-      title: "Element",
+      title: "Mệnh của cá",
       dataIndex: "element",
     },
     {
-      title: "Description",
+      title: "Thông tin giới thiệu",
       dataIndex: "description",
+      width: 450,
     },
     {
-      title: "Colors",
+      title: "Màu sắc",
       dataIndex: "colors",
       render: (colors) => (
         <ul>
@@ -125,34 +120,33 @@ const Koi = () => {
       ),
     },
     {
-      title: "Action",
+      title: "Hành động",
       dataIndex: "koiType",
       key: "koiType",
-
+      width: 150, 
       render: (_, koi) => (
         <>
           <Button
             type="primary"
             onClick={() => handleEdit(koi)}
           >
-            Edit
+            Chỉnh sửa
           </Button>
-
           <Popconfirm
             title="Xóa cá Koi"
             description="Bạn có chắc muốn xóa loại cá này?"
             onConfirm={() => handleDeleteKoi(koi.koiType)}
-
+            okButtonProps={{ size: 'small' }}
+            cancelButtonProps={{ size: 'small' }}
           >
             <Button type="primary" danger>
-              Delete
+              Xóa cá Koi
             </Button>
           </Popconfirm>
         </>
       ),
     },
   ];
-
 
   const handleDeleteKoi = async (koiType) => {
     try {
@@ -175,7 +169,6 @@ const Koi = () => {
     setOpenModal(false);
   };
 
-
   const handleEdit = (koi) => {
     setIsEditing(true);
     setEditingKoi(koi);
@@ -193,27 +186,18 @@ const Koi = () => {
   };
 
   const handleSubmit = async (values) => {
-
     // Kiểm tra tổng tỉ trọng
-
     const totalPercentage = values.colors.reduce(
       (sum, color) => sum + parseFloat(color.percentage || 0),
       0
     );
-
-
-
     if (Math.abs(totalPercentage - 1) > 0.001) {
-
       toast.error("Tổng tỉ trọng màu phải bằng 1");
       return;
     }
-
     try {
       setSubmitting(true);
-
       let imageUrl = "";
-
       if (fileList.length > 0 && fileList[0].originFileObj) {
         const file = fileList[0].originFileObj;
         imageUrl = await uploadFile(file);
@@ -222,7 +206,6 @@ const Koi = () => {
       }
 
       const koiData = {
-
         ...values,
         image: imageUrl,
         colors: values.colors.map((color) => ({
@@ -230,7 +213,6 @@ const Koi = () => {
           percentage: parseFloat(color.percentage),
         })),
       };
-
       if (isEditing) {
         await api.put("KoiVariety/UpdateKoiAndTypeColor", koiData);
         toast.success("Cập nhật thành công");
@@ -316,7 +298,6 @@ const Koi = () => {
 
   return (
     <div>
-      {/* className="dashboard-container" */}
       <h1>Quản lý cá Koi</h1>
       <Space>
         <Button onClick={handleOpenModal}>Tạo mới loại cá Koi</Button>
@@ -328,7 +309,6 @@ const Koi = () => {
       <Modal
         confirmLoading={submitting}
         onOk={() => form.submit()}
-
         title={isEditing ? "Chỉnh sửa cá Koi" : "Tạo một giống cá Koi mới"}
         open={openModal}
         onCancel={() => {
@@ -339,7 +319,6 @@ const Koi = () => {
         }}
       >
         <Form onFinish={handleSubmit} form={form}>
-
           <Form.Item
             label="Giống cá Koi"
             name="koiType"

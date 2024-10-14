@@ -19,11 +19,11 @@ function getItem(label, key, icon, children) {
   };
 }
 const items = [
-  getItem("Manage Ads", "ads", <PieChartOutlined />),
-  getItem("Manage User", "user", <PieChartOutlined />),
-  getItem("Manage Blog", "blog", <PieChartOutlined />),
-  getItem("Manage Koi", "koi", <PieChartOutlined />),
-  getItem("Manage Pond", "pond", <PieChartOutlined />),
+  getItem("Quản lý quảng cáo", "ads", <PieChartOutlined />),
+  getItem("Quản lý người dùng", "user", <PieChartOutlined />),
+  getItem("Quản lý Blog", "blog", <PieChartOutlined />),
+  getItem("Quản lý cá Koi", "koi", <PieChartOutlined />),
+  getItem("Quản lý hồ", "pond", <PieChartOutlined />),
 ];
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -37,6 +37,7 @@ const Dashboard = () => {
   const handleLogout = () => {
     localStorage.removeItem("userId");
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
     setUserId(null);
     navigate("/");
   };
@@ -82,7 +83,7 @@ const Dashboard = () => {
               margin: "16px 0",
             }}
           >
-            <Breadcrumb.Item>User</Breadcrumb.Item>
+            <Breadcrumb.Item>Admin</Breadcrumb.Item>
             <Breadcrumb.Item>{userId}</Breadcrumb.Item>
           </Breadcrumb>
           <div

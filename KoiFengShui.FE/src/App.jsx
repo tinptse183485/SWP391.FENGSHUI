@@ -27,10 +27,6 @@ import CreateBlog from "./page/Admin-page/CreateBlog";
 import BlogDetail from "./page/Admin-page/BlogDetail";
 import BlogList from "./page/Blogs-list";
 
-
-
-
-
 function App() {
 
   const router = createBrowserRouter([
@@ -63,12 +59,10 @@ function App() {
           element: <Blog />,
         },
         {
-
           path: "create-blog",
           element: <CreateBlog />,
         },
         {
-
           path: "koi",
           element: <Koi />,
         },
@@ -92,13 +86,10 @@ function App() {
       element: <CalculateCompability />,
 
     },
-
     {
       path: "blogs-list",
       element: <BlogList />,
     },
-
-
     {
       path: "ads-list",
       element: <Ads_list />,
