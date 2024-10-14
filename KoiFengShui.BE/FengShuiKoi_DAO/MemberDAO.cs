@@ -43,14 +43,11 @@ namespace FungShuiKoi_DAO
 
 				foreach (var member in members)
 				{
-					if (member.Birthday == null) continue;
-
 					int age = now.Year - member.Birthday.Year;
 					if (now.Month < member.Birthday.Month || (now.Month == member.Birthday.Month && now.Day < member.Birthday.Day))
 					{
 						age--;
 					}
-
 					if (age < 18) result["Dưới 18"]++;
 					else if (age < 30) result["18-29"]++;
 					else if (age < 50) result["30-49"]++;
@@ -127,10 +124,8 @@ namespace FungShuiKoi_DAO
 				{
 					return false;
 				}
-
 				existingMember.Name = updatedMember.Name;
 				existingMember.Birthday = updatedMember.Birthday;
-
 				dbContext.Entry(existingMember).State = EntityState.Modified;
 				dbContext.SaveChanges();
 				return true;

@@ -48,7 +48,7 @@ namespace KoiFengShui.BE.Controllers
                 var advertisements = _advertisementService.GetAdvertisementByAdID(adId);
                 if (advertisements == null)
                 {
-                    return BadRequest("Không tìm thấy quảng cáo");
+                    return NotFound("Không tìm thấy quảng cáo");
                 }
                 return Ok(advertisements);
             }
@@ -58,7 +58,25 @@ namespace KoiFengShui.BE.Controllers
             }
         }
 
-        [HttpGet("CheckAdIdExist")]
+		[HttpGet("GetAdvertisementByUserId")]
+		public IActionResult GetAdvertisementByUserId(string  UserId)
+		{
+			try
+			{
+				var advertisements = _advertisementService.GetAdvertisementByUserID(UserId);
+				if (advertisements == null)
+				{
+					return NotFound("Người dùng chưa có quảng cáo");
+				}
+				return Ok(advertisements);
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Lỗi server: {ex.Message}");
+			}
+		}
+
+		[HttpGet("CheckAdIdExist")]
         public IActionResult CheckAdIdExist(string adId)
         {
             try
@@ -106,9 +124,10 @@ namespace KoiFengShui.BE.Controllers
                 List<AdsPackage> list = _adsPackageService.GetListAdsPackageByRank(rank);
                 foreach (AdsPackage ad in list)
                 {
-                    if (ad.StartDate <= DateTime.Now && ad.ExpiredDate >= DateTime.Now)
+                    Advertisement ads = _advertisementService.GetAdvertisementByAdID(ad.AdId);
+                    if (ad.StartDate <= DateTime.Now && ad.ExpiredDate >= DateTime.Now && ads.Status.Equals("Approved"))
                     {
-                        listAd.Add(_advertisementService.GetAdvertisementByAdID(ad.AdId));
+                        listAd.Add(ads);
                     }
                 }
                 if (listAd == null)
@@ -124,7 +143,8 @@ namespace KoiFengShui.BE.Controllers
             }
         }
 
-	[HttpGet("GenerateAdId")]
+
+		[HttpGet("GenerateAdId")]
         public IActionResult GenerateAdId(string AdId)
         {
             try
@@ -317,7 +337,7 @@ namespace KoiFengShui.BE.Controllers
         }
 
         [HttpPut("UpdateAdvertisementStatus")]
-        public IActionResult UpdateAdvertisementStatus(string adId, string status)
+        public IActionResult UpdateAdvertisementStatus(string adId,string elementID, string status)
         {
             try
             {
@@ -328,6 +348,7 @@ namespace KoiFengShui.BE.Controllers
                 }
                 else
                 {
+                    advertise.ElementId = elementID;
                     advertise.Status = status;
                     bool check = _advertisementService.UpdateAdvertisement(advertise);
                     if (check)
@@ -458,7 +479,7 @@ namespace KoiFengShui.BE.Controllers
                         Heading = advertisement.Heading,
                         Image = advertisement.Image,
                         Link = advertisement.Link,
-                        ElementId = "None",
+                        ElementId = advertisement.ElementId,
                         Status = "Pending"
                     };
                 }
@@ -468,7 +489,7 @@ namespace KoiFengShui.BE.Controllers
                     newAd.Heading = advertisement.Heading;
                     newAd.Image = advertisement.Image;
                     newAd.Link = advertisement.Link;
-                    newAd.ElementId = "None";
+                    newAd.ElementId = advertisement.ElementId;
                     newAd.Status = "Pending";
                 }
 
