@@ -31,6 +31,7 @@ namespace FengShuiKoi_Repository
 		{
 			return AdvertisementDAO.Instance.GetAdvertisementByUserIdAndStatus(userId, status);
 		}
+		public List<Advertisement> GetAdvertisementByUserID(string userdID) => AdvertisementDAO.Instance.GetAdvertisementByUserID(userdID);
 
 		public List<Advertisement> GetAdvertisements()
         {

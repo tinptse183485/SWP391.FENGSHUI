@@ -30,7 +30,7 @@ namespace FengShuiKoi_Services
         {
             return iAdvertisementRepo.GetAdvertisementByAdID(AdID);
         }
-
+		public List<Advertisement> GetAdvertisementByUserID(string userdID) => iAdvertisementRepo.GetAdvertisementByUserID(userdID);
 		public List<Advertisement> GetAdvertisementByUserIdAndStatus(string userId, string status)
 		{
 			return iAdvertisementRepo.GetAdvertisementByUserIdAndStatus(userId, status);

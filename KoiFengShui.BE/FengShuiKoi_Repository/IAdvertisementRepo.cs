@@ -19,6 +19,8 @@ namespace FengShuiKoi_Repository
 
 		public List<Advertisement> GetAdvertisementByUserIdAndStatus(string userId, string status);
         public List<Advertisement> GetAdvertisementStatus(string status);
+        public List<Advertisement> GetAdvertisementByUserID(string userdID);
 
-    }
+
+	}
 }

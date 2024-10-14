@@ -48,7 +48,7 @@ namespace KoiFengShui.BE.Controllers
                 var advertisements = _advertisementService.GetAdvertisementByAdID(adId);
                 if (advertisements == null)
                 {
-                    return BadRequest("Không tìm thấy quảng cáo");
+                    return NotFound("Không tìm thấy quảng cáo");
                 }
                 return Ok(advertisements);
             }
@@ -57,8 +57,25 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
+		[HttpGet("GetAdvertisementByUserId")]
+		public IActionResult GetAdvertisementByUserId(string  UserId)
+		{
+			try
+			{
+				var advertisements = _advertisementService.GetAdvertisementByUserID(UserId);
+				if (advertisements == null)
+				{
+					return NotFound("Người dùng chưa có quảng cáo");
+				}
+				return Ok(advertisements);
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Lỗi server: {ex.Message}");
+			}
+		}
 
-        [HttpGet("CheckAdIdExist")]
+		[HttpGet("CheckAdIdExist")]
         public IActionResult CheckAdIdExist(string adId)
         {
             try
