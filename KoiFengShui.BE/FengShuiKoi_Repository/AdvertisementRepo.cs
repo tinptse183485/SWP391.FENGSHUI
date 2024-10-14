@@ -42,5 +42,8 @@ namespace FengShuiKoi_Repository
 		{
             return AdvertisementDAO.Instance.UpdateAdvertisement(updatedAdvertisement);
         }
-    }
+
+		public List<Advertisement> GetExpiredAdvertisements() => AdvertisementDAO.Instance.GetExpiredAdvertisements();
+
+	}
 }

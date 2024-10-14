@@ -19,5 +19,7 @@ namespace FengShuiKoi_Services
         public List<Advertisement> GetAdvertisementStatus(string status);
         public List<Advertisement> GetAdvertisementByUserID(string userdID);
 
+        public void UpdateExpiredAdvertisements();
+
 	}
 }

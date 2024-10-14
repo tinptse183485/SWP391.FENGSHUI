@@ -335,7 +335,7 @@ namespace KoiFengShui.BE.Controllers
         }
 
         [HttpPut("UpdateAdvertisementStatus")]
-        public IActionResult UpdateAdvertisementStatus(string adId, string status)
+        public IActionResult UpdateAdvertisementStatus(string adId,string elementID, string status)
         {
             try
             {
@@ -346,6 +346,7 @@ namespace KoiFengShui.BE.Controllers
                 }
                 else
                 {
+                    advertise.ElementId = elementID;
                     advertise.Status = status;
                     bool check = _advertisementService.UpdateAdvertisement(advertise);
                     if (check)
@@ -476,7 +477,7 @@ namespace KoiFengShui.BE.Controllers
                         Heading = advertisement.Heading,
                         Image = advertisement.Image,
                         Link = advertisement.Link,
-                        ElementId = "None",
+                        ElementId = advertisement.ElementId,
                         Status = "Pending"
                     };
                 }
@@ -486,7 +487,7 @@ namespace KoiFengShui.BE.Controllers
                     newAd.Heading = advertisement.Heading;
                     newAd.Image = advertisement.Image;
                     newAd.Link = advertisement.Link;
-                    newAd.ElementId = "None";
+                    newAd.ElementId = advertisement.ElementId;
                     newAd.Status = "Pending";
                 }
 

@@ -45,5 +45,16 @@ namespace FengShuiKoi_Services
 		{
             return iAdvertisementRepo.UpdateAdvertisement(updatedAdvertisement);
         }
-    }
+
+		public void UpdateExpiredAdvertisements()
+		{
+			var expiredAds = iAdvertisementRepo.GetExpiredAdvertisements();
+			foreach (var ad in expiredAds)
+			{
+				ad.Status = "Expired";
+				iAdvertisementRepo.UpdateAdvertisement(ad);
+			}
+		}
+
+	}
 }
