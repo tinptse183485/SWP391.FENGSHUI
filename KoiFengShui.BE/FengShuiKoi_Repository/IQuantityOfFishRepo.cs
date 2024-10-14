@@ -9,6 +9,6 @@ namespace FengShuiKoi_Repository
 {
     public interface IQuantityOfFishRepo
     {
-        public QuantityOfFish getQuantityByElement(string element);
+        Task<QuantityOfFish> getQuantityByElement(string element);
     }
 }

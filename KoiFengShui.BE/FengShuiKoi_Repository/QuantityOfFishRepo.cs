@@ -1,6 +1,5 @@
 ﻿using FengShuiKoi_BO;
 using FengShuiKoi_DAO;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +10,6 @@ namespace FengShuiKoi_Repository
 {
     public class QuantityOfFishRepo : IQuantityOfFishRepo
     {
-        public QuantityOfFish getQuantityByElement(string element) => QuantityOfFishDAO.Instance.getQuantityByElement(element);
-        
+        public async Task<QuantityOfFish> getQuantityByElement(string element) => await QuantityOfFishDAO.Instance.getQuantityByElement(element);
     }
 }

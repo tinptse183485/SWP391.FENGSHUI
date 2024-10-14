@@ -1,6 +1,7 @@
 ﻿using FengShuiKoi_BO;
 using FengShuiKoi_Repository;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FengShuiKoi_Services
 {
@@ -13,14 +14,14 @@ namespace FengShuiKoi_Services
             colorRepo = new ColorRepo();
         }
 
-        public Color GetColorById(string id) => colorRepo.GetColorById(id);
+        public async Task<Color> GetColorById(string id) => await colorRepo.GetColorById(id);
 
-        public List<Color> GetColors() => colorRepo.GetColors();
+        public async Task<List<Color>> GetColors() => await colorRepo.GetColors();
 
-        public bool AddColor(Color color) => colorRepo.AddColor(color);
+        public async Task<bool> AddColor(Color color) => await colorRepo.AddColor(color);
 
-        public bool DeleteColor(string id) => colorRepo.DeleteColor(id);
+        public async Task<bool> DeleteColor(string id) => await colorRepo.DeleteColor(id);
 
-        public bool UpdateColor(Color color) => colorRepo.UpdateColor(color);
+        public async Task<bool> UpdateColor(Color color) => await colorRepo.UpdateColor(color);
     }
 }

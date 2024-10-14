@@ -1,26 +1,26 @@
 ﻿using FengShuiKoi_BO;
 using FengShuiKoi_DAO;
 using System.Collections.Generic;
-using System.Xml.Linq;
+using System.Threading.Tasks;
 
 namespace FengShuiKoi_Repository
 {
     public class ElementColorRepo : IElementColorRepo
     {
-        public ElementColor GetElementColorById(string element, string color) => ElementColorDAO.Instance.GetElementColorById(element, color);
+        public async Task<ElementColor> GetElementColorById(string element, string color) => await ElementColorDAO.Instance.GetElementColorById(element, color);
 
-        public List<ElementColor> GetElementColors() => ElementColorDAO.Instance.GetElementColors();
+        public async Task<List<ElementColor>> GetElementColors() => await ElementColorDAO.Instance.GetElementColors();
 
-        public bool AddElementColor(ElementColor elementColor) => ElementColorDAO.Instance.AddElementColor(elementColor);
+        public async Task<bool> AddElementColor(ElementColor elementColor) => await ElementColorDAO.Instance.AddElementColor(elementColor);
 
-        public bool DeleteElementColor(string element, string color) => ElementColorDAO.Instance.DeleteElementColor(element, color);
+        public async Task<bool> DeleteElementColor(string element, string color) => await ElementColorDAO.Instance.DeleteElementColor(element, color);
 
-        public bool UpdateElementColor(ElementColor elementColor) => ElementColorDAO.Instance.UpdateElementColor(elementColor);
+        public async Task<bool> UpdateElementColor(ElementColor elementColor) => await ElementColorDAO.Instance.UpdateElementColor(elementColor);
 
-        public float GetPointElementColor(string element, string color) => ElementColorDAO.Instance.GetPointElementColor(element, color);
+        public async Task<float> GetPointElementColor(string element, string color) => await ElementColorDAO.Instance.GetPointElementColor(element, color);
 
-        public ElementColor GetElementColorByColorId(string color) => ElementColorDAO.Instance.GetElementColorByColorId(color);
+        public async Task<ElementColor> GetElementColorByColorId(string color) => await ElementColorDAO.Instance.GetElementColorByColorId(color);
 
-        public bool DeleteElementColorByColorId(string color) => ElementColorDAO.Instance.DeleteElementColorByColorId( color);
+        public async Task<bool> DeleteElementColorByColorId(string color) => await ElementColorDAO.Instance.DeleteElementColorByColorId(color);
     }
 }

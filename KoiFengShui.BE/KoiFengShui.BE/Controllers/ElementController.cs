@@ -1,7 +1,9 @@
 ﻿using FengShuiKoi_BO;
 using FengShuiKoi_Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace KoiFengShui.BE.Controllers
 {
@@ -14,16 +16,13 @@ namespace KoiFengShui.BE.Controllers
         {
             _elementService = elementService;
         }
-        [HttpGet("GetAllElement")]
-        public IActionResult GetAllElement()
-        {
-            List<Element> listElement = new List<Element>();
 
+        [HttpGet("GetAllElement")]
+        public async Task<IActionResult> GetAllElement()
+        {
             try
             {
-                listElement = _elementService.GetElement();
-
-
+                List<Element> listElement = await _elementService.GetElement();
                 return Ok(listElement);
             }
             catch (Exception ex)

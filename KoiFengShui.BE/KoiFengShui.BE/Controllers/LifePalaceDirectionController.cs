@@ -2,6 +2,7 @@
 using FengShuiKoi_Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace KoiFengShui.BE.Controllers
 {
@@ -10,25 +11,24 @@ namespace KoiFengShui.BE.Controllers
     public class LifePalaceDirectionController : ControllerBase
     {
         private readonly ILifePlaceDirectionService _lifePlaceDirectionService;
+
         public LifePalaceDirectionController(ILifePlaceDirectionService lifePlaceDirectionService)
         {
             _lifePlaceDirectionService = lifePlaceDirectionService;
         }
+
         [HttpGet("GetAllMansionsAndDes")]
-        public IActionResult GetAllMansionsAndDes()
+        public async Task<IActionResult> GetAllMansionsAndDes()
         {
             try
             {
-                var sortedMansionsAndDescriptions = _lifePlaceDirectionService.GetEightMansionsAndDescriptions();
+                var sortedMansionsAndDescriptions = await _lifePlaceDirectionService.GetEightMansionsAndDescriptions();
 
-               
                 var result = sortedMansionsAndDescriptions.Select(item => new
                 {
                     EightMansions = item.EightMansions,
                     Description = item.Description
                 }).ToList();
-
-                
 
                 return Ok(result);
             }

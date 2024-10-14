@@ -1,19 +1,20 @@
 ﻿using FengShuiKoi_BO;
 using FengShuiKoi_DAO;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FengShuiKoi_Repository
 {
     public class LifePlaceRepo : ILifePlaceRepo
     {
-        public LifePalace GetLifePlaceById(string id) => LifePlaceDAO.Instance.GetLifePlaceById(id);
+        public async Task<LifePalace> GetLifePlaceById(string id) => await LifePlaceDAO.Instance.GetLifePlaceById(id);
 
-        public List<LifePalace> GetLifePlaces() => LifePlaceDAO.Instance.GetLifePlaces();
+        public async Task<List<LifePalace>> GetLifePlaces() => await LifePlaceDAO.Instance.GetLifePlaces();
 
-        public bool AddLifePlace(LifePalace lifePlace) => LifePlaceDAO.Instance.AddLifePlace(lifePlace);
+        public async Task<bool> AddLifePlace(LifePalace lifePlace) => await LifePlaceDAO.Instance.AddLifePlace(lifePlace);
 
-        public bool DeleteLifePlace(string id) => LifePlaceDAO.Instance.DeleteLifePlace(id);
+        public async Task<bool> DeleteLifePlace(string id) => await LifePlaceDAO.Instance.DeleteLifePlace(id);
 
-        public bool UpdateLifePlace(LifePalace lifePlace) => LifePlaceDAO.Instance.UpdateLifePlace(lifePlace);
+        public async Task<bool> UpdateLifePlace(LifePalace lifePlace) => await LifePlaceDAO.Instance.UpdateLifePlace(lifePlace);
     }
 }

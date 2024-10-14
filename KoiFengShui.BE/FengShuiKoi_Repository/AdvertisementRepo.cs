@@ -2,44 +2,43 @@
 using FengShuiKoi_DAO;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FengShuiKoi_Repository
 {
     public class AdvertisementRepo : IAdvertisementRepo
     {
-        public bool AddAdvertisement(Advertisement advertisement)
+        public async Task<bool> AddAdvertisement(Advertisement advertisement)
         {
-            return AdvertisementDAO.Instance.AddAdvertisement(advertisement);
+            return await AdvertisementDAO.Instance.AddAdvertisement(advertisement);
         }
 
-        public bool DeleteAdvertisement(string adID)
+        public async Task<bool> DeleteAdvertisement(string adID)
         {
-            return AdvertisementDAO.Instance.DeleteAdvertisement(adID);
+            return await AdvertisementDAO.Instance.DeleteAdvertisement(adID);
         }
 
-        public Advertisement GetAdvertisementByAdID(string AdID)
+        public async Task<Advertisement> GetAdvertisementByAdID(string AdID)
         {
-            return AdvertisementDAO.Instance.GetAdvertisementByAdID(AdID);
+            return await AdvertisementDAO.Instance.GetAdvertisementByAdID(AdID);
         }
 
-        public List<Advertisement> GetAdvertisementStatus(string status) => AdvertisementDAO.Instance.GetAdvertisementStatus(status);
+        public async Task<List<Advertisement>> GetAdvertisementStatus(string status)
+            => await AdvertisementDAO.Instance.GetAdvertisementStatus(status);
 
-        public List<Advertisement> GetAdvertisementByUserIdAndStatus(string userId, string status)
-		{
-			return AdvertisementDAO.Instance.GetAdvertisementByUserIdAndStatus(userId, status);
-		}
-
-		public List<Advertisement> GetAdvertisements()
+        public async Task<List<Advertisement>> GetAdvertisementByUserIdAndStatus(string userId, string status)
         {
-            return AdvertisementDAO.Instance.GetAdvertisements();
+            return await AdvertisementDAO.Instance.GetAdvertisementByUserIdAndStatus(userId, status);
         }
 
-		public bool UpdateAdvertisement(Advertisement updatedAdvertisement)
-		{
-            return AdvertisementDAO.Instance.UpdateAdvertisement(updatedAdvertisement);
+        public async Task<List<Advertisement>> GetAdvertisements()
+        {
+            return await AdvertisementDAO.Instance.GetAdvertisements();
+        }
+
+        public async Task<bool> UpdateAdvertisement(Advertisement updatedAdvertisement)
+        {
+            return await AdvertisementDAO.Instance.UpdateAdvertisement(updatedAdvertisement);
         }
     }
 }

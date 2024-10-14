@@ -4,6 +4,7 @@ using FengShuiKoi_Services;
 using KoiFengShui.BE.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using static KoiFengShui.BE.Controllers.CompatibilityController;
 
 namespace KoiFengShui.BE.Controllers
@@ -25,14 +26,13 @@ namespace KoiFengShui.BE.Controllers
         }
 
         [HttpGet("GetAllColor")]
-        public IActionResult GetAllColor()
+        public async Task<IActionResult> GetAllColor()
         {
             List<Color> listColor = new List<Color>();
-           
+
             try
             {
-                listColor = _colorService.GetColors();
-
+                listColor = await _colorService.GetColors();
 
                 return Ok(listColor);
             }
@@ -41,7 +41,7 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
-        
+
         public class Element_Color
         {
             public string ColorID { get; set; }
@@ -53,8 +53,9 @@ namespace KoiFengShui.BE.Controllers
             public string ElementID { get; set; }
             public double Point { get; set; }
         }
+
         [HttpPost("AddColorAndElement")]
-        public IActionResult AddColorAndElement(Element_Color colorDto)
+        public async Task<IActionResult> AddColorAndElement(Element_Color colorDto)
         {
             try
             {
@@ -68,7 +69,7 @@ namespace KoiFengShui.BE.Controllers
                     return BadRequest("Vui lòng nhập điểm cho các bản mệnh!");
                 }
 
-                if (_colorService.GetColorById(colorDto.ColorID) != null)
+                if (await _colorService.GetColorById(colorDto.ColorID) != null)
                 {
                     return BadRequest("Màu này đã tồn tại.");
                 }
@@ -77,13 +78,12 @@ namespace KoiFengShui.BE.Controllers
                 {
                     ColorId = colorDto.ColorID
                 };
-                bool result = _colorService.AddColor(newColor);
+                bool result = await _colorService.AddColor(newColor);
                 if (!result)
                 {
                     return BadRequest("Thêm màu mới thất bại");
                 }
 
-                
                 foreach (var elementPoint in colorDto.ElementPoint)
                 {
                     if (elementPoint.Point < 0.25 || elementPoint.Point > 1)
@@ -91,7 +91,7 @@ namespace KoiFengShui.BE.Controllers
                         return BadRequest($"Điểm cho bản mệnh {elementPoint.ElementID} phải nằm trong khoảng 0.25 đến 1.");
                     }
 
-                    if (_elementService.GetElementAndMutualism(elementPoint.ElementID) == null)
+                    if (await _elementService.GetElementAndMutualism(elementPoint.ElementID) == null)
                     {
                         return BadRequest($"Không tìm thấy bản mệnh: {elementPoint.ElementID}.");
                     }
@@ -103,14 +103,12 @@ namespace KoiFengShui.BE.Controllers
                         ColorPoint = elementPoint.Point
                     };
 
-                    bool result2 = _elementColorService.AddElementColor(newElementColor);
+                    bool result2 = await _elementColorService.AddElementColor(newElementColor);
                     if (!result2)
                     {
                         return BadRequest($"Thêm ElementColor thất bại cho ElementID: {elementPoint.ElementID}");
                     }
-                   
                 }
-                  
 
                 if (result)
                 {
@@ -129,30 +127,29 @@ namespace KoiFengShui.BE.Controllers
         }
 
         [HttpDelete("DeleteColor/{colorId}")]
-        public IActionResult DeleteColor(string colorId)
+        public async Task<IActionResult> DeleteColor(string colorId)
         {
             try
             {
-
-                var existingcolorId = _colorService.GetColorById(colorId);
+                var existingcolorId = await _colorService.GetColorById(colorId);
                 if (existingcolorId == null)
                 {
                     return NotFound("Không tìm thấy màu tương ứng.");
                 }
-                bool result3 =false;
-                var existingElementColor = _elementColorService.GetElementColorByColorId(colorId);
+                bool result3 = false;
+                var existingElementColor = await _elementColorService.GetElementColorByColorId(colorId);
                 if (existingElementColor != null)
                 {
-                    result3 = _elementColorService.DeleteElementColorByColorId(colorId);
+                    result3 = await _elementColorService.DeleteElementColorByColorId(colorId);
                 }
                 bool result2 = false;
-                var existingTypeColors = _typeColorService.GetTypeByColor(colorId);
+                var existingTypeColors = await _typeColorService.GetTypeByColor(colorId);
                 if (existingTypeColors != null && existingTypeColors.Any())
                 {
-                   result2 = _typeColorService.DeleteTypeColorByColorId(colorId);
+                    result2 = await _typeColorService.DeleteTypeColorByColorId(colorId);
                 }
-                bool result = _colorService.DeleteColor(colorId);
-                
+                bool result = await _colorService.DeleteColor(colorId);
+
                 if (result)
                 {
                     return Ok("Xóa Màu thành công");
@@ -161,7 +158,6 @@ namespace KoiFengShui.BE.Controllers
                 {
                     return BadRequest("Xóa Màu thất bại");
                 }
-
             }
             catch (Exception ex)
             {

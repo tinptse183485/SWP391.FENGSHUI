@@ -2,24 +2,31 @@
 using FengShuiKoi_DAO;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FengShuiKoi_Repository
 {
-	public class AccountRepo : IAccountRepo
-	{
-		public bool AddAccount(Account account) => AccountDAO.Instance.AddAccount(account);
+    public class AccountRepo : IAccountRepo
+    {
+        public async Task<bool> AddAccount(Account account)
+            => await AccountDAO.Instance.AddAccount(account);
 
-		public bool DeleteAccount(string userId) => AccountDAO.Instance.DeleteAccount(userId);
+        public async Task<bool> DeleteAccount(string userId)
+            => await AccountDAO.Instance.DeleteAccount(userId);
 
-		public Account GetAccountByEmail(string email) => AccountDAO.Instance.GetAccountByEmail(email);
+        public async Task<Account> GetAccountByEmail(string email)
+            => await AccountDAO.Instance.GetAccountByEmail(email);
 
-		public Account GetAccountByUserID(string userid)=> AccountDAO.Instance.GetAccountByUserID(userid);
+        public async Task<Account> GetAccountByUserID(string userid)
+            => await AccountDAO.Instance.GetAccountByUserID(userid);
 
-		public List<Account> GetAllAccounts()=> AccountDAO.Instance.GetAccounts();
-        public bool UpdateAccountByUser(Account newAccountData) => AccountDAO.Instance.UpdateAccountByUser(newAccountData);
-        public bool UpdateAccountByAdmin(Account newAccountData) => AccountDAO.Instance.UpdateAccountByAdmin(newAccountData);
-	}
+        public async Task<List<Account>> GetAllAccounts()
+            => await AccountDAO.Instance.GetAccounts();
+
+        public async Task<bool> UpdateAccountByUser(Account newAccountData)
+            => await AccountDAO.Instance.UpdateAccountByUser(newAccountData);
+
+        public async Task<bool> UpdateAccountByAdmin(Account newAccountData)
+            => await AccountDAO.Instance.UpdateAccountByAdmin(newAccountData);
+    }
 }

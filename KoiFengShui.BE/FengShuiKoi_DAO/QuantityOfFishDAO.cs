@@ -1,4 +1,5 @@
 ﻿using FengShuiKoi_BO;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,11 +31,9 @@ namespace FengShuiKoi_DAO
             dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
         }
 
-        public QuantityOfFish getQuantityByElement(string element)
+        public async Task<QuantityOfFish> getQuantityByElement(string element)
         {
-            return dbContext.QuantityOfFishes.SingleOrDefault(m => m.ElementId.Equals(element));
+            return await dbContext.QuantityOfFishes.SingleOrDefaultAsync(m => m.ElementId.Equals(element));
         }
-
-
     }
 }

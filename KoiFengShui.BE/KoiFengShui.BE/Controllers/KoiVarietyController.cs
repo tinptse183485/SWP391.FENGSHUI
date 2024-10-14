@@ -2,15 +2,14 @@
 using FengShuiKoi_Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
+using System.Threading.Tasks;
 using System.Linq;
-
 using System.Xml.Linq;
 using static KoiFengShui.BE.Controllers.ColorController;
+using System.Drawing;
 
 namespace KoiFengShui.BE.Controllers
 {
-
     [Route("api/[controller]")]
     [ApiController]
     public class KoiVarietyController : ControllerBase
@@ -32,14 +31,15 @@ namespace KoiFengShui.BE.Controllers
             _typeColorService = typeColorService;
             _elementColorService = elementColorService;
         }
+
         [HttpGet("GetQuantityByDOB")]
-        public IActionResult GetQuantityByElement(string dob)
+        public async Task<IActionResult> GetQuantityByElement(string dob)
         {
             int year = int.Parse(dob.Substring(0, 4));
             try
             {
-                string element = _elementService.GetElementByBirthYear(year);
-                var quantity = _QuantityService.getQuantityByElement(element);
+                string element =  _elementService.GetElementByBirthYear(year);
+                var quantity = await _QuantityService.getQuantityByElement(element);
                 return Ok(quantity);
             }
             catch (Exception ex)
@@ -47,17 +47,18 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
+
         [HttpGet("GetListKoiByDOBOrder")]
-        public IActionResult GetListKoiByDOBOrder(string dob)
+        public async Task<IActionResult> GetListKoiByDOBOrder(string dob)
         {
             List<KoiVariety> listKoi = new List<KoiVariety>();
             int year = int.Parse(dob.Substring(0, 4));
             try
             {
-                string element = _elementService.GetElementByBirthYear(year);
-                var mutual = _elementService.GetElementAndMutualism(element);
-                var list1 = _koiVarietyService.GetKoiVarietiesByElemnet(mutual.Mutualism);
-                var list2 = _koiVarietyService.GetKoiVarietiesByElemnet(element);
+                string element =  _elementService.GetElementByBirthYear(year);
+                var mutual = await _elementService.GetElementAndMutualism(element);
+                var list1 = await _koiVarietyService.GetKoiVarietiesByElemnet(mutual.Mutualism);
+                var list2 = await _koiVarietyService.GetKoiVarietiesByElemnet(element);
                 listKoi.AddRange(list1);
                 listKoi.AddRange(list2);
                 return Ok(listKoi);
@@ -67,16 +68,17 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
+
         [HttpGet("GetListKoiByDOBOrderS1")]
-        public IActionResult GetListKoiByDOBOrderS1(string dob)
+        public async Task<IActionResult> GetListKoiByDOBOrderS1(string dob)
         {
             int year = int.Parse(dob.Substring(0, 4));
             try
             {
-                string element = _elementService.GetElementByBirthYear(year);
-                var mutual = _elementService.GetElementAndMutualism(element);
-                var list1 = _koiVarietyService.GetKoiVarietiesByElemnet(mutual.Mutualism);
-                var list2 = _koiVarietyService.GetKoiVarietiesByElemnet(element);
+                string element =  _elementService.GetElementByBirthYear(year);
+                var mutual = await _elementService.GetElementAndMutualism(element);
+                var list1 = await _koiVarietyService.GetKoiVarietiesByElemnet(mutual.Mutualism);
+                var list2 = await _koiVarietyService.GetKoiVarietiesByElemnet(element);
 
                 var allKoi = new List<KoiVariety>();
                 allKoi.AddRange(list1);
@@ -86,12 +88,12 @@ namespace KoiFengShui.BE.Controllers
 
                 foreach (var koi in allKoi)
                 {
-                    var koiColors = _typeColorService.GetColorsAndPercentages(koi.KoiType);
+                    var koiColors = await _typeColorService.GetColorsAndPercentages(koi.KoiType);
                     double totalScore = 0;
 
                     foreach (var color in koiColors)
                     {
-                        var pointForColor = _elementColorService.GetPointElementColor(element, color.ColorId);
+                        var pointForColor = await _elementColorService.GetPointElementColor(element, color.ColorId);
                         totalScore += pointForColor * color.Percentage;
                     }
 
@@ -108,16 +110,39 @@ namespace KoiFengShui.BE.Controllers
             }
         }
 
-
         [HttpGet("GetAllKoi")]
-        public IActionResult GetAllKoiVarieties()
+        public async Task<IActionResult> GetAllKoiVarieties()
         {
             List<KoiVariety> listKoi = new List<KoiVariety>();
 
             try
             {
+                listKoi = await _koiVarietyService.GetKoiVarieties();
+                return Ok(listKoi);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
+            }
+        }
 
-                listKoi = _koiVarietyService.GetKoiVarieties();
+        [HttpGet("GetListKoiByColor")]
+        public async Task<IActionResult> GetListKoiByColor(string color)
+        {
+            List<KoiVariety> listKoi = new List<KoiVariety>();
+            try
+            {
+                List<TypeColor> listTypeColor = await _typeColorService.GetTypeByColor(color);
+
+                foreach (TypeColor typeColor in listTypeColor)
+                {
+                    KoiVariety koiVariety = await _koiVarietyService.GetKoiVarietyByType(typeColor.KoiType);
+
+                    if (koiVariety != null)
+                    {
+                        listKoi.Add(koiVariety);
+                    }
+                }
 
                 return Ok(listKoi);
             }
@@ -126,34 +151,7 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
-        [HttpGet("GetListKoiByColor")]
-        public IActionResult GetListKoiByColor(string color)
-        {
-            List<KoiVariety> listKoi = new List<KoiVariety>();
-            try
-            {
-                List<TypeColor> listTypeColor = _typeColorService.GetTypeByColor(color);
 
-                foreach (TypeColor typeColor in listTypeColor)
-                {
-
-                    KoiVariety koiVariety = _koiVarietyService.GetKoiVarietyByType(typeColor.KoiType);
-
-
-                    if (koiVariety != null)
-                    {
-                        listKoi.Add(koiVariety);
-                    }
-                }
-
-                return Ok(listKoi); // Return the correct variable
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
-            }
-
-        }
         public class AddKoiTypeColor
         {
             public string KoiType { get; set; }
@@ -181,11 +179,10 @@ namespace KoiFengShui.BE.Controllers
             return true;
         }
         [HttpPost("AddKoiAndTypeColor")]
-        public IActionResult AddKoiAndTypeColor([FromBody] AddKoiTypeColor koiFish)
+        public async Task<IActionResult> AddKoiAndTypeColor([FromBody] AddKoiTypeColor koiFish)
         {
             try
             {
-
                 if (string.IsNullOrWhiteSpace(koiFish.KoiType))
                 {
                     return BadRequest("Vui lòng nhập loại cá Koi!");
@@ -196,11 +193,12 @@ namespace KoiFengShui.BE.Controllers
                     return BadRequest("Vui lòng nhập ít nhất một màu và tỷ lệ!");
                 }
 
-                if (_elementService.GetElementAndMutualism(koiFish.Element) == null)
+
+                if (await _elementService.GetElementAndMutualism(koiFish.Element) == null)
                 {
                     return BadRequest("Không có sinh mệnh này.");
                 }
-                if (_koiVarietyService.GetKoiVarietyByType(koiFish.KoiType) != null)
+                if (await _koiVarietyService.GetKoiVarietyByType(koiFish.KoiType) != null)
                 {
                     return BadRequest("Loại cá Koi này đã tồn tại.");
                 }
@@ -209,6 +207,7 @@ namespace KoiFengShui.BE.Controllers
                 {
                     return BadRequest("Chỉ được chọn 1 màu 1 lần");
                 }
+
                 double totalPercentage = 0;
                 foreach (var color in koiFish.Colors)
                 {
@@ -244,7 +243,11 @@ namespace KoiFengShui.BE.Controllers
                     Element = koiFish.Element,
                 };
 
-                bool koiTypeAdded = _koiVarietyService.AddKoiVariety(newKoiType);
+
+
+              
+
+                bool koiTypeAdded = await _koiVarietyService.AddKoiVariety(newKoiType);
                 if (!koiTypeAdded)
                 {
                     return BadRequest("Thêm loại cá Koi mới thất bại.");
@@ -260,14 +263,13 @@ namespace KoiFengShui.BE.Controllers
                         Percentage = color.Percentage
                     };
 
-                    bool colorAdded = _typeColorService.AddKoiTypeColor(koiTypeColor);
+                    bool colorAdded = await _typeColorService.AddKoiTypeColor(koiTypeColor);
                     if (colorAdded)
                     {
                         addedColors.Add(color);
                     }
                     else
                     {
-
                         return BadRequest($"Thêm màu {color.ColorId} cho loại cá Koi thất bại.");
                     }
                 }
@@ -279,22 +281,22 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, "Lỗi máy chủ. Vui lòng thử lại sau.");
             }
         }
+
         [HttpPut("UpdateKoiAndTypeColor")]
-        public IActionResult UpdateKoiAndTypeColor([FromBody] AddKoiTypeColor koiFish)
+        public async Task<IActionResult> UpdateKoiAndTypeColor([FromBody] AddKoiTypeColor koiFish)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(koiFish.KoiType))
-                {
-                    return BadRequest("Vui lòng nhập loại cá Koi!");
-                }
+        if (string.IsNullOrWhiteSpace(koiFish.KoiType))
+        {
+            return BadRequest("Vui lòng nhập loại cá Koi!");
+        }
 
-                var existingKoi = _koiVarietyService.GetKoiVarietyByType(koiFish.KoiType);
+        var existingKoi = await _koiVarietyService.GetKoiVarietyByType(koiFish.KoiType);
                 if (existingKoi == null)
                 {
                     return NotFound($"Không tìm thấy loại cá Koi: {koiFish.KoiType}");
                 }
-
                 if (koiFish.Colors == null || koiFish.Colors.Count == 0)
                 {
                     return BadRequest("Vui lòng nhập ít nhất một màu và tỷ lệ!");
@@ -338,19 +340,19 @@ namespace KoiFengShui.BE.Controllers
                 }
 
 
+
+
                 existingKoi.Image = koiFish.Image;
                 existingKoi.Description = koiFish.Description;
                 existingKoi.Element = koiFish.Element;
 
-                bool koiTypeUpdated = _koiVarietyService.UpdateKoiVariety(existingKoi);
+                bool koiTypeUpdated = await _koiVarietyService.UpdateKoiVariety(existingKoi);
                 if (!koiTypeUpdated)
                 {
                     return BadRequest("Cập nhật loại cá Koi thất bại.");
                 }
 
-
-                _typeColorService.DeleteTypeColorByKoiType(koiFish.KoiType);
-
+                await _typeColorService.DeleteTypeColorByKoiType(koiFish.KoiType);
 
                 var updatedColors = new List<TypeColorOfFish>();
                 foreach (var color in koiFish.Colors)
@@ -362,7 +364,7 @@ namespace KoiFengShui.BE.Controllers
                         Percentage = color.Percentage
                     };
 
-                    bool colorAdded = _typeColorService.AddKoiTypeColor(koiTypeColor);
+                    bool colorAdded = await _typeColorService.AddKoiTypeColor(koiTypeColor);
                     if (colorAdded)
                     {
                         updatedColors.Add(color);
@@ -380,8 +382,9 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, "Lỗi máy chủ. Vui lòng thử lại sau.");
             }
         }
+
         [HttpDelete("DeleteKoiAndTypeColor/{KoiType}")]
-        public IActionResult DeleteKoiAndTypeColor(string KoiType)
+        public async Task<IActionResult> DeleteKoiAndTypeColor(string KoiType)
         {
             try
             {
@@ -390,19 +393,18 @@ namespace KoiFengShui.BE.Controllers
                     return BadRequest("Vui lòng điền loại cá");
                 }
 
-                var existingKoi = _koiVarietyService.GetKoiVarietyByType(KoiType);
+                var existingKoi = await _koiVarietyService.GetKoiVarietyByType(KoiType);
                 if (existingKoi == null)
                 {
                     return NotFound("Không tìm thấy cá tương ứng.");
                 }
-                var existingTypeColorPoint = _typeColorService.GetTypeByKoiType(KoiType);
+                var existingTypeColorPoint = await _typeColorService.GetTypeByKoiType(KoiType);
                 if (existingTypeColorPoint?.Any() == true)
                 {
-                    _typeColorService.DeleteTypeColorByKoiType(KoiType);
+                    await _typeColorService.DeleteTypeColorByKoiType(KoiType);
                 }
 
-
-                bool result = _koiVarietyService.DeleteKoiVariety((KoiType));
+                bool result = await _koiVarietyService.DeleteKoiVariety((KoiType));
 
                 if (result)
                 {
@@ -412,7 +414,6 @@ namespace KoiFengShui.BE.Controllers
                 {
                     return BadRequest($"Xóa cá Koi {KoiType} thất bại");
                 }
-
             }
             catch (Exception ex)
             {

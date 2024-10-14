@@ -1,23 +1,19 @@
 ﻿using FengShuiKoi_BO;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FengShuiKoi_Services
 {
     public interface IAdsPackageService
     {
-        public AdsPackage GetAdsPackageByAdIDRank(string AdID, string Rank);
-
-		public List<AdsPackage> GetListAdsPackageByAdID(string AdID);
-        public List<AdsPackage> GetListAdsPackageByRank(string Rank);
-        public Dictionary<string, double> GetRevenueByPackage();
-		public List<AdsPackage> GetAdsPackages();
-        public bool AddAdsPackage(AdsPackage ads);
-        public bool UpdateAdsPackage(AdsPackage newAdsPackage);
-
-		public bool DeleteAdsPackage(string AdID, string Rank);
+        Task<AdsPackage> GetAdsPackageByAdIDRank(string AdID, string Rank);
+        Task<List<AdsPackage>> GetListAdsPackageByAdID(string AdID);
+        Task<List<AdsPackage>> GetListAdsPackageByRank(string Rank);
+        Task<Dictionary<string, double>> GetRevenueByPackage();
+        Task<List<AdsPackage>> GetAdsPackages();
+        Task<bool> AddAdsPackage(AdsPackage ads);
+        Task<bool> UpdateAdsPackage(AdsPackage newAdsPackage);
+        Task<bool> DeleteAdsPackage(string AdID, string Rank);
     }
 }
