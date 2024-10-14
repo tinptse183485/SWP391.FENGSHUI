@@ -39,9 +39,9 @@ namespace FengShuiKoi_Services
 		{
 			return iAccountRepo.GetAllAccounts();
 		}
-        public bool UpdateAccountByUser(Account newAccountData) => iAccountRepo.UpdateAccountByUser(newAccountData);
-        public bool UpdateAccountByAdmin(Account newAccountData)
-        {
+		public bool UpdateAccountByUser(Account newAccountData) => iAccountRepo.UpdateAccountByUser(newAccountData);
+		public bool UpdateAccountByAdmin(Account newAccountData)
+		{
 			return (iAccountRepo.UpdateAccountByAdmin(newAccountData));
 		}
 	}
