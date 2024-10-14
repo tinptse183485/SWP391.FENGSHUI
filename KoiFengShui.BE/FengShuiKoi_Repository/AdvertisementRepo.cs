@@ -32,7 +32,7 @@ namespace FengShuiKoi_Repository
             return await AdvertisementDAO.Instance.GetAdvertisementByUserIdAndStatus(userId, status);
         }
 
-		public List<Advertisement> GetAdvertisementByUserID(string userdID) => AdvertisementDAO.Instance.GetAdvertisementByUserID(userdID);
+		public async Task<List<Advertisement>> GetAdvertisementByUserID(string userdID) => await AdvertisementDAO.Instance.GetAdvertisementByUserID(userdID);
 
 
         public async Task<List<Advertisement>> GetAdvertisements()
@@ -45,7 +45,7 @@ namespace FengShuiKoi_Repository
             return await AdvertisementDAO.Instance.UpdateAdvertisement(updatedAdvertisement);
         }
 
-		public List<Advertisement> GetExpiredAdvertisements() => AdvertisementDAO.Instance.GetExpiredAdvertisements();
+		public async Task<List<Advertisement>> GetExpiredAdvertisements() => await AdvertisementDAO.Instance.GetExpiredAdvertisements();
 
 	}
 }

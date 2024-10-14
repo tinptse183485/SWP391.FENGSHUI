@@ -16,8 +16,8 @@ namespace FengShuiKoi_Services
         Task<List<Advertisement>> GetAdvertisementByUserIdAndStatus(string userId, string status);
         Task<List<Advertisement>> GetAdvertisementStatus(string status);
 
-        public List<Advertisement> GetAdvertisementByUserID(string userdID);
-        public void UpdateExpiredAdvertisements();
+        public Task<List<Advertisement>> GetAdvertisementByUserID(string userdID);
+        public Task UpdateExpiredAdvertisementsAsync();
 
 	}
 }

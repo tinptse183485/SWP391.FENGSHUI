@@ -119,7 +119,7 @@ namespace KoiFengShui.BE.Controllers
                 List<AdsPackage> list = await _adsPackageService.GetListAdsPackageByRank(rank);
                 foreach (AdsPackage ad in list)
                 {
-                    Advertisement ads = _advertisementService.GetAdvertisementByAdID(ad.AdId);
+                    Advertisement ads = await _advertisementService.GetAdvertisementByAdID(ad.AdId);
                     if (ad.StartDate <= DateTime.Now && ad.ExpiredDate >= DateTime.Now && ads.Status.Equals("Approved"))
                     {
 
@@ -352,7 +352,6 @@ namespace KoiFengShui.BE.Controllers
                 }
                 else
                 {
-                    advertise.ElementId = elementID;
                     advertise.Status = status;
                     bool check = await _advertisementService.UpdateAdvertisement(advertise);
                     if (check)
@@ -404,35 +403,7 @@ namespace KoiFengShui.BE.Controllers
 
         
 
-		[HttpPut("UpdateAdvertisementStatus")]
-		public IActionResult UpdateAdvertisementStatus(string adId, string status)
-		{
-			try
-			{
-				var advertise = _advertisementService.GetAdvertisementByAdID(adId);
-				if (advertise == null)
-				{
-					return BadRequest("Không tìm thấy bài quảng cáo");
-				}
-				else
-				{
-					advertise.Status = status;
-					bool check = _advertisementService.UpdateAdvertisement(advertise);
-					if (check)
-					{
-						return Ok("Cập nhật thành công");
-					}
-					else
-					{
-						return BadRequest("Cập nhật thất bại");
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-				return StatusCode(500, $"Lỗi server: {ex.Message}");
-			}
-		}
+		
 
 
 	[HttpPut("UpdateAdvertisement")]

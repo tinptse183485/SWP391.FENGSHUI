@@ -85,7 +85,7 @@ namespace FengShuiKoi_DAO
                 if (existingAccount == null) return false;
 
                 existingAccount.Status = newAccountData.Status;
-                existingAccount.Password = newAccountData.Password;
+               
 
                 dbContext.Entry(existingAccount).State = EntityState.Modified;
                 await dbContext.SaveChangesAsync();

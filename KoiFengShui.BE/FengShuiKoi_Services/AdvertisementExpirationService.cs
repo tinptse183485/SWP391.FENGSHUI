@@ -29,7 +29,7 @@ namespace FengShuiKoi_Services
 						scope.ServiceProvider
 							.GetRequiredService<IAdvertisementService>();
 
-					advertisementService.UpdateExpiredAdvertisements();
+					advertisementService.UpdateExpiredAdvertisementsAsync();
 				}
 				await Task.Delay(_checkInterval, stoppingToken);
 			}

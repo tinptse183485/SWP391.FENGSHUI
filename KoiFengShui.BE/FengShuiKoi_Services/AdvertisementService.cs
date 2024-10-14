@@ -35,7 +35,7 @@ namespace FengShuiKoi_Services
             return await iAdvertisementRepo.GetAdvertisementByUserIdAndStatus(userId, status);
         }
 
-		public List<Advertisement> GetAdvertisementByUserID(string userdID) => iAdvertisementRepo.GetAdvertisementByUserID(userdID);
+		public async Task<List<Advertisement>> GetAdvertisementByUserID(string userdID) => await iAdvertisementRepo.GetAdvertisementByUserID(userdID);
 		
 
 
@@ -50,9 +50,9 @@ namespace FengShuiKoi_Services
         }
 
 
-		public void UpdateExpiredAdvertisements()
+		public async Task UpdateExpiredAdvertisementsAsync()
 		{
-			var expiredAds = iAdvertisementRepo.GetExpiredAdvertisements();
+			var expiredAds = await iAdvertisementRepo.GetExpiredAdvertisements();
 			foreach (var ad in expiredAds)
 			{
 				ad.Status = "Expired";

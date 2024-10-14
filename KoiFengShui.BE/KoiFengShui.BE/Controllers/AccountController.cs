@@ -116,11 +116,6 @@ namespace KoiFengShui.BE.Controllers
                     return BadRequest("Tài khoản không tồn tại");
                 }
 
-                if (string.IsNullOrWhiteSpace(Account.Password))
-                {
-                    return BadRequest("Mật khẩu không được để trống");
-                }
-
                 if (string.IsNullOrWhiteSpace(Account.status))
                 {
                     return BadRequest("Trạng thái không được để trống");
