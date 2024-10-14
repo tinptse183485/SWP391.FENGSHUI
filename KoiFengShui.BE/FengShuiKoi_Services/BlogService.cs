@@ -35,7 +35,7 @@ namespace FengShuiKoi_Services
         {
            return blogRepo.GetBlogs();
         
-    }
+        }
         public string GetLastBlogId() =>blogRepo.GetLastBlogId();
         public bool UpdateBlog(Blog BlogID)
         {
