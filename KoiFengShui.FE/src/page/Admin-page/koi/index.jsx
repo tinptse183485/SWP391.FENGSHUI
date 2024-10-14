@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react"; // Thêm useEffect và useState
-// import "./index.css";
 import api from "../../../config/axios";
-
 import {
   Button,
   Form,
@@ -89,26 +87,27 @@ const Koi = () => {
 
   const columns = [
     {
-      title: "Koi Type",
+      title: "Giống cá Koi",
       dataIndex: "koiType",
     },
     {
-      title: "Image",
+      title: "Hình ảnh",
       dataIndex: "image",
       render: (image) => {
         return <Image src={image} alt="" width={100}></Image>;
       },
     },
     {
-      title: "Element",
+      title: "Mệnh của cá",
       dataIndex: "element",
     },
     {
-      title: "Description",
+      title: "Thông tin giới thiệu",
       dataIndex: "description",
+      width: 450,
     },
     {
-      title: "Colors",
+      title: "Màu sắc",
       dataIndex: "colors",
       render: (colors) => (
         <ul>
@@ -121,25 +120,27 @@ const Koi = () => {
       ),
     },
     {
-      title: "Action",
+      title: "Hành động",
       dataIndex: "koiType",
       key: "koiType",
+      width: 150, 
       render: (_, koi) => (
         <>
           <Button
             type="primary"
             onClick={() => handleEdit(koi)}
           >
-            Edit
+            Chỉnh sửa
           </Button>
-
           <Popconfirm
             title="Xóa cá Koi"
             description="Bạn có chắc muốn xóa loại cá này?"
             onConfirm={() => handleDeleteKoi(koi.koiType)}
+            okButtonProps={{ size: 'small' }}
+            cancelButtonProps={{ size: 'small' }}
           >
             <Button type="primary" danger>
-              Delete
+              Xóa cá Koi
             </Button>
           </Popconfirm>
         </>

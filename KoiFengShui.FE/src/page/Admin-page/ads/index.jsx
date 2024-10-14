@@ -1,31 +1,48 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../config/axios";
-import { Table, Button, message, Image, Typography, Space } from "antd";
+import { Table, Button, message, Image, Typography, Space, Menu } from "antd";
 import { useNavigate } from "react-router-dom";
 const { Text } = Typography;
 
 const Ads = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]); // Khởi tạo state để lưu trữ dữ liệu
+  const [filteredData, setFilteredData] = useState([]);
+  const [selectedStatus, setSelectedStatus] = useState("all");
+
+  const menuItems = [
+    { key: "all", label: "Tất cả" },
+    { key: "Pending", label: "Đang chờ" },
+    { key: "Approved", label: "Đã duyệt" },
+    { key: "Canceled", label: "Đã hủy" },
+    { key: "Refunded", label: "Đã hoàn tiền" },
+  ];
+
   const fetchData = async () => {
     const response = await api.get("Advertisement/GetAllAdvertisement");
     setData(response.data);
+    filterAds("all");
   };
+
   useEffect(() => {
     fetchData();
   }, []);
-  const handleUpdateStatus = async (adId, status) => {
-    try {
-      await api.put(
-        `Advertisement/UpdateAdvertisementStatus?adId=${adId}&status=${status}`
-      );
-      message.success(
-        `Đã cập nhật trạng thái thành của bài quảng cáo ${adId} thành ${status}`
-      );
-      fetchData(); // Tải lại dữ liệu sau khi cập nhật
-    } catch (error) {
-      message.error("Có lỗi xảy ra khi cập nhật trạng thái");
+
+  useEffect(() => {
+    filterAds(selectedStatus);
+  }, [selectedStatus, data]);
+
+  const filterAds = (status) => {
+    if (status === "all") {
+      setFilteredData(data);
+    } else {
+      const filtered = data.filter((ad) => ad.status === status);
+      setFilteredData(filtered);
     }
+  };
+
+  const handleMenuClick = (e) => {
+    setSelectedStatus(e.key);
   };
 
   const statusPriority = {
@@ -36,7 +53,7 @@ const Ads = () => {
   };
   const columns = [
     {
-      title: "AdID",
+      title: "Quảng cáo",
       dataIndex: "adId",
       key: "adId",
       render: (text) => <Text strong>{text}</Text>,
@@ -101,22 +118,25 @@ const Ads = () => {
       key: "action",
       width: 200,
       render: (_, record) => {
+        const isApproved = record.status === "Approved";
         const isRefunded = record.status === "Refunded";
+        const isCanceled = record.status === "Canceled";
+        const isDisabled = isApproved || isRefunded || isCanceled;
         return (
           <Space size="small" direction="vertical">
             <Button
               type="primary"
               onClick={() => handleUpdateStatus(record.adId, "Approved")}
-              disabled={record.status === "Approved" || isRefunded}
+              disabled={isDisabled}
             >
               Phê duyệt
             </Button>
-            {record.status === "Canceled" ? (
+            {isCanceled ? (
               <Button
                 type="primary"
                 danger
                 onClick={() => handleUpdateStatus(record.adId, "Refunded")}
-                disabled={isRefunded}
+                disabled={isApproved || isRefunded}
               >
                 Hoàn trả
               </Button>
@@ -125,7 +145,7 @@ const Ads = () => {
                 type="primary"
                 danger
                 onClick={() => handleUpdateStatus(record.adId, "Canceled")}
-                disabled={isRefunded}
+                disabled={isApproved || isRefunded}
               >
                 Hủy bỏ
               </Button>
@@ -138,7 +158,17 @@ const Ads = () => {
   return (
     <div>
       <h1>Quản lý quảng cáo</h1>
-      <Table dataSource={data} columns={columns}/>
+      <Menu
+        mode="horizontal"
+        selectedKeys={[selectedStatus]}
+        onClick={handleMenuClick}
+        style={{ marginBottom: 16 }}
+      >
+        {menuItems.map((item) => (
+          <Menu.Item key={item.key}>{item.label}</Menu.Item>
+        ))}
+      </Menu>
+      <Table dataSource={filteredData} columns={columns} />
     </div>
   );
 };

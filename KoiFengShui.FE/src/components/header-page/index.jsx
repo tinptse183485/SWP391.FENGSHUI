@@ -9,18 +9,22 @@ import { useNavigate } from "react-router-dom";
 function HeaderTemplate() {
   const navigate = useNavigate();
   const [userId, setUserId] = useState(null);
+  const [userRole, setUserRole] = useState(null);
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
   useEffect(() => {
     const user = localStorage.getItem("userId");
+    const role = localStorage.getItem("role");
     if (user) {
       setUserId(user);
+      setUserRole(role);
     }
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("userId");
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
     setUserId(null);
     navigate("/");
   };
@@ -34,7 +38,12 @@ function HeaderTemplate() {
 
   const menu = (
     <Menu onClick={handleMenuClick}>
-      <Menu.Item key="logout">Logout</Menu.Item>
+      {userRole === "Admin" && (
+        <Menu.Item key="dashboard">
+          <Link to="/dashboard">Dashboard</Link>
+        </Menu.Item>
+      )}
+      <Menu.Item key="logout">Đăng xuất</Menu.Item>
     </Menu>
   );
 

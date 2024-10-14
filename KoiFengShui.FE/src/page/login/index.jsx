@@ -34,6 +34,7 @@ function Login() {
       const { role, token, userId } = response.data;
       localStorage.setItem("token", token);
       localStorage.setItem("userId", userId);
+      localStorage.setItem("role", role);
 
 
       if (role === "ADMIN") {
@@ -53,6 +54,7 @@ function Login() {
       const { role, token, userId } = response.data;
       localStorage.setItem("token", token);
       localStorage.setItem("userId", userId);
+      localStorage.setItem("role", role);
       if (role === "Admin") {
         navigate("/dashboard");
       } else {

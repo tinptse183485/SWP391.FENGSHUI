@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Layout, Menu, Table, Button, Popconfirm, message } from "antd";
+import {  Layout, Menu, Table, Button, Popconfirm, message, Typography, Space } from "antd";
 import { useNavigate } from "react-router-dom";
-import Header_page from "../../../components/header-page";
 import api from "../../../config/axios";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import "./index.css";
 import { toast } from "react-toastify";
-
-const { Content } = Layout;
-
+const { Text } = Typography;
 const Blog = () => {
   const navigate = useNavigate();
   const [blogs, setBlogs] = useState([]);
@@ -69,19 +66,23 @@ const Blog = () => {
     }
   };
 
+  const statusPriority = {
+    Draft: 1,
+    Published: 2
+  };
   const columns = [
     {
-      title: "BlogId",
+      title: "Blog",
       dataIndex: "blogId",
       key: "blogId",
     },
     {
-      title: "Heading",
+      title: "Tiêu đề",
       dataIndex: "heading",
       key: "heading",
     },
     {
-      title: "Image",
+      title: "Hình ảnh",
       dataIndex: "image",
       key: "image",
       render: (_, record) => (
@@ -110,9 +111,20 @@ const Blog = () => {
       ),
     },
     {
-      title: "Status",
+      title: "Trạng thái",
       dataIndex: "status",
       key: "status",
+      render: (status) => (
+        <Text
+          style={{
+            color: status === "Published" ? "#52c41a" : "#1890ff",
+          }}
+        >
+          {status}
+        </Text>
+      ),
+      sorter: (a, b) => statusPriority[a.status] - statusPriority[b.status],
+      defaultSortOrder: 'ascend',
     },
     {
       title: "Hành động",
@@ -148,7 +160,6 @@ const Blog = () => {
           Tạo Blog
         </button>
         <Menu
-        className="menu"
         theme="light"
         mode="horizontal"
         selectedKeys={[selectedStatus]}
