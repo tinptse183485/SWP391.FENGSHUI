@@ -83,10 +83,6 @@ namespace KoiFengShui.BE.Controllers
 					return BadRequest("Tài khoản không tồn tại");
 				}
 
-				if (string.IsNullOrWhiteSpace(Account.Password))
-				{
-					return BadRequest("Mật khẩu không được để trống");
-				}
 				if (string.IsNullOrWhiteSpace(Account.Email))
 				{
 					return BadRequest("Email không được để trống");
@@ -101,8 +97,15 @@ namespace KoiFengShui.BE.Controllers
 				{
 					return BadRequest("Email đã tồn tại");
 				}
-				existingAccount.Password = Account.Password;
+
+				// Chỉ cập nhật mật khẩu nếu người dùng cung cấp mật khẩu mới
+				if (!string.IsNullOrWhiteSpace(Account.Password))
+				{
+					existingAccount.Password = BCrypt.Net.BCrypt.HashPassword(Account.Password);
+				}
+
 				existingAccount.Email = Account.Email;
+
 				var existingMember = _memberService.GetMemberByUserID(Account.UserID);
 				if (existingMember != null)
 				{
@@ -132,14 +135,10 @@ namespace KoiFengShui.BE.Controllers
 		{
 			try
 			{
-				if (_accountService.GetAccountByUserID(Account.UserID) == null)
+				var existingAccount = _accountService.GetAccountByUserID(Account.UserID);
+				if (existingAccount == null)
 				{
 					return BadRequest("Tài khoản không tồn tại");
-				}
-
-				if (string.IsNullOrWhiteSpace(Account.Password))
-				{
-					return BadRequest("Mật khẩu không được để trống");
 				}
 
 				if (string.IsNullOrWhiteSpace(Account.status))
@@ -147,14 +146,10 @@ namespace KoiFengShui.BE.Controllers
 					return BadRequest("Trạng thái không được để trống");
 				}
 
-				var acc = new Account
-				{
-					UserId = Account.UserID,
-					Password = BCrypt.Net.BCrypt.HashPassword(Account.Password),
-					Status = Account.status
-				};
+				// Admin chỉ có thể cập nhật trạng thái
+				existingAccount.Status = Account.status;
 
-				bool result = _accountService.UpdateAccountByAdmin(acc);
+				bool result = _accountService.UpdateAccountByAdmin(existingAccount);
 
 				if (result)
 				{
@@ -185,7 +180,7 @@ namespace KoiFengShui.BE.Controllers
 				{
 					UserID = account.UserId,
 					Email = account.Email,
-					Password = account.Password,
+					Password = "",
 					Role = account.Role,
 					status = account.Status,
 					Name = member?.Name,
@@ -193,7 +188,6 @@ namespace KoiFengShui.BE.Controllers
 				};
 				accountInfoList.Add(accountInfo);
 			}
-
 			return Ok(accountInfoList);
 		}
 		[HttpPost("register")]

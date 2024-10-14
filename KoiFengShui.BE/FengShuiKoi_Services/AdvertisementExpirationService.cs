@@ -12,7 +12,7 @@ namespace FengShuiKoi_Services
 	public class AdvertisementExpirationService : BackgroundService
 	{
 		private readonly IServiceProvider _services;
-		private readonly TimeSpan _checkInterval = TimeSpan.FromHours(1);
+		private readonly TimeSpan _checkInterval = TimeSpan.FromHours(0.1);
 
 		public AdvertisementExpirationService(IServiceProvider services)
 		{
