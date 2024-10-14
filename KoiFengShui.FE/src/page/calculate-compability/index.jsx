@@ -28,6 +28,7 @@ function ComputeCompability() {
   const [form] = Form.useForm();
 
   const [advertisements, setAdvertisements] = useState([]);
+  const [userInfo, setUserInfo] = useState(null);
   const [filteredFishList, setFilteredFishList] = useState([]);
   const [fishList, setFishList] = useState([]);
   const [selectedFishes, setSelectedFishes] = useState([]);
@@ -51,6 +52,26 @@ function ComputeCompability() {
 
   const [shapePoint, setShapePoint] = useState(null);
   const [directionPoint, setDirectionPoint] = useState(null);
+  const fetchUserInfo = async (birthdate, gender) => {
+    try {
+      const userInfoResponse = await api.get('Fate/CalculateLife_Palace', {
+        params: {
+          YOB: birthdate.format("YYYY-MM-DD"),
+          Gender: gender
+        }
+      });
+      setUserLifePalife(userInfoResponse.data);
+      const userElementResponse = await api.get('Fate/element', {
+        params: {
+          DOB: birthdate.format("YYYY-MM-DD")
+        }
+      });
+      setUserElement(userElementResponse.data);
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+      toast.error("Error fetching user info");
+    }
+  };
 
 
   useEffect(() => {
@@ -155,7 +176,9 @@ function ComputeCompability() {
         selectedPondShape,
         pondDirection,
       } = values;
-  
+
+     
+
       // Prepare payload
       const payload = selectedFishes.map(fish => ({
         koiType: fish.koiType,
@@ -166,28 +189,28 @@ function ComputeCompability() {
           }))
           .filter((color) => color.percentage > 0),
       }));
-  
+
       console.log("Payload to be sent:", payload);
-  
+
       // Prepare query parameters
       const queryParams = new URLSearchParams({
         ShapeID: selectedPondShape || '',
         DOB: birthdate.format("YYYY-MM-DD"),
         Gender: Gender
       });
-  
+
       // Add Direction only if it's selected
       if (pondDirection) {
         queryParams.append('Direction', pondDirection);
       }
-  
+
       // Call API using query params
       const response = await api.post(
 
         `Compatibility/GetTheCompatibilityOfUser?${queryParams.toString()}`,
         payload
       );
-  
+
       console.log("API Response:", response.data);
       
       const response1 = await api.get(`Fate/element?dob=${birthdate.format("YYYY-MM-DD")}`);
@@ -590,7 +613,16 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
                     { required: true, message: "Vui lòng chọn ngày sinh" },
                   ]}
                 >
-                  <DatePicker format="YYYY-MM-DD" style={{ width: "100%" }} />
+                  <DatePicker 
+                    format="YYYY-MM-DD" 
+                    style={{ width: "100%" }} 
+                    onChange={(date) => {
+                      const gender = form.getFieldValue("Gender");
+                      if (date && gender) {
+                        fetchUserInfo(date, gender);
+                      }
+                    }}
+                  />
                 </Form.Item>
                 <Form.Item
                   label="Giới tính"
@@ -599,11 +631,23 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
                     { required: true, message: "Hãy chọn giới tính của bạn!" },
                   ]}
                 >
-                  <Radio.Group>
+                  <Radio.Group onChange={(e) => {
+                    const birthdate = form.getFieldValue("birthdate");
+                    if (birthdate && e.target.value) {
+                      fetchUserInfo(birthdate, e.target.value);
+                    }
+                  }}>
                     <Radio value="male">Nam</Radio>
                     <Radio value="female">Nữ</Radio>
                   </Radio.Group>
                 </Form.Item>
+                {userElement && userLifePalife && (
+  <div className="user-info-section">
+    <h2 className="user-info-title">Thông tin người dùng</h2>
+    <p><strong>Mệnh:</strong> {userElement}</p>
+    <p><strong>Cung mệnh:</strong> {userLifePalife}</p>
+  </div>
+)}
               </div>
 
               <Form.Item

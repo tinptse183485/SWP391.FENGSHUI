@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Sidebar from "../../../components/sidebar/Sidebar";
 import api from "../../../config/axios";
 import { Table, Button, message, Image, Typography, Space } from "antd";
 import { useNavigate } from "react-router-dom";
-
 const { Text } = Typography;
 
 const Ads = () => {
@@ -30,6 +28,12 @@ const Ads = () => {
     }
   };
 
+  const statusPriority = {
+    Pending: 1,
+    Approved: 2,
+    Canceled: 3,
+    Refunded: 4
+  };
   const columns = [
     {
       title: "AdID",
@@ -77,54 +81,64 @@ const Ads = () => {
         <Text
           style={{
             color:
-              status === "Approved"
-                ? "#52c41a"
-                : status === "Refunded"
-                ? "#faad14"
-                : "#f5222d",
+            status === "Approved"
+            ? "#52c41a"
+            : status === "Refunded"
+            ? "#faad14"
+            : status === "Canceled"
+            ? "#f5222d"
+            : "#1890ff", // Màu cho trạng thái Pending
           }}
         >
           {status}
         </Text>
       ),
+      sorter: (a, b) => statusPriority[a.status] - statusPriority[b.status],
+      defaultSortOrder: 'ascend',
     },
     {
       title: "Action",
       key: "action",
       width: 200,
-      render: (_, record) => (
-        <Space size="small" direction="vertical">
-          <Button
-            type="primary"
-            onClick={() => handleUpdateStatus(record.adId, "Approved")}
-            disabled={record.status === "Approved"}
-          >
-            Phê duyệt
-          </Button>
-          {record.status === "Canceled" ? (
+      render: (_, record) => {
+        const isRefunded = record.status === "Refunded";
+        return (
+          <Space size="small" direction="vertical">
             <Button
               type="primary"
-              danger
-              onClick={() => handleUpdateStatus(record.adId, "Refunded")}
+              onClick={() => handleUpdateStatus(record.adId, "Approved")}
+              disabled={record.status === "Approved" || isRefunded}
             >
-              Hoàn trả
+              Phê duyệt
             </Button>
-          ) : (
-            <Button
-              type="primary"
-              danger
-              onClick={() => handleUpdateStatus(record.adId, "Canceled")}
-            >
-              Hủy bỏ
-            </Button>
-          )}
-        </Space>
-      ),
+            {record.status === "Canceled" ? (
+              <Button
+                type="primary"
+                danger
+                onClick={() => handleUpdateStatus(record.adId, "Refunded")}
+                disabled={isRefunded}
+              >
+                Hoàn trả
+              </Button>
+            ) : (
+              <Button
+                type="primary"
+                danger
+                onClick={() => handleUpdateStatus(record.adId, "Canceled")}
+                disabled={isRefunded}
+              >
+                Hủy bỏ
+              </Button>
+            )}
+          </Space>
+        );
+      },
     },
   ];
   return (
-    <div className="dashboard-container">
-      <Table dataSource={data} columns={columns} />
+    <div>
+      <h1>Quản lý quảng cáo</h1>
+      <Table dataSource={data} columns={columns}/>
     </div>
   );
 };

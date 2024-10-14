@@ -40,14 +40,15 @@ const Koi = () => {
   const [colorForm] = Form.useForm();
   const [editingKoi, setEditingKoi] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-
   useEffect(() => {
     fetchDataAndColors();
+
 
     fetchColors();
   }, []); // Chạy một lần khi component mount
 
   const fetchDataAndColors = async () => {
+
     try {
       const [koiResponse, colorResponse] = await Promise.all([
         api.get("KoiVariety/GetAllKoi"),
@@ -85,7 +86,6 @@ const Koi = () => {
       toast.error("Không thể tải danh sách màu");
     }
   };
-
 
   const columns = [
     {
@@ -160,6 +160,7 @@ const Koi = () => {
     setIsEditing(false);
     form.resetFields();
     setFileList([]);
+
     setOpenModal(true);
   };
 
@@ -185,21 +186,16 @@ const Koi = () => {
 
   const handleSubmit = async (values) => {
     // Kiểm tra tổng tỉ trọng
-
     const totalPercentage = values.colors.reduce(
       (sum, color) => sum + parseFloat(color.percentage || 0),
       0
     );
-
-
     if (Math.abs(totalPercentage - 1) > 0.001) {
       toast.error("Tổng tỉ trọng màu phải bằng 1");
       return;
     }
-
     try {
       setSubmitting(true);
-
       let imageUrl = "";
       if (fileList.length > 0 && fileList[0].originFileObj) {
         const file = fileList[0].originFileObj;
@@ -232,10 +228,13 @@ const Koi = () => {
 
       toast.error(err.response?.data?.message || "Có lỗi xảy ra");
 
+
     } finally {
       setSubmitting(false);
     }
   };
+
+
 
 
   const handleAddColor = async (values) => {
@@ -298,7 +297,6 @@ const Koi = () => {
 
   return (
     <div>
-      {/* className="dashboard-container" */}
       <h1>Quản lý cá Koi</h1>
       <Space>
         <Button onClick={handleOpenModal}>Tạo mới loại cá Koi</Button>

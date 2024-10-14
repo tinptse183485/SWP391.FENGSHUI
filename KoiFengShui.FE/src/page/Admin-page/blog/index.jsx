@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Layout, Menu, Table, Button, Popconfirm, message } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import Header_page from '../../../components/header-page';
-import api from '../../../config/axios';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import './index.css';
-import { toast } from 'react-toastify';
+import React, { useState, useEffect } from "react";
+import { Layout, Menu, Table, Button, Popconfirm, message } from "antd";
+import { useNavigate } from "react-router-dom";
+import Header_page from "../../../components/header-page";
+import api from "../../../config/axios";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import "./index.css";
+import { toast } from "react-toastify";
 
 const { Content } = Layout;
 
@@ -13,12 +13,12 @@ const Blog = () => {
   const navigate = useNavigate();
   const [blogs, setBlogs] = useState([]);
   const [filteredBlogs, setFilteredBlogs] = useState([]);
-  const [selectedStatus, setSelectedStatus] = useState('all');
+  const [selectedStatus, setSelectedStatus] = useState("all");
 
   const menuItems = [
-    { key: 'all', label: 'Tất cả' },
-    { key: 'Draft', label: 'Bản nháp' },
-    { key: 'Published', label: 'Đã đăng' },
+    { key: "all", label: "Tất cả" },
+    { key: "Draft", label: "Bản nháp" },
+    { key: "Published", label: "Đã đăng" },
   ];
 
   useEffect(() => {
@@ -34,12 +34,12 @@ const Blog = () => {
       const response = await api.get("Blog/GetAllBlog");
       setBlogs(response.data);
     } catch (error) {
-      console.error('Error fetching blogs:', error);
+      console.error("Error fetching blogs:", error);
     }
   };
 
   const filterBlogs = (status) => {
-    if (status === 'all') {
+    if (status === "all") {
       setFilteredBlogs(blogs);
     } else {
       const filtered = blogs.filter((blog) => blog.status === status);
@@ -71,22 +71,30 @@ const Blog = () => {
 
   const columns = [
     {
-      title: 'BlogId',
-      dataIndex: 'blogId',
-      key: 'blogId',
+      title: "BlogId",
+      dataIndex: "blogId",
+      key: "blogId",
     },
     {
-      title: 'Heading',
-      dataIndex: 'heading',
-      key: 'heading',
+      title: "Heading",
+      dataIndex: "heading",
+      key: "heading",
     },
     {
-      title: 'Image',
-      dataIndex: 'image',
-      key: 'image',
+      title: "Image",
+      dataIndex: "image",
+      key: "image",
       render: (_, record) => (
-        <img src={record.image} alt="Blog Image"  
-        style={{ width: '150px', height: '150px', objectFit: "cover", borderRadius: "4px" }} />
+        <img
+          src={record.image}
+          alt="Blog Image"
+          style={{
+            width: "150px",
+            height: "150px",
+            objectFit: "cover",
+            borderRadius: "4px",
+          }}
+        />
       ),
     },
     {
@@ -102,13 +110,13 @@ const Blog = () => {
       ),
     },
     {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
     },
     {
-      title: 'Hành động',
-      key: 'action',
+      title: "Hành động",
+      key: "action",
       render: (_, record) => (
         <>
           <Button
@@ -134,32 +142,24 @@ const Blog = () => {
   ];
 
   return (
-    <Layout style={{ minHeight: '100vh', backgroundColor: 'white' }}>
-      <Layout>
-        <Content style={{ margin: '16px' }}>
-          <div className="container" style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-            <div className="Heading">
-              <h1>Quản lý Blog</h1>
-              <button onClick={handleCreate} className="btn-create">
-                Tạo Blog
-              </button>
-            </div>
-            <Menu
-              className="menu"
-              theme="light"
-              mode="horizontal"
-              selectedKeys={[selectedStatus]}
-              onClick={handleMenuClick}
-            >
-              {menuItems.map((item) => (
-                <Menu.Item key={item.key}>{item.label}</Menu.Item>
-              ))}
-            </Menu>
-            <Table columns={columns} dataSource={filteredBlogs} rowKey="blogId" />
-          </div>
-        </Content>
-      </Layout>
-    </Layout>
+      <div>
+        <h1>Quản lý Blog</h1>
+        <button onClick={handleCreate} className="btn-create">
+          Tạo Blog
+        </button>
+        <Menu
+        className="menu"
+        theme="light"
+        mode="horizontal"
+        selectedKeys={[selectedStatus]}
+        onClick={handleMenuClick}
+      >
+        {menuItems.map((item) => (
+          <Menu.Item key={item.key}>{item.label}</Menu.Item>
+        ))}
+      </Menu>
+      <Table columns={columns} dataSource={filteredBlogs} rowKey="blogId" />
+      </div>
   );
 };
 

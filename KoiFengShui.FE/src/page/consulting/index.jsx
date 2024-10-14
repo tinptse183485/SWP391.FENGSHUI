@@ -12,12 +12,13 @@ import api from "../../config/axios";
 
 function Consulting() {
   const location = useLocation(); // Get location object
-  const { koiData, koiQuantity, pondShape, pondDirection, fate } = location.state || {
+  const { koiData, koiQuantity, pondShape, pondDirection, fate, lifePalace } = location.state || {
     koiData: [],
     koiQuantity: [],
     pondShape: [],
     pondDirection: [],
     fate: null,
+    lifePalace: null,
   }; // Extract  data
   const [advertisements, setAdvertisements] = useState([]);
   const [userElement, setUserElement] = useState(null);
@@ -78,11 +79,13 @@ function Consulting() {
       try {
         const adsResponse = await api.get('Advertisement/GetAllAdvertisement');
         setAdvertisements(adsResponse.data);
+      
         
         // Get user element from the location state
         if (location.state && location.state.fate) {
           console.log(location.state.fate);
           setUserElement(location.state.fate);
+          setLifePalace(lifePalaceResponse.data);
         } else {
           console.error("User element not found in location state");
           // Handle the case when user element is not available
@@ -91,6 +94,8 @@ function Consulting() {
         console.error("Error fetching data:", error);
       }
     };
+
+    
   
     fetchData();
   }, [location]);
@@ -101,7 +106,10 @@ function Consulting() {
       </header>
       <body>
         <div className="Guest-element">
-          <h1>Mệnh của bạn là </h1>
+
+          <h1>Mệnh của bạn là {userElement} </h1>
+          <h1>Cung mệnh của bạn là {lifePalace} </h1> 
+
         </div>
 
         <div className="Header-fish">

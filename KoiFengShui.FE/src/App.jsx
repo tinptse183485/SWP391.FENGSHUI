@@ -25,9 +25,7 @@ import PaymentSuccess from './page/PaymentSuccess';
 import ChoosePackage from './page/ChoosePackage';
 import CreateBlog from "./page/Admin-page/CreateBlog";
 import BlogDetail from "./page/Admin-page/BlogDetail";
-
-
-
+import BlogList from "./page/Blogs-list";
 
 function App() {
 
@@ -88,7 +86,10 @@ function App() {
       element: <CalculateCompability />,
 
     },
-
+    {
+      path: "blogs-list",
+      element: <BlogList />,
+    },
     {
       path: "ads-list",
       element: <Ads_list />,
