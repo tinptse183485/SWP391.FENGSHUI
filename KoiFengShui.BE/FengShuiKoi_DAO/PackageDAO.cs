@@ -1,7 +1,9 @@
 ﻿using FengShuiKoi_BO;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FengShuiKoi_DAO
 {
@@ -26,26 +28,26 @@ namespace FengShuiKoi_DAO
             dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
         }
 
-        public Package GetPackageByRank(string rank)
+        public async Task<Package> GetPackageByRank(string rank)
         {
-            return dbContext.Packages.SingleOrDefault(p => p.Rank == rank);
+            return await dbContext.Packages.SingleOrDefaultAsync(p => p.Rank == rank);
         }
 
-        public List<Package> GetPackages()
+        public async Task<List<Package>> GetPackages()
         {
-            return dbContext.Packages.ToList();
+            return await dbContext.Packages.ToListAsync();
         }
 
-        public bool AddPackage(Package package)
+        public async Task<bool> AddPackage(Package package)
         {
             bool isSuccess = false;
-            Package existingPackage = this.GetPackageByRank(package.Rank);
+            Package existingPackage = await this.GetPackageByRank(package.Rank);
             try
             {
                 if (existingPackage == null)
                 {
-                    dbContext.Packages.Add(package);
-                    dbContext.SaveChanges();
+                    await dbContext.Packages.AddAsync(package);
+                    await dbContext.SaveChangesAsync();
                     isSuccess = true;
                 }
             }
@@ -56,16 +58,16 @@ namespace FengShuiKoi_DAO
             return isSuccess;
         }
 
-        public bool DeletePackage(string rank)
+        public async Task<bool> DeletePackage(string rank)
         {
             bool isSuccess = false;
-            Package package = this.GetPackageByRank(rank);
+            Package package = await this.GetPackageByRank(rank);
             try
             {
                 if (package != null)
                 {
                     dbContext.Packages.Remove(package);
-                    dbContext.SaveChanges();
+                    await dbContext.SaveChangesAsync();
                     isSuccess = true;
                 }
             }
@@ -76,13 +78,13 @@ namespace FengShuiKoi_DAO
             return isSuccess;
         }
 
-        public bool UpdatePackage(Package package)
+        public async Task<bool> UpdatePackage(Package package)
         {
             bool isSuccess = false;
             try
             {
                 dbContext.Entry<Package>(package).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
                 isSuccess = true;
             }
             catch (Exception ex)
@@ -91,6 +93,5 @@ namespace FengShuiKoi_DAO
             }
             return isSuccess;
         }
-
     }
 }

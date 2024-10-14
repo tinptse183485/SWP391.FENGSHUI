@@ -18,7 +18,6 @@ namespace FengShuiKoi_DAO
         {
             get
             {
-                //singleton design pattern
                 if (instance == null)
                 {
                     instance = new TypeColorDAO();
@@ -32,75 +31,58 @@ namespace FengShuiKoi_DAO
             dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
         }
 
-        public TypeColor GetPercentage(string color, string type)
+        public async Task<TypeColor> GetPercentage(string color, string type)
         {
-            return dbContext.TypeColors.SingleOrDefault(m => m.Color.Equals(color) && m.KoiType.Equals(type));
+            return await dbContext.TypeColors.SingleOrDefaultAsync(m => m.Color.Equals(color) && m.KoiType.Equals(type));
         }
 
-        public List<TypeColor> GetAllType()
+        public async Task<List<TypeColor>> GetAllType()
         {
-            return dbContext.TypeColors.ToList();
+            return await dbContext.TypeColors.ToListAsync();
         }
-        public List<TypeColor> GetColorsAndPercentages(string koiType)
+
+        public async Task<List<TypeColor>> GetColorsAndPercentages(string koiType)
         {
-            List<TypeColor> list = new List<TypeColor>();
-
-            foreach (TypeColor item in this.GetAllType())
-            {
-                if (item.KoiType == koiType)
-                    list.Add(item);
-            }
-
-            return list;
+            var allTypes = await this.GetAllType();
+            return allTypes.Where(item => item.KoiType == koiType).ToList();
         }
-        public TypeColor GetTypeByColorID(string colorId)
+
+        public async Task<TypeColor> GetTypeByColorID(string colorId)
         {
-            return dbContext.TypeColors.FirstOrDefault(tc => tc.ColorId == colorId);
+            return await dbContext.TypeColors.FirstOrDefaultAsync(tc => tc.ColorId == colorId);
         }
-        public List<TypeColor> GetTypeByColor(string color)
+
+        public async Task<List<TypeColor>> GetTypeByColor(string color)
         {
-            List<TypeColor> listType = new List<TypeColor>();
-
-            foreach (TypeColor item in this.GetAllType())
-            {
-                if (item.ColorId == color)
-                    listType.Add(item);
-            }
-
-            return listType;
+            var allTypes = await this.GetAllType();
+            return allTypes.Where(item => item.ColorId == color).ToList();
         }
-        public List<TypeColor> GetTypeByKoiType(string KoiType)
+
+        public async Task<List<TypeColor>> GetTypeByKoiType(string KoiType)
         {
-            List<TypeColor> listType = new List<TypeColor>();
-
-            foreach (TypeColor item in this.GetAllType())
-            {
-                if (item.KoiType == KoiType)
-                    listType.Add(item);
-            }
-
-            return listType;
+            var allTypes = await this.GetAllType();
+            return allTypes.Where(item => item.KoiType == KoiType).ToList();
         }
-        public bool DeleteTypeColorsByColorId(string colorId)
+
+        public async Task<bool> DeleteTypeColorsByColorId(string colorId)
         {
             try
             {
-                var colorsToRemove = dbContext.TypeColors
+                var colorsToRemove = await dbContext.TypeColors
                     .Where(tc => tc.ColorId == colorId)
-                    .ToList();
+                    .ToListAsync();
 
                 if (colorsToRemove.Any())
                 {
-                   
                     var koiTypesToRemove = colorsToRemove.Select(tc => tc.KoiType).Distinct().ToList();
 
-                    var typeKoisToRemove = dbContext.TypeColors
+                    var typeKoisToRemove = await dbContext.TypeColors
                         .Where(tk => koiTypesToRemove.Contains(tk.KoiType))
-                        .ToList();
+                        .ToListAsync();
 
                     dbContext.TypeColors.RemoveRange(typeKoisToRemove);
                     dbContext.TypeColors.RemoveRange(colorsToRemove);
-                    dbContext.SaveChanges();
+                    await dbContext.SaveChangesAsync();
                     return true;
                 }
 
@@ -112,32 +94,29 @@ namespace FengShuiKoi_DAO
             }
         }
 
-        public bool DeleteTypeColorsByKoiType(string koiType)
+        public async Task<bool> DeleteTypeColorsByKoiType(string koiType)
         {
             try
             {
-                var typeColorsToDelete = dbContext.TypeColors
+                var typeColorsToDelete = await dbContext.TypeColors
                     .Where(tc => tc.KoiType == koiType)
-                    .ToList();
+                    .ToListAsync();
 
                 if (typeColorsToDelete.Any())
                 {
-                   
                     dbContext.TypeColors.RemoveRange(typeColorsToDelete);
-                    dbContext.SaveChanges();
-
-                   
-                    return true ;
+                    await dbContext.SaveChangesAsync();
+                    return true;
                 }
                 return false;
             }
-            catch (Exception ex)
-            {      
+            catch (Exception)
+            {
                 return false;
             }
         }
 
-        public bool AddKoiTypeColor(TypeColor koiFish)
+        public async Task<bool> AddKoiTypeColor(TypeColor koiFish)
         {
             try
             {
@@ -153,15 +132,13 @@ namespace FengShuiKoi_DAO
                     Percentage = koiFish.Percentage
                 };
 
-            
-                dbContext.TypeColors.Add(koiTypeColor);
-                dbContext.SaveChanges();
+                await dbContext.TypeColors.AddAsync(koiTypeColor);
+                await dbContext.SaveChangesAsync();
 
                 return true;
             }
             catch (Exception)
             {
-           
                 return false;
             }
         }

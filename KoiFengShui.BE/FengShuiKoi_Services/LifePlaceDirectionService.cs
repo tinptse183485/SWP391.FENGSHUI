@@ -1,6 +1,7 @@
 ﻿using FengShuiKoi_BO;
 using FengShuiKoi_Repository;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FengShuiKoi_Services
 {
@@ -13,19 +14,18 @@ namespace FengShuiKoi_Services
             lifePlaceDirectionRepo = new LifePlaceDirectionRepo();
         }
 
-        public LifePalaceDirection GetLifePlaceDirectionById(string lifePalace, string direction) => lifePlaceDirectionRepo.GetLifePlaceDirectionById(lifePalace, direction);
+        public async Task<LifePalaceDirection> GetLifePlaceDirectionById(string lifePalace, string direction) => await lifePlaceDirectionRepo.GetLifePlaceDirectionById(lifePalace, direction);
 
-        public List<LifePalaceDirection> GetLifePlaceDirections() => lifePlaceDirectionRepo.GetLifePlaceDirections();
-        public List<(string EightMansions, string Description)> GetEightMansionsAndDescriptions() => lifePlaceDirectionRepo.GetEightMansionsAndDescriptions();
-        public bool AddLifePlaceDirection(LifePalaceDirection lifePlaceDirection) => lifePlaceDirectionRepo.AddLifePlaceDirection(lifePlaceDirection);
+        public async Task<List<LifePalaceDirection>> GetLifePlaceDirections() => await lifePlaceDirectionRepo.GetLifePlaceDirections();
 
-        public bool DeleteLifePlaceDirection(string lifePalace, string direction) => lifePlaceDirectionRepo.DeleteLifePlaceDirection(lifePalace, direction);
+        public async Task<List<(string EightMansions, string Description)>> GetEightMansionsAndDescriptions() => await lifePlaceDirectionRepo.GetEightMansionsAndDescriptions();
 
-        public bool UpdateLifePlaceDirection(LifePalaceDirection lifePlaceDirection) => lifePlaceDirectionRepo.UpdateLifePlaceDirection(lifePlaceDirection);
+        public async Task<bool> AddLifePlaceDirection(LifePalaceDirection lifePlaceDirection) => await lifePlaceDirectionRepo.AddLifePlaceDirection(lifePlaceDirection);
 
+        public async Task<bool> DeleteLifePlaceDirection(string lifePalace, string direction) => await lifePlaceDirectionRepo.DeleteLifePlaceDirection(lifePalace, direction);
 
-        public List<LifePalaceDirection> GetGoodDirectionByLifePalace(string LifePalace) => lifePlaceDirectionRepo.GetGoodDirectionByLifePalace(LifePalace);
+        public async Task<bool> UpdateLifePlaceDirection(LifePalaceDirection lifePlaceDirection) => await lifePlaceDirectionRepo.UpdateLifePlaceDirection(lifePlaceDirection);
 
+        public async Task<List<LifePalaceDirection>> GetGoodDirectionByLifePalace(string LifePalace) => await lifePlaceDirectionRepo.GetGoodDirectionByLifePalace(LifePalace);
     }
-
 }

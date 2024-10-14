@@ -1,8 +1,8 @@
 ﻿using FengShuiKoi_BO;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FengShuiKoi_DAO
@@ -15,7 +15,6 @@ namespace FengShuiKoi_DAO
         {
             get
             {
-                //singleton design pattern
                 if (instance == null)
                 {
                     instance = new AdvertisementDAO();
@@ -27,10 +26,12 @@ namespace FengShuiKoi_DAO
         {
             dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
         }
-        public Advertisement GetAdvertisementByAdID(string AdID)
+
+        public async Task<Advertisement> GetAdvertisementByAdID(string AdID)
         {
-            return dbContext.Advertisements.SingleOrDefault(m => m.AdId.Equals(AdID));
+            return await dbContext.Advertisements.SingleOrDefaultAsync(m => m.AdId.Equals(AdID));
         }
+
 
         public List<Advertisement> GetAdvertisementByUserIdAndStatus(string userId, string status)
         {
@@ -38,67 +39,70 @@ namespace FengShuiKoi_DAO
                 .Where(m => m.UserId.Equals(userId) && m.Status.Equals(status))
                 .ToList();
         }
-        public List<Advertisement> GetAdvertisementStatus(string status)
+
+           public async Task<List<Advertisement>> GetAdvertisements()
         {
-            return dbContext.Advertisements
-                .Where(m => m.Status.Equals(status))
-                .ToList();
+            return await dbContext.Advertisements.ToListAsync();
         }
+
         public List<Advertisement> GetAdvertisementByUserID(string userdID)
         {
             return dbContext.Advertisements
                 .Where(m => m.UserId.Equals(userdID))
                 .ToList();
         }
-        public List<Advertisement> GetAdvertisements()
+        
+
+            public async Task<List<Advertisement>> GetAdvertisementStatus(string status)
         {
-            return dbContext.Advertisements.ToList();
+            return await dbContext.Advertisements.Where(m => m.Status.Equals(status)).ToListAsync();
         }
-        public bool AddAdvertisement(Advertisement advertisement)
+
+        public async Task<List<Advertisement>> GetAdvertisementByUserIdAndStatus(string userId, string status)
         {
-            bool isSuccess = false;
-            Advertisement _advertisement = this.GetAdvertisementByAdID(advertisement.AdId);
+            return await dbContext.Advertisements.Where(m => m.UserId.Equals(userId) && m.Status.Equals(status)).ToListAsync();
+        }
+
+        public async Task<bool> AddAdvertisement(Advertisement advertisement)
+        {
             try
             {
-                if (_advertisement == null)
-                {
-                    dbContext.Advertisements.Add(advertisement);
-                    dbContext.SaveChanges();
-                    isSuccess = true;
-                }
-
+                await dbContext.Advertisements.AddAsync(advertisement);
+                await dbContext.SaveChangesAsync();
+                return true;
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-            return isSuccess;
         }
-        public bool DeleteAdvertisement(string adid)
+
+        public async Task<bool> DeleteAdvertisement(string adID)
         {
-            bool isSuccess = false;
-            Advertisement advertisement = this.GetAdvertisementByAdID(adid);
             try
             {
+                var advertisement = await GetAdvertisementByAdID(adID);
                 if (advertisement != null)
                 {
                     dbContext.Advertisements.Remove(advertisement);
-                    dbContext.SaveChanges();
-                    isSuccess = true;
+                    await dbContext.SaveChangesAsync();
+                    return true;
                 }
+                return false;
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-            return isSuccess;
         }
-        public bool UpdateAdvertisement(Advertisement updatedAdvertisement)
+
+        public async Task<bool> UpdateAdvertisement(Advertisement updatedAdvertisement)
         {
             bool isSuccess = false;
-            Advertisement advertisement = this.GetAdvertisementByAdID(updatedAdvertisement.AdId);
+
             try
             {
+                var advertisement = await GetAdvertisementByAdID(updatedAdvertisement.AdId);
                 if (advertisement != null)
                 {
                     advertisement.Heading = updatedAdvertisement.Heading;
@@ -106,8 +110,8 @@ namespace FengShuiKoi_DAO
                     advertisement.Link = updatedAdvertisement.Link;
                     advertisement.Status = updatedAdvertisement.Status;
                     advertisement.ElementId = updatedAdvertisement.ElementId;
-                    dbContext.Entry(advertisement).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    dbContext.SaveChanges();
+                    dbContext.Entry(advertisement).State = EntityState.Modified;
+                    await dbContext.SaveChangesAsync();
                     isSuccess = true;
                 }
             }
@@ -117,6 +121,9 @@ namespace FengShuiKoi_DAO
             }
             return isSuccess;
         }
+
+
+        
 
         public List<Advertisement> GetExpiredAdvertisements()
         {
@@ -126,3 +133,4 @@ namespace FengShuiKoi_DAO
         }
     }
 }
+

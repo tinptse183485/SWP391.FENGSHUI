@@ -1,8 +1,6 @@
 ﻿using FengShuiKoi_BO;
-using System;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FengShuiKoi_DAO
@@ -16,7 +14,6 @@ namespace FengShuiKoi_DAO
         {
             get
             {
-                //singleton design pattern
                 if (instance == null)
                 {
                     instance = new ElementDAO();
@@ -30,17 +27,14 @@ namespace FengShuiKoi_DAO
             dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
         }
 
-        public Element GetElementAndMutualism(string element)
+        public async Task<Element> GetElementAndMutualism(string element)
         {
-            return dbContext.Elements.SingleOrDefault(m => m.ElementId.Equals(element));
+            return await dbContext.Elements.SingleOrDefaultAsync(m => m.ElementId.Equals(element));
         }
 
-
-        public List<Element> GetElement()
+        public async Task<List<Element>> GetElement()
         {
-            return dbContext.Elements.ToList();
+            return await dbContext.Elements.ToListAsync();
         }
-
-
     }
 }

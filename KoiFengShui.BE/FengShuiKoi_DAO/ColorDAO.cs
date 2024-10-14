@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace FengShuiKoi_DAO
 {
@@ -26,26 +28,26 @@ namespace FengShuiKoi_DAO
             dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
         }
 
-        public Color GetColorById(string id)
+        public async Task<Color> GetColorById(string id)
         {
-            return dbContext.Colors.FirstOrDefault(c => c.ColorId== id);
+            return await dbContext.Colors.FirstOrDefaultAsync(c => c.ColorId == id);
         }
 
-        public List<Color> GetColors()
+        public async Task<List<Color>> GetColors()
         {
-            return dbContext.Colors.ToList();
+            return await dbContext.Colors.ToListAsync();
         }
 
-        public bool AddColor(Color color)
+        public async Task<bool> AddColor(Color color)
         {
             bool isSuccess = false;
-            Color existingColor = this.GetColorById(color.ColorId);
+            Color existingColor = await this.GetColorById(color.ColorId);
             try
             {
                 if (existingColor == null)
                 {
-                    dbContext.Colors.Add(color);
-                    dbContext.SaveChanges();
+                    await dbContext.Colors.AddAsync(color);
+                    await dbContext.SaveChangesAsync();
                     isSuccess = true;
                 }
             }
@@ -56,16 +58,16 @@ namespace FengShuiKoi_DAO
             return isSuccess;
         }
 
-        public bool DeleteColor(string id)
+        public async Task<bool> DeleteColor(string id)
         {
             bool isSuccess = false;
-            Color color = this.GetColorById(id);
+            Color color = await this.GetColorById(id);
             try
             {
                 if (color != null)
                 {
                     dbContext.Colors.Remove(color);
-                    dbContext.SaveChanges();
+                    await dbContext.SaveChangesAsync();
                     isSuccess = true;
                 }
             }
@@ -76,13 +78,13 @@ namespace FengShuiKoi_DAO
             return isSuccess;
         }
 
-        public bool UpdateColor(Color color)
+        public async Task<bool> UpdateColor(Color color)
         {
             bool isSuccess = false;
             try
             {
                 dbContext.Entry<Color>(color).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
                 isSuccess = true;
             }
             catch (Exception ex)

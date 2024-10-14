@@ -1,18 +1,18 @@
 ﻿using FengShuiKoi_BO;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FengShuiKoi_Services
 {
     public interface IPointOfShapeService
     {
-        PointOfShape GetPointOfShape(string element, string shape);
-        List<PointOfShape> GetPointOfShapes();
-        bool AddPointOfShape(PointOfShape pointOfShape);
-        bool DeletePointOfShape(string element, string shape);
-        bool UpdatePointOfShape(PointOfShape pointOfShape);
-        public List<PointOfShape> GetGoodShapeByElemnet(string element);
-        public PointOfShape GetPointOfShapeByShapeID(string shape);
-        public bool DeletePointOfShapeByShapeID(string shapeID);
-
+        Task<PointOfShape> GetPointOfShape(string element, string shape);
+        Task<List<PointOfShape>> GetPointOfShapes();
+        Task<bool> AddPointOfShape(PointOfShape pointOfShape);
+        Task<bool> DeletePointOfShape(string element, string shape);
+        Task<bool> UpdatePointOfShape(PointOfShape pointOfShape);
+        Task<List<PointOfShape>> GetGoodShapeByElemnet(string element);
+        Task<PointOfShape> GetPointOfShapeByShapeID(string shape);
+        Task<bool> DeletePointOfShapeByShapeID(string shapeID);
     }
 }

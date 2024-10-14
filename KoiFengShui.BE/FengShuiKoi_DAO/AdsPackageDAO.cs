@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FengShuiKoi_DAO
@@ -18,7 +17,6 @@ namespace FengShuiKoi_DAO
         {
             get
             {
-                //singleton design pattern
                 if (instance == null)
                 {
                     instance = new AdsPackageDAO();
@@ -31,11 +29,11 @@ namespace FengShuiKoi_DAO
             dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
         }
 
-        public Dictionary<string, double> GetRevenueByPackage()
+        public async Task<Dictionary<string, double>> GetRevenueByPackage()
         {
             try
             {
-                var adsPackages = dbContext.AdsPackages.AsNoTracking().ToList();
+                var adsPackages = await dbContext.AdsPackages.AsNoTracking().ToListAsync();
                 var revenueByPackage = new Dictionary<string, double>();
 
                 foreach (var package in adsPackages)
@@ -55,87 +53,80 @@ namespace FengShuiKoi_DAO
             }
         }
 
+        public async Task<List<AdsPackage>> GetAdsPackages()
+        {
+            return await dbContext.AdsPackages.ToListAsync();
+        }
 
-        public List<AdsPackage> GetAdsPackages()
+        public async Task<AdsPackage> GetAdsPackageByAdIDRank(string AdID, string Rank)
         {
-            return dbContext.AdsPackages.ToList();
+            return await dbContext.AdsPackages.SingleOrDefaultAsync(m => m.AdId.Equals(AdID) && m.Rank.Equals(Rank));
         }
-        public AdsPackage GetAdsPackageByAdIDRank(string AdID, string Rank)
+
+        public async Task<List<AdsPackage>> GetListAdsPackageByAdID(string AdID)
         {
-            return dbContext.AdsPackages.SingleOrDefault(m => m.AdId.Equals(AdID) && m.Rank.Equals(Rank));
+            return await dbContext.AdsPackages.Where(m => m.AdId.Equals(AdID)).ToListAsync();
         }
-        public List<AdsPackage> GetListAdsPackageByAdID(string AdID)
+
+        public async Task<List<AdsPackage>> GetListAdsPackageByRank(string Rank)
         {
-            return dbContext.AdsPackages.Where(m => m.AdId.Equals(AdID)).ToList();
+            return await dbContext.AdsPackages.Where(m => m.Rank.Equals(Rank)).ToListAsync();
         }
-        public List<AdsPackage> GetListAdsPackageByRank(string Rank)
+
+        public async Task<bool> AddAdsPackage(AdsPackage ads)
         {
-            return dbContext.AdsPackages.Where(m => m.Rank.Equals(Rank)).ToList();
-        }
-        public bool AddAdsPackage(AdsPackage ads)
-        {
-            bool isSuccess = false;
-            AdsPackage adsPackage = this.GetAdsPackageByAdIDRank(ads.AdId, ads.Rank);
+            AdsPackage adsPackage = await this.GetAdsPackageByAdIDRank(ads.AdId, ads.Rank);
+            if (adsPackage != null) return false;
+
             try
             {
-                if (adsPackage == null)
-                {
-                    dbContext.AdsPackages.Add(ads);
-                    dbContext.SaveChanges();
-                    isSuccess = true;
-                }
-
+                await dbContext.AdsPackages.AddAsync(ads);
+                await dbContext.SaveChangesAsync();
+                return true;
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-            return isSuccess;
         }
-        public bool UpdateAdsPackage(AdsPackage newAdsPackage)
+
+        public async Task<bool> UpdateAdsPackage(AdsPackage newAdsPackage)
         {
-            bool isSuccess = false;
-            AdsPackage ads = this.GetAdsPackageByAdIDRank(newAdsPackage.AdId, newAdsPackage.Rank);
+            AdsPackage ads = await this.GetAdsPackageByAdIDRank(newAdsPackage.AdId, newAdsPackage.Rank);
+            if (ads == null) return false;
+
             ads.StartDate = newAdsPackage.StartDate;
             ads.ExpiredDate = newAdsPackage.ExpiredDate;
             ads.Quantity = newAdsPackage.Quantity;
             ads.Total = newAdsPackage.Total;
+
             try
             {
-                if (ads != null)
-                {
-                    dbContext.Entry<AdsPackage>(ads).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    dbContext.SaveChanges();
-                    isSuccess = true;
-                }
+                dbContext.Entry(ads).State = EntityState.Modified;
+                await dbContext.SaveChangesAsync();
+                return true;
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-            return isSuccess;
         }
 
-        public bool DeleteAdsPackage(string AdID, string Rank)
+        public async Task<bool> DeleteAdsPackage(string AdID, string Rank)
         {
-            bool isSuccess = false;
-            AdsPackage ads = this.GetAdsPackageByAdIDRank(AdID, Rank);
+            AdsPackage ads = await this.GetAdsPackageByAdIDRank(AdID, Rank);
+            if (ads == null) return false;
+
             try
             {
-                if (ads != null)
-                {
-                    dbContext.AdsPackages.Remove(ads);
-                    dbContext.SaveChanges();
-                    isSuccess = true;
-                }
+                dbContext.AdsPackages.Remove(ads);
+                await dbContext.SaveChangesAsync();
+                return true;
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-            return isSuccess;
         }
-
-
     }
 }

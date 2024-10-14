@@ -1,21 +1,19 @@
 ﻿using FengShuiKoi_BO;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FengShuiKoi_Repository
 {
-	public interface IAccountRepo
-	{
-		public Account GetAccountByEmail(string email);
-		public Account GetAccountByUserID(string userid);
+    public interface IAccountRepo
+    {
+        Task<Account> GetAccountByEmail(string email);
+        Task<Account> GetAccountByUserID(string userid);
 
-		public List<Account> GetAllAccounts();
-		public bool AddAccount(Account account);
-		public bool UpdateAccountByUser(Account newAccountData);
-        public bool UpdateAccountByAdmin(Account newAccountData);
-		public bool DeleteAccount(string userId);
-	}
+        Task<List<Account>> GetAllAccounts();
+        Task<bool> AddAccount(Account account);
+        Task<bool> UpdateAccountByUser(Account newAccountData);
+        Task<bool> UpdateAccountByAdmin(Account newAccountData);
+        Task<bool> DeleteAccount(string userId);
+    }
 }

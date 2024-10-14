@@ -1,7 +1,9 @@
 ﻿using FengShuiKoi_BO;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FengShuiKoi_DAO
 {
@@ -26,26 +28,26 @@ namespace FengShuiKoi_DAO
             dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
         }
 
-        public LifePalace GetLifePlaceById(string id)
+        public async Task<LifePalace> GetLifePlaceById(string id)
         {
-            return dbContext.LifePalaces.SingleOrDefault(lp => lp.LifePalaceId == id);
+            return await dbContext.LifePalaces.SingleOrDefaultAsync(lp => lp.LifePalaceId == id);
         }
 
-        public List<LifePalace> GetLifePlaces()
+        public async Task<List<LifePalace>> GetLifePlaces()
         {
-            return dbContext.LifePalaces.ToList();
+            return await dbContext.LifePalaces.ToListAsync();
         }
 
-        public bool AddLifePlace(LifePalace lifePlace)
+        public async Task<bool> AddLifePlace(LifePalace lifePlace)
         {
             bool isSuccess = false;
-            LifePalace existingLifePlace = this.GetLifePlaceById(lifePlace.LifePalaceId);
+            LifePalace existingLifePlace = await this.GetLifePlaceById(lifePlace.LifePalaceId);
             try
             {
                 if (existingLifePlace == null)
                 {
-                    dbContext.LifePalaces.Add(lifePlace);
-                    dbContext.SaveChanges();
+                    await dbContext.LifePalaces.AddAsync(lifePlace);
+                    await dbContext.SaveChangesAsync();
                     isSuccess = true;
                 }
             }
@@ -56,16 +58,16 @@ namespace FengShuiKoi_DAO
             return isSuccess;
         }
 
-        public bool DeleteLifePlace(string id)
+        public async Task<bool> DeleteLifePlace(string id)
         {
             bool isSuccess = false;
-            LifePalace lifePlace = this.GetLifePlaceById(id);
+            LifePalace lifePlace = await this.GetLifePlaceById(id);
             try
             {
                 if (lifePlace != null)
                 {
                     dbContext.LifePalaces.Remove(lifePlace);
-                    dbContext.SaveChanges();
+                    await dbContext.SaveChangesAsync();
                     isSuccess = true;
                 }
             }
@@ -76,13 +78,13 @@ namespace FengShuiKoi_DAO
             return isSuccess;
         }
 
-        public bool UpdateLifePlace(LifePalace lifePlace)
+        public async Task<bool> UpdateLifePlace(LifePalace lifePlace)
         {
             bool isSuccess = false;
             try
             {
                 dbContext.Entry<LifePalace>(lifePlace).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
                 isSuccess = true;
             }
             catch (Exception ex)

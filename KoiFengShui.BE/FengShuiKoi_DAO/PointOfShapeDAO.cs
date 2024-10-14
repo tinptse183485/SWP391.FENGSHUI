@@ -1,7 +1,9 @@
 ﻿using FengShuiKoi_BO;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FengShuiKoi_DAO
 {
@@ -26,30 +28,30 @@ namespace FengShuiKoi_DAO
             dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
         }
 
-        public PointOfShape GetPointOfShape(string element, string shape)
+        public async Task<PointOfShape> GetPointOfShape(string element, string shape)
         {
-            return dbContext.PointOfShapes.FirstOrDefault(p => p.ElementId == element && p.ShapeId == shape);
+            return await dbContext.PointOfShapes.FirstOrDefaultAsync(p => p.ElementId == element && p.ShapeId == shape);
         }
-        public PointOfShape GetPointOfShapeByShapeID( string shape)
+        public async Task<PointOfShape> GetPointOfShapeByShapeID(string shape)
         {
-            return dbContext.PointOfShapes.FirstOrDefault(p => p.ShapeId == shape);
-        }
-
-        public List<PointOfShape> GetPointOfShapes()
-        {
-            return dbContext.PointOfShapes.ToList();
+            return await dbContext.PointOfShapes.FirstOrDefaultAsync(p => p.ShapeId == shape);
         }
 
-        public bool AddPointOfShape(PointOfShape pointOfShape)
+        public async Task<List<PointOfShape>> GetPointOfShapes()
+        {
+            return await dbContext.PointOfShapes.ToListAsync();
+        }
+
+        public async Task<bool> AddPointOfShape(PointOfShape pointOfShape)
         {
             bool isSuccess = false;
-            PointOfShape existingPointOfShape = this.GetPointOfShape(pointOfShape.ElementId, pointOfShape.ElementId);
+            PointOfShape existingPointOfShape = await this.GetPointOfShape(pointOfShape.ElementId, pointOfShape.ElementId);
             try
             {
                 if (existingPointOfShape == null)
                 {
-                    dbContext.PointOfShapes.Add(pointOfShape);
-                    dbContext.SaveChanges();
+                    await dbContext.PointOfShapes.AddAsync(pointOfShape);
+                    await dbContext.SaveChangesAsync();
                     isSuccess = true;
                 }
             }
@@ -60,16 +62,16 @@ namespace FengShuiKoi_DAO
             return isSuccess;
         }
 
-        public bool DeletePointOfShape(string element, string shape)
+        public async Task<bool> DeletePointOfShape(string element, string shape)
         {
             bool isSuccess = false;
-            PointOfShape pointOfShape = this.GetPointOfShape(element, shape);
+            PointOfShape pointOfShape = await this.GetPointOfShape(element, shape);
             try
             {
                 if (pointOfShape != null)
                 {
                     dbContext.PointOfShapes.Remove(pointOfShape);
-                    dbContext.SaveChanges();
+                    await dbContext.SaveChangesAsync();
                     isSuccess = true;
                 }
             }
@@ -79,41 +81,36 @@ namespace FengShuiKoi_DAO
             }
             return isSuccess;
         }
-        public bool DeletePointOfShapeByShapeID(string shapeID)
+        public async Task<bool> DeletePointOfShapeByShapeID(string shapeID)
         {
             try
             {
-                
-                var pointsToRemove = dbContext.PointOfShapes
+                var pointsToRemove = await dbContext.PointOfShapes
                     .Where(pos => pos.ShapeId == shapeID)
-                    .ToList();
+                    .ToListAsync();
 
                 if (pointsToRemove.Any())
                 {
-                    
                     dbContext.PointOfShapes.RemoveRange(pointsToRemove);
 
-                  
-                    var shapeToRemove = dbContext.Shapes
-                        .FirstOrDefault(s => s.ShapeId == shapeID);
+                    var shapeToRemove = await dbContext.Shapes
+                        .FirstOrDefaultAsync(s => s.ShapeId == shapeID);
 
                     if (shapeToRemove != null)
                     {
                         dbContext.Shapes.Remove(shapeToRemove);
                     }
 
-                    
-                    var elementShapesToRemove = dbContext.PointOfShapes
+                    var elementShapesToRemove = await dbContext.PointOfShapes
                         .Where(es => es.ShapeId == shapeID)
-                        .ToList();
+                        .ToListAsync();
 
                     if (elementShapesToRemove.Any())
                     {
                         dbContext.PointOfShapes.RemoveRange(elementShapesToRemove);
                     }
 
-                
-                    dbContext.SaveChanges();
+                    await dbContext.SaveChangesAsync();
                     return true;
                 }
 
@@ -125,13 +122,13 @@ namespace FengShuiKoi_DAO
             }
         }
 
-        public bool UpdatePointOfShape(PointOfShape pointOfShape)
+        public async Task<bool> UpdatePointOfShape(PointOfShape pointOfShape)
         {
             bool isSuccess = false;
             try
             {
                 dbContext.Entry<PointOfShape>(pointOfShape).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
                 isSuccess = true;
             }
             catch (Exception ex)
@@ -141,17 +138,10 @@ namespace FengShuiKoi_DAO
             return isSuccess;
         }
 
-		public List<PointOfShape> GetGoodShapeByElemnet(string element)
-		{
-			List<PointOfShape> listShape = new List<PointOfShape>();
-
-			foreach (PointOfShape item in this.GetPointOfShapes())
-			{
-				if (item.Point >= 0.75 && item.ElementId.Equals(element))
-					listShape.Add(item);
-			}
-
-			return listShape;
-		}
-	}
+        public async Task<List<PointOfShape>> GetGoodShapeByElemnet(string element)
+        {
+            var allShapes = await this.GetPointOfShapes();
+            return allShapes.Where(item => item.Point >= 0.75 && item.ElementId.Equals(element)).ToList();
+        }
+    }
 }

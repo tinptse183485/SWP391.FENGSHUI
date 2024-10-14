@@ -1,11 +1,11 @@
 ﻿using FengShuiKoi_BO;
 using FengShuiKoi_Services;
 using KoiFengShui.BE.Model;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics.Metrics;
-using System.Text.Json;
+using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace KoiFengShui.BE.Controllers
 {
@@ -28,11 +28,11 @@ namespace KoiFengShui.BE.Controllers
         }
 
         [HttpGet("GetAllAdvertisement")]
-        public IActionResult GetAllAdvertisement()
+        public async Task<IActionResult> GetAllAdvertisement()
         {
             try
             {
-                var listAdvertisement = _advertisementService.GetAdvertisements();
+                var listAdvertisement = await _advertisementService.GetAdvertisements();
                 return Ok(listAdvertisement);
             }
             catch (Exception ex)
@@ -40,12 +40,13 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
+
         [HttpGet("GetAdvertisementByAdId")]
-        public IActionResult GetAdvertisementByAdId(string adId)
+        public async Task<IActionResult> GetAdvertisementByAdId(string adId)
         {
             try
             {
-                var advertisements = _advertisementService.GetAdvertisementByAdID(adId);
+                var advertisements = await _advertisementService.GetAdvertisementByAdID(adId);
                 if (advertisements == null)
                 {
                     return NotFound("Không tìm thấy quảng cáo");
@@ -57,6 +58,7 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
+
 
 		[HttpGet("GetAdvertisementByUserId")]
 		public IActionResult GetAdvertisementByUserId(string  UserId)
@@ -75,38 +77,31 @@ namespace KoiFengShui.BE.Controllers
 				return StatusCode(500, $"Lỗi server: {ex.Message}");
 			}
 		}
+ [HttpGet("CheckAdIdExist")]
+        public async Task<IActionResult> CheckAdIdExist(string adId)
 
-		[HttpGet("CheckAdIdExist")]
-        public IActionResult CheckAdIdExist(string adId)
         {
             try
             {
-                var advertise = _advertisementService.GetAdvertisementByAdID(adId);
-                if (advertise != null)
-                {
-                    return Ok("True");
-                }
-                else
-                {
-                    return Ok("False");
-                }
+                var advertise = await _advertisementService.GetAdvertisementByAdID(adId);
+                return Ok(advertise != null ? "True" : "False");
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
+
         [HttpGet("GetAdvertisementByUserIDandStatus")]
-        public IActionResult GetAdvertisementByUserIDandStatus(string userID, string status)
+        public async Task<IActionResult> GetAdvertisementByUserIDandStatus(string userID, string status)
         {
             try
             {
-                var advertisements = _advertisementService.GetAdvertisementByUserIdAndStatus(userID, status);
+                var advertisements = await _advertisementService.GetAdvertisementByUserIdAndStatus(userID, status);
                 if (advertisements == null)
                 {
                     return BadRequest("Không tìm thấy quảng cáo");
                 }
-
                 return Ok(advertisements);
             }
             catch (Exception ex)
@@ -116,25 +111,30 @@ namespace KoiFengShui.BE.Controllers
         }
 
         [HttpGet("GetAdvertisementByRank")]
-        public IActionResult GetAdvertisementByRank(string rank)
+        public async Task<IActionResult> GetAdvertisementByRank(string rank)
         {
             List<Advertisement> listAd = new List<Advertisement>();
             try
             {
-                List<AdsPackage> list = _adsPackageService.GetListAdsPackageByRank(rank);
+                List<AdsPackage> list = await _adsPackageService.GetListAdsPackageByRank(rank);
                 foreach (AdsPackage ad in list)
                 {
                     Advertisement ads = _advertisementService.GetAdvertisementByAdID(ad.AdId);
                     if (ad.StartDate <= DateTime.Now && ad.ExpiredDate >= DateTime.Now && ads.Status.Equals("Approved"))
                     {
-                        listAd.Add(ads);
+
+                        var advertisement = await _advertisementService.GetAdvertisementByAdID(ad.AdId);
+                        if (advertisement != null)
+                        {
+                            listAd.Add(advertisement);
+                        }
+
                     }
                 }
-                if (listAd == null)
+                if (listAd.Count == 0)
                 {
                     return BadRequest("Không tìm thấy quảng cáo");
                 }
-
                 return Ok(listAd);
             }
             catch (Exception ex)
@@ -143,9 +143,9 @@ namespace KoiFengShui.BE.Controllers
             }
         }
 
+        [HttpGet("GenerateAdId")]
+        public async Task<IActionResult> GenerateAdId(string AdId)
 
-		[HttpGet("GenerateAdId")]
-        public IActionResult GenerateAdId(string AdId)
         {
             try
             {
@@ -157,7 +157,7 @@ namespace KoiFengShui.BE.Controllers
                     int attempts = 0;
                     const int maxAttempts = 10;
 
-                    while (_advertisementService.GetAdvertisementByAdID(adId) != null && attempts < maxAttempts)
+                    while (await _advertisementService.GetAdvertisementByAdID(adId) != null && attempts < maxAttempts)
                     {
                         adId = GenerateUniqueAdId();
                         attempts++;
@@ -184,11 +184,11 @@ namespace KoiFengShui.BE.Controllers
         }
 
         [HttpGet("GetAdvertisementByStatusAdmin")]
-        public IActionResult GetAdvertisementByStatusAdmin(string status)
+        public async Task<IActionResult> GetAdvertisementByStatusAdmin(string status)
         {
             try
             {
-                var advertisements = _advertisementService.GetAdvertisementStatus(status);
+                var advertisements = await _advertisementService.GetAdvertisementStatus(status);
                 if (advertisements == null)
                 {
                     return BadRequest("Không tìm thấy quảng cáo có trạng thái" + status);
@@ -200,8 +200,9 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
+
         [HttpPost("SaveAdvertisementDraft")]
-        public IActionResult SaveAdvertisementDraft(AdvertisementDTO advertisementDto)
+        public async Task<IActionResult> SaveAdvertisementDraft(AdvertisementDTO advertisementDto)
         {
             try
             {
@@ -209,13 +210,13 @@ namespace KoiFengShui.BE.Controllers
                 Advertisement existingAdvertisement = new Advertisement();
                 if (Regex.IsMatch(advertisementDto.AdId, @"^AD\d{3}$"))
                 {
-                    existingAdvertisement = _advertisementService.GetAdvertisementByAdID(advertisementDto.AdId);
+                    existingAdvertisement = await _advertisementService.GetAdvertisementByAdID(advertisementDto.AdId);
                 }
 
                 if (existingAdvertisement == null)
                 {
                     // Tạo mới quảng cáo
-                    if (_accountService.GetAccountByUserID(advertisementDto.UserId) == null)
+                    if (await _accountService.GetAccountByUserID(advertisementDto.UserId) == null)
                     {
                         return BadRequest("Không tìm thấy ID của người dùng.");
                     }
@@ -224,7 +225,7 @@ namespace KoiFengShui.BE.Controllers
                     int attempts = 0;
                     const int maxAttempts = 10;
 
-                    while (_advertisementService.GetAdvertisementByAdID(adId) != null && attempts < maxAttempts)
+                    while (await _advertisementService.GetAdvertisementByAdID(adId) != null && attempts < maxAttempts)
                     {
                         adId = GenerateUniqueAdId();
                         attempts++;
@@ -246,7 +247,7 @@ namespace KoiFengShui.BE.Controllers
                         Status = "Draft",
                     };
 
-                    bool result = _advertisementService.AddAdvertisement(newAdvertisement);
+                    bool result = await _advertisementService.AddAdvertisement(newAdvertisement);
 
                     if (result)
                     {
@@ -266,7 +267,7 @@ namespace KoiFengShui.BE.Controllers
                     existingAdvertisement.ElementId = advertisementDto.ElementId;
                     existingAdvertisement.Status = "Draft";
 
-                    bool result = _advertisementService.UpdateAdvertisement(existingAdvertisement);
+                    bool result = await _advertisementService.UpdateAdvertisement(existingAdvertisement);
                     if (result)
                     {
                         return Ok("Cập nhật bản nháp quảng cáo thành công");
@@ -284,12 +285,12 @@ namespace KoiFengShui.BE.Controllers
         }
 
         [HttpPost("AddAdvertisementDraft")]
-        public IActionResult AddAdvertisementDraft(AdvertisementDTO advertisementDto)
+        public async Task<IActionResult> AddAdvertisementDraft(AdvertisementDTO advertisementDto)
         {
             try
             {
                 // Validate input
-                if (_accountService.GetAccountByUserID(advertisementDto.UserId) == null)
+                if (await _accountService.GetAccountByUserID(advertisementDto.UserId) == null)
                 {
                     return BadRequest(" Không tìm thấy ID của người dùng. ");
                 }
@@ -298,7 +299,7 @@ namespace KoiFengShui.BE.Controllers
                 int attempts = 0;
                 const int maxAttempts = 10;
 
-                while (_advertisementService.GetAdvertisementByAdID(adId) != null && attempts < maxAttempts)
+                while (await _advertisementService.GetAdvertisementByAdID(adId) != null && attempts < maxAttempts)
                 {
                     adId = GenerateUniqueAdId();
                     attempts++;
@@ -320,7 +321,7 @@ namespace KoiFengShui.BE.Controllers
                     Status = "Draft",
                 };
                 // Add advertisement
-                bool result = _advertisementService.AddAdvertisement(advertisement);
+                bool result = await _advertisementService.AddAdvertisement(advertisement);
 
                 if (result)
                 {
@@ -337,12 +338,14 @@ namespace KoiFengShui.BE.Controllers
             }
         }
 
-        [HttpPut("ApproveAdvertisement")]
-        public IActionResult ApproveAdvertisement(string adId,string elementID, string status)
+
+        [HttpPut("UpdateAdvertisementStatus")]
+        public async Task<IActionResult> UpdateAdvertisementStatus(string adId, string status)
+
         {
             try
             {
-                var advertise = _advertisementService.GetAdvertisementByAdID(adId);
+                var advertise = await _advertisementService.GetAdvertisementByAdID(adId);
                 if (advertise == null)
                 {
                     return BadRequest("Không tìm thấy bài quảng cáo");
@@ -351,7 +354,7 @@ namespace KoiFengShui.BE.Controllers
                 {
                     advertise.ElementId = elementID;
                     advertise.Status = status;
-                    bool check = _advertisementService.UpdateAdvertisement(advertise);
+                    bool check = await _advertisementService.UpdateAdvertisement(advertise);
                     if (check)
                     {
                         return Ok("Cập nhật thành công");
@@ -367,6 +370,39 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
+
+
+        [HttpPut("UpdateDaftAdvertisement")]
+        public async Task<IActionResult> UpdateDaftAdvertisement(AdvertisementDTO advertisement)
+        {
+            try
+            {
+                var existingAdvertisement = await _advertisementService.GetAdvertisementByAdID(advertisement.AdId);
+                if (existingAdvertisement == null)
+                {
+                    return NotFound("Không tìm thấy quảng cáo");
+                }
+                existingAdvertisement.Image = advertisement.Image;
+                existingAdvertisement.Heading = advertisement.Heading;
+                existingAdvertisement.Link = advertisement.Link;
+                existingAdvertisement.Status = "Draft";
+                bool result1 = await _advertisementService.UpdateAdvertisement(existingAdvertisement);
+                if (result1)
+                {
+                    return Ok("Cập nhật Draft thành công");
+                }
+                else
+                {
+                    return BadRequest("Cập nhật gói thất bại");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi server: {ex.Message}");
+            }
+        }
+
+        
 
 		[HttpPut("UpdateAdvertisementStatus")]
 		public IActionResult UpdateAdvertisementStatus(string adId, string status)
@@ -399,25 +435,26 @@ namespace KoiFengShui.BE.Controllers
 		}
 
 
-		[HttpPut("UpdateAdvertisement")]
-        public IActionResult UpdateAdvertisement(AdvertisementDTO advertisement, string Rank, string Status, DateTime startDate, int quantity, float total)
+	[HttpPut("UpdateAdvertisement")]
+        public async Task<IActionResult> UpdateAdvertisement(AdvertisementDTO advertisement, string Rank, string Status, DateTime startDate, int quantity, float total)
+
         {
             try
             {
-                var existingAdvertisement = _advertisementService.GetAdvertisementByAdID(advertisement.AdId);
+                var existingAdvertisement = await _advertisementService.GetAdvertisementByAdID(advertisement.AdId);
                 if (existingAdvertisement == null)
                 {
                     return NotFound("Không tìm thấy quảng cáo");
                 }
-                if (_elementService.GetElementAndMutualism(advertisement.ElementId) == null)
+                if (await _elementService.GetElementAndMutualism(advertisement.ElementId) == null)
                 {
                     return BadRequest("Không tìm thấy nguyên tố phù hợp ");
                 }
                 existingAdvertisement.ElementId = advertisement.ElementId;
                 existingAdvertisement.Status = Status;
-                bool result1 = _advertisementService.UpdateAdvertisement(existingAdvertisement);
-                AdsPackage adsPackage = _adsPackageService.GetAdsPackageByAdIDRank(advertisement.AdId, Rank);
-                Package package = _packageService.GetPackageByRank(Rank);
+                bool result1 = await _advertisementService.UpdateAdvertisement(existingAdvertisement);
+                AdsPackage adsPackage = await _adsPackageService.GetAdsPackageByAdIDRank(advertisement.AdId, Rank);
+                Package package = await _packageService.GetPackageByRank(Rank);
                 if (adsPackage == null)
                 {
                     AdsPackage newads = new AdsPackage();
@@ -427,7 +464,7 @@ namespace KoiFengShui.BE.Controllers
                     newads.ExpiredDate = startDate.AddDays(package.Duration * quantity);
                     newads.Quantity = quantity;
                     newads.Total = total;
-                    bool result2 = _adsPackageService.AddAdsPackage(newads);
+                    bool result2 = await _adsPackageService.AddAdsPackage(newads);
                     if (result2)
                     {
                         return Ok("Thêm quảng cáo thành công");
@@ -449,7 +486,7 @@ namespace KoiFengShui.BE.Controllers
         }
 
         [HttpPost("CreateAdvertisement")]
-        public IActionResult CreateAdvertisement(AdvertisementDTO advertisement, string Rank, DateTime startDate, int quantity, float total)
+        public async Task<IActionResult> CreateAdvertisement(AdvertisementDTO advertisement, string Rank, DateTime startDate, int quantity, float total)
         {
             try
             {
@@ -458,14 +495,14 @@ namespace KoiFengShui.BE.Controllers
 
                 if (!isNewAd)
                 {
-                    existingAdvertisement = _advertisementService.GetAdvertisementByAdID(advertisement.AdId);
+                    existingAdvertisement = await _advertisementService.GetAdvertisementByAdID(advertisement.AdId);
                     if (existingAdvertisement == null)
                     {
                         return NotFound("Không tìm thấy bản nháp quảng cáo");
                     }
                 }
 
-                if (_elementService.GetElementAndMutualism(advertisement.ElementId) == null)
+                if (await _elementService.GetElementAndMutualism(advertisement.ElementId) == null)
                 {
                     return BadRequest("Không tìm thấy nguyên tố phù hợp");
                 }
@@ -498,11 +535,11 @@ namespace KoiFengShui.BE.Controllers
                 bool result;
                 if (isNewAd)
                 {
-                    result = _advertisementService.AddAdvertisement(newAd);
+                    result = await _advertisementService.AddAdvertisement(newAd);
                 }
                 else
                 {
-                    result = _advertisementService.UpdateAdvertisement(newAd);
+                    result = await _advertisementService.UpdateAdvertisement(newAd);
                 }
 
                 if (!result)
@@ -510,7 +547,7 @@ namespace KoiFengShui.BE.Controllers
                     return BadRequest("Tạo quảng cáo thất bại");
                 }
 
-                Package package = _packageService.GetPackageByRank(Rank);
+                Package package = await _packageService.GetPackageByRank(Rank);
                 if (package == null)
                 {
                     return BadRequest("Không tìm thấy gói quảng cáo phù hợp");
@@ -526,7 +563,7 @@ namespace KoiFengShui.BE.Controllers
                     Total = total
                 };
 
-                bool adsPackageResult = _adsPackageService.AddAdsPackage(newAdsPackage);
+                bool adsPackageResult = await _adsPackageService.AddAdsPackage(newAdsPackage);
                 if (!adsPackageResult)
                 {
                     return BadRequest("Thêm gói quảng cáo thất bại");
@@ -541,18 +578,17 @@ namespace KoiFengShui.BE.Controllers
         }
 
         [HttpDelete("DeleteAdvertisement/{adId}")]
-        public IActionResult DeleteAdvertisement(string adId)
+        public async Task<IActionResult> DeleteAdvertisement(string adId)
         {
             try
             {
-
-                var existingAdvertisement = _advertisementService.GetAdvertisementByAdID(adId);
+                var existingAdvertisement = await _advertisementService.GetAdvertisementByAdID(adId);
                 if (existingAdvertisement == null)
                 {
                     return NotFound("Không tìm thấy quảng cáo");
                 }
 
-                bool result = _advertisementService.DeleteAdvertisement(adId);
+                bool result = await _advertisementService.DeleteAdvertisement(adId);
                 if (result)
                 {
                     return Ok("Xóa quảng cáo thành công");
@@ -561,7 +597,6 @@ namespace KoiFengShui.BE.Controllers
                 {
                     return BadRequest("Xóa quảng cáo thất bại");
                 }
-
             }
             catch (Exception ex)
             {

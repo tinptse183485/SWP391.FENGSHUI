@@ -1,6 +1,7 @@
 ﻿using FengShuiKoi_BO;
 using FengShuiKoi_Repository;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FengShuiKoi_Services
 {
@@ -13,14 +14,14 @@ namespace FengShuiKoi_Services
             directionRepo = new DirectionRepo();
         }
 
-        public Direction GetDirectionById(string id) => directionRepo.GetDirectionById(id);
+        public async Task<Direction> GetDirectionById(string id) => await directionRepo.GetDirectionById(id);
 
-        public List<Direction> GetDirections() => directionRepo.GetDirections();
+        public async Task<List<Direction>> GetDirections() => await directionRepo.GetDirections();
 
-        public bool AddDirection(Direction direction) => directionRepo.AddDirection(direction);
+        public async Task<bool> AddDirection(Direction direction) => await directionRepo.AddDirection(direction);
 
-        public bool DeleteDirection(string id) => directionRepo.DeleteDirection(id);
+        public async Task<bool> DeleteDirection(string id) => await directionRepo.DeleteDirection(id);
 
-        public bool UpdateDirection(Direction direction) => directionRepo.UpdateDirection(direction);
+        public async Task<bool> UpdateDirection(Direction direction) => await directionRepo.UpdateDirection(direction);
     }
 }

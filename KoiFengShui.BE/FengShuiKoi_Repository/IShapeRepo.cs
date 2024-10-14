@@ -1,15 +1,16 @@
 ﻿using FengShuiKoi_BO;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FengShuiKoi_Repository
 {
     public interface IShapeRepo
     {
-        Shape GetShapeById(string id);
-        List<Shape> GetShapes();
-        bool AddShape(Shape shape);
-        bool DeleteShape(string id);
-        bool UpdateShape(Shape shape);
-        Shape GetShapeByImg(string img);
+        Task<Shape> GetShapeById(string id);
+        Task<List<Shape>> GetShapes();
+        Task<bool> AddShape(Shape shape);
+        Task<bool> DeleteShape(string id);
+        Task<bool> UpdateShape(Shape shape);
+        Task<Shape> GetShapeByImg(string img);
     }
 }

@@ -18,16 +18,14 @@ namespace FengShuiKoi_Services
             iTypeColorRepo = new TypeColorRepo();
         }
 
-
-        public List<TypeColor> GetAllType() => iTypeColorRepo.GetAllType();
-        public TypeColor GetTypeByColorID(string colorId) => iTypeColorRepo.GetTypeByColorID(colorId);
-        public TypeColor GetPercentage(string color, string type) => iTypeColorRepo.GetPercentage(color, type);
-        public bool DeleteTypeColorByColorId(string colorId) => iTypeColorRepo.DeleteTypeColorByColorId(colorId);
-        public bool DeleteTypeColorByKoiType(string KoiType) => iTypeColorRepo.DeleteTypeColorByKoiType(KoiType);
-        public List<TypeColor> GetTypeByColor(string color) => iTypeColorRepo.GetTypeByColor(color);
-        public bool AddKoiTypeColor(TypeColor koiFish) => iTypeColorRepo.AddKoiTypeColor(koiFish);
-        public List<TypeColor> GetColorsAndPercentages(string koiType) => iTypeColorRepo.GetColorsAndPercentages(koiType);
-        public List<TypeColor> GetTypeByKoiType(string KoiType) => iTypeColorRepo.GetTypeByKoiType(KoiType);
-
+        public async Task<List<TypeColor>> GetAllType() => await iTypeColorRepo.GetAllType();
+        public async Task<TypeColor> GetTypeByColorID(string colorId) => await iTypeColorRepo.GetTypeByColorID(colorId);
+        public async Task<TypeColor> GetPercentage(string color, string type) => await iTypeColorRepo.GetPercentage(color, type);
+        public async Task<bool> DeleteTypeColorByColorId(string colorId) => await iTypeColorRepo.DeleteTypeColorByColorId(colorId);
+        public async Task<bool> DeleteTypeColorByKoiType(string KoiType) => await iTypeColorRepo.DeleteTypeColorByKoiType(KoiType);
+        public async Task<List<TypeColor>> GetTypeByColor(string color) => await iTypeColorRepo.GetTypeByColor(color);
+        public async Task<bool> AddKoiTypeColor(TypeColor koiFish) => await iTypeColorRepo.AddKoiTypeColor(koiFish);
+        public async Task<List<TypeColor>> GetColorsAndPercentages(string koiType) => await iTypeColorRepo.GetColorsAndPercentages(koiType);
+        public async Task<List<TypeColor>> GetTypeByKoiType(string KoiType) => await iTypeColorRepo.GetTypeByKoiType(KoiType);
     }
 }

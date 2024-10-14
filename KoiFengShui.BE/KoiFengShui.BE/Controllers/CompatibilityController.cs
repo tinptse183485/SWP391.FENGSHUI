@@ -30,22 +30,19 @@ namespace KoiFengShui.BE.Controllers
             _lifePlaceDirectionService = lifePlaceDirectionService;
         }
         [HttpPost("GetPointOf1KoiTypes")]
-        public IActionResult GetPointOf1KoiTypes(string koiType, string dob)
+        public async Task<IActionResult> GetPointOf1KoiTypes(string koiType, string dob)
         {
             int year = int.Parse(dob.Substring(0, 4));
 
             try
             {
-                string element = _elementService.GetElementByBirthYear(year);
-
-
-                var koiColors = _typeColorService.GetColorsAndPercentages(koiType);
-
+                string element =  _elementService.GetElementByBirthYear(year);
+                var koiColors = await _typeColorService.GetColorsAndPercentages(koiType);
                 double totalScore = 0;
 
                 foreach (var color in koiColors)
                 {
-                    var pointForColor = _elementColorService.GetPointElementColor(element, color.ColorId);
+                    var pointForColor = await _elementColorService.GetPointElementColor(element, color.ColorId);
                     totalScore += pointForColor * color.Percentage;
                 }
                 return Ok(Math.Round(totalScore, 3));
@@ -68,7 +65,7 @@ namespace KoiFengShui.BE.Controllers
         }
 
         [HttpPost("GetAttributeCustomColor")]
-        public IActionResult GetAttributeCustomColor([FromBody] CustomKoiTypeColor customKoiType, string dob)
+        public async Task<IActionResult> GetAttributeCustomColor([FromBody] CustomKoiTypeColor customKoiType, string dob)
         {
             if (customKoiType?.Colors == null || !customKoiType.Colors.Any())
             {
@@ -90,7 +87,7 @@ namespace KoiFengShui.BE.Controllers
                         continue;
                     }
 
-                    var pointForColor = _elementColorService.GetPointElementColor(element, color.ColorId);
+                    var pointForColor = await _elementColorService.GetPointElementColor(element, color.ColorId);
                     totalScore += pointForColor * color.Percentage.Value;
                     totalPercentage += color.Percentage.Value;
                 }
@@ -109,7 +106,7 @@ namespace KoiFengShui.BE.Controllers
         }
 
         [HttpPost("GetAveragePointOfKoiTypes")]
-        public IActionResult GetAveragePointOfKoiTypes([FromBody] List<CustomKoiTypeColor> customKoiTypes, string dob)
+        public async Task<IActionResult> GetAveragePointOfKoiTypes([FromBody] List<CustomKoiTypeColor> customKoiTypes, string dob)
         {
             if (customKoiTypes == null || !customKoiTypes.Any())
             {
@@ -139,7 +136,7 @@ namespace KoiFengShui.BE.Controllers
                         {
                             continue;
                         }
-                        var pointForColor = _elementColorService.GetPointElementColor(element, color.ColorId);
+                        var pointForColor = await _elementColorService.GetPointElementColor(element, color.ColorId);
                         koiScore += pointForColor * color.Percentage.Value;
                         totalPercentage += color.Percentage.Value;
                     }
@@ -168,14 +165,14 @@ namespace KoiFengShui.BE.Controllers
         }
 
         [HttpGet("GetPointOfShapeByShapeIDAndDOB")]
-        public IActionResult GetPointOfShapeByShapeIDAndDOB(string ShapeID, string DOB)
+        public async Task<IActionResult> GetPointOfShapeByShapeIDAndDOB(string ShapeID, string DOB)
         {
 
             int year = int.Parse(DOB.Substring(0, 4));
             try
             {
                 string element = _elementService.GetElementByBirthYear(year);
-                PointOfShape shape = _pointOfShapeService.GetPointOfShape(element, ShapeID);
+                PointOfShape shape = await _pointOfShapeService.GetPointOfShape(element, ShapeID);
                 if (shape != null)
                 {
                     return Ok(shape.Point * 100);
@@ -192,7 +189,7 @@ namespace KoiFengShui.BE.Controllers
             }
         }
         [HttpGet("GetPointOfDirectionByDirecDOBGEN")]
-        public IActionResult GetPointOfDirectionByDirecDOBGEN(string Direction, string DOB, string Gender)
+        public async Task<IActionResult> GetPointOfDirectionByDirecDOBGEN(string Direction, string DOB, string Gender)
         {
             string Life_Palace = "";
             try
@@ -207,7 +204,7 @@ namespace KoiFengShui.BE.Controllers
                     int lunarYear = lunarDate[2];
                     Life_Palace = _lifePlaceService.CalculateFate(lunarYear, Gender);
                 }
-                var point = _lifePlaceDirectionService.GetLifePlaceDirectionById(Life_Palace, Direction);
+                var point = await _lifePlaceDirectionService.GetLifePlaceDirectionById(Life_Palace, Direction);
                 return Ok(point.PointOfDirection * 100);
             }
             catch (Exception ex)
@@ -216,13 +213,13 @@ namespace KoiFengShui.BE.Controllers
             }
         }
         [HttpPost("GetTheCompatibilityOfUserByListFish")]
-        public IActionResult GetTheCompatibilityOfUserByListFish([FromBody] List<CustomKoiTypeColor> customKoiTypes, string ShapeID, string Direction, string DOB, string Gender)
+        public async Task<IActionResult> GetTheCompatibilityOfUserByListFish([FromBody] List<CustomKoiTypeColor> customKoiTypes, string ShapeID, string Direction, string DOB, string Gender)
         {
             try
             {
-                var s3Result = GetPointOfDirectionByDirecDOBGEN(Direction, DOB, Gender) as OkObjectResult;
-                var s2Result = GetPointOfShapeByShapeIDAndDOB(ShapeID, DOB) as OkObjectResult;
-                var s1Result = GetAveragePointOfKoiTypes(customKoiTypes, DOB) as OkObjectResult;
+                var s3Result = await GetPointOfDirectionByDirecDOBGEN(Direction, DOB, Gender) as OkObjectResult;
+                var s2Result = await GetPointOfShapeByShapeIDAndDOB(ShapeID, DOB) as OkObjectResult;
+                var s1Result = await GetAveragePointOfKoiTypes(customKoiTypes, DOB) as OkObjectResult;
 
                 if (s1Result == null || s2Result == null || s3Result == null)
                 {
@@ -241,13 +238,13 @@ namespace KoiFengShui.BE.Controllers
             }
         }
         [HttpPost("GetTheCompatibilityOfUserByOneFish")]
-        public IActionResult GetTheCompatibilityOfUserByOneFish(string koiType, string ShapeID, string Direction, string DOB, string Gender)
+        public async Task<IActionResult> GetTheCompatibilityOfUserByOneFish(string koiType, string ShapeID, string Direction, string DOB, string Gender)
         {
             try
             {
-                var s3Result = GetPointOfDirectionByDirecDOBGEN(Direction, DOB, Gender) as OkObjectResult;
-                var s2Result = GetPointOfShapeByShapeIDAndDOB(ShapeID, DOB) as OkObjectResult;
-                var s1Result = GetPointOf1KoiTypes(koiType, DOB) as OkObjectResult;
+                var s3Result = await GetPointOfDirectionByDirecDOBGEN(Direction, DOB, Gender) as OkObjectResult;
+                var s2Result = await GetPointOfShapeByShapeIDAndDOB(ShapeID, DOB) as OkObjectResult;
+                var s1Result = await GetPointOf1KoiTypes(koiType, DOB) as OkObjectResult;
                 if (s1Result == null || s2Result == null || s3Result == null)
                 {
                     return BadRequest("Không thể tính toán một hoặc nhiều thành phần của độ tương thích.");
@@ -269,7 +266,7 @@ namespace KoiFengShui.BE.Controllers
 
 
         [HttpPost("GetTheCompatibilityOfUser")]
-        public IActionResult GetTheCompatibilityOfUser([FromBody] List<CustomKoiTypeColor>? customKoiTypes, string? ShapeID, string? Direction, string DOB, string Gender)
+        public async Task<IActionResult> GetTheCompatibilityOfUser([FromBody] List<CustomKoiTypeColor>? customKoiTypes, string? ShapeID, string? Direction, string DOB, string Gender)
         {
             try
             {
@@ -288,7 +285,7 @@ namespace KoiFengShui.BE.Controllers
 
                 if (customKoiTypes != null && customKoiTypes.Any())
                 {
-                    s1Result = GetAveragePointOfKoiTypes(customKoiTypes, DOB) as OkObjectResult;
+                    s1Result = await GetAveragePointOfKoiTypes(customKoiTypes, DOB) as OkObjectResult;
                     if (s1Result != null)
                     {
                         s1 = ((dynamic)s1Result.Value).AverageScore;
@@ -297,7 +294,7 @@ namespace KoiFengShui.BE.Controllers
 
                 if (!string.IsNullOrEmpty(ShapeID))
                 {
-                    s2Result = GetPointOfShapeByShapeIDAndDOB(ShapeID, DOB) as OkObjectResult;
+                    s2Result = await  GetPointOfShapeByShapeIDAndDOB(ShapeID, DOB) as OkObjectResult;
                     if (s2Result != null)
                     {
                         s2 = Convert.ToDouble(s2Result.Value);
@@ -306,7 +303,7 @@ namespace KoiFengShui.BE.Controllers
 
                 if (!string.IsNullOrEmpty(Direction))
                 {
-                    s3Result = GetPointOfDirectionByDirecDOBGEN(Direction, DOB, Gender) as OkObjectResult;
+                    s3Result = await  GetPointOfDirectionByDirecDOBGEN(Direction, DOB, Gender) as OkObjectResult;
                     if (s3Result != null)
                     {
                         s3 = Convert.ToDouble(s3Result.Value);

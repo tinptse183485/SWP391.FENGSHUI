@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FengShuiKoi_DAO
@@ -24,33 +23,29 @@ namespace FengShuiKoi_DAO
                 return instance;
             }
         }
-        public BlogDAO()
-        {
-            dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
-        }
-        public Blog GetBlogByBlogID(string BlogID)
-        {
-            return dbContext.Blogs.SingleOrDefault(m => m.BlogId.Equals(BlogID));
-        }
-       
 
-        public List<Blog> GetBlogs()
+        public async Task<Blog> GetBlogByBlogID(string BlogID)
         {
-            return dbContext.Blogs.ToList();
+            return await dbContext.Blogs.SingleOrDefaultAsync(m => m.BlogId.Equals(BlogID));
         }
-        public bool AddBlog(Blog blog)
+
+        public async Task<List<Blog>> GetBlogs()
+        {
+            return await dbContext.Blogs.ToListAsync();
+        }
+
+        public async Task<bool> AddBlog(Blog blog)
         {
             bool isSuccess = false;
-            Blog _blog = this.GetBlogByBlogID(blog.BlogId);
+            Blog _blog = await this.GetBlogByBlogID(blog.BlogId);
             try
             {
                 if (_blog == null)
                 {
-                    dbContext.Blogs.Add(blog);
-                    dbContext.SaveChanges();
+                    await dbContext.Blogs.AddAsync(blog);
+                    await dbContext.SaveChangesAsync();
                     isSuccess = true;
                 }
-
             }
             catch (Exception ex)
             {
@@ -58,34 +53,17 @@ namespace FengShuiKoi_DAO
             }
             return isSuccess;
         }
-        public string GetLastBlogId()
-        {
-            try
-            {
-             
-                var lastBlogId = dbContext.Blogs
-                    .OrderByDescending(b => b.BlogId)
-                    .Select(b => b.BlogId)
-                    .FirstOrDefault();
 
-                return lastBlogId ?? string.Empty;
-            }
-            catch (Exception ex)
-            {
-              
-                return string.Empty;
-            }
-        }
-        public bool DeleteBlog(string BlogID)
+        public async Task<bool> DeleteBlog(string BlogID)
         {
             bool isSuccess = false;
-            Blog blog = this.GetBlogByBlogID(BlogID);
+            Blog blog = await this.GetBlogByBlogID(BlogID);
             try
             {
                 if (blog != null)
                 {
                     dbContext.Blogs.Remove(blog);
-                    dbContext.SaveChanges();
+                    await dbContext.SaveChangesAsync();
                     isSuccess = true;
                 }
             }
@@ -95,38 +73,45 @@ namespace FengShuiKoi_DAO
             }
             return isSuccess;
         }
-        public bool UpdateBlog(Blog updatedBlog)
+
+        public async Task<bool> UpdateBlog(Blog updatedBlog)
         {
             if (updatedBlog == null)
             {
-                return false; 
+                return false;
             }
 
             try
             {
-                var existingBlog = dbContext.Blogs.Find(updatedBlog.BlogId);
+                var existingBlog = await dbContext.Blogs.FindAsync(updatedBlog.BlogId);
                 if (existingBlog == null)
                 {
-                    return false; 
+                    return false;
                 }
 
                 dbContext.Entry(existingBlog).CurrentValues.SetValues(updatedBlog);
 
-               
-                int affectedRows = dbContext.SaveChanges();
+                int affectedRows = await dbContext.SaveChangesAsync();
 
                 return affectedRows > 0;
             }
             catch (DbUpdateException ex)
             {
-               
                 return false;
             }
             catch (Exception ex)
             {
-                
                 return false;
             }
+        }
+
+        public async Task<string> GetLastBlogId()
+        {
+            var lastBlog = await dbContext.Blogs
+                .OrderByDescending(b => b.BlogId)
+                .FirstOrDefaultAsync();
+
+            return lastBlog?.BlogId;
         }
     }
 }

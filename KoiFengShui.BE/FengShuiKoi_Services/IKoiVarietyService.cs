@@ -1,25 +1,16 @@
 ﻿using FengShuiKoi_BO;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FengShuiKoi_Services
 {
     public interface IKoiVarietyService
     {
-        public KoiVariety GetKoiVarietyByType(string type);
-
-        public List<KoiVariety> GetKoiVarieties();
-
-        public List<KoiVariety> GetKoiVarietiesByElemnet(string element);
-
-        public bool AddKoiVariety(KoiVariety variety);
-
-        public bool DeleteKoiVariety(string type);
-
-        public bool UpdateKoiVariety(KoiVariety updatedKoi);
-
+        Task<KoiVariety> GetKoiVarietyByType(string type);
+        Task<List<KoiVariety>> GetKoiVarieties();
+        Task<List<KoiVariety>> GetKoiVarietiesByElemnet(string element);
+        Task<bool> AddKoiVariety(KoiVariety variety);
+        Task<bool> DeleteKoiVariety(string type);
+        Task<bool> UpdateKoiVariety(KoiVariety updatedKoi);
     }
 }
