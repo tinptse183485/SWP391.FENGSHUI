@@ -1,7 +1,6 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
-import { Button, message } from 'antd';
+import { Button, message, Radio } from 'antd';
 import api from '../../config/axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './index.css';
@@ -15,12 +14,13 @@ function CreateAds() {
     heading: '',
     image: '',
     link: '',
-
     userId: localStorage.getItem("userId"),
     elementId: 'None',
     status: 'Draft'
   });
   const editorRef = useRef(null);
+
+  const [elements, setElements] = useState([]);
 
   useEffect(() => {
     const { advertisement } = location.state || {};
@@ -30,9 +30,28 @@ function CreateAds() {
         ...advertisement
       }));
     }
+    fetchElements();
   }, [location.state]);
 
+  useEffect(() => {
+    fetchElements();
+  }, []);
 
+  const fetchElements = async () => {
+    try {
+      const response = await api.get('Element/GetAllElement');
+      setElements(response.data);
+    } catch (error) {
+      console.error('Error fetching elements:', error);
+      message.error('Failed to fetch elements. Please try again.');
+    }
+  };
+  const handleElementChange = (e) => {
+    setAdData(prevData => ({
+      ...prevData,
+      elementId: e.target.value
+    }));
+  };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setAdData(prevData => ({
@@ -111,6 +130,17 @@ const handleChoosePackage = () => {
         placeholder="URL hình ảnh"
         required
       />
+       <div className="element-selection">
+      <h3>Chọn phần tử cho quảng cáo:</h3>
+      <Radio.Group onChange={handleElementChange} value={adData.elementId}>
+        {elements.map(element => (
+          <Radio key={element.elementId} value={element.elementId}>
+            {element.elementId}
+          </Radio>
+        ))}
+      </Radio.Group>
+    </div>
+      
       <Editor
         apiKey='48zvgxqbyrxhxjktp3nysk7hscrlqcz0143gyuhannv3rfv5'
 
@@ -167,4 +197,3 @@ const handleChoosePackage = () => {
 
 
 export default CreateAds;
-

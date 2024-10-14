@@ -70,3 +70,16 @@
   margin-bottom: 20px;
 }
 
+.element-selection {
+  margin-bottom: 20px;
+}
+
+.element-selection h3 {
+  margin-bottom: 10px;
+}
+
+.ant-radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
