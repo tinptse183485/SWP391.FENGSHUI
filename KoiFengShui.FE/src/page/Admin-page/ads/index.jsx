@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../config/axios";
-import { Table, Button, message, Image, Typography, Space, Menu } from "antd";
+import { Table, Button, message, Image, Typography, Space, Menu, Modal, Select, Form } from "antd";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 const { Text } = Typography;
 
 const Ads = () => {
@@ -9,6 +10,13 @@ const Ads = () => {
   const [data, setData] = useState([]); // Khởi tạo state để lưu trữ dữ liệu
   const [filteredData, setFilteredData] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState("all");
+  const [elements, setElements] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedElementId, setSelectedElementId] = useState(null);
+  const [currentAdId, setCurrentAdId] = useState(null);
+  const [currentStatus, setCurrentStatus] = useState(null);
+  const [form] = Form.useForm();
+  const [isApproving, setIsApproving] = useState(false);
 
   const menuItems = [
     { key: "all", label: "Tất cả" },
@@ -26,6 +34,7 @@ const Ads = () => {
 
   useEffect(() => {
     fetchData();
+    fetchElements();
   }, []);
 
   useEffect(() => {
@@ -155,6 +164,59 @@ const Ads = () => {
       },
     },
   ];
+
+  const fetchElements = async () => {
+    try {
+      const response = await api.get("Element/GetAllElement");
+      setElements(response.data);
+    } catch (error) {
+      console.error("Error fetching elements:", error);
+      message.error("Không thể tải danh sách element");
+    }
+  };
+
+  const handleUpdateStatus = (adId, status) => {
+    setCurrentAdId(adId);
+    setCurrentStatus(status);
+    setIsApproving(status === "Approved");
+    setIsModalVisible(true);
+  };
+
+  const handleModalOk = async () => {
+    try {
+      if (isApproving) {
+        if (!selectedElementId) {
+          message.error("Vui lòng chọn một element");
+          return;
+        }
+        await api.put(`Advertisement/ApproveAdvertisement?adId=${currentAdId}&elementID=${selectedElementId}&status=${currentStatus}`);
+      } else {
+        // Sử dụng API mới cho hủy bỏ/hoàn tiền
+        await api.put(`Advertisement/UpdateAdvertisementStatus?adId=${currentAdId}&status=${currentStatus}`);
+      }
+      
+      toast.success(`Cập nhật trạng thái thành công của bài quảng cáo ${currentAdId} thành ${currentStatus}`);
+      fetchData();
+      resetModalData();
+    } catch (error) {
+      console.error("Error updating status:", error);
+      toast.error(`Cập nhật trạng thái thất bại của bài quảng cáo ${currentAdId}`);
+    }
+  };
+
+  const handleModalCancel = () => {
+    resetModalData();
+  };
+
+  const resetModalData = () => {
+    setIsModalVisible(false);
+    setSelectedElementId(null);
+    setCurrentAdId(null);
+    setCurrentStatus(null);
+    setIsApproving(false);
+    form.resetFields();
+  };
+
   return (
     <div>
       <h1>Quản lý quảng cáo</h1>
@@ -169,6 +231,35 @@ const Ads = () => {
         ))}
       </Menu>
       <Table dataSource={filteredData} columns={columns} />
+      <Modal
+        title={isApproving ? "Phê duyệt quảng cáo" : `${currentStatus === "Canceled" ? "Hủy bỏ" : "Hoàn tiền"} quảng cáo`}
+        visible={isModalVisible}
+        onOk={handleModalOk}
+        onCancel={handleModalCancel}
+      >
+        {isApproving ? (
+          <Form form={form}>
+            <Form.Item
+              name="elementId"
+              rules={[{ required: true, message: 'Vui lòng chọn một element' }]}
+            >
+              <Select
+                style={{ width: '100%' }}
+                placeholder="Chọn một element"
+                onChange={(value) => setSelectedElementId(value)}
+              >
+                {elements.map((element) => (
+                  <Select.Option key={element.elementId} value={element.elementId}>
+                    {element.elementId}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Form>
+        ) : (
+          <p>Bạn có chắc chắn muốn {currentStatus === "Canceled" ? "hủy bỏ" : "hoàn tiền"} quảng cáo này?</p>
+        )}
+      </Modal>
     </div>
   );
 };
