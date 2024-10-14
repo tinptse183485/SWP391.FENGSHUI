@@ -90,7 +90,9 @@ function Home() {
                 className="header-img"
               />
               <div className="carousel-content">
-                <h3>{ad.heading}</h3>
+                <Link style={{color: "white"}} to={`/advertisement-detail/${ad.adId}`}>
+                  <h3>{ad.heading}</h3>
+                </Link>
               </div>
             </div>
           ))}
@@ -169,15 +171,20 @@ function Home() {
                           src={ad.image}
                           alt={ad.heading}
                         />
-                        <a href={ad.link}>
+                        <Link to={`/advertisement-detail/${ad.adId}`}>
                           <h3>{ad.heading}</h3>
-                        </a>
+                        </Link>
                       </div>
                     ))
                 ) : (
                   <p>No approved gold advertisements available at the moment.</p>
                 )}
               </div>
+              <div className="view-all-blogs-container">
+              <Link to="/ads-list" className="view-all-blogs-btn">
+                View All Advertisements
+              </Link>
+            </div>
               <button
                 className="nav-button nav-button-right"
                 onClick={showNext}
