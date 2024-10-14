@@ -103,7 +103,7 @@ const User_Ads = () => {
       <Layout>
         <Content style={{ margin: "16px" }}>
           <div
-            className="container"
+            className="container-ads"
             style={{ padding: 24, background: "#fff", minHeight: 360 }}
           >
             <div className="Heading">

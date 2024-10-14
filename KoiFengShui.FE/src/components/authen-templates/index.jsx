@@ -1,5 +1,5 @@
 import "./index.css";
-import koiImage from "./path-to-koi-image.jpg";
+import koiImage from "/koi_image/koigif1.gif";
 function AuthenTemplate({ children }) {
   return (
     <div className="authen-template">
