@@ -123,9 +123,10 @@ namespace KoiFengShui.BE.Controllers
                 List<AdsPackage> list = _adsPackageService.GetListAdsPackageByRank(rank);
                 foreach (AdsPackage ad in list)
                 {
-                    if (ad.StartDate <= DateTime.Now && ad.ExpiredDate >= DateTime.Now)
+                    Advertisement ads = _advertisementService.GetAdvertisementByAdID(ad.AdId);
+                    if (ad.StartDate <= DateTime.Now && ad.ExpiredDate >= DateTime.Now && ads.Status.Equals("Approved"))
                     {
-                        listAd.Add(_advertisementService.GetAdvertisementByAdID(ad.AdId));
+                        listAd.Add(ads);
                     }
                 }
                 if (listAd == null)
@@ -140,33 +141,6 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
-
-		[HttpGet("GetAdvertisementByRank")]
-		public IActionResult GetAdvertisementByRank(string rank)
-		{
-            List<Advertisement> listAd = new List<Advertisement>();
-			try
-			{
-                List<AdsPackage> list = _adsPackageService.GetListAdsPackageByRank(rank);
-				foreach(AdsPackage ad in list)
-                {
-                    if(ad.StartDate <= DateTime.Now && ad.ExpiredDate>= DateTime.Now)
-                    {
-                        listAd.Add(_advertisementService.GetAdvertisementByAdID(ad.AdId));
-                    }
-                }
-				if (listAd == null)
-				{
-					return BadRequest("Không tìm thấy quảng cáo");
-				}
-
-				return Ok(listAd);
-			}
-			catch (Exception ex)
-			{
-				return StatusCode(500, $"Internal server error: {ex.Message}");
-			}
-		}
 
 		[HttpGet("GenerateAdId")]
         public IActionResult GenerateAdId(string AdId)
