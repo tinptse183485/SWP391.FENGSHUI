@@ -26,6 +26,16 @@ import CreateBlog from "./page/Admin-page/CreateBlog";
 import BlogDetail from "./page/Admin-page/BlogDetail";
 import BlogList from "./page/Blogs-list";
 
+import Dashboard from "./components/dashboard";
+
+import AdvertisementDetail from "./page/AdvertismentDetail";
+import VNPayPayment from './page/Payment';
+import PaymentSuccess from './page/PaymentSuccess';
+import ChoosePackage from './page/ChoosePackage';
+import CreateBlog from "./page/Admin-page/CreateBlog";
+import BlogDetail from "./page/Admin-page/BlogDetail";
+import BlogList from "./page/Blogs-list";
+
 function App() {
 
   const router = createBrowserRouter([

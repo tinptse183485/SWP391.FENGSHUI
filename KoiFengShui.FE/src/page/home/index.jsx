@@ -95,9 +95,13 @@ function Home() {
                 className="header-img"
               />
               <div className="carousel-content">
+<<<<<<< HEAD
                 <Link to={`/advertisement-detail/${ad.adId}`}>
                   <h3>{ad.heading}</h3>
                 </Link>
+=======
+                <h3>{ad.heading}</h3>
+>>>>>>> 66b2e3accfab7c1543957c0ccddc99fe2e588311
               </div>
             </div>
           ))}
@@ -177,15 +181,25 @@ function Home() {
                     .filter(ad => ad.status === "Approved")
                     .slice(adIndex, adIndex + 3)
                     .map((ad) => (
+<<<<<<< HEAD
                       <div className="Card"  key={ad.adId}>
+=======
+                      <div className="Card" key={ad.adId}>
+>>>>>>> 66b2e3accfab7c1543957c0ccddc99fe2e588311
                         <img
                           src={ad.image}
                           alt={ad.heading}
                         />
+<<<<<<< HEAD
                         <Link to={`/advertisement-detail/${ad.adId}`}>
                           <h3>{ad.heading}</h3>
                         </Link>
                           
+=======
+                        <a href={ad.link}>
+                          <h3>{ad.heading}</h3>
+                        </a>
+>>>>>>> 66b2e3accfab7c1543957c0ccddc99fe2e588311
                       </div>
                     ))
                 ) : (
