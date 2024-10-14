@@ -48,6 +48,9 @@ function HeaderTemplate() {
       navigate("/", { state: { scrollTo: "Advertisements" } });
     }
   };
+  const handleLogin = () => {
+    navigate("/login");
+  };
 
   return (
     <div>
@@ -114,7 +117,7 @@ function HeaderTemplate() {
             </Dropdown>
           ) : (
             <Button className="login-btn">
-              <Link to="login">Log in / Sign up</Link>
+              <Link onClick={handleLogin}>Log in / Sign up</Link>
             </Button>
           )}
         </div>

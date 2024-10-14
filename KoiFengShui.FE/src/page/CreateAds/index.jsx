@@ -14,7 +14,6 @@ function CreateAds() {
     heading: '',
     image: '',
     link: '',
-
     userId: localStorage.getItem("userId"),
     elementId: 'None',
     status: 'Draft'
