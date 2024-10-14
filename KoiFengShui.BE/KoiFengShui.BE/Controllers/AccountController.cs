@@ -111,7 +111,8 @@ namespace KoiFengShui.BE.Controllers
         {
             try
             {
-                if (await _accountService.GetAccountByUserID(Account.UserID) == null)
+                var existingAccount = await _accountService.GetAccountByUserID(Account.UserID);
+                if (existingAccount == null)
                 {
                     return BadRequest("Tài khoản không tồn tại");
                 }
@@ -121,14 +122,10 @@ namespace KoiFengShui.BE.Controllers
                     return BadRequest("Trạng thái không được để trống");
                 }
 
-                var acc = new Account
-                {
-                    UserId = Account.UserID,
-                    Password = Account.Password,
-                    Status = Account.status
-                };
+                // Admin chỉ có thể cập nhật trạng thái
+                existingAccount.Status = Account.status;
 
-                bool result = await _accountService.UpdateAccountByAdmin(acc);
+                bool result = await _accountService.UpdateAccountByAdmin(existingAccount);
 
                 if (result)
                 {
@@ -158,7 +155,7 @@ namespace KoiFengShui.BE.Controllers
                 {
                     UserID = account.UserId,
                     Email = account.Email,
-                    Password = account.Password,
+                    Password = "",
                     Role = account.Role,
                     status = account.Status,
                     Name = member?.Name,

@@ -61,11 +61,11 @@ namespace KoiFengShui.BE.Controllers
 
 
 		[HttpGet("GetAdvertisementByUserId")]
-		public IActionResult GetAdvertisementByUserId(string  UserId)
+		public async Task<IActionResult> GetAdvertisementByUserId(string  UserId)
 		{
 			try
 			{
-				var advertisements = _advertisementService.GetAdvertisementByUserID(UserId);
+				var advertisements = await _advertisementService.GetAdvertisementByUserID(UserId);
 				if (advertisements == null)
 				{
 					return NotFound("Người dùng chưa có quảng cáo");
