@@ -26,18 +26,18 @@ namespace FengShuiKoi_Services
             return blogRepo.DeleteBlog(BlogID);
         }
 
-        public Blog GetAccountByUserID(string BlogID)
+        public Blog GetBlogByID(string BlogID)
         {
-            return blogRepo.GetAccountByUserID(BlogID);
+            return blogRepo.GetBlogByID(BlogID);
         }
 
         public List<Blog> GetBlogs()
         {
            return blogRepo.GetBlogs();
         
-    }
-
-        public bool UpdateBlog(string BlogID)
+        }
+        public string GetLastBlogId() =>blogRepo.GetLastBlogId();
+        public bool UpdateBlog(Blog BlogID)
         {
             return blogRepo.UpdateBlog(BlogID);
         }

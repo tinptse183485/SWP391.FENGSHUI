@@ -15,11 +15,11 @@ namespace FengShuiKoi_Repository
         public bool DeleteBlog(string BlogID) => BlogDAO.Instance.DeleteBlog(BlogID);
 
 
-
-        public Blog GetAccountByUserID(string BlogID) => BlogDAO.Instance.GetBlogByBlogID(BlogID);
+        public string GetLastBlogId() => BlogDAO.Instance.GetLastBlogId();
+        public Blog GetBlogByID(string BlogID) => BlogDAO.Instance.GetBlogByBlogID(BlogID);
 
         public List<Blog> GetBlogs() => BlogDAO.Instance.GetBlogs();
 
-        public bool UpdateBlog(string BlogID) => BlogDAO.Instance.UpdateBlog(BlogID);
+        public bool UpdateBlog(Blog BlogID) => BlogDAO.Instance.UpdateBlog(BlogID);
     }
 }

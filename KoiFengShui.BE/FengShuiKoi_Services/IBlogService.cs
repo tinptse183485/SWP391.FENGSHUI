@@ -15,10 +15,10 @@ namespace FengShuiKoi_Services
 
 
 
-        public Blog GetAccountByUserID(string BlogID);
+        public Blog GetBlogByID(string BlogID);
 
         public List<Blog> GetBlogs();
-
-        public bool UpdateBlog(string BlogID);
+        public string GetLastBlogId();
+        public bool UpdateBlog(Blog BlogID);
     }
 }

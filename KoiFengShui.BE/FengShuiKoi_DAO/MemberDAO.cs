@@ -124,10 +124,8 @@ namespace FungShuiKoi_DAO
 				{
 					return false;
 				}
-
 				existingMember.Name = updatedMember.Name;
 				existingMember.Birthday = updatedMember.Birthday;
-
 				dbContext.Entry(existingMember).State = EntityState.Modified;
 				dbContext.SaveChanges();
 				return true;

@@ -59,7 +59,7 @@ namespace KoiFengShui.BE
             builder.Services.AddScoped<IAdsPackageService, AdsPackageService>();
             builder.Services.AddScoped<ITypeColorService, TypeColorService>();
             builder.Services.AddScoped<IElementColorService, ElementColorService>();
-
+            builder.Services.AddScoped<IBlogService, BlogService>();
             builder.Services.AddScoped<IElementService, ElementService>();
             builder.Services.AddScoped<IKoiVarietyService, KoiVarietyService>();
             builder.Services.AddScoped<IQuantityOfFishService, QuantityOfFishService>();

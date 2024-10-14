@@ -1,4 +1,5 @@
 ﻿using FengShuiKoi_BO;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +41,7 @@ namespace FengShuiKoi_DAO
         public bool AddBlog(Blog blog)
         {
             bool isSuccess = false;
-            Blog  _blog = this.GetBlogByBlogID(blog.BlogId);
+            Blog _blog = this.GetBlogByBlogID(blog.BlogId);
             try
             {
                 if (_blog == null)
@@ -56,6 +57,24 @@ namespace FengShuiKoi_DAO
                 throw new Exception(ex.Message);
             }
             return isSuccess;
+        }
+        public string GetLastBlogId()
+        {
+            try
+            {
+             
+                var lastBlogId = dbContext.Blogs
+                    .OrderByDescending(b => b.BlogId)
+                    .Select(b => b.BlogId)
+                    .FirstOrDefault();
+
+                return lastBlogId ?? string.Empty;
+            }
+            catch (Exception ex)
+            {
+              
+                return string.Empty;
+            }
         }
         public bool DeleteBlog(string BlogID)
         {
@@ -76,24 +95,38 @@ namespace FengShuiKoi_DAO
             }
             return isSuccess;
         }
-        public bool UpdateBlog(string BlogID)
+        public bool UpdateBlog(Blog updatedBlog)
         {
-            bool isSuccess = false;
-            Blog blog = this.GetBlogByBlogID(BlogID);
+            if (updatedBlog == null)
+            {
+                return false; 
+            }
+
             try
             {
-                if (blog != null)
+                var existingBlog = dbContext.Blogs.Find(updatedBlog.BlogId);
+                if (existingBlog == null)
                 {
-                    dbContext.Entry<Blog>(blog).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    dbContext.SaveChanges();
-                    isSuccess = true;
+                    return false; 
                 }
+
+                dbContext.Entry(existingBlog).CurrentValues.SetValues(updatedBlog);
+
+               
+                int affectedRows = dbContext.SaveChanges();
+
+                return affectedRows > 0;
+            }
+            catch (DbUpdateException ex)
+            {
+               
+                return false;
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                
+                return false;
             }
-            return isSuccess;
         }
     }
 }
