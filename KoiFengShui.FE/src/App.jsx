@@ -26,6 +26,16 @@ import ChoosePackage from './page/ChoosePackage';
 
 
 
+import Dashboard from "./components/dashboard";
+
+import AdvertisementDetail from "./page/AdvertismentDetail";
+import VNPayPayment from './page/Payment';
+import PaymentSuccess from './page/PaymentSuccess';
+import ChoosePackage from './page/ChoosePackage';
+import CreateBlog from "./page/Admin-page/CreateBlog";
+import BlogDetail from "./page/Admin-page/BlogDetail";
+import BlogList from "./page/Blogs-list";
+
 function App() {
 
   const router = createBrowserRouter([
@@ -46,6 +56,7 @@ function App() {
       element: <Dashboard/>,
       children: [
         {
+
           path: "AdminDashboard",
           element: <AdminDashboard />,
         },
@@ -54,6 +65,7 @@ function App() {
           element: <User />,
         },
         
+
         {
           path: "ads",
           element: <ADS />,
@@ -63,6 +75,12 @@ function App() {
           element: <Blog />,
         },
         {
+
+          path: "create-blog",
+          element: <CreateBlog />,
+        },
+        {
+
           path: "koi",
           element: <Koi />,
         },
@@ -72,6 +90,7 @@ function App() {
         },
       ],
     },
+   
     {
 
       path: "calculation",
@@ -88,6 +107,12 @@ function App() {
     },
 
     {
+
+      path: "blogs-list",
+      element: <BlogList />,
+    },
+    {
+
       path: "ads-list",
       element: <Ads_list />,
     },
@@ -113,6 +138,12 @@ function App() {
       element: <PaymentSuccess />,
     },
     {
+
+      path: "blog-detail/:id",
+      element: <BlogDetail />,
+    },
+    {
+
       path: "/choose-package",
       element: <ChoosePackage />
     }

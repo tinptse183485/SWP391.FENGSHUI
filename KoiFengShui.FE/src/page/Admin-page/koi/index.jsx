@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"; // Thêm useEffect và useState
-// import "./index.css";
-import api from "../../../config/axios";
 
+import api from "../../../config/axios";
 import {
   Button,
   Form,
@@ -36,15 +35,19 @@ const Koi = () => {
   const [fileList, setFileList] = useState([]);
   const [colors, setColors] = useState([]);
 
+
+
   const [colorModalVisible, setColorModalVisible] = useState(false);
   const [colorForm] = Form.useForm();
-
+  const [editingKoi, setEditingKoi] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
   useEffect(() => {
     fetchDataAndColors();
     fetchColors();
   }, []); // Chạy một lần khi component mount
 
   const fetchDataAndColors = async () => {
+
     try {
       const [koiResponse, colorResponse] = await Promise.all([
         api.get("KoiVariety/GetAllKoi"),
@@ -85,26 +88,29 @@ const Koi = () => {
 
   const columns = [
     {
-      title: "Koi Type",
+      title: "Giống cá Koi",
       dataIndex: "koiType",
     },
     {
-      title: "Image",
+      title: "Hình ảnh",
+
       dataIndex: "image",
       render: (image) => {
         return <Image src={image} alt="" width={100}></Image>;
       },
     },
     {
-      title: "Element",
+      title: "Mệnh của cá",
       dataIndex: "element",
     },
     {
-      title: "Description",
+      title: "Thông tin giới thiệu",
       dataIndex: "description",
+      width: 450,
     },
     {
-      title: "Colors",
+      title: "Màu sắc",
+
       dataIndex: "colors",
       render: (colors) => (
         <ul>
@@ -117,28 +123,29 @@ const Koi = () => {
       ),
     },
     {
-      title: "Action",
+
+      title: "Hành động",
       dataIndex: "koiType",
       key: "koiType",
-      render: (koiType, category) => (
+      width: 150, 
+      render: (_, koi) => (
         <>
-          {/* <Button
+          <Button
             type="primary"
-            onClick={() => {
-              setOpenModal(true);
-              form.setFieldsValue(category);
-            }}
+            onClick={() => handleEdit(koi)}
           >
-            Edit
-          </Button> */}
-
+            Chỉnh sửa
+          </Button>
           <Popconfirm
-            title="Delete"
-            description="Delete?"
-            onConfirm={() => handleDelete(koiType)}
+            title="Xóa cá Koi"
+            description="Bạn có chắc muốn xóa loại cá này?"
+            onConfirm={() => handleDeleteKoi(koi.koiType)}
+            okButtonProps={{ size: 'small' }}
+            cancelButtonProps={{ size: 'small' }}
           >
             <Button type="primary" danger>
-              Delete
+              Xóa cá Koi
+
             </Button>
           </Popconfirm>
         </>
@@ -146,7 +153,22 @@ const Koi = () => {
     },
   ];
 
+
+  const handleDeleteKoi = async (koiType) => {
+    try {
+      const response = await api.delete(`KoiVariety/DeleteKoiAndTypeColor/${koiType}`);
+      toast.success(response.data);
+      fetchDataAndColors();
+    } catch (error) {
+      toast.error(error.response.data);
+    }
+  };
   const handleOpenModal = () => {
+    setIsEditing(false);
+    form.resetFields();
+    setFileList([]);
+
+
     setOpenModal(true);
   };
 
@@ -154,7 +176,23 @@ const Koi = () => {
     setOpenModal(false);
   };
 
-  const handleCreateKoi = async (values) => {
+  const handleEdit = (koi) => {
+    setIsEditing(true);
+    setEditingKoi(koi);
+    form.setFieldsValue({
+      koiType: koi.koiType,
+      element: koi.element,
+      description: koi.description,
+      colors: koi.colors.map(color => ({
+        colorId: color.colorId,
+        percentage: color.percentage
+      }))
+    });
+    setFileList(koi.image ? [{ url: koi.image, uid: '-1', name: 'image.png' }] : []);
+    setOpenModal(true);
+  };
+
+  const handleSubmit = async (values) => {
     // Kiểm tra tổng tỉ trọng
 
     const totalPercentage = values.colors.reduce(
@@ -163,21 +201,21 @@ const Koi = () => {
     );
 
     if (Math.abs(totalPercentage - 1) > 0.001) {
-      // Sử dụng sai số nhỏ để xử lý lỗi làm tròn số thập phân
       toast.error("Tổng tỉ trọng màu phải bằng 1");
       return;
     }
-
     try {
       setSubmitting(true);
-
       let imageUrl = "";
-      if (fileList.length > 0) {
+      if (fileList.length > 0 && fileList[0].originFileObj) {
         const file = fileList[0].originFileObj;
         imageUrl = await uploadFile(file);
+      } else if (isEditing && editingKoi.image) {
+        imageUrl = editingKoi.image;
       }
 
-      const koi = {
+      const koiData = {
+
         ...values,
         image: imageUrl,
         colors: values.colors.map((color) => ({
@@ -185,15 +223,25 @@ const Koi = () => {
           percentage: parseFloat(color.percentage),
         })),
       };
-      const response = await api.post("KoiVariety/AddKoiAndTypeColor", koi);
 
-      console.log(response.data);
-      toast.success("Tạo mới thành công");
+      if (isEditing) {
+        await api.put("KoiVariety/UpdateKoiAndTypeColor", koiData);
+        toast.success("Cập nhật thành công");
+      } else {
+        await api.post("KoiVariety/AddKoiAndTypeColor", koiData);
+        toast.success("Tạo mới thành công");
+      }
       setOpenModal(false);
       form.resetFields();
       fetchDataAndColors();
+      setEditingKoi(null);
+      setIsEditing(false);
     } catch (err) {
+
       toast.error(err.response?.data?.message || "Có lỗi xảy ra");
+
+
+
     } finally {
       setSubmitting(false);
     }
@@ -259,7 +307,6 @@ const Koi = () => {
 
   return (
     <div>
-      {/* className="dashboard-container" */}
       <h1>Quản lý cá Koi</h1>
       <Space>
         <Button onClick={handleOpenModal}>Tạo mới loại cá Koi</Button>
@@ -271,11 +318,16 @@ const Koi = () => {
       <Modal
         confirmLoading={submitting}
         onOk={() => form.submit()}
-        title="Tạo một giống cá Koi mới"
+        title={isEditing ? "Chỉnh sửa cá Koi" : "Tạo một giống cá Koi mới"}
         open={openModal}
-        onCancel={handleCloseModal}
+        onCancel={() => {
+          handleCloseModal();
+          setEditingKoi(null);
+          setIsEditing(false);
+          form.resetFields();
+        }}
       >
-        <Form onFinish={handleCreateKoi} form={form}>
+        <Form onFinish={handleSubmit} form={form}>
           <Form.Item
             label="Giống cá Koi"
             name="koiType"
