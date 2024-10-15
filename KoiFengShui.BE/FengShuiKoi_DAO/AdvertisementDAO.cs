@@ -123,7 +123,7 @@ namespace FengShuiKoi_DAO
         public async Task<List<Advertisement>> GetExpiredAdvertisements()
         {
             return await dbContext.Advertisements
-                .Where(a => a.Status != "Expired" && a.AdsPackages.Any(ap => ap.ExpiredDate < DateTime.Now))
+                .Where(a => a.Status == "Approved" || a.Status =="Pending" && a.AdsPackages.Any(ap => ap.ExpiredDate < DateTime.Now))
                 .ToListAsync();
         }
     }

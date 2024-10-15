@@ -338,7 +338,36 @@ namespace KoiFengShui.BE.Controllers
             }
         }
 
-
+        [HttpPut("ApproveAdvertisement")]
+        public async Task<IActionResult> ApproveAdvertisement(string adId, string elementID, string status)
+        {
+            try
+            {
+                var advertise = await _advertisementService.GetAdvertisementByAdID(adId);
+                if (advertise == null)
+                {
+                    return BadRequest("Không tìm thấy bài quảng cáo");
+                }
+                else
+                {
+                    advertise.ElementId = elementID;
+                    advertise.Status = status;
+                    bool check = await _advertisementService.UpdateAdvertisement(advertise);
+                    if (check)
+                    {
+                        return Ok("Cập nhật thành công");
+                    }
+                    else
+                    {
+                        return BadRequest("Cập nhật thất bại");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi server: {ex.Message}");
+            }
+        }
         [HttpPut("UpdateAdvertisementStatus")]
         public async Task<IActionResult> UpdateAdvertisementStatus(string adId, string status)
 
