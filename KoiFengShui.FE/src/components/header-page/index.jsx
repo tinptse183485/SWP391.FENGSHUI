@@ -38,16 +38,26 @@ function HeaderTemplate() {
     </Menu>
   );
 
-  const handleScrollToAdvertisements = (event) => {
+  const handleScrollToSection = (sectionId) => (event) => {
     event.preventDefault();
-    const advertisementsSection = document.getElementById("Advertisements");
-    if (advertisementsSection) {
-      advertisementsSection.scrollIntoView({ behavior: "smooth" });
+    const section = document.getElementById(sectionId);
+    if (section) {
+      const headerHeight = document.querySelector('.top-bar').offsetHeight;
+      const sectionPosition = section.getBoundingClientRect().top + window.pageYOffset;
+      window.scrollTo({
+        top: sectionPosition - headerHeight,
+        behavior: 'smooth'
+      });
     } else {
-      // If the section is not on the current page, navigate to home and then scroll
-      navigate("/", { state: { scrollTo: "Advertisements" } });
+      navigate("/", { state: { scrollTo: sectionId } });
     }
   };
+
+  const handleScrollToAboutUs = handleScrollToSection("about-us");
+  const handleScrollToAdvertisements = handleScrollToSection("Advertisements");
+  const handleScrollToBlog = handleScrollToSection("blog");
+  const handleScrollToContact = handleScrollToSection("contact");
+
   const handleLogin = () => {
     navigate("/login");
   };
@@ -81,25 +91,16 @@ function HeaderTemplate() {
                 </Link>
               </li>
               <li>
-                <Link to="/ads-list">
-                  <a href="#about">About Us</a>
-                </Link>
+                <a href="#about-us" onClick={handleScrollToAboutUs}>About Us</a>
               </li>
               <li>
-                <a
-                  href="#Advertisements"
-                  onClick={handleScrollToAdvertisements}
-                >
-                  Quảng cáo
-                </a>
+                <a href="#Advertisements" onClick={handleScrollToAdvertisements}>Quảng cáo</a>
               </li>
               <li>
-                <Link to="/user-ads">
-                  <a href="#blog">Blog</a>
-                </Link>
+                <a href="#blog" onClick={handleScrollToBlog}>Blog</a>
               </li>
               <li>
-                <a href="#contact">Liên hệ</a>
+                <a href="#contact" onClick={handleScrollToContact}>Liên hệ</a>
               </li>
             </ul>
           </nav>

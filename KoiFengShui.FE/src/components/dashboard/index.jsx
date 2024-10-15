@@ -5,10 +5,16 @@ import {
   PieChartOutlined,
   TeamOutlined,
   UserOutlined,
+
+  LogoutOutlined,
+
 } from "@ant-design/icons";
 import { Breadcrumb, Button, Layout, Menu, theme } from "antd";
 import { Link, Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import KoiImage from './koi.jpg';
+import "./index.css";
+
 const { Header, Content, Footer, Sider } = Layout;
 function getItem(label, key, icon, children) {
   return {
@@ -19,11 +25,14 @@ function getItem(label, key, icon, children) {
   };
 }
 const items = [
-  getItem("Manage Ads", "ads", <PieChartOutlined />),
-  getItem("Manage User", "user", <PieChartOutlined />),
-  getItem("Manage Blog", "blog", <PieChartOutlined />),
-  getItem("Manage Koi", "koi", <PieChartOutlined />),
-  getItem("Manage Pond", "pond", <PieChartOutlined />),
+
+  getItem("Dashboard", "AdminDashboard", <PieChartOutlined />),
+  getItem("Quản lý quảng cáo", "ads", <PieChartOutlined />),
+  getItem("Quản lý người dùng", "user", <PieChartOutlined />),
+  getItem("Quản lý Blog", "blog", <PieChartOutlined />),
+  getItem("Quản lý cá Koi", "koi", <PieChartOutlined />),
+  getItem("Quản lý hồ", "pond", <PieChartOutlined />),
+
 ];
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -37,6 +46,8 @@ const Dashboard = () => {
   const handleLogout = () => {
     localStorage.removeItem("userId");
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
+
     setUserId(null);
     navigate("/");
   };
@@ -48,6 +59,7 @@ const Dashboard = () => {
     <Layout
       style={{
         minHeight: "100vh",
+
       }}
     >
       <Sider
@@ -55,14 +67,43 @@ const Dashboard = () => {
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
       >
+
+        <div className="logo">
+        {collapsed ? (
+          <img src={KoiImage} alt="Logo" />
+        ) : (
+            <img src={KoiImage} alt="Logo" />
+        )}
+      </div>
         <div className="demo-logo-vertical" />
+        
+
         <Menu
           theme="dark"
           defaultSelectedKeys={["1"]}
           mode="inline"
           items={items}
+
+          style={{
+            marginTop: "80px",
+            padding: '16px 0', 
+          }}
+          itemStyle={{
+            margin: '16px 0', // Thêm khoảng cách giữa các item
+          }}
         />
-        <Button onClick={handleLogout}>Log out</Button>
+        
+        <Button
+          style={{
+            marginTop: "80px",
+          }}
+          type="primary"
+          icon={<LogoutOutlined />}
+          onClick={handleLogout}
+        >
+          {collapsed ? "" : "Logout"}
+        </Button>
+
       </Sider>
 
       <Layout>
@@ -82,7 +123,8 @@ const Dashboard = () => {
               margin: "16px 0",
             }}
           >
-            <Breadcrumb.Item>User</Breadcrumb.Item>
+
+            <Breadcrumb.Item>Admin</Breadcrumb.Item>
             <Breadcrumb.Item>{userId}</Breadcrumb.Item>
           </Breadcrumb>
           <div
@@ -101,7 +143,6 @@ const Dashboard = () => {
             textAlign: "center",
           }}
         >
-          Ant Design ©{new Date().getFullYear()} Created by Ant UED
         </Footer>
       </Layout>
     </Layout>

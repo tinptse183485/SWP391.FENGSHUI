@@ -1,4 +1,5 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { RouterProvider, createBrowserRouter, Navigate, useLocation } from "react-router-dom";
+import { toast } from 'react-toastify';
 import Home from "./page/home";
 import Login from "./page/login";
 import Register from "./page/register";
@@ -17,6 +18,7 @@ import Ads_list from "./page/Ads_list";
 import CreateAds from "./page/CreateAds";
 import User_Ads from "./page/User_Ads";
 
+
 import Dashboard from "./components/dashboard";
 
 import AdvertisementDetail from "./page/AdvertismentDetail";
@@ -29,10 +31,29 @@ import BlogList from "./page/Blogs-list";
 
 
 
-
-
 function App() {
+  const ProtectedRoute = ({ children }) => {
+    const location = useLocation();
+    const userId = localStorage.getItem('userId');
 
+    if (!userId) {
+      toast.error('Vui lòng đăng nhập để truy cập trang này.');
+      return <Navigate to="/login" state={{ from: location }} replace />;
+    }
+
+    return children;
+  };
+
+  const ProtectedRouteAdmin = ({ children }) => {
+    const userId = localStorage.getItem('userId');
+    const userRole = localStorage.getItem('role');
+
+    if (userId && userRole === "Admin") {
+      return children;
+    }
+    toast.error('Vui lòng đăng nhập để truy cập trang này.');
+      return <Navigate to="/login"  replace />;
+  }
   const router = createBrowserRouter([
     {
       path: "/",
@@ -48,7 +69,7 @@ function App() {
     },
     {
       path: "dashboard",
-      element: <Dashboard/>,
+      element:<ProtectedRouteAdmin><Dashboard/></ProtectedRouteAdmin> ,
       children: [
         {
           path: "user",
@@ -63,12 +84,10 @@ function App() {
           element: <Blog />,
         },
         {
-
           path: "create-blog",
           element: <CreateBlog />,
         },
         {
-
           path: "koi",
           element: <Koi />,
         },
@@ -78,7 +97,6 @@ function App() {
         },
       ],
     },
-   
     {
 
       path: "calculation",
@@ -93,24 +111,21 @@ function App() {
       element: <CalculateCompability />,
 
     },
-
     {
       path: "blogs-list",
       element: <BlogList />,
     },
-
-
     {
       path: "ads-list",
       element: <Ads_list />,
     },
     {
       path: "create-ads",
-      element: <CreateAds />,
+      element: <ProtectedRoute><CreateAds /></ProtectedRoute>,
     },
     {
       path: "user-ads",
-      element: <User_Ads />,
+      element: <ProtectedRoute><User_Ads /></ProtectedRoute>,
     },
 
     {
@@ -132,13 +147,11 @@ function App() {
     {
       path: "/choose-package",
       element: <ChoosePackage />
-    }
-
-
+    },
+  
   ]);
 
   return <RouterProvider router={router} />;
 }
-
 
 export default App;

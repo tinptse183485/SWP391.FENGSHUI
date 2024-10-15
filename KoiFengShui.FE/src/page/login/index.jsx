@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthenTemplate from "../../components/authen-templates";
 import { GoogleOutlined } from "@ant-design/icons";
 import api from "../../config/axios";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "./index.css";
 
 import { GoogleLogin } from '@react-oauth/google';
@@ -51,6 +51,7 @@ function Login() {
       const { role, token, userId } = response.data;
       localStorage.setItem("token", token);
       localStorage.setItem("userId", userId);
+      localStorage.setItem("role", role);
       if (role === "Admin") {
         navigate("/dashboard");
       } else {
@@ -101,6 +102,7 @@ function Login() {
       const { role, token, userId } = response.data;
       localStorage.setItem("token", token);
       localStorage.setItem("userId", userId);
+      
 
       if (role === "ADMIN") {
         navigate("/dashboard");

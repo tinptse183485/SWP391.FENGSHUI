@@ -2,7 +2,7 @@
   "name": "swp391-koifengshuiconsultweb-fa24",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@mui/material": "^6.1.2",
@@ -27,8 +26,7 @@
     "react-pro-sidebar": "^1.1.0",
     "react-router-dom": "^6.26.2",
     "react-toastify": "^10.0.5",
-    "recharts": "^2.12.7"
-
+    "recharts": "^2.13.0"
   },
   "devDependencies": {
     "@codeceptjs/configure": "^1.0.1",
@@ -43,11 +41,8 @@
     "eslint-plugin-react-refresh": "^0.4.9",
     "globals": "^15.9.0",
 
-
-
     "playwright": "^1.47.2",
 
     "vite": "^5.4.8"
-
   }
 }

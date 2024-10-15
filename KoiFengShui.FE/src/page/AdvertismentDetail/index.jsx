@@ -4,6 +4,7 @@ import api from "../../config/axios";
 import HeaderTemplate from "../../components/header-page";
 import { Spin } from 'antd';
 import './index.css';
+import FooterTemplate from '../../components/footer-page';
 
 
 function AdvertisementDetail() {
@@ -42,6 +43,7 @@ function AdvertisementDetail() {
           </>
         )}
       </div>
+      <FooterTemplate />
     </>
   );
 }

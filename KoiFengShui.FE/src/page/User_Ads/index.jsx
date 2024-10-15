@@ -15,6 +15,7 @@ const User_Ads = () => {
   const [advertisements, setAdvertisements] = useState([]);
   const [filteredAds, setFilteredAds] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState("all");
+  const [adsPackages, setAdsPackages] = useState([]);
 
   const menuItems = [
     { key: "all", label: "Tất cả" },
@@ -26,18 +27,44 @@ const User_Ads = () => {
   ];
   const userId = localStorage.getItem("userId");
 
-  useEffect(() => {
+  useEffect(() =>  {
+    fetchAdsPackages(); 
     fetchAdvertisements();
+    
   }, []);
+
+  useEffect(() => {
+    if (adsPackages.length > 0) {
+      fetchAdvertisements();
+    }
+  }, [adsPackages]);
 
   useEffect(() => {
     filterAdvertisements(selectedStatus);
   }, [selectedStatus, advertisements]);
 
+  const fetchAdsPackages = async () => {
+    try {
+      const response = await api.get('AdsPackage/GetAllAdsPackage');
+      setAdsPackages(response.data);
+      console.log(adsPackages);
+    } catch (error) {
+      console.error("Error fetching ads packages:", error);
+    }
+  };
+
   const fetchAdvertisements = async () => {
     try {
-      const response = await api.get(`Advertisement/GetAdvertisementByUserId?UserId=${userId}`); // Replace with your actual API endpoint
-      setAdvertisements(response.data);
+      const response = await api.get(`Advertisement/GetAdvertisementByUserId?UserId=${userId}`);
+      const adsWithExpirationDate = response.data.map(ad => {
+        const adPackage = adsPackages.find(pkg => pkg.adId === ad.adId);
+        return {
+          ...ad,
+          expirationDate: adPackage ? adPackage.expiredDate : null
+        };
+      });
+      setAdvertisements(adsWithExpirationDate);
+      console.log(adsWithExpirationDate);
     } catch (error) {
       console.error("Error fetching advertisements:", error);
     }
@@ -80,14 +107,44 @@ const User_Ads = () => {
       key: "createdAt",
     },
     {
+      title: "Ngày hết hạn",
+      dataIndex: "expirationDate",
+      key: "expirationDate",
+      render: (expirationDate) => {
+        if (!expirationDate) return "N/A";
+        const date = new Date(expirationDate);
+        return date.toLocaleDateString("vi-VN", {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        });
+      },
+    },
+    {
       title: "Hành động",
       key: "action",
-      render: (_, record) =>
-        record.status === "Draft" ? (
-          <Button onClick={() => handleUpdateDraft(record)}>
-            Cập nhật bản nháp
-          </Button>
-        ) : null,
+      render: (_, record) => {
+        const currentDate = new Date();
+        const expirationDate = new Date(record.expirationDate);
+        console.log(record.expirationDate);
+        const sevenDaysAfterExpiration = new Date(expirationDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+        console.log(sevenDaysAfterExpiration);
+
+        if (record.status === "Draft") {
+          return (
+            <Button onClick={() => handleUpdateDraft(record)}>
+              Cập nhật bản nháp
+            </Button>
+          );
+        } else if (record.status === "Approved" && currentDate > expirationDate && currentDate <= sevenDaysAfterExpiration) {
+          return (
+            <Button onClick={() => handleExtendAd(record.adId)}>
+              Gia hạn
+            </Button>
+          );
+        }
+        return null;
+      },
     },
   ];
 
@@ -97,6 +154,14 @@ const User_Ads = () => {
 
   const handleUpdateDraft = (advertisement) => {
     navigate("/create-ads", { state: { advertisement } });
+  };
+
+  const handleExtendAd = (adId) => {
+    // Implement the logic to extend the advertisement
+    console.log(`Extending advertisement with ID: ${adId}`);
+    // You might want to navigate to an extension page or open a modal
+    // For example:
+    // navigate(`/extend-ad/${adId}`);
   };
 
   return (

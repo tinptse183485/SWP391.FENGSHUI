@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react"; // Added useState and useEffect
-import Sidebar from "../../../components/sidebar/Sidebar";
+
 import "./index.css";
 import api from "../../../config/axios";
 
@@ -22,7 +22,8 @@ const Pond = () => {
   };
 
   return (
-    <div className="dashboard-container">
+    <div>
+      <h1>Quản lý hồ cá Koi</h1>
       <div className="dashboard-content">
         {data.length > 0 ? ( // Kiểm tra xem có dữ liệu không
           data.map((item) => (

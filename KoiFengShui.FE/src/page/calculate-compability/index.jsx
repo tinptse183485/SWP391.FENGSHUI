@@ -605,6 +605,7 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
               layout="vertical"
               className="compatibility-form"
             >
+              <div className="user-info">
               <div className="birthdate-gender-row">
                 <Form.Item
                   name="birthdate"
@@ -641,14 +642,17 @@ comment += "- Với gia chủ mang mệnh Thổ, việc chọn cá Koi phù hợ
                     <Radio value="female">Nữ</Radio>
                   </Radio.Group>
                 </Form.Item>
-                {userElement && userLifePalife && (
+                
+              </div>
+              {userElement && userLifePalife && (
   <div className="user-info-section">
     <h2 className="user-info-title">Thông tin người dùng</h2>
     <p><strong>Mệnh:</strong> {userElement}</p>
     <p><strong>Cung mệnh:</strong> {userLifePalife}</p>
   </div>
 )}
-              </div>
+</div>
+
 
               <Form.Item
                 label="Chọn loại cá"

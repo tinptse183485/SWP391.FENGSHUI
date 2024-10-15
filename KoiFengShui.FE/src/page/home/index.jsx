@@ -23,6 +23,14 @@ const contentStyle = {
   background: "#364d79",
 };
 
+const handleUserAds = () => {
+  if(!localStorage.getItem("userId")){
+    toast.warning("Vui lòng đăng nhập để sử dụng chức năng này");
+    return <Navigate to="/login" />;
+  }
+  return;
+}
+
 function Home() {
   const processedRef = useRef(false);
   const [advertisements, setAdvertisements] = useState({
@@ -101,11 +109,41 @@ function Home() {
 
 
         <body>
+        <div id="about-us" className="container">
+            <div className="feature about-us-title">
+            <div className="rectangle"></div>
+              <h2 style={{margin: "0 40px"}}>Về chúng tôi</h2>
+              
+              
+            </div>
+            <div className="about-us-container">
+            <div className="about-us-content">
+              <p>
+                Chào mừng bạn đến với Koi Phong Thủy - nơi hội tụ đam mê và kiến thức về cá Koi. Chúng tôi tự hào là điểm đến hàng đầu cho những người yêu thích và nuôi cá Koi tại Việt Nam.
+              </p>
+              <p>
+                Với hơn 10 năm kinh nghiệm trong lĩnh vực này, chúng tôi cung cấp:
+              </p>
+              <ul>
+                <li>Thông tin chuyên sâu về các loại cá Koi</li>
+                <li>Tư vấn chọn cá và thiết kế hồ theo phong thủy</li>
+                <li>Chia sẻ kinh nghiệm nuôi cá Koi</li>
+                <li>Dịch vụ quảng cáo cho các cơ sở kinh doanh cá Koi</li>
+              </ul>
+              <p>
+                Chúng tôi cam kết mang đến cho bạn những thông tin chính xác, hữu ích và cập nhật nhất về thế giới cá Koi. Hãy cùng Koi Phong Thủy khám phá vẻ đẹp và nghệ thuật của việc nuôi cá Koi!
+              </p>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" viewBox="0 0 800 800"><g stroke-width="10" stroke="hsl(0, 0%, 100%)" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5.5 21" transform="matrix(0.22495105434386492,0.9743700647852352,-0.9743700647852352,0.22495105434386492,626.7676041765482,-265.72844765164007)"><path d="M204 204Q487 359 400 400Q394 23 596 596 " marker-end="url(#SvgjsMarker3948)"></path></g><defs><marker markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" viewBox="0 0 5 5" orient="auto" id="SvgjsMarker3948"><polygon points="0,5 1.6666666666666667,2.5 0,0 5,2.5" fill="hsl(0, 0%, 100%)"></polygon></marker></defs></svg>
+            </div>
+          </div>
           {/* Trending Feature */}
-          <div className="container">
+          <div id="trending-feature" className="container">
             <div className="feature">
+            
               <h2>Tính năng nổi bật</h2>
               <div class="rectangle"></div>
+              
               </div>
               <div className="Card-container">
               <div className="Card">
@@ -137,7 +175,7 @@ function Home() {
                 <img src={KoiImage2} alt="Calculate compatibility"></img>
                 <a href="#">
                   {" "}
-                  <Link to="user-ads">
+                  <Link  to="/user-ads">
                     <h3>Đăng tin quảng cáo</h3>
                   </Link>
 
@@ -147,8 +185,9 @@ function Home() {
           </div>
           <div id="Advertisements" className="container">
             <div className="feature">
-            <h2>Quảng cáo</h2>
             <div class="rectangle"></div>
+            <h2>Quảng cáo</h2>
+            
             </div>
             <div className="advertisement-container">
               <button
@@ -182,7 +221,7 @@ function Home() {
               </div>
               <div className="view-all-blogs-container">
               <Link to="/ads-list" className="view-all-blogs-btn">
-                View All Advertisements
+                Xem tất cả quảng cáo
               </Link>
             </div>
               <button
@@ -197,8 +236,9 @@ function Home() {
             </div>
           </div>
           {/* Blog */}
-          <div className="container">
+          <div id="blog" className="container">
             <div className="feature">
+            <div class="rectangle"></div>
               <h2>Blog</h2>
               <div class="rectangle"></div>
               </div>
@@ -218,12 +258,25 @@ function Home() {
             </div>
             <div className="view-all-blogs-container">
               <Link to="/blogs-list" className="view-all-blogs-btn">
-                View All Blogs
+                Xem tất cả blogs
               </Link>
             </div>
           </div>
+          
+         
+          <div className="container">
+            <div className="feature">
+              <h2>Khách hàng nói gì về chúng tôi</h2>
+              <div className="rectangle"></div>
+            </div>
+            <div className="testimonial-container">
+              {/* Add 2-3 testimonial cards here */}
+            </div>
+          </div>
         </body>
+        <div id="contact">
         <FooterPage></FooterPage>
+        </div>
       </div>
     </>
   );
