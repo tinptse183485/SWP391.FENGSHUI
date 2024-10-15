@@ -36,7 +36,7 @@ const Ads_list = () => {
 
     <>
       <HeaderTemplate />
-      <div className="ads-container">
+      <div className="advertisements-container">
         <h1 className="ads-title">Our Advertisements</h1>
         
         {featuredAd && (

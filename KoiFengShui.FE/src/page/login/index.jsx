@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthenTemplate from "../../components/authen-templates";
 import { GoogleOutlined } from "@ant-design/icons";
 import api from "../../config/axios";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "./index.css";
 
 import { GoogleLogin } from '@react-oauth/google';
@@ -21,8 +21,6 @@ function Login() {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      
-
       // Send Google user info to your backend
       const response = await api.post("/Account/google-login", {
         email: user.email,
@@ -34,11 +32,10 @@ function Login() {
       const { role, token, userId } = response.data;
       localStorage.setItem("token", token);
       localStorage.setItem("userId", userId);
-      localStorage.setItem("role", role);
 
 
       if (role === "ADMIN") {
-        navigate("/dashboard");
+        navigate("/dashboard/AdminDashboard");
       } else {
         navigate("/");
       }
@@ -105,6 +102,7 @@ function Login() {
       const { role, token, userId } = response.data;
       localStorage.setItem("token", token);
       localStorage.setItem("userId", userId);
+      
 
       if (role === "ADMIN") {
         navigate("/dashboard");
@@ -120,7 +118,7 @@ function Login() {
   return (
     <AuthenTemplate>
       <div className="login-header">
-        <h1>Welcome to Koi Hên Xui !</h1>
+        <h1>KOI PHONG THỦY !</h1>
         <p>Đăng nhập để tiếp tục</p>
       </div>
       <Form labelCol={{ span: 24 }} onFinish={handleLogin}>

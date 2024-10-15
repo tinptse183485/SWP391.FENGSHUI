@@ -7,10 +7,10 @@ import { ToastContainer } from "react-toastify";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+  <>
     <GoogleOAuthProvider clientId="958782319796-ba6d0uqplfepnmsdu1aol963oq6orkok.apps.googleusercontent.com">
       <App />
       <ToastContainer />
     </GoogleOAuthProvider>
-  </React.StrictMode>
+  </>
 );

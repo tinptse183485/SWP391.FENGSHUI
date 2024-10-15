@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../config/axios";
+
 import { Table, Button, message, Image, Typography, Space, Menu, Modal, Select, Form } from "antd";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+
 const { Text } = Typography;
 
 const Ads = () => {
@@ -107,6 +109,7 @@ const Ads = () => {
         <Text
           style={{
             color:
+
             status === "Approved"
             ? "#52c41a"
             : status === "Refunded"
@@ -114,18 +117,22 @@ const Ads = () => {
             : status === "Canceled"
             ? "#f5222d"
             : "#1890ff", // Màu cho trạng thái Pending
+
           }}
         >
           {status}
         </Text>
       ),
+
       sorter: (a, b) => statusPriority[a.status] - statusPriority[b.status],
       defaultSortOrder: 'ascend',
+
     },
     {
       title: "Action",
       key: "action",
       width: 200,
+
       render: (_, record) => {
         const isApproved = record.status === "Approved";
         const isRefunded = record.status === "Refunded";

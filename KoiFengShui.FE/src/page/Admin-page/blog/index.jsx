@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import {  Layout, Menu, Table, Button, Popconfirm, message, Typography, Space } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +7,7 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import "./index.css";
 import { toast } from "react-toastify";
 const { Text } = Typography;
+
 const Blog = () => {
   const navigate = useNavigate();
   const [blogs, setBlogs] = useState([]);
@@ -154,6 +156,7 @@ const Blog = () => {
   ];
 
   return (
+
       <div>
         <h1>Quản lý Blog</h1>
         <button onClick={handleCreate} className="btn-create">
@@ -170,6 +173,7 @@ const Blog = () => {
         ))}
       </Menu>
       <Table columns={columns} dataSource={filteredBlogs} rowKey="blogId" />
+
       </div>
   );
 };

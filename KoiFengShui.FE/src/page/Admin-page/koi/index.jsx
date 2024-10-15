@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"; // Thêm useEffect và useState
+
 import api from "../../../config/axios";
 import {
   Button,
@@ -34,14 +35,14 @@ const Koi = () => {
   const [fileList, setFileList] = useState([]);
   const [colors, setColors] = useState([]);
 
+
+
   const [colorModalVisible, setColorModalVisible] = useState(false);
   const [colorForm] = Form.useForm();
   const [editingKoi, setEditingKoi] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   useEffect(() => {
     fetchDataAndColors();
-
-
     fetchColors();
   }, []); // Chạy một lần khi component mount
 
@@ -92,6 +93,7 @@ const Koi = () => {
     },
     {
       title: "Hình ảnh",
+
       dataIndex: "image",
       render: (image) => {
         return <Image src={image} alt="" width={100}></Image>;
@@ -108,6 +110,7 @@ const Koi = () => {
     },
     {
       title: "Màu sắc",
+
       dataIndex: "colors",
       render: (colors) => (
         <ul>
@@ -120,6 +123,7 @@ const Koi = () => {
       ),
     },
     {
+
       title: "Hành động",
       dataIndex: "koiType",
       key: "koiType",
@@ -141,12 +145,14 @@ const Koi = () => {
           >
             <Button type="primary" danger>
               Xóa cá Koi
+
             </Button>
           </Popconfirm>
         </>
       ),
     },
   ];
+
 
   const handleDeleteKoi = async (koiType) => {
     try {
@@ -161,6 +167,7 @@ const Koi = () => {
     setIsEditing(false);
     form.resetFields();
     setFileList([]);
+
 
     setOpenModal(true);
   };
@@ -187,10 +194,12 @@ const Koi = () => {
 
   const handleSubmit = async (values) => {
     // Kiểm tra tổng tỉ trọng
+
     const totalPercentage = values.colors.reduce(
       (sum, color) => sum + parseFloat(color.percentage || 0),
       0
     );
+
     if (Math.abs(totalPercentage - 1) > 0.001) {
       toast.error("Tổng tỉ trọng màu phải bằng 1");
       return;
@@ -206,6 +215,7 @@ const Koi = () => {
       }
 
       const koiData = {
+
         ...values,
         image: imageUrl,
         colors: values.colors.map((color) => ({
@@ -213,6 +223,7 @@ const Koi = () => {
           percentage: parseFloat(color.percentage),
         })),
       };
+
       if (isEditing) {
         await api.put("KoiVariety/UpdateKoiAndTypeColor", koiData);
         toast.success("Cập nhật thành công");
@@ -227,16 +238,12 @@ const Koi = () => {
       setIsEditing(false);
     } catch (err) {
 
-      toast.error(err.response?.data?.message || "Có lỗi xảy ra");
-
+      toast.error(err.response?.data || "Có lỗi xảy ra");
 
     } finally {
       setSubmitting(false);
     }
   };
-
-
-
 
   const handleAddColor = async (values) => {
     const formattedValues = {
@@ -371,7 +378,6 @@ const Koi = () => {
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name, ...restField }) => (
-
                   <Space
                     key={key}
                     style={{ display: "flex", marginBottom: 8 }}
@@ -387,13 +393,11 @@ const Koi = () => {
                           <Option key={colorId} value={colorId}>
                             {colorId}
                           </Option>
-
                         ))}
                       </Select>
                     </Form.Item>
                     <Form.Item
                       {...restField}
-
                       name={[name, "percentage"]}
                       rules={[
                         { required: true, message: "Nhập tỉ trọng" },
@@ -411,13 +415,11 @@ const Koi = () => {
                         step="0.01"
                         placeholder="Tỉ trọng (0-1)"
                       />
-
                     </Form.Item>
                     <MinusCircleOutlined onClick={() => remove(name)} />
                   </Space>
                 ))}
                 <Form.Item>
-
                   <Space>
                     <Button
                       type="dashed"
@@ -427,7 +429,6 @@ const Koi = () => {
                       Thêm màu
                     </Button>
                   </Space>
-
                 </Form.Item>
               </>
             )}
@@ -469,7 +470,6 @@ const Koi = () => {
               Thêm màu mới
             </Button>
           </Form.Item>
-
         </Form>
       </Modal>
 

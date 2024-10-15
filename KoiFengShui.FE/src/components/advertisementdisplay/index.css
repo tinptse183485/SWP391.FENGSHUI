@@ -15,6 +15,12 @@ img{
   height: 200px;  
   object-fit: cover;
 }
+.advertisement-container h2{
+  text-align: center;
+  font-size: 35px ;
+  font-weight: 600;
+  color: #fad7a7;
+}
 
 .advertisement-list {
 display: flex;
