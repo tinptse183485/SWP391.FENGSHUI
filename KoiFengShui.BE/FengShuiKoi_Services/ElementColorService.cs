@@ -1,6 +1,7 @@
 ﻿using FengShuiKoi_BO;
 using FengShuiKoi_Repository;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FengShuiKoi_Services
 {
@@ -13,21 +14,20 @@ namespace FengShuiKoi_Services
             elementColorRepo = new ElementColorRepo();
         }
 
-        public ElementColor GetElementColorById(string element, string color) => elementColorRepo.GetElementColorById(element, color);
+        public async Task<ElementColor> GetElementColorById(string element, string color) => await elementColorRepo.GetElementColorById(element, color);
 
-        public List<ElementColor> GetElementColors() => elementColorRepo.GetElementColors();
+        public async Task<List<ElementColor>> GetElementColors() => await elementColorRepo.GetElementColors();
 
-        public bool AddElementColor(ElementColor elementColor) => elementColorRepo.AddElementColor(elementColor);
+        public async Task<bool> AddElementColor(ElementColor elementColor) => await elementColorRepo.AddElementColor(elementColor);
 
-        public bool DeleteElementColor(string element, string color) => elementColorRepo.DeleteElementColor(element, color);
+        public async Task<bool> DeleteElementColor(string element, string color) => await elementColorRepo.DeleteElementColor(element, color);
 
-        public bool UpdateElementColor(ElementColor elementColor) => elementColorRepo.UpdateElementColor(elementColor);
+        public async Task<bool> UpdateElementColor(ElementColor elementColor) => await elementColorRepo.UpdateElementColor(elementColor);
 
+        public async Task<float> GetPointElementColor(string element, string color) => await elementColorRepo.GetPointElementColor(element, color);
 
-        public float GetPointElementColor(string element, string color) => elementColorRepo.GetPointElementColor(element, color);
+        public async Task<ElementColor> GetElementColorByColorId(string color) => await elementColorRepo.GetElementColorByColorId(color);
 
-        public ElementColor GetElementColorByColorId(string color) => elementColorRepo.GetElementColorByColorId(color);
-
-        public bool DeleteElementColorByColorId(string color) => elementColorRepo.DeleteElementColorByColorId(color);
+        public async Task<bool> DeleteElementColorByColorId(string color) => await elementColorRepo.DeleteElementColorByColorId(color);
     }
 }

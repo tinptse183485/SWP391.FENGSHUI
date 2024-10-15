@@ -2,9 +2,6 @@
 using FengShuiKoi_Repository;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FengShuiKoi_Services
@@ -16,41 +13,41 @@ namespace FengShuiKoi_Services
         {
             iAdsPackageRepo = new AdsPackageRepo();
         }
-        public bool AddAdsPackage(AdsPackage ads)
+        public async Task<bool> AddAdsPackage(AdsPackage ads)
         {
-            return iAdsPackageRepo.AddAdsPackage(ads);
+            return await iAdsPackageRepo.AddAdsPackage(ads);
         }
-		public Dictionary<string, double> GetRevenueByPackage()
+        public async Task<Dictionary<string, double>> GetRevenueByPackage()
         {
-            return iAdsPackageRepo.GetRevenueByPackage();
-        }
-
-		public bool DeleteAdsPackage(string AdID, string Rank)
-        {
-            return iAdsPackageRepo.DeleteAdsPackage(AdID, Rank);
+            return await iAdsPackageRepo.GetRevenueByPackage();
         }
 
-        public AdsPackage GetAdsPackageByAdIDRank(string AdID, string Rank)
+        public async Task<bool> DeleteAdsPackage(string AdID, string Rank, DateTime CreateAt)
         {
-            return iAdsPackageRepo.GetAdsPackageByAdIDRank(AdID, Rank);
+            return await iAdsPackageRepo.DeleteAdsPackage(AdID, Rank, CreateAt);
         }
 
-        public List<AdsPackage> GetAdsPackages()
+        public async Task<AdsPackage> GetAdsPackageByAdIDRankTime(string AdID, string Rank, DateTime CreateAt)
         {
-            return iAdsPackageRepo.GetAdsPackages();
+            return await iAdsPackageRepo.GetAdsPackageByAdIDRankTime(AdID, Rank, CreateAt);
         }
 
-        public List<AdsPackage> GetListAdsPackageByAdID(string AdID)
+        public async Task<List<AdsPackage>> GetAdsPackages()
         {
-           return iAdsPackageRepo.GetListAdsPackageByAdID(AdID); 
+            return await iAdsPackageRepo.GetAdsPackages();
         }
-		public List<AdsPackage> GetListAdsPackageByRank(string Rank)
+
+        public async Task<List<AdsPackage>> GetListAdsPackageByAdID(string AdID)
         {
-			return iAdsPackageRepo.GetListAdsPackageByRank(Rank);
-		}
-		public bool UpdateAdsPackage(AdsPackage newAdsPackage)
-		{
-            return iAdsPackageRepo.UpdateAdsPackage(newAdsPackage);
+            return await iAdsPackageRepo.GetListAdsPackageByAdID(AdID);
+        }
+        public async Task<List<AdsPackage>> GetListAdsPackageByRank(string Rank)
+        {
+            return await iAdsPackageRepo.GetListAdsPackageByRank(Rank);
+        }
+        public async Task<bool> UpdateAdsPackage(AdsPackage newAdsPackage)
+        {
+            return await iAdsPackageRepo.UpdateAdsPackage(newAdsPackage);
         }
     }
 }

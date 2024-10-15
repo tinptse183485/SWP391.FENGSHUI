@@ -3,25 +3,27 @@ using FengShuiKoi_Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection.Metadata;
+using System.Threading.Tasks;
 
 namespace KoiFengShui.BE.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class BlogController : ControllerBase
-    {   private readonly IBlogService _blogService;
+    {
+        private readonly IBlogService _blogService;
         public BlogController(IBlogService blogService)
         {
-              _blogService = blogService;
+            _blogService = blogService;
         }
+
         [HttpGet("GetAllBlog")]
-        public IActionResult GetAllBlog()
-        {   
+        public async Task<IActionResult> GetAllBlog()
+        {
             List<Blog> blogs = new List<Blog>();
             try
             {
-                blogs = _blogService.GetBlogs();
-
+                blogs = await _blogService.GetBlogs();
 
                 return Ok(blogs);
             }
@@ -30,8 +32,9 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, "An error occurred while processing your request.");
             }
         }
+
         [HttpGet("GetBlogByID")]
-        public IActionResult GetBlogByID(string blog)
+        public async Task<IActionResult> GetBlogByID(string blog)
         {
             try
             {
@@ -39,8 +42,8 @@ namespace KoiFengShui.BE.Controllers
                 {
                     return BadRequest("Vui lòng điền BlogID");
                 }
-                var blogs = _blogService.GetBlogByID(blog);
-                
+                var blogs = await _blogService.GetBlogByID(blog);
+
                 if (blogs == null)
                 {
                     return BadRequest("Không tìm thấy Blog phù hợp");
@@ -53,10 +56,10 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, "An error occurred while processing your request.");
             }
         }
+
         [HttpPut("UpdateBlog")]
-        public IActionResult UpdateBlog(Blog blog)
+        public async Task<IActionResult> UpdateBlog(Blog blog)
         {
-            
             try
             {
                 if (string.IsNullOrWhiteSpace(blog.BlogId))
@@ -79,12 +82,12 @@ namespace KoiFengShui.BE.Controllers
                 {
                     return BadRequest("Vui lòng điền file Image cho Blog");
                 }
-                var blogs = _blogService.GetBlogByID(blog.BlogId);
+                var blogs = await _blogService.GetBlogByID(blog.BlogId);
                 if (blogs == null)
                 {
                     return BadRequest("Không tìm thấy Blog phù hợp");
                 }
-                bool result = _blogService.UpdateBlog(blog);
+                bool result = await _blogService.UpdateBlog(blog);
 
                 if (result)
                 {
@@ -100,11 +103,10 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, "An error occurred while processing your request.");
             }
         }
+
         [HttpPost("AddBlog")]
-        public IActionResult AddBlog(Blog blog)
+        public async Task<IActionResult> AddBlog(Blog blog)
         {
-
-
             if (string.IsNullOrWhiteSpace(blog.Heading))
             {
                 return BadRequest("Vui lòng điền Heading cho Blog");
@@ -123,11 +125,10 @@ namespace KoiFengShui.BE.Controllers
             }
             try
             {
-                
-                string newBlogId = GenerateNewBlogId();
+                string newBlogId = await GenerateNewBlogId();
                 blog.BlogId = newBlogId;
 
-                bool result = _blogService.AddBlog(blog);
+                bool result = await _blogService.AddBlog(blog);
 
                 if (result)
                 {
@@ -140,23 +141,22 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-               
                 return StatusCode(500, "Đã xảy ra lỗi trong quá trình xử lý yêu cầu của bạn.");
             }
         }
+
         [HttpDelete("DeleteBlog/{blogID}")]
-        public IActionResult DeleteBlog(string blogID)
+        public async Task<IActionResult> DeleteBlog(string blogID)
         {
             try
             {
-
-                var blogs = _blogService.GetBlogByID(blogID);
+                var blogs = await _blogService.GetBlogByID(blogID);
                 if (blogs == null)
                 {
                     return BadRequest("Không tìm thấy Blog phù hợp");
                 }
 
-                var result = _blogService.DeleteBlog(blogID);
+                var result = await _blogService.DeleteBlog(blogID);
 
                 if (result)
                 {
@@ -169,14 +169,13 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-
                 return StatusCode(500, "Đã xảy ra lỗi trong quá trình xử lý yêu cầu của bạn.");
             }
         }
-        private string GenerateNewBlogId()
+
+        private async Task<string> GenerateNewBlogId()
         {
-           
-            string lastBlogId = _blogService.GetLastBlogId();
+            string lastBlogId = await _blogService.GetLastBlogId();
 
             if (string.IsNullOrEmpty(lastBlogId))
             {
@@ -184,9 +183,7 @@ namespace KoiFengShui.BE.Controllers
             }
             else
             {
-                
                 int lastNumber = int.Parse(lastBlogId.Substring(2));
-               
                 return $"BL{(lastNumber + 1):D3}";
             }
         }

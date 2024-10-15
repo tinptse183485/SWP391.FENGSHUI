@@ -15,7 +15,6 @@ namespace FengShuiKoi_Services
         {
             iquantityRepo = new QuantityOfFishRepo();
         }
-        public QuantityOfFish getQuantityByElement(string element) => iquantityRepo.getQuantityByElement(element);
-        
+        public async Task<QuantityOfFish> getQuantityByElement(string element) => await iquantityRepo.getQuantityByElement(element);
     }
 }

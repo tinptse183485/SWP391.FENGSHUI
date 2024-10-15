@@ -2,6 +2,9 @@
 using FengShuiKoi_Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace KoiFengShui.BE.Controllers
 {
@@ -9,24 +12,19 @@ namespace KoiFengShui.BE.Controllers
     [ApiController]
     public class DirectionController : ControllerBase
     {
-
         private readonly IDirectionService _directionService;
-
 
         public DirectionController(IDirectionService directionService)
         {
             _directionService = directionService;
         }
-        [HttpGet("GetAllDirection")]
-        public IActionResult GetAllDirection()
-        {
-            List<Direction> listDirection = new List<Direction>();
 
+        [HttpGet("GetAllDirection")]
+        public async Task<IActionResult> GetAllDirection()
+        {
             try
             {
-
-                listDirection = _directionService.GetDirections();
-
+                List<Direction> listDirection = await _directionService.GetDirections();
                 return Ok(listDirection);
             }
             catch (Exception ex)

@@ -1,24 +1,21 @@
 ﻿using FengShuiKoi_BO;
-using FengShuiKoi_DAO;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FengShuiKoi_Repository
 {
     public interface IBlogRepo
     {
-        public bool AddBlog(Blog Blog);
+        Task<bool> AddBlog(Blog Blog);
 
-        public bool DeleteBlog(string BlogID) ;
+        Task<bool> DeleteBlog(string BlogID);
 
-        public string GetLastBlogId();
-        public bool UpdateBlog(Blog Blog);  
-        public Blog GetBlogByID(string BlogID) ;
+        Task<string> GetLastBlogId();
 
-        public List<Blog> GetBlogs() ;
-        
+        Task<bool> UpdateBlog(Blog Blog);
+
+        Task<Blog> GetBlogByID(string BlogID);
+
+        Task<List<Blog>> GetBlogs();
     }
 }
