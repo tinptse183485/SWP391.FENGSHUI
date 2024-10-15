@@ -40,8 +40,21 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
+		[HttpGet("GetAllAdvertisementSortted")]
+		public async Task<IActionResult> GetAllAdvertisementSortted()
+		{
+			try
+			{
+				var listAdvertisement = await _advertisementService.GetAdvertisementsSortted();
+				return Ok(listAdvertisement);
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Lỗi server: {ex.Message}");
+			}
+		}
 
-        [HttpGet("GetAdvertisementByAdId")]
+		[HttpGet("GetAdvertisementByAdId")]
         public async Task<IActionResult> GetAdvertisementByAdId(string adId)
         {
             try
@@ -120,7 +133,7 @@ namespace KoiFengShui.BE.Controllers
                 foreach (AdsPackage ad in list)
                 {
                     Advertisement ads = await _advertisementService.GetAdvertisementByAdID(ad.AdId);
-                    if (ad.StartDate <= DateTime.Now && ad.ExpiredDate >= DateTime.Now && ads.Status.Equals("Approved"))
+                    if (ads.Status.Equals("Approved"))
                     {
 
                         var advertisement = await _advertisementService.GetAdvertisementByAdID(ad.AdId);
@@ -170,8 +183,12 @@ namespace KoiFengShui.BE.Controllers
                 {
                     return BadRequest("ID người dùng là bắt buộc.");
                 }
+				if (string.IsNullOrEmpty(advertisementDto.ElementId))
+				{
+					return BadRequest("Mệnh của bài đăng là bắt buộc.");
+				}
 
-                if (await _accountService.GetAccountByUserID(advertisementDto.UserId) == null)
+				if (await _accountService.GetAccountByUserID(advertisementDto.UserId) == null)
                 {
                     return BadRequest("Không tìm thấy ID của người dùng.");
                 }
@@ -190,7 +207,11 @@ namespace KoiFengShui.BE.Controllers
                     advertisement = new Advertisement
                     {
                         AdId = adId,
+                        Heading = advertisementDto.Heading,
+                        Image = advertisementDto.Image,
+                        Link = advertisementDto.Link,
                         UserId = advertisementDto.UserId,
+                        ElementId = advertisementDto.ElementId,
                         Status = "Draft"
                     };
                 }
@@ -393,11 +414,6 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
-
-
-
-
-
 
         [HttpPut("UpdateAdvertisement")]
         public async Task<IActionResult> UpdateAdvertisement(AdvertisementDTO advertisement, string Rank, string Status, DateTime startDate, DateTime CreateAt, int quantity, float total)

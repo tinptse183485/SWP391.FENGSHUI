@@ -31,16 +31,28 @@ namespace FengShuiKoi_DAO
         {
             return await dbContext.Advertisements.SingleOrDefaultAsync(m => m.AdId.Equals(AdID));
         }
-
-
-       
-
-           public async Task<List<Advertisement>> GetAdvertisements()
+        public async Task<List<Advertisement>> GetAdvertisements()
         {
             return await dbContext.Advertisements.ToListAsync();
         }
+		public async Task<List<Advertisement>> GetAdvertisementsSortted()
+		{
+			var now = DateTime.Now;
+			return await dbContext.Advertisements
+				.Join(dbContext.AdsPackages,
+					ad => ad.AdId,
+					ap => ap.AdId,
+					(ad, ap) => new { Advertisement = ad, AdsPackage = ap })
+				.Where(x => x.AdsPackage.StartDate <= now && x.AdsPackage.ExpiredDate >= now)
+				.OrderBy(x => x.AdsPackage.Rank == "Diamond" ? 0 :
+							  x.AdsPackage.Rank == "Gold" ? 1 :
+							  x.AdsPackage.Rank == "Silver" ? 2 : 3)
+				.ThenByDescending(x => x.AdsPackage.StartDate)
+				.Select(x => x.Advertisement)
+				.ToListAsync();
+		}
 
-        public async Task<List<Advertisement>> GetAdvertisementByUserID(string userdID)
+		public async Task<List<Advertisement>> GetAdvertisementByUserID(string userdID)
         {
             return await dbContext.Advertisements
                 .Where(m => m.UserId.Equals(userdID))
@@ -123,7 +135,7 @@ namespace FengShuiKoi_DAO
         public async Task<List<Advertisement>> GetExpiredAdvertisements()
         {
             return await dbContext.Advertisements
-                .Where(a => a.Status == "Approved" || a.Status =="Pending" && a.AdsPackages.Any(ap => ap.ExpiredDate < DateTime.Now))
+                .Where(a => (a.Status == "Approved" || a.Status =="Pending") && a.AdsPackages.Any(ap => ap.ExpiredDate < DateTime.Now))
                 .ToListAsync();
         }
     }

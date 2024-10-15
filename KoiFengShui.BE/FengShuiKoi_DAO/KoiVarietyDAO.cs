@@ -106,7 +106,7 @@ namespace FengShuiKoi_DAO
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error updating KoiVariety: {ex.Message}");
+                Console.WriteLine($"Lỗi khi cập nhật KoiVariety: {ex.Message}");
                 return false;
             }
         }

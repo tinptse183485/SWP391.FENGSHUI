@@ -46,6 +46,7 @@ namespace FengShuiKoi_Repository
         }
 
 		public async Task<List<Advertisement>> GetExpiredAdvertisements() => await AdvertisementDAO.Instance.GetExpiredAdvertisements();
+        public async Task<List<Advertisement>> GetAdvertisementsSortted() => await AdvertisementDAO.Instance.GetAdvertisementsSortted();
 
 	}
 }
