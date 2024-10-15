@@ -87,10 +87,12 @@ const Dashboard = () => {
   const countAdsByUserId = () => {
     const userCounts = {};
     adData.forEach((ad) => {
-      if (userCounts[ad.userId]) {
-        userCounts[ad.userId]++;
-      } else {
-        userCounts[ad.userId] = 1;
+      if (ad.status !== "Canceled") {
+        if (userCounts[ad.userId]) {
+          userCounts[ad.userId]++;
+        } else {
+          userCounts[ad.userId] = 1;
+        }
       }
     });
     return userCounts;
@@ -201,21 +203,17 @@ const Dashboard = () => {
     <div className="dashboard-container">
       <h2>Dashboard</h2>
       <div className="dashboard-content">
-
-        
         {/* Thẻ tổng quan */}
         <div className="overview-cards">
           <div className="overview-card">
             <h3>số lượng quảng cáo</h3>
-            <p>{adData.length}</p>
+            <p>{countAdsByUserId() ? Object.values(countAdsByUserId()).reduce((acc, curr) => acc + curr, 0) : 0}</p>
           </div>
-
           <div className="overview-card" style={{ backgroundColor: '#ff9800' }}>
             <h3>Tổng doanh thu</h3>
             <p>{Object.values(revenueData).reduce((acc, curr) => acc + curr, 0)}</p>
           </div>
         </div>
-
         <div className="chart-container">
           {revenueData && Object.keys(revenueData).length > 0 ? (
             <Bar key="revenueChart" data={revenueChartData} options={revenueOptions} />

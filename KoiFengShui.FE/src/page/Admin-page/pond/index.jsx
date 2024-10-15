@@ -1,6 +1,5 @@
 
 import React, { useState, useEffect } from "react"; // Added useState and useEffect
-import Sidebar from "../../../components/sidebar/Sidebar";
 import "./index.css";
 import api from "../../../config/axios";
 

@@ -97,14 +97,6 @@ const User_Ads = () => {
     navigate("/create-ads", { state: { advertisement } });
   };
 
-  const handleEditAd = (adId) => {
-    navigate(`/edit-ad/${adId}`);
-  };
-
-  const handleUpdateDraft = (advertisement) => {
-    navigate("/create-ads", { state: { advertisement } });
-  };
-
   return (
 
     <>
