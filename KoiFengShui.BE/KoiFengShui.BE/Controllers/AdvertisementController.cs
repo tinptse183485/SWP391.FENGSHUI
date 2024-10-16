@@ -33,6 +33,10 @@ namespace KoiFengShui.BE.Controllers
             try
             {
                 var listAdvertisement = await _advertisementService.GetAdvertisements();
+                if (listAdvertisement == null)
+                {
+                    return NotFound("Không có quảng cáo nào.");
+                } 
                 return Ok(listAdvertisement);
             }
             catch (Exception ex)
@@ -46,6 +50,28 @@ namespace KoiFengShui.BE.Controllers
 			try
 			{
 				var listAdvertisement = await _advertisementService.GetAdvertisementsSortted();
+				if (listAdvertisement == null)
+				{
+					return NotFound("Không có quảng cáo nào.");
+				}
+				return Ok(listAdvertisement);
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Lỗi server: {ex.Message}");
+			}
+		}
+
+		[HttpGet("GetAllAdvertisemenWithPackageSortted")]
+		public async Task<IActionResult> GetAllAdvertisemenWithPackageSortted()
+		{
+			try
+			{
+				var listAdvertisement = await _advertisementService.GetAdvertisementsWithPackageSorted();
+				if (listAdvertisement == null)
+				{
+					return NotFound("Không có quảng cáo nào.");
+				}
 				return Ok(listAdvertisement);
 			}
 			catch (Exception ex)

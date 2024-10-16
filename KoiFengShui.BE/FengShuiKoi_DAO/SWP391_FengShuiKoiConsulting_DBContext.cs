@@ -82,7 +82,7 @@ namespace FengShuiKoi_BO
 
                 entity.Property(e => e.Rank).HasMaxLength(50);
 
-                entity.Property(e => e.CreateAt).HasColumnType("date");
+                entity.Property(e => e.CreateAt).HasColumnType("datetime");
 
                 entity.Property(e => e.ExpiredDate).HasColumnType("date");
 

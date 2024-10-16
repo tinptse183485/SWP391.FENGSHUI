@@ -38,7 +38,7 @@ namespace FengShuiKoi_Services
 		public async Task<List<Advertisement>> GetAdvertisementByUserID(string userdID) => await iAdvertisementRepo.GetAdvertisementByUserID(userdID);
 		
         public async Task<List<Advertisement>> GetAdvertisementsSortted() => await iAdvertisementRepo.GetAdvertisementsSortted();
-
+		public async Task<List<AdvertisementWithPackageDTO>> GetAdvertisementsWithPackageSorted() => await iAdvertisementRepo.GetAdvertisementsWithPackageSorted();
 
 		public async Task<List<Advertisement>> GetAdvertisements()
         {
