@@ -144,7 +144,7 @@ namespace KoiFengShui.BE.Controllers
                 {
                     foreach (var ads in ListAdsPackage)
                     {
-                        await _adsPackageService.DeleteAdsPackage(ads.AdId, rank);
+                        await _adsPackageService.DeleteAdsPackage(ads.AdId, rank,ads.CreateAt);
                     }
                     foreach (var advertise in listAdsvertisement)
                     {

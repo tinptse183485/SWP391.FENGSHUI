@@ -7,13 +7,13 @@ namespace FengShuiKoi_Repository
 {
     public interface IAdsPackageRepo
     {
-        Task<AdsPackage> GetAdsPackageByAdIDRank(string AdID, string Rank);
-        Task<List<AdsPackage>> GetListAdsPackageByAdID(string AdID);
+        Task<AdsPackage> GetAdsPackageByAdIDRankTime(string AdID, string Rank, DateTime CreateAt);
+		    Task<List<AdsPackage>> GetListAdsPackageByAdID(string AdID);
         Task<List<AdsPackage>> GetListAdsPackageByRank(string Rank);
         Task<List<AdsPackage>> GetAdsPackages();
         Task<bool> AddAdsPackage(AdsPackage ads);
         Task<bool> UpdateAdsPackage(AdsPackage newAdsPackage);
         Task<Dictionary<string, double>> GetRevenueByPackage();
-        Task<bool> DeleteAdsPackage(string AdID, string Rank);
+		    Task<bool> DeleteAdsPackage(string AdID, string Rank, DateTime CreateAt);
     }
 }

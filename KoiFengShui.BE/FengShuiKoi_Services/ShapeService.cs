@@ -23,5 +23,7 @@ namespace FengShuiKoi_Services
         public async Task<bool> DeleteShape(string id) => await shapeRepo.DeleteShape(id);
 
         public async Task<bool> UpdateShape(Shape shape) => await shapeRepo.UpdateShape(shape);
-    }
+        public async Task<bool> UpdateShapeImg(string shapeId, string Img) => await shapeRepo.UpdateShapeImg(shapeId, Img);
+
+	}
 }

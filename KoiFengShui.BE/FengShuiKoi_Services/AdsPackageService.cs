@@ -22,14 +22,14 @@ namespace FengShuiKoi_Services
             return await iAdsPackageRepo.GetRevenueByPackage();
         }
 
-        public async Task<bool> DeleteAdsPackage(string AdID, string Rank)
+        public async Task<bool> DeleteAdsPackage(string AdID, string Rank, DateTime CreateAt)
         {
-            return await iAdsPackageRepo.DeleteAdsPackage(AdID, Rank);
+            return await iAdsPackageRepo.DeleteAdsPackage(AdID, Rank, CreateAt);
         }
 
-        public async Task<AdsPackage> GetAdsPackageByAdIDRank(string AdID, string Rank)
+        public async Task<AdsPackage> GetAdsPackageByAdIDRankTime(string AdID, string Rank, DateTime CreateAt)
         {
-            return await iAdsPackageRepo.GetAdsPackageByAdIDRank(AdID, Rank);
+            return await iAdsPackageRepo.GetAdsPackageByAdIDRankTime(AdID, Rank, CreateAt);
         }
 
         public async Task<List<AdsPackage>> GetAdsPackages()

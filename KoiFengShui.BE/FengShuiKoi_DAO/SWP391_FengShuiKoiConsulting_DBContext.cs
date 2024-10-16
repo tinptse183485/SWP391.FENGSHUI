@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using FengShuiKoi_BO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace FengShuiKoi_DAO
+namespace FengShuiKoi_BO
 {
     public partial class SWP391_FengShuiKoiConsulting_DBContext : DbContext
     {
@@ -41,10 +40,7 @@ namespace FengShuiKoi_DAO
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-
-
-                optionsBuilder.UseSqlServer("Server=DESKTOP-QQRNGCE\\SQLEXPRESS;Database=SWP391_FengShuiKoiConsulting_DB;Uid=sa;Pwd=12345;");
-
+                optionsBuilder.UseSqlServer("Server=HAUHANDSOME\\HAUHUYNH;Database=SWP391_FengShuiKoiConsulting_DB;Uid=sa;Pwd=12345;");
             }
         }
 
@@ -53,11 +49,11 @@ namespace FengShuiKoi_DAO
             modelBuilder.Entity<Account>(entity =>
             {
                 entity.HasKey(e => e.UserId)
-                    .HasName("PK__Account__1788CCAC7492BBA4");
+                    .HasName("PK__Account__1788CCAC76C88481");
 
                 entity.ToTable("Account");
 
-                entity.HasIndex(e => e.Email, "UQ__Account__A9D1053496FDCC6B")
+                entity.HasIndex(e => e.Email, "UQ__Account__A9D10534665EA82C")
                     .IsUnique();
 
                 entity.Property(e => e.UserId)
@@ -66,7 +62,7 @@ namespace FengShuiKoi_DAO
 
                 entity.Property(e => e.Email).HasMaxLength(50);
 
-                entity.Property(e => e.Password).HasMaxLength(50);
+                entity.Property(e => e.Password).HasMaxLength(500);
 
                 entity.Property(e => e.Role).HasMaxLength(255);
 
@@ -75,8 +71,8 @@ namespace FengShuiKoi_DAO
 
             modelBuilder.Entity<AdsPackage>(entity =>
             {
-                entity.HasKey(e => new { e.AdId, e.Rank })
-                    .HasName("PK__Ads_Pack__0CC88B4BDFF85C68");
+                entity.HasKey(e => new { e.AdId, e.Rank, e.CreateAt })
+                    .HasName("PK__Ads_Pack__0895C312C332449C");
 
                 entity.ToTable("Ads_Package");
 
@@ -86,6 +82,8 @@ namespace FengShuiKoi_DAO
 
                 entity.Property(e => e.Rank).HasMaxLength(50);
 
+                entity.Property(e => e.CreateAt).HasColumnType("datetime");
+
                 entity.Property(e => e.ExpiredDate).HasColumnType("date");
 
                 entity.Property(e => e.StartDate).HasColumnType("date");
@@ -94,19 +92,19 @@ namespace FengShuiKoi_DAO
                     .WithMany(p => p.AdsPackages)
                     .HasForeignKey(d => d.AdId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Ads_Packag__AdID__37A5467C");
+                    .HasConstraintName("FK__Ads_Packag__AdID__4AB81AF0");
 
                 entity.HasOne(d => d.RankNavigation)
                     .WithMany(p => p.AdsPackages)
                     .HasForeignKey(d => d.Rank)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Ads_Packag__Rank__38996AB5");
+                    .HasConstraintName("FK__Ads_Packag__Rank__4BAC3F29");
             });
 
             modelBuilder.Entity<Advertisement>(entity =>
             {
                 entity.HasKey(e => e.AdId)
-                    .HasName("PK__Advertis__7130D58E1D6D1654");
+                    .HasName("PK__Advertis__7130D58EC642C14A");
 
                 entity.ToTable("Advertisement");
 
@@ -131,13 +129,13 @@ namespace FengShuiKoi_DAO
                 entity.HasOne(d => d.Element)
                     .WithMany(p => p.Advertisements)
                     .HasForeignKey(d => d.ElementId)
-                    .HasConstraintName("FK__Advertise__Eleme__30F848ED");
+                    .HasConstraintName("FK__Advertise__Eleme__440B1D61");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Advertisements)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Advertise__UserI__300424B4");
+                    .HasConstraintName("FK__Advertise__UserI__4316F928");
             });
 
             modelBuilder.Entity<Blog>(entity =>
@@ -187,7 +185,7 @@ namespace FengShuiKoi_DAO
             modelBuilder.Entity<ElementColor>(entity =>
             {
                 entity.HasKey(e => new { e.ElementId, e.ColorId })
-                    .HasName("PK__Element___6CF3044C3D1D7E92");
+                    .HasName("PK__Element___6CF3044CF172DB69");
 
                 entity.ToTable("Element_Color");
 
@@ -203,19 +201,19 @@ namespace FengShuiKoi_DAO
                     .WithMany(p => p.ElementColors)
                     .HasForeignKey(d => d.ColorId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Element_C__Color__4CA06362");
+                    .HasConstraintName("FK__Element_C__Color__5FB337D6");
 
                 entity.HasOne(d => d.Element)
                     .WithMany(p => p.ElementColors)
                     .HasForeignKey(d => d.ElementId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Element_C__Eleme__4BAC3F29");
+                    .HasConstraintName("FK__Element_C__Eleme__5EBF139D");
             });
 
             modelBuilder.Entity<Feedback>(entity =>
             {
                 entity.HasKey(e => e.FbId)
-                    .HasName("PK__Feedback__36769D6CA8BFE74C");
+                    .HasName("PK__Feedback__36769D6C2D3D32D1");
 
                 entity.ToTable("Feedback");
 
@@ -237,19 +235,19 @@ namespace FengShuiKoi_DAO
                     .WithMany(p => p.Feedbacks)
                     .HasForeignKey(d => d.AdId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Feedback__AdID__33D4B598");
+                    .HasConstraintName("FK__Feedback__AdID__46E78A0C");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Feedbacks)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Feedback__UserID__34C8D9D1");
+                    .HasConstraintName("FK__Feedback__UserID__47DBAE45");
             });
 
             modelBuilder.Entity<KoiVariety>(entity =>
             {
                 entity.HasKey(e => e.KoiType)
-                    .HasName("PK__Koi_Vari__B9D5579B68FED8F3");
+                    .HasName("PK__Koi_Vari__B9D5579BFEA27E4C");
 
                 entity.ToTable("Koi_Variety");
 
@@ -272,7 +270,7 @@ namespace FengShuiKoi_DAO
             modelBuilder.Entity<LifePalaceDirection>(entity =>
             {
                 entity.HasKey(e => new { e.LifePalaceId, e.DirectionId })
-                    .HasName("PK__LifePala__A0F9BE30938B2C70");
+                    .HasName("PK__LifePala__A0F9BE30D0E8E6BE");
 
                 entity.ToTable("LifePalace_Direction");
 
@@ -292,19 +290,19 @@ namespace FengShuiKoi_DAO
                     .WithMany(p => p.LifePalaceDirections)
                     .HasForeignKey(d => d.DirectionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__LifePalac__Direc__5441852A");
+                    .HasConstraintName("FK__LifePalac__Direc__6754599E");
 
                 entity.HasOne(d => d.LifePalace)
                     .WithMany(p => p.LifePalaceDirections)
                     .HasForeignKey(d => d.LifePalaceId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__LifePalac__LifeP__534D60F1");
+                    .HasConstraintName("FK__LifePalac__LifeP__66603565");
             });
 
             modelBuilder.Entity<Member>(entity =>
             {
                 entity.HasKey(e => e.UserId)
-                    .HasName("PK__Member__1788CCAC97FC6C73");
+                    .HasName("PK__Member__1788CCAC9B7BCA4B");
 
                 entity.ToTable("Member");
 
@@ -320,13 +318,13 @@ namespace FengShuiKoi_DAO
                     .WithOne(p => p.Member)
                     .HasForeignKey<Member>(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Member__UserID__276EDEB3");
+                    .HasConstraintName("FK__Member__UserID__3A81B327");
             });
 
             modelBuilder.Entity<Package>(entity =>
             {
                 entity.HasKey(e => e.Rank)
-                    .HasName("PK__Package__DF85EC564642F28F");
+                    .HasName("PK__Package__DF85EC560A02A350");
 
                 entity.ToTable("Package");
 
@@ -340,7 +338,7 @@ namespace FengShuiKoi_DAO
             modelBuilder.Entity<PointOfShape>(entity =>
             {
                 entity.HasKey(e => new { e.ElementId, e.ShapeId })
-                    .HasName("PK__PointOfS__A326BA00586DC963");
+                    .HasName("PK__PointOfS__A326BA0030A11336");
 
                 entity.ToTable("PointOfShape");
 
@@ -356,19 +354,19 @@ namespace FengShuiKoi_DAO
                     .WithMany(p => p.PointOfShapes)
                     .HasForeignKey(d => d.ElementId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__PointOfSh__Eleme__403A8C7D");
+                    .HasConstraintName("FK__PointOfSh__Eleme__534D60F1");
 
                 entity.HasOne(d => d.Shape)
                     .WithMany(p => p.PointOfShapes)
                     .HasForeignKey(d => d.ShapeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__PointOfSh__Shape__412EB0B6");
+                    .HasConstraintName("FK__PointOfSh__Shape__5441852A");
             });
 
             modelBuilder.Entity<QuantityOfFish>(entity =>
             {
                 entity.HasKey(e => e.ElementId)
-                    .HasName("PK__Quantity__A429723A4569E189");
+                    .HasName("PK__Quantity__A429723AF2360E8E");
 
                 entity.ToTable("QuantityOfFish");
 
@@ -382,7 +380,7 @@ namespace FengShuiKoi_DAO
                     .WithOne(p => p.QuantityOfFish)
                     .HasForeignKey<QuantityOfFish>(d => d.ElementId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__QuantityO__Eleme__3D5E1FD2");
+                    .HasConstraintName("FK__QuantityO__Eleme__5070F446");
             });
 
             modelBuilder.Entity<Shape>(entity =>
@@ -399,7 +397,7 @@ namespace FengShuiKoi_DAO
             modelBuilder.Entity<TypeColor>(entity =>
             {
                 entity.HasKey(e => new { e.KoiType, e.ColorId })
-                    .HasName("PK__Type_Col__710F21ED188F3520");
+                    .HasName("PK__Type_Col__710F21ED87417D5D");
 
                 entity.ToTable("Type_Color");
 
@@ -413,13 +411,13 @@ namespace FengShuiKoi_DAO
                     .WithMany(p => p.TypeColors)
                     .HasForeignKey(d => d.ColorId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Type_Colo__Color__48CFD27E");
+                    .HasConstraintName("FK__Type_Colo__Color__5BE2A6F2");
 
                 entity.HasOne(d => d.KoiTypeNavigation)
                     .WithMany(p => p.TypeColors)
                     .HasForeignKey(d => d.KoiType)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Type_Colo__KoiTy__47DBAE45");
+                    .HasConstraintName("FK__Type_Colo__KoiTy__5AEE82B9");
             });
 
             OnModelCreatingPartial(modelBuilder);

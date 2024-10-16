@@ -17,12 +17,20 @@ namespace KoiFengShui.BE.Controllers
         private readonly IAccountService _accountService;
         private readonly IMemberService _memberService;
         private readonly IToken _tokenService;
+        private readonly IVerificationCodeService _verificationCodeService;
+        private readonly IEmailService _emailService;
 
-        public AccountController(IAccountService accountService, IMemberService memberService, IToken tokenService)
+        public AccountController(IAccountService accountService,
+                                 IMemberService memberService,
+                                 IToken tokenService,
+                                 IVerificationCodeService verificationCodeService,
+                                 IEmailService emailService)
         {
             _memberService = memberService;
             _accountService = accountService;
             _tokenService = tokenService;
+            _verificationCodeService = verificationCodeService;
+            _emailService = emailService;
         }
 
         [HttpPost("login")]
@@ -60,7 +68,10 @@ namespace KoiFengShui.BE.Controllers
                 {
                     return BadRequest("Tài khoản không tồn tại");
                 }
-
+                if (string.IsNullOrWhiteSpace(Account.Email))
+                {
+                    return BadRequest("Email không được để trống");
+                }
                 if (string.IsNullOrWhiteSpace(Account.Password))
                 {
                     return BadRequest("Mật khẩu không được để trống");
@@ -73,7 +84,6 @@ namespace KoiFengShui.BE.Controllers
                 {
                     return BadRequest("Tên không được để trống");
                 }
-
                 var accountWithSameEmail = await _accountService.GetAccountByEmail(Account.Email);
                 if (accountWithSameEmail != null && accountWithSameEmail.UserId != Account.UserID)
                 {
@@ -155,7 +165,7 @@ namespace KoiFengShui.BE.Controllers
                 {
                     UserID = account.UserId,
                     Email = account.Email,
-                    Password = "",
+                    Password = account.Password,
                     Role = account.Role,
                     status = account.Status,
                     Name = member?.Name,
@@ -166,9 +176,32 @@ namespace KoiFengShui.BE.Controllers
 
             return Ok(accountInfoList);
         }
+        [HttpGet("GetAccountMemberInfoByUserID")]
+        public async Task<IActionResult> GetAccountMemberInfoByUserID(string userID)
+        {
+            var accounts = await _accountService.GetAccountByUserID(userID);
+            var member = await _memberService.GetMemberByUserID(userID);
+            RegisterDTO userInfo = new RegisterDTO();
+            if (member == null || accounts == null)
+            {
+                return NotFound("Không tìm thấy thông tin người dùng");
+            }
+            else
+            {
+                userInfo.UserID = userID;
+                userInfo.Password = accounts.Password;
+                userInfo.Name = member.Name;
+                userInfo.Email = accounts.Email;
+                userInfo.Role = accounts.Role;
+                userInfo.status = accounts.Status;
+                userInfo.Birthday = member.Birthday;
+            }
+
+            return Ok(userInfo);
+        }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterDTO newAccount)
+        public async Task<IActionResult> Register([FromBody] RegisterDTO newAccount)
         {
             if (await _accountService.GetAccountByUserID(newAccount.UserID) != null)
             {
@@ -241,5 +274,51 @@ namespace KoiFengShui.BE.Controllers
                 UserId = account.UserId
             });
         }
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDTO model)
+        {
+            var account = await _accountService.GetAccountByEmail(model.Email);
+            if (account == null)
+            {
+                return NotFound("Email không tồn tại trong hệ thống.");
+            }
+
+            var code = await _verificationCodeService.GenerateCodeForEmail(model.Email);
+            await _emailService.SendEmailAsync(model.Email, "Mã xác thực đặt lại mật khẩu", $"Mã xác thực của bạn là: {code} . Mã có hiệu lực trong vòng 15 phút");
+
+            return Ok("Mã xác thực đã được gửi đến email của bạn.");
+        }
+
+        [HttpPost("verify-code")]
+        public async Task<IActionResult> VerifyCode([FromBody] VerifyCodeDTO model)
+        {
+            bool isValid = await _verificationCodeService.VerifyCode(model.Email, model.Code);
+            if (!isValid)
+            {
+                return BadRequest("Mã xác thực không hợp lệ hoặc đã hết hạn.");
+            }
+
+            return Ok("Mã xác thực hợp lệ.");
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO model)
+        {
+            var account = await _accountService.GetAccountByEmail(model.Email);
+            if (account == null)
+            {
+                return NotFound("Email không tồn tại trong hệ thống.");
+            }
+            account.Password = model.NewPassword;
+            bool result = await _accountService.UpdateAccountByUser(account);
+            if (result)
+            {
+                return Ok("Mật khẩu đã được đặt lại thành công.");
+            }
+            else
+            {
+                return BadRequest("Không thể đặt lại mật khẩu. Vui lòng thử lại sau.");
+            }
+        }
     }
-    }
+}

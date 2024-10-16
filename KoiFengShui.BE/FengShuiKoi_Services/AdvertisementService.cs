@@ -35,11 +35,12 @@ namespace FengShuiKoi_Services
             return await iAdvertisementRepo.GetAdvertisementByUserIdAndStatus(userId, status);
         }
 
-		public async Task<List<Advertisement>> GetAdvertisementByUserID(string userdID) => await iAdvertisementRepo.GetAdvertisementByUserID(userdID);
+        public async Task<List<Advertisement>> GetAdvertisementByUserID(string userdID) => await iAdvertisementRepo.GetAdvertisementByUserID(userdID);
 		
+        public async Task<List<Advertisement>> GetAdvertisementsSortted() => await iAdvertisementRepo.GetAdvertisementsSortted();
+		    public async Task<List<AdvertisementWithPackageDTO>> GetAdvertisementsWithPackageSorted() => await iAdvertisementRepo.GetAdvertisementsWithPackageSorted();
 
-
-        public async Task<List<Advertisement>> GetAdvertisements()
+		    public async Task<List<Advertisement>> GetAdvertisements()
         {
             return await iAdvertisementRepo.GetAdvertisements();
         }
@@ -49,15 +50,14 @@ namespace FengShuiKoi_Services
             return await iAdvertisementRepo.UpdateAdvertisement(updatedAdvertisement);
         }
 
-
-		public async Task UpdateExpiredAdvertisementsAsync()
-		{
-			var expiredAds = await iAdvertisementRepo.GetExpiredAdvertisements();
-			foreach (var ad in expiredAds)
-			{
+		    public async Task UpdateExpiredAdvertisementsAsync()
+		    {
+			    var expiredAds = await iAdvertisementRepo.GetExpiredAdvertisements();
+			    foreach (var ad in expiredAds)
+			  {
 				ad.Status = "Expired";
 				iAdvertisementRepo.UpdateAdvertisement(ad);
-			}
+			  }
 		}
 
 	}
