@@ -26,7 +26,7 @@ function getItem(label, key, icon, children) {
 }
 const items = [
 
-  getItem("Dashboard", "AdminDashboard", <PieChartOutlined />),
+  getItem("Thống kê trang web", "AdminDashboard", <PieChartOutlined />),
   getItem("Quản lý quảng cáo", "ads", <PieChartOutlined />),
   getItem("Quản lý người dùng", "user", <PieChartOutlined />),
   getItem("Quản lý Blog", "blog", <PieChartOutlined />),

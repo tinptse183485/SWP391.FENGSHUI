@@ -4,7 +4,6 @@ import Home from "./page/home";
 import Login from "./page/login";
 import Register from "./page/register";
 
-// import Dashboard from "./page/Admin-page/dashboard";
 
 import Calculation from "./page/calculation";
 import Consulting from "./page/consulting";
@@ -28,8 +27,8 @@ import ChoosePackage from './page/ChoosePackage';
 import CreateBlog from "./page/Admin-page/CreateBlog";
 import BlogDetail from "./page/Admin-page/BlogDetail";
 import BlogList from "./page/Blogs-list";
-
-
+import AdminDashboard from "./page/Admin-page/dashboard";
+import UserProfile from "./page/User-Profile";
 
 function App() {
   const ProtectedRoute = ({ children }) => {
@@ -71,6 +70,10 @@ function App() {
       path: "dashboard",
       element:<ProtectedRouteAdmin><Dashboard/></ProtectedRouteAdmin> ,
       children: [
+        {
+          path: "AdminDashboard",
+          element: <AdminDashboard/>,
+        },
         {
           path: "user",
           element: <User />,
@@ -118,6 +121,10 @@ function App() {
     {
       path: "ads-list",
       element: <Ads_list />,
+    },
+    {
+      path: "user-profile",
+      element: <ProtectedRoute><UserProfile /></ProtectedRoute>,
     },
     {
       path: "create-ads",

@@ -35,7 +35,7 @@ function Login() {
 
 
       if (role === "ADMIN") {
-        navigate("/dashboard");
+        navigate("/dashboard/AdminDashboard");
       } else {
         navigate("/");
       }

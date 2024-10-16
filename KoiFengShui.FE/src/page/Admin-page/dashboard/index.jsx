@@ -21,7 +21,7 @@ ChartJS.register(
   Legend
 );
 
-const Dashboard = () => {
+const AdminDashboard = () => {
   const [adData, setAdData] = useState([]);
   const [revenueData, setRevenueByPackageData] = useState({});
   const [ageGroupData, setAgeGroupData] = useState({});
@@ -249,4 +249,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default AdminDashboard;
