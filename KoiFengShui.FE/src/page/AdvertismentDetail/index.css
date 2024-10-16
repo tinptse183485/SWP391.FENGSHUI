@@ -1,12 +1,31 @@
-.ad-detail-container{
-    margin: 130px 80px 30px 80px;
+
+.ad-detail-container, .feedback-section {
+    margin: 30px 80px;
     background-color: #fff;
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.8);
 }
-img{
+.ad-detail-container{
+    margin-top: 130px;
+}
+
+img {
     width: auto;
     height: auto;
     object-fit: cover;
+}
+
+.feedback-section h2 {
+    margin-bottom: 15px;
+    font-size: 1.5em;
+    color: #333;
+}
+
+.feedback-section .ant-input-textarea {
+    margin-bottom: 15px;
+}
+
+.feedback-section .ant-btn {
+    margin-top: 10px;
 }
