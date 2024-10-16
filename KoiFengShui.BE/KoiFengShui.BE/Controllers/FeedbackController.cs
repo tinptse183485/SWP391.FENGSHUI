@@ -131,6 +131,10 @@ namespace KoiFengShui.BE.Controllers
             {
                 return BadRequest("Không tìm thấy quảng cáo này.");
             }
+            if(feedback.Rate < 1 ||  feedback.Rate > 5)
+            {
+                return BadRequest("Đánh giá sai mức độ phù hợp.");
+            }
             try
             {
                 string newFbId = await GenerateNewFbId();
@@ -141,6 +145,7 @@ namespace KoiFengShui.BE.Controllers
                     AdId = feedback.AdId,
                     Description = feedback.Description,
                     UserId = feedback.UserId,
+                    Rate = feedback.Rate,
                 };
                 bool result = await _feedBackService.AddFeedback(_fb);
 
