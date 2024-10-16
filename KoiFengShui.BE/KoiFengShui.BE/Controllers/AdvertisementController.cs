@@ -18,13 +18,15 @@ namespace KoiFengShui.BE.Controllers
         private readonly IAccountService _accountService;
         private readonly IAdsPackageService _adsPackageService;
         private readonly IAdvertisementService _advertisementService;
-        public AdvertisementController(IPackageService packageService, IAdvertisementService advertisementService, IAdsPackageService adsPackageService, IAccountService accountService, IElementService elementService)
+        private readonly IEmailService _emailService;
+        public AdvertisementController(IPackageService packageService, IAdvertisementService advertisementService, IAdsPackageService adsPackageService, IAccountService accountService, IElementService elementService, IEmailService emailService)
         {
             _packageService = packageService;
             _adsPackageService = adsPackageService;
             _advertisementService = advertisementService;
             _accountService = accountService;
             _elementService = elementService;
+            _emailService = emailService;
         }
 
         [HttpGet("GetAllAdvertisement")]
@@ -36,7 +38,7 @@ namespace KoiFengShui.BE.Controllers
                 if (listAdvertisement == null)
                 {
                     return NotFound("Không có quảng cáo nào.");
-                } 
+                }
                 return Ok(listAdvertisement);
             }
             catch (Exception ex)
@@ -44,43 +46,43 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
-		[HttpGet("GetAllAdvertisementSortted")]
-		public async Task<IActionResult> GetAllAdvertisementSortted()
-		{
-			try
-			{
-				var listAdvertisement = await _advertisementService.GetAdvertisementsSortted();
-				if (listAdvertisement == null)
-				{
-					return NotFound("Không có quảng cáo nào.");
-				}
-				return Ok(listAdvertisement);
-			}
-			catch (Exception ex)
-			{
-				return StatusCode(500, $"Lỗi server: {ex.Message}");
-			}
-		}
+        [HttpGet("GetAllAdvertisementSortted")]
+        public async Task<IActionResult> GetAllAdvertisementSortted()
+        {
+            try
+            {
+                var listAdvertisement = await _advertisementService.GetAdvertisementsSortted();
+                if (listAdvertisement == null)
+                {
+                    return NotFound("Không có quảng cáo nào.");
+                }
+                return Ok(listAdvertisement);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi server: {ex.Message}");
+            }
+        }
 
-		[HttpGet("GetAllAdvertisemenWithPackageSortted")]
-		public async Task<IActionResult> GetAllAdvertisemenWithPackageSortted()
-		{
-			try
-			{
-				var listAdvertisement = await _advertisementService.GetAdvertisementsWithPackageSorted();
-				if (listAdvertisement == null)
-				{
-					return NotFound("Không có quảng cáo nào.");
-				}
-				return Ok(listAdvertisement);
-			}
-			catch (Exception ex)
-			{
-				return StatusCode(500, $"Lỗi server: {ex.Message}");
-			}
-		}
+        [HttpGet("GetAllAdvertisemenWithPackageSortted")]
+        public async Task<IActionResult> GetAllAdvertisemenWithPackageSortted()
+        {
+            try
+            {
+                var listAdvertisement = await _advertisementService.GetAdvertisementsWithPackageSorted();
+                if (listAdvertisement == null)
+                {
+                    return NotFound("Không có quảng cáo nào.");
+                }
+                return Ok(listAdvertisement);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi server: {ex.Message}");
+            }
+        }
 
-		[HttpGet("GetAdvertisementByAdId")]
+        [HttpGet("GetAdvertisementByAdId")]
         public async Task<IActionResult> GetAdvertisementByAdId(string adId)
         {
             try
@@ -209,12 +211,12 @@ namespace KoiFengShui.BE.Controllers
                 {
                     return BadRequest("ID người dùng là bắt buộc.");
                 }
-				if (string.IsNullOrEmpty(advertisementDto.ElementId))
-				{
-					return BadRequest("Mệnh của bài đăng là bắt buộc.");
-				}
+                if (string.IsNullOrEmpty(advertisementDto.ElementId))
+                {
+                    return BadRequest("Mệnh của bài đăng là bắt buộc.");
+                }
 
-				if (await _accountService.GetAccountByUserID(advertisementDto.UserId) == null)
+                if (await _accountService.GetAccountByUserID(advertisementDto.UserId) == null)
                 {
                     return BadRequest("Không tìm thấy ID của người dùng.");
                 }
@@ -493,7 +495,7 @@ namespace KoiFengShui.BE.Controllers
         }
 
         [HttpPost("CreateAdvertisement")]
-        public async Task<IActionResult> CreateAdvertisement(AdvertisementDTO advertisement, string Rank, DateTime startDate, DateTime CreateAt, int quantity, float total)
+        public async Task<IActionResult> CreateAdvertisement(AdvertisementDTO advertisement, string Rank, DateTime startDate, DateTime CreateAt, int quantity, float total,string TransactionCode, string BankCode)
         {
             try
             {
@@ -577,6 +579,66 @@ namespace KoiFengShui.BE.Controllers
                     return BadRequest("Thêm gói quảng cáo thất bại");
                 }
 
+                // Gửi email thông báo
+                var account = await _accountService.GetAccountByUserID(advertisement.UserId);
+                if (account != null && !string.IsNullOrEmpty(account.Email))
+                {
+                    string emailBody = $@"
+                    <html>
+                    <body>
+                        <h2>Thông tin Quảng Cáo</h2>
+                        <table border='1' style='border-collapse: collapse;'>
+                            <tr>
+                                <td><strong>Mã giao dịch:</strong></td>
+                                <td>{TransactionCode}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Mã ngân hàng:</strong></td>
+                                <td>{BankCode}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Mã Quảng Cáo:</strong></td>
+                                <td>{newAd.AdId}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tiêu đề:</strong></td>
+                                <td>{newAd.Heading}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Trạng thái:</strong></td>
+                                <td>{newAd.Status}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Gói:</strong></td>
+                                <td>{newAdsPackage.Rank}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ngày bắt đầu:</strong></td>
+                                <td>{newAdsPackage.StartDate:dd/MM/yyyy}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ngày kết thúc:</strong></td>
+                                <td>{newAdsPackage.ExpiredDate:dd/MM/yyyy}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Số lượng:</strong></td>
+                                <td>{newAdsPackage.Quantity}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tổng tiền:</strong></td>
+                                <td>{newAdsPackage.Total:N0} đ</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ngày tạo:</strong></td>
+                                <td>{newAdsPackage.CreateAt:dd/MM/yyyy HH:mm:ss}</td>
+                            </tr>
+                        </table>
+                    </body> 
+                    </html>";
+
+                    await _emailService.SendEmailAsync(account.Email, "Thông báo tạo quảng cáo thành công", emailBody);
+                }
+
                 return Ok(new { Message = "Tạo quảng cáo thành công", AdId = newAd.AdId });
             }
             catch (Exception ex)
@@ -610,6 +672,49 @@ namespace KoiFengShui.BE.Controllers
             {
                 return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
+        }
+
+        [HttpPost("TransferNotification")]
+        public async Task<IActionResult> TransferNotification([FromBody] PaymentNotificationDTO model)
+        {
+            var account = await _accountService.GetAccountByEmail(model.Email);
+            if (account == null)
+            {
+                return NotFound("Email không tồn tại trong hệ thống.");
+            }
+
+            string emailBody = $@"
+            <html>
+            <body>
+                <h2>Thông tin thanh toán</h2>
+                <table border='1' style='border-collapse: collapse;'>
+                    <tr>
+                        <td><strong>Số tiền:</strong></td>
+                        <td>{model.Amount:N0} đ</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Thông tin đơn hàng:</strong></td>
+                        <td>{model.OrderInfo}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Mã giao dịch:</strong></td>
+                        <td>{model.TransactionCode}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Mã ngân hàng:</strong></td>
+                        <td>{model.BankCode}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ngày thanh toán:</strong></td>
+                        <td>{model.PaymentDate:dd/MM/yyyy HH:mm:ss}</td>
+                    </tr>
+                </table>
+            </body>
+            </html>";
+
+            await _emailService.SendEmailAsync(model.Email, "Thông báo thanh toán thành công", emailBody);
+
+            return Ok("Thông báo thanh toán đã được gửi đến email của bạn.");
         }
     }
 }

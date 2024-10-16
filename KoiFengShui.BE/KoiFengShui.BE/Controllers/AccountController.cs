@@ -197,7 +197,7 @@ namespace KoiFengShui.BE.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterDTO newAccount)
+        public async Task<IActionResult> Register([FromBody] RegisterDTO newAccount)
         {
             if (await _accountService.GetAccountByUserID(newAccount.UserID) != null)
             {

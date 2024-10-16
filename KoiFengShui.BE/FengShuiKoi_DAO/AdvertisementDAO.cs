@@ -160,9 +160,6 @@ namespace FengShuiKoi_DAO
             return isSuccess;
         }
 
-
-        
-
         public async Task<List<Advertisement>> GetExpiredAdvertisements()
         {
             return await dbContext.Advertisements
