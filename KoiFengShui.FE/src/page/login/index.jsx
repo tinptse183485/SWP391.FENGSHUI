@@ -124,7 +124,6 @@ function Login() {
       <Form labelCol={{ span: 24 }} onFinish={handleLogin}>
         <Form.Item
           label="UserID"
-
           name="UserId"
 
           rules={[
@@ -138,9 +137,7 @@ function Login() {
         </Form.Item>
         <Form.Item
           label="Password"
-
           name="Password"
-
           rules={[
             {
               require: true,
@@ -148,7 +145,7 @@ function Login() {
             },
           ]}
         >
-          <Input.Password />
+          <Input.Password/>
         </Form.Item>
         <div>
           <Link to="/register">Don't have account? Register now!</Link>
@@ -166,7 +163,8 @@ function Login() {
         >
           Login with Google
         </Button> */}
-        <GoogleLogin
+        <GoogleLogin 
+          className="btnLoginwithGoogle"
           onSuccess={handleGoogleLoginSuccess}
           onError={() => {
 

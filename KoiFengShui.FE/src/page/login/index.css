@@ -1,6 +1,3 @@
-
-
-
 .login-header{
     font-family: Arial, sans-serif;
 }
@@ -19,6 +16,15 @@
   }
   .ant-form-item-label .title{
     font-size: 400px;
+  }
+  .ant-input-password{
+    width: 100%;
+    
+    border: none;
+    border-radius: 20px !important;
+    background-color: rgba(255, 255, 255, 0.8);
+    font-size: 18px !important;
+    transition: all 0.3s ease;
   }
 /* Divider */
 .divider {
@@ -47,13 +53,13 @@
     right: 0;
   }
 .btnLogin{
-    width: 100%;
+    width: 70%;
   padding: 12px;
   background-color: #0056b3;
   color: #fff;
   border: none;
-  border-radius: 4px;
-  font-size: 16px;
+  border-radius: 20px !important;
+  font-size: 18px ;
   cursor: pointer;
 }
 
@@ -63,7 +69,7 @@
   background-color: #db4437;
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 15px !important;
   font-size: 16px;
   cursor: pointer;
 }
@@ -71,3 +77,5 @@
 .btnLoginwithGoogle:hover {
     background-color: #c23321;
 }
+
+

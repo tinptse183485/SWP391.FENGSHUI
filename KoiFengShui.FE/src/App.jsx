@@ -30,8 +30,6 @@ import BlogList from "./page/Blogs-list";
 import AdminDashboard from "./page/Admin-page/dashboard";
 import UserProfile from "./page/User-Profile";
 
-
-
 function App() {
   const ProtectedRoute = ({ children }) => {
     const location = useLocation();

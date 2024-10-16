@@ -57,7 +57,9 @@ const Ads_list = () => {
               <img src={ad.image} alt={ad.heading} className="ad-item-image" />
               <div className="ad-item-content">
                 <h3 className="ad-item-title">{ad.heading}</h3>
-                <p className="ad-item-date">{new Date(ad.startDate).toLocaleDateString()}</p>
+                <p className="ad-item-date">
+                  {new Date(ad.adsPackage.createAt).toLocaleString()}
+                </p>
                 <Link to={`/advertisement-detail/${ad.adId}`} className="view-details-link">View Details</Link>
               </div>
             </article>
