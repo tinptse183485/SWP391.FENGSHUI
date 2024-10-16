@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 
 namespace FengShuiKoi_DAO
@@ -38,6 +39,10 @@ namespace FengShuiKoi_DAO
         {
             return await dbContext.Feedbacks.Where(f => f.UserId.Equals(userId)).ToListAsync();
         }
+        public async Task<List<Feedback>> GetFeedbackByAdId(string AdId)
+        {
+            return await dbContext.Feedbacks.Where(f => f.AdId.Equals(AdId)).ToListAsync();
+        }
 
         public async Task<List<Feedback>> GetFeedbacks()
         {
@@ -46,16 +51,22 @@ namespace FengShuiKoi_DAO
 
         public async Task<bool> AddFeedback(Feedback feedback)
         {
+            bool isSuccess = false;
+            Feedback _fb = await this.GetFeedbackByFeedbackID(feedback.FbId);
             try
             {
-                await dbContext.Feedbacks.AddAsync(feedback);
-                await dbContext.SaveChangesAsync();
-                return true;
+                if (_fb == null)
+                {
+                    await dbContext.Feedbacks.AddAsync(feedback);
+                    await dbContext.SaveChangesAsync();
+                    isSuccess = true;
+                }
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
+            return isSuccess;
         }
 
         public async Task<bool> DeleteFeedback(string feedbackId)
@@ -94,6 +105,14 @@ namespace FengShuiKoi_DAO
                 throw new Exception(ex.Message);
             }
             return false;
+        }
+        public async Task<string> GetLastFBId()
+        {
+            var lastfeedback = await dbContext.Feedbacks
+                .OrderByDescending(b => b.FbId)
+                .FirstOrDefaultAsync();
+
+            return lastfeedback?.FbId;
         }
     }
 }

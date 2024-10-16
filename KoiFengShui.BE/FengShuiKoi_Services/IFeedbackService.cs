@@ -12,5 +12,7 @@ namespace FengShuiKoi_Services
         Task<bool> AddFeedback(Feedback feedback);
         Task<bool> UpdateFeedback(string feedbackId);
         Task<bool> DeleteFeedback(string feedbackId);
+        Task<List<Feedback>> GetFeedbackByAdId(string AdId);
+        Task<string> GetLastFBId();
     }
 }
