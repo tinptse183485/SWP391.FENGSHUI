@@ -76,6 +76,10 @@ namespace KoiFengShui.BE.Controllers
                 {
                     return BadRequest("Mật khẩu không được để trống");
                 }
+                if (string.IsNullOrWhiteSpace(Account.Email))
+                {
+                    return BadRequest("Email không được để trống");
+                }
                 if (string.IsNullOrWhiteSpace(Account.Name))
                 {
                     return BadRequest("Tên không được để trống");

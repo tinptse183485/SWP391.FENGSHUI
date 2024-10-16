@@ -26,7 +26,6 @@ namespace FengShuiKoi_DAO
         {
             dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
         }
-
         public async Task<Advertisement> GetAdvertisementByAdID(string AdID)
         {
             return await dbContext.Advertisements.SingleOrDefaultAsync(m => m.AdId.Equals(AdID));
@@ -159,7 +158,6 @@ namespace FengShuiKoi_DAO
             }
             return isSuccess;
         }
-
         public async Task<List<Advertisement>> GetExpiredAdvertisements()
         {
             return await dbContext.Advertisements

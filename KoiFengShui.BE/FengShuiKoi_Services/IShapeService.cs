@@ -13,6 +13,5 @@ namespace FengShuiKoi_Services
         Task<bool> UpdateShape(Shape shape);
         Task<Shape> GetShapeByImg(string img);
         Task<bool> UpdateShapeImg(string shapeId, string Img);
-
 	}
 }

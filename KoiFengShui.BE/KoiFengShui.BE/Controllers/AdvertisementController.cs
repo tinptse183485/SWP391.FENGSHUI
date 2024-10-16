@@ -100,7 +100,6 @@ namespace KoiFengShui.BE.Controllers
             }
         }
 
-
         [HttpGet("GetAdvertisementByUserId")]
         public async Task<IActionResult> GetAdvertisementByUserId(string UserId)
         {
@@ -215,18 +214,15 @@ namespace KoiFengShui.BE.Controllers
                 {
                     return BadRequest("Mệnh của bài đăng là bắt buộc.");
                 }
-
                 if (await _accountService.GetAccountByUserID(advertisementDto.UserId) == null)
                 {
                     return BadRequest("Không tìm thấy ID của người dùng.");
                 }
-
                 string adId = await GenerateOrValidateAdId(advertisementDto.AdId);
                 if (adId == null)
                 {
                     return StatusCode(500, "Không tạo được ID quảng cáo. Vui lòng thử lại.");
                 }
-
                 Advertisement advertisement = await _advertisementService.GetAdvertisementByAdID(adId);
                 bool isNewAdvertisement = advertisement == null;
 
@@ -383,7 +379,6 @@ namespace KoiFengShui.BE.Controllers
         }
         [HttpPut("UpdateAdvertisementStatus")]
         public async Task<IActionResult> UpdateAdvertisementStatus(string adId, string status)
-
         {
             try
             {
