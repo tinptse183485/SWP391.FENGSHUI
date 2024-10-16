@@ -293,8 +293,11 @@ namespace KoiFengShui.BE.Controllers
         {
             return BadRequest("Vui lòng nhập loại cá Koi!");
         }
-
-        var existingKoi = await _koiVarietyService.GetKoiVarietyByType(koiFish.KoiType);
+                if (await _elementService.GetElementAndMutualism(koiFish.Element) == null)
+                {
+                    return BadRequest("Không có sinh mệnh này.");
+                }
+                var existingKoi = await _koiVarietyService.GetKoiVarietyByType(koiFish.KoiType);
                 if (existingKoi == null)
                 {
                     return NotFound($"Không tìm thấy loại cá Koi: {koiFish.KoiType}");
