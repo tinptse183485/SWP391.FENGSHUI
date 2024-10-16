@@ -1,7 +1,19 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../config/axios";
+import moment from "moment"; // Add this import for date formatting
 
-import { Table, Button, message, Image, Typography, Space, Menu, Modal, Select, Form } from "antd";
+import {
+  Table,
+  Button,
+  message,
+  Image,
+  Typography,
+  Space,
+  Menu,
+  Modal,
+  Select,
+  Form,
+} from "antd";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -14,11 +26,12 @@ const Ads = () => {
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [elements, setElements] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedElementId, setSelectedElementId] = useState(null);
   const [currentAdId, setCurrentAdId] = useState(null);
   const [currentStatus, setCurrentStatus] = useState(null);
   const [form] = Form.useForm();
   const [isApproving, setIsApproving] = useState(false);
+  const [adsPackages, setAdsPackages] = useState({});
+  const [currentElementId, setCurrentElementId] = useState(null);
 
   const menuItems = [
     { key: "all", label: "Tất cả" },
@@ -29,8 +42,18 @@ const Ads = () => {
   ];
 
   const fetchData = async () => {
-    const response = await api.get("Advertisement/GetAllAdvertisement");
-    setData(response.data);
+    const [adsResponse, packagesResponse] = await Promise.all([
+      api.get("Advertisement/GetAllAdvertisement"),
+      api.get("AdsPackage/GetAllAdsPackage"),
+    ]);
+
+    const packagesMap = packagesResponse.data.reduce((acc, pkg) => {
+      acc[pkg.adId] = pkg;
+      return acc;
+    }, {});
+
+    setAdsPackages(packagesMap);
+    setData(adsResponse.data);
     filterAds("all");
   };
 
@@ -56,19 +79,20 @@ const Ads = () => {
     setSelectedStatus(e.key);
   };
 
+  const rankPriority = {
+    Diamond: 1,
+    Gold: 2,
+    Silver: 3,
+  };
+
   const statusPriority = {
     Pending: 1,
     Approved: 2,
     Canceled: 3,
-    Refunded: 4
+    Refunded: 4,
   };
+
   const columns = [
-    {
-      title: "Quảng cáo",
-      dataIndex: "adId",
-      key: "adId",
-      render: (text) => <Text strong>{text}</Text>,
-    },
     {
       title: "Tiêu đề",
       dataIndex: "heading",
@@ -102,6 +126,32 @@ const Ads = () => {
       ),
     },
     {
+      title: "Mệnh",
+      dataIndex: "elementId",
+      key: "elementId",
+      render: (elementId) => (
+        <Text
+          style={{
+            color:
+              elementId === "Kim"
+                ? "#FFD700" // Vàng đậm
+                : elementId === "Mộc"
+                ? "#228B22" // Xanh lá cây đậm
+                : elementId === "Thủy"
+                ? "#1E90FF" // Xanh dương
+                : elementId === "Hỏa"
+                ? "#FF4500" // Đỏ cam
+                : elementId === "Thổ"
+                ? "#8B4513" // Nâu đất
+                : "#000000", // Màu mặc định nếu không khớp
+            fontWeight: "bold",
+          }}
+        >
+          {elementId}
+        </Text>
+      ),
+    },
+    {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
@@ -109,15 +159,13 @@ const Ads = () => {
         <Text
           style={{
             color:
-
-            status === "Approved"
-            ? "#52c41a"
-            : status === "Refunded"
-            ? "#faad14"
-            : status === "Canceled"
-            ? "#f5222d"
-            : "#1890ff", // Màu cho trạng thái Pending
-
+              status === "Approved"
+                ? "#52c41a"
+                : status === "Refunded"
+                ? "#faad14"
+                : status === "Canceled"
+                ? "#f5222d"
+                : "#1890ff", // Màu cho trạng thái Pending
           }}
         >
           {status}
@@ -125,8 +173,52 @@ const Ads = () => {
       ),
 
       sorter: (a, b) => statusPriority[a.status] - statusPriority[b.status],
-      defaultSortOrder: 'ascend',
-
+      sortDirections: ['descend', 'ascend'],
+    },
+    {
+      title: "Rank",
+      dataIndex: "adId",
+      key: "rank",
+      render: (adId) => <Text>{adsPackages[adId]?.rank || 'N/A'}</Text>,
+      sorter: (a, b) => {
+        const rankA = adsPackages[a.adId]?.rank;
+        const rankB = adsPackages[b.adId]?.rank;
+        return (rankPriority[rankA] || Infinity) - (rankPriority[rankB] || Infinity);
+      },
+      sortDirections: ['descend', 'ascend'],
+    },
+    {
+      title: "Ngày tạo",
+      dataIndex: "adId",
+      key: "createAt",
+      render: (adId) => {
+        const createAt = adsPackages[adId]?.createAt;
+        return createAt
+          ? moment(createAt).format("DD/MM/YYYY HH:mm:ss")
+          : "N/A";
+      },
+    },
+    {
+      title: "Ngày bắt đầu",
+      dataIndex: "adId",
+      key: "startAt",
+      render: (adId) => {
+        const startAt = adsPackages[adId]?.startDate;
+        return startAt
+        ? moment(startAt).format("DD/MM/YYYY HH:mm:ss")
+        : "N/A";
+      },
+    },
+    {
+      title: "Ngày hết hạn",
+      dataIndex: "adId",
+      key: "endAt",
+      render: (adId) => {
+        const endAt = adsPackages[adId]?.expiredDate;
+        return endAt
+        ? moment(endAt).format("DD/MM/YYYY HH:mm:ss")
+        : "N/A";
+      },
     },
     {
       title: "Action",
@@ -183,31 +275,42 @@ const Ads = () => {
   };
 
   const handleUpdateStatus = (adId, status) => {
+    const ad = data.find(item => item.adId === adId);
     setCurrentAdId(adId);
     setCurrentStatus(status);
     setIsApproving(status === "Approved");
+    setCurrentElementId(ad.elementId); // Set the current element ID
     setIsModalVisible(true);
+    
+    if (status === "Approved") {
+      form.setFieldsValue({ elementId: ad.elementId }); // Pre-set the form field
+    }
   };
 
   const handleModalOk = async () => {
     try {
       if (isApproving) {
-        if (!selectedElementId) {
-          message.error("Vui lòng chọn một element");
-          return;
-        }
-        await api.put(`Advertisement/ApproveAdvertisement?adId=${currentAdId}&elementID=${selectedElementId}&status=${currentStatus}`);
+        const values = await form.validateFields();
+        await api.put(
+          `Advertisement/ApproveAdvertisement?adId=${currentAdId}&elementID=${values.elementId}&status=${currentStatus}`
+        );
       } else {
         // Sử dụng API mới cho hủy bỏ/hoàn tiền
-        await api.put(`Advertisement/UpdateAdvertisementStatus?adId=${currentAdId}&status=${currentStatus}`);
+        await api.put(
+          `Advertisement/UpdateAdvertisementStatus?adId=${currentAdId}&status=${currentStatus}`
+        );
       }
-      
-      toast.success(`Cập nhật trạng thái thành công của bài quảng cáo ${currentAdId} thành ${currentStatus}`);
+
+      toast.success(
+        `Cập nhật trạng thái thành công của bài quảng cáo ${currentAdId} thành ${currentStatus}`
+      );
       fetchData();
       resetModalData();
     } catch (error) {
       console.error("Error updating status:", error);
-      toast.error(`Cập nhật trạng thái thất bại của bài quảng cáo ${currentAdId}`);
+      toast.error(
+        `Cập nhật trạng thái thất bại của bài quảng cáo ${currentAdId}`
+      );
     }
   };
 
@@ -217,7 +320,6 @@ const Ads = () => {
 
   const resetModalData = () => {
     setIsModalVisible(false);
-    setSelectedElementId(null);
     setCurrentAdId(null);
     setCurrentStatus(null);
     setIsApproving(false);
@@ -239,21 +341,26 @@ const Ads = () => {
       </Menu>
       <Table dataSource={filteredData} columns={columns} />
       <Modal
-        title={isApproving ? "Phê duyệt quảng cáo" : `${currentStatus === "Canceled" ? "Hủy bỏ" : "Hoàn tiền"} quảng cáo`}
+        title={
+          isApproving
+            ? "Phê duyệt quảng cáo"
+            : `${
+                currentStatus === "Canceled" ? "Hủy bỏ" : "Hoàn tiền"
+              } quảng cáo`
+        }
         visible={isModalVisible}
         onOk={handleModalOk}
         onCancel={handleModalCancel}
       >
         {isApproving ? (
-          <Form form={form}>
+          <Form form={form} initialValues={{ elementId: currentElementId }}>
             <Form.Item
               name="elementId"
-              rules={[{ required: true, message: 'Vui lòng chọn một element' }]}
+              rules={[{ required: true, message: "Vui lòng chọn một element" }]}
             >
               <Select
-                style={{ width: '100%' }}
-                placeholder="Chọn một element"
-                onChange={(value) => setSelectedElementId(value)}
+                style={{ width: "100%" }}
+                onChange={(value) => setCurrentElementId(value)}
               >
                 {elements.map((element) => (
                   <Select.Option key={element.elementId} value={element.elementId}>
@@ -264,7 +371,11 @@ const Ads = () => {
             </Form.Item>
           </Form>
         ) : (
-          <p>Bạn có chắc chắn muốn {currentStatus === "Canceled" ? "hủy bỏ" : "hoàn tiền"} quảng cáo này?</p>
+          <p>
+            Bạn có chắc chắn muốn{" "}
+            {currentStatus === "Canceled" ? "hủy bỏ" : "hoàn tiền"} quảng cáo
+            này?
+          </p>
         )}
       </Modal>
     </div>
