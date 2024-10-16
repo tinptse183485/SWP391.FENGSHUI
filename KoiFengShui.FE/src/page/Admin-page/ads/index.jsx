@@ -30,7 +30,6 @@ const Ads = () => {
   const [currentStatus, setCurrentStatus] = useState(null);
   const [form] = Form.useForm();
   const [isApproving, setIsApproving] = useState(false);
-  const [adsPackages, setAdsPackages] = useState({});
   const [currentElementId, setCurrentElementId] = useState(null);
 
   const menuItems = [
@@ -42,19 +41,16 @@ const Ads = () => {
   ];
 
   const fetchData = async () => {
-    const [adsResponse, packagesResponse] = await Promise.all([
-      api.get("Advertisement/GetAllAdvertisement"),
-      api.get("AdsPackage/GetAllAdsPackage"),
-    ]);
-
-    const packagesMap = packagesResponse.data.reduce((acc, pkg) => {
-      acc[pkg.adId] = pkg;
-      return acc;
-    }, {});
-
-    setAdsPackages(packagesMap);
-    setData(adsResponse.data);
-    filterAds("all");
+    try {
+      const response = await api.get(
+        "Advertisement/GetAllAdvertisemenWithPackageSortted"
+      );
+      setData(response.data);
+      filterAds("all");
+    } catch (error) {
+      console.error("Lỗi khi tải danh sách quảng cáo:", error);
+      toast.error(error.response.data || "Không thể tải danh sách quảng cáo");
+    }
   };
 
   useEffect(() => {
@@ -173,55 +169,40 @@ const Ads = () => {
       ),
 
       sorter: (a, b) => statusPriority[a.status] - statusPriority[b.status],
-      sortDirections: ['descend', 'ascend'],
+      sortDirections: ["descend", "ascend"],
     },
     {
       title: "Rank",
-      dataIndex: "adId",
+      dataIndex: "rank",
       key: "rank",
-      render: (adId) => <Text>{adsPackages[adId]?.rank || 'N/A'}</Text>,
-      sorter: (a, b) => {
-        const rankA = adsPackages[a.adId]?.rank;
-        const rankB = adsPackages[b.adId]?.rank;
-        return (rankPriority[rankA] || Infinity) - (rankPriority[rankB] || Infinity);
-      },
-      sortDirections: ['descend', 'ascend'],
+      render: (rank) => <Text>{rank || "N/A"}</Text>,
+      sorter: (a, b) =>
+        (rankPriority[a.rank] || Infinity) - (rankPriority[b.rank] || Infinity),
+      sortDirections: ["descend", "ascend"],
     },
     {
       title: "Ngày tạo",
-      dataIndex: "adId",
+      dataIndex: "createAt",
       key: "createAt",
-      render: (adId) => {
-        const createAt = adsPackages[adId]?.createAt;
-        return createAt
-          ? moment(createAt).format("DD/MM/YYYY HH:mm:ss")
-          : "N/A";
-      },
+      render: (createAt) =>
+        createAt ? moment(createAt).format("DD/MM/YYYY HH:mm:ss") : "N/A",
     },
     {
       title: "Ngày bắt đầu",
-      dataIndex: "adId",
-      key: "startAt",
-      render: (adId) => {
-        const startAt = adsPackages[adId]?.startDate;
-        return startAt
-        ? moment(startAt).format("DD/MM/YYYY HH:mm:ss")
-        : "N/A";
-      },
+      dataIndex: "startDate",
+      key: "startDate",
+      render: (startDate) =>
+        startDate ? moment(startDate).format("DD/MM/YYYY HH:mm:ss") : "N/A",
     },
     {
       title: "Ngày hết hạn",
-      dataIndex: "adId",
-      key: "endAt",
-      render: (adId) => {
-        const endAt = adsPackages[adId]?.expiredDate;
-        return endAt
-        ? moment(endAt).format("DD/MM/YYYY HH:mm:ss")
-        : "N/A";
-      },
+      dataIndex: "expiredDate",
+      key: "expiredDate",
+      render: (expiredDate) =>
+        expiredDate ? moment(expiredDate).format("DD/MM/YYYY HH:mm:ss") : "N/A",
     },
     {
-      title: "Action",
+      title: "Duyệt bài",
       key: "action",
       width: 200,
 
@@ -270,18 +251,18 @@ const Ads = () => {
       setElements(response.data);
     } catch (error) {
       console.error("Error fetching elements:", error);
-      message.error("Không thể tải danh sách element");
+      toast.error(error.response.data ||"Không thể tải danh sách element");
     }
   };
 
   const handleUpdateStatus = (adId, status) => {
-    const ad = data.find(item => item.adId === adId);
+    const ad = data.find((item) => item.adId === adId);
     setCurrentAdId(adId);
     setCurrentStatus(status);
     setIsApproving(status === "Approved");
     setCurrentElementId(ad.elementId); // Set the current element ID
     setIsModalVisible(true);
-    
+
     if (status === "Approved") {
       form.setFieldsValue({ elementId: ad.elementId }); // Pre-set the form field
     }
@@ -309,7 +290,7 @@ const Ads = () => {
     } catch (error) {
       console.error("Error updating status:", error);
       toast.error(
-        `Cập nhật trạng thái thất bại của bài quảng cáo ${currentAdId}`
+        error.response.data || `Cập nhật trạng thái thất bại của bài quảng cáo ${currentAdId}`
       );
     }
   };
@@ -363,7 +344,10 @@ const Ads = () => {
                 onChange={(value) => setCurrentElementId(value)}
               >
                 {elements.map((element) => (
-                  <Select.Option key={element.elementId} value={element.elementId}>
+                  <Select.Option
+                    key={element.elementId}
+                    value={element.elementId}
+                  >
                     {element.elementId}
                   </Select.Option>
                 ))}
