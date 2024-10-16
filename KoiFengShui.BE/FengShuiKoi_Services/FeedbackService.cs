@@ -43,5 +43,13 @@ namespace FengShuiKoi_Services
         {
             return await feedbackRepo.UpdateFeedback(feedbackId);
         }
+        public async Task<List<Feedback>> GetFeedbackByAdId(string AdId)
+        {
+            return await feedbackRepo.GetFeedbackByAdId(AdId);
+        }
+        public async Task<string> GetLastFBId()
+        {
+            return await feedbackRepo.GetLastFBId();
+        }
     }
 }

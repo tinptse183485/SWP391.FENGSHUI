@@ -1,5 +1,6 @@
 using FengShuiKoi_Repository;
 using FengShuiKoi_Services;
+using KoiFengShui.BE.Middleware;
 using KoiFengShui.BE.TokenService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -42,7 +43,7 @@ namespace KoiFengShui.BE
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSigningKey))
                     };
                 });
-
+         
             // Register services
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IMemberService, MemberService>();
@@ -67,6 +68,11 @@ namespace KoiFengShui.BE
             builder.Services.AddScoped<IPackageService, PackageService>();
             builder.Services.AddScoped<IAdvertisementService, AdvertisementService>();
 
+            builder.Services.AddScoped<IFeedbackService, FeedbackService>();
+
+            builder.Services.AddHostedService<AdvertisementExpirationService>();
+
+
 
             builder.Services.AddHostedService<AdvertisementExpirationService>();
             builder.Services.AddSingleton<IVerificationCodeService, VerificationCodeService>();
@@ -90,13 +96,13 @@ namespace KoiFengShui.BE
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseCors("AllowReactApp");
-
+            app.UseMiddleware<JwtMiddleware>();
             app.MapControllers();
 
             app.Run();

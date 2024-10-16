@@ -15,9 +15,11 @@ namespace FengShuiKoi_Repository
         Task<bool> UpdateAdvertisement(Advertisement updatedAdvertisement);
         Task<List<Advertisement>> GetAdvertisementByUserIdAndStatus(string userId, string status);
         Task<List<Advertisement>> GetAdvertisementStatus(string status);
+
         Task<List<Advertisement>> GetAdvertisementsSortted();
         Task<List<AdvertisementWithPackageDTO>> GetAdvertisementsWithPackageSorted();
 		    public Task<List<Advertisement>> GetAdvertisementByUserID(string userdID);
+
         public Task<List<Advertisement>> GetExpiredAdvertisements();
 
    }

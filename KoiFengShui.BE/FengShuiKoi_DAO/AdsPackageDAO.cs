@@ -133,5 +133,26 @@ namespace FengShuiKoi_DAO
                 throw new Exception(ex.Message);
             }
         }
+        public async Task<Dictionary<string, double>> GetTotalRevenueByMonth(int year, int month)
+        {
+            try
+            {
+                var startDate = new DateTime(year, month, 1);
+                var endDate = startDate.AddMonths(1);
+
+                var TotalRevenueByRank = await dbContext.AdsPackages
+                    .Where(p => p.CreateAt >= startDate && p.CreateAt < endDate)
+                    .GroupBy(p => p.Rank)
+                    .Select(g => new { Rank = g.Key, TongDoanhThu = g.Sum(p => p.Total) })
+                    .ToDictionaryAsync(x => x.Rank, x => x.TongDoanhThu);
+
+                return TotalRevenueByRank;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Lỗi trong LayDoanhThuTheoThangVaRank: {ex.Message}");
+                return new Dictionary<string, double>();
+            }
+        }
     }
 }

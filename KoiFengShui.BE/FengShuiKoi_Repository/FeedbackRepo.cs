@@ -18,5 +18,7 @@ namespace FengShuiKoi_Repository
         public async Task<List<Feedback>> GetAllFeedbacks() => await FeedbackDAO.Instance.GetFeedbacks();
 
         public async Task<bool> UpdateFeedback(string feedbackId) => await FeedbackDAO.Instance.UpdateFeedback(feedbackId);
+        public async Task<List<Feedback>> GetFeedbackByAdId(string AdId) => await FeedbackDAO.Instance.GetFeedbackByAdId(AdId);
+        public async Task<string> GetLastFBId() => await FeedbackDAO.Instance.GetLastFBId();
     }
 }

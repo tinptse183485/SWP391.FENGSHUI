@@ -1,5 +1,6 @@
 ﻿using FengShuiKoi_BO;
 using FengShuiKoi_Services;
+using KoiFengShui.BE.Attributes;
 using KoiFengShui.BE.Model;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace KoiFengShui.BE.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class AdvertisementController : ControllerBase
@@ -100,6 +102,8 @@ namespace KoiFengShui.BE.Controllers
             }
         }
 
+
+
         [HttpGet("GetAdvertisementByUserId")]
         public async Task<IActionResult> GetAdvertisementByUserId(string UserId)
         {
@@ -160,7 +164,9 @@ namespace KoiFengShui.BE.Controllers
                 foreach (AdsPackage ad in list)
                 {
                     Advertisement ads = await _advertisementService.GetAdvertisementByAdID(ad.AdId);
+
                     if (ads.Status.Equals("Approved"))
+
                     {
 
                         var advertisement = await _advertisementService.GetAdvertisementByAdID(ad.AdId);
@@ -210,6 +216,7 @@ namespace KoiFengShui.BE.Controllers
                 {
                     return BadRequest("ID người dùng là bắt buộc.");
                 }
+
                 if (string.IsNullOrEmpty(advertisementDto.ElementId))
                 {
                     return BadRequest("Mệnh của bài đăng là bắt buộc.");
@@ -226,6 +233,7 @@ namespace KoiFengShui.BE.Controllers
                 Advertisement advertisement = await _advertisementService.GetAdvertisementByAdID(adId);
                 bool isNewAdvertisement = advertisement == null;
 
+
                 if (isNewAdvertisement)
                 {
                     advertisement = new Advertisement
@@ -236,6 +244,7 @@ namespace KoiFengShui.BE.Controllers
                         Link = advertisementDto.Link,
                         UserId = advertisementDto.UserId,
                         ElementId = advertisementDto.ElementId,
+
                         Status = "Draft"
                     };
                 }
@@ -379,6 +388,7 @@ namespace KoiFengShui.BE.Controllers
         }
         [HttpPut("UpdateAdvertisementStatus")]
         public async Task<IActionResult> UpdateAdvertisementStatus(string adId, string status)
+
         {
             try
             {
@@ -438,6 +448,11 @@ namespace KoiFengShui.BE.Controllers
             }
         }
 
+
+
+
+
+
         [HttpPut("UpdateAdvertisement")]
         public async Task<IActionResult> UpdateAdvertisement(AdvertisementDTO advertisement, string Rank, string Status, DateTime startDate, DateTime CreateAt, int quantity, float total)
 
@@ -490,7 +505,9 @@ namespace KoiFengShui.BE.Controllers
         }
 
         [HttpPost("CreateAdvertisement")]
+
         public async Task<IActionResult> CreateAdvertisement(AdvertisementDTO advertisement, string Rank, DateTime startDate, DateTime CreateAt, int quantity, float total,string TransactionCode, string BankCode)
+
         {
             try
             {

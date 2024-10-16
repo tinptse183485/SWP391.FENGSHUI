@@ -7,6 +7,7 @@ using System.Linq;
 using System.Xml.Linq;
 using static KoiFengShui.BE.Controllers.ColorController;
 using System.Drawing;
+using KoiFengShui.BE.Attributes;
 
 namespace KoiFengShui.BE.Controllers
 {
@@ -281,7 +282,8 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, "Lỗi máy chủ. Vui lòng thử lại sau.");
             }
         }
-
+        
+        
         [HttpPut("UpdateKoiAndTypeColor")]
         public async Task<IActionResult> UpdateKoiAndTypeColor([FromBody] AddKoiTypeColor koiFish)
         {
@@ -291,8 +293,11 @@ namespace KoiFengShui.BE.Controllers
         {
             return BadRequest("Vui lòng nhập loại cá Koi!");
         }
-
-        var existingKoi = await _koiVarietyService.GetKoiVarietyByType(koiFish.KoiType);
+                if (await _elementService.GetElementAndMutualism(koiFish.Element) == null)
+                {
+                    return BadRequest("Không có sinh mệnh này.");
+                }
+                var existingKoi = await _koiVarietyService.GetKoiVarietyByType(koiFish.KoiType);
                 if (existingKoi == null)
                 {
                     return NotFound($"Không tìm thấy loại cá Koi: {koiFish.KoiType}");

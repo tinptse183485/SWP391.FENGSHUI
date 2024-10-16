@@ -30,6 +30,7 @@ namespace FengShuiKoi_DAO
         {
             return await dbContext.Advertisements.SingleOrDefaultAsync(m => m.AdId.Equals(AdID));
         }
+
         public async Task<List<Advertisement>> GetAdvertisements()
         {
             return await dbContext.Advertisements.ToListAsync();
@@ -83,6 +84,7 @@ namespace FengShuiKoi_DAO
 		}
 
 		public async Task<List<Advertisement>> GetAdvertisementByUserID(string userdID)
+
         {
             return await dbContext.Advertisements
                 .Where(m => m.UserId.Equals(userdID))
@@ -158,6 +160,7 @@ namespace FengShuiKoi_DAO
             }
             return isSuccess;
         }
+
         public async Task<List<Advertisement>> GetExpiredAdvertisements()
         {
             return await dbContext.Advertisements
@@ -166,4 +169,5 @@ namespace FengShuiKoi_DAO
         }
     }
 }
+
 

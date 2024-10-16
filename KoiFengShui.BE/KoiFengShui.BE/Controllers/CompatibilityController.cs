@@ -1,10 +1,12 @@
 ﻿using FengShuiKoi_BO;
 using FengShuiKoi_Services;
+using KoiFengShui.BE.Attributes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KoiFengShui.BE.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class CompatibilityController : ControllerBase
@@ -188,6 +190,7 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
+        
         [HttpGet("GetPointOfDirectionByDirecDOBGEN")]
         public async Task<IActionResult> GetPointOfDirectionByDirecDOBGEN(string Direction, string DOB, string Gender)
         {

@@ -1,11 +1,13 @@
 ﻿using FengShuiKoi_BO;
 using FengShuiKoi_Services;
+using KoiFengShui.BE.Attributes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace KoiFengShui.BE.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
     public class FateController : ControllerBase

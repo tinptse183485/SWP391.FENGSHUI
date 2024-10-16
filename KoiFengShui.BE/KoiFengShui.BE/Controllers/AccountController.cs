@@ -68,19 +68,16 @@ namespace KoiFengShui.BE.Controllers
                 {
                     return BadRequest("Tài khoản không tồn tại");
                 }
+
                 if (string.IsNullOrWhiteSpace(Account.Email))
                 {
                     return BadRequest("Email không được để trống");
                 }
-                if (string.IsNullOrWhiteSpace(Account.Password))
-                {
-                    return BadRequest("Mật khẩu không được để trống");
-                }
-                if (string.IsNullOrWhiteSpace(Account.Email))
-                {
-                    return BadRequest("Email không được để trống");
-                }
-                if (string.IsNullOrWhiteSpace(Account.Name))
+				if (string.IsNullOrWhiteSpace(Account.Password))
+				{
+					return BadRequest("Mật khẩu không được để trống");
+				}
+				if (string.IsNullOrWhiteSpace(Account.Name))
                 {
                     return BadRequest("Tên không được để trống");
                 }
@@ -176,6 +173,7 @@ namespace KoiFengShui.BE.Controllers
 
             return Ok(accountInfoList);
         }
+
         [HttpGet("GetAccountMemberInfoByUserID")]
         public async Task<IActionResult> GetAccountMemberInfoByUserID(string userID)
         {
@@ -183,6 +181,7 @@ namespace KoiFengShui.BE.Controllers
             var member = await _memberService.GetMemberByUserID(userID);
             RegisterDTO userInfo = new RegisterDTO();
             if (member == null || accounts == null)
+
             {
                 return NotFound("Không tìm thấy thông tin người dùng");
             }
@@ -202,6 +201,7 @@ namespace KoiFengShui.BE.Controllers
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDTO newAccount)
+
         {
             if (await _accountService.GetAccountByUserID(newAccount.UserID) != null)
             {
@@ -321,4 +321,6 @@ namespace KoiFengShui.BE.Controllers
             }
         }
     }
-}
+
+    }
+

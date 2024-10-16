@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace KoiFengShui.BE.Controllers
-{
+{   
     [Route("api/[controller]")]
     [ApiController]
     public class AdsPackageController : ControllerBase
@@ -62,6 +62,19 @@ namespace KoiFengShui.BE.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, $"Lỗi server: {ex.Message}");
+            }
+        }
+        [HttpGet("GetTotalRevenueByMonth")]
+        public async Task<IActionResult> GetTotalRevenueByMonth(int year, int month)
+        {
+            try
+            {
+                var GetTotal = await _adsPackageService.GetTotalRevenueByMonth(year, month);
+                return Ok(GetTotal);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi server nội bộ: {ex.Message}");
             }
         }
     }
