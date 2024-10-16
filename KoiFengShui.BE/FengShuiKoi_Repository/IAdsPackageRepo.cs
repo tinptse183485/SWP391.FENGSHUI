@@ -15,5 +15,6 @@ namespace FengShuiKoi_Repository
         Task<bool> UpdateAdsPackage(AdsPackage newAdsPackage);
         Task<Dictionary<string, double>> GetRevenueByPackage();
 		Task<bool> DeleteAdsPackage(string AdID, string Rank, DateTime CreateAt);
+        Task<Dictionary<string, double>> GetTotalRevenueByMonth(int year, int month);
     }
 }

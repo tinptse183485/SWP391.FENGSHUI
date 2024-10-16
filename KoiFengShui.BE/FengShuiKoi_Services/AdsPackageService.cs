@@ -1,4 +1,5 @@
 ﻿using FengShuiKoi_BO;
+using FengShuiKoi_DAO;
 using FengShuiKoi_Repository;
 using System;
 using System.Collections.Generic;
@@ -48,6 +49,10 @@ namespace FengShuiKoi_Services
         public async Task<bool> UpdateAdsPackage(AdsPackage newAdsPackage)
         {
             return await iAdsPackageRepo.UpdateAdsPackage(newAdsPackage);
+        }
+        public Task<Dictionary<string, double>> GetTotalRevenueByMonth(int year, int month)
+        {
+            return AdsPackageDAO.Instance.GetTotalRevenueByMonth(year, month);
         }
     }
 }

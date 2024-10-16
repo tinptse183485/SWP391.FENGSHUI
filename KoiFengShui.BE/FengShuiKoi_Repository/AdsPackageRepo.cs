@@ -47,5 +47,9 @@ namespace FengShuiKoi_Repository
         {
             return AdsPackageDAO.Instance.UpdateAdsPackage(newAdsPackage);
         }
+        public Task<Dictionary<string, double>> GetTotalRevenueByMonth(int year, int month)
+        {
+            return AdsPackageDAO.Instance.GetTotalRevenueByMonth(year, month);
+        }
     }
 }
