@@ -14,7 +14,7 @@ function Register() {
       values.role = "Member";
       values.status = "Active";
       const response = await api.post("Account/register", values);
-      toast.success("Successfully register new account!");
+      toast.success("Đăng ký tài khoản thành công!");
       navigate("/login");
     } catch (error) {
       toast.error(error.response.data); //nơi mà backend sẽ trả về lỗi khi mà register fail
@@ -26,13 +26,13 @@ function Register() {
       if (!value || getFieldValue("Password") === value) {
         return Promise.resolve();
       }
-      return Promise.reject(new Error("The two passwords do not match!"));
+      return Promise.reject(new Error("Hai mật khẩu không khớp!"));
     },
   });
   return (
     <AuthenTemplate>
       <div className="login-header">
-        <h1>Welcome to Koi Hên Xui !</h1>
+        <h1>Đăng ký tài khoản</h1>
         <p>Hãy nhập thông tin để tạo tài khoản</p>
       </div>
       <Form
@@ -41,70 +41,73 @@ function Register() {
           span: 24,
         }}
         name="userForm"
+        className="register-form"
         initialValues={{ remember: true }}
         onFinish={handleRegister}
       >
         <Form.Item
-          label="UserID"
+          
           name="UserID"
+          
           rules={[
-            { required: true, message: "Xin hãy nhập User ID" },
-            { min: 4, message: "User ID must be at least 4 characters!" },
+            { required: true, message: "Xin hãy nhập tên tài khoản" },
+            { min: 4, message: "Tên tài khoản phải có ít nhất 4 ký tự!" },
           ]}
         >
-          <Input />
+          <Input placeholder="Tên tài khoản" />
         </Form.Item>
 
         <Form.Item
-          label="Password"
+          
           name="Password"
           rules={[
-            { required: true, message: "Xin hãy nhập password!" },
-            { min: 6, message: "Password must be at least 6 characters!" },
+            { required: true, message: "Xin hãy nhập mật khẩu!" },
+            { min: 6, message: "Mật khẩu phải có ít nhất 6 ký tự!" },
           ]}
           hasFeedback
         >
-          <Input.Password />
+          <Input.Password placeholder="Mật khẩu" />
         </Form.Item>
 
         <Form.Item
-          label="Re-enter Password"
+          
           name="confirmPassword"
           dependencies={["Password"]} // Ensure the password field updates the validation for this field
           hasFeedback
           rules={[
-            { required: true, message: "Please confirm your password!" },
+            { required: true, message: "Vui lòng nhập lại password của bạn!" },
             validatePasswordConfirmation(form),
           ]}
         >
-          <Input.Password />
+          <Input.Password placeholder="Nhập lại mật khẩu" />
         </Form.Item>
 
         <Form.Item
-          label="Họ và tên"
+          
           name="Name"
           rules={[{ required: true, message: "Xin hãy nhập họ và tên!" }]}
         >
-          <Input />
+          <Input placeholder="Họ và tên" />
         </Form.Item>
 
         <Form.Item
-          label="Email"
+          
           name="Email"
           rules={[
-            { required: true, message: "Please input your email!" },
-            { type: "email", message: "Please input a valid email!" },
+            { required: true, message: "Vui lòng nhập email của bạn!" },
+            { type: "email", message: "Vui lòng nhập email hợp lệ!" },
           ]}
         >
-          <Input />
+          <Input placeholder="Email" />
         </Form.Item>
 
         <Form.Item
-          label="Birthday"
+          
           name="Birthday"
-          rules={[{ required: true, message: "Please select your birthday!" }]}
+        
+          rules={[{ required: true, message: "Chọn ngày sinh của bạn!" }]}
         >
-          <DatePicker format="YYYY-MM-DD" className="datePicker" />
+          <DatePicker placeholder="Chọn ngày sinh" format="YYYY-MM-DD" className="datePicker" />
         </Form.Item>
         {/* <Form.Item
           label="Birthday"
@@ -122,10 +125,10 @@ function Register() {
 
         <Form.Item>
           <Button type="primary" htmlType="submit">
-            Register
+            Đăng ký
           </Button>
         </Form.Item>
-        <Link to="/login">Already have account ? Login now</Link>
+        <Link to="/login" className="login-link">Đã có tài khoản ? Đăng nhập ngay</Link>
       </Form>
     </AuthenTemplate>
   );

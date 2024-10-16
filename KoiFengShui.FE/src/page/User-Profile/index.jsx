@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./index.css";
 import HeaderTemplate from "../../components/header-page";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+// import { FaEye, FaEyeSlash } from "react-icons/fa";
 import api from "../../config/axios";
 import { Button, Modal, Form, Input, DatePicker, message, Table } from "antd";
 import moment from "moment";
@@ -177,48 +177,44 @@ function UserProfile() {
         <h1 className="user-profile-heading">
           Chào mừng {user?.userID} đến trang thông tin người dùng
         </h1>
-        <div className="user-information">
-          <h2>Thông tin người dùng</h2>
-          {user && (
-            <>
-              <ul className="user-info-list">
-                <li>
-                  <span>UserID:</span> {user.userID}
-                </li>
-                <li>
-                  <span>Mật khẩu:</span>
-                  {showPassword ? user.password : "••••••••"}
-                  <button onClick={togglePasswordVisibility}>
-                    {showPassword ? "👁️" : "👁️‍🗨️"}
-                  </button>
-                </li>
-                <li>
-                  <span>Email:</span> {user.email}
-                </li>
-                <li>
-                  <span>Tên:</span> {user.name}
-                </li>
-                <li>
-                  <span>Ngày sinh:</span>{" "}
-                  {moment(user.birthday).format("YYYY-MM-DD")}
-                </li>
-              </ul>
-              <div className="update-account-container">
-                <Button
-                  type="primary"
-                  onClick={showModal}
-                  className="update-account-button"
-                >
-                  Cập nhật tài khoản
-                </Button>
-              </div>
-            </>
-          )}
-        </div>
-        <div className="user-ads">
-          <div className="user-ads-list">
-            <h3>Bài quảng cáo đã đăng</h3>
-            <Table columns={columns} dataSource={advertisements} rowKey="id" />
+        <div className="user-profile-content">
+          <div className="user-information">
+            <h2>Thông tin người dùng</h2>
+            {user && (
+              <>
+                <ul className="user-info-list">
+                  <li>
+                    <span>UserID:</span> {user.userID}
+                  </li>
+                  <li>
+                    <span>Mật khẩu:</span>
+                    {showPassword ? user.password : "••••••••"}
+                    <button onClick={togglePasswordVisibility}>
+                      {showPassword ? "👁️" : "👁️‍🗨️"}
+                    </button>
+                  </li>
+                  <li>
+                    <span>Email:</span> {user.email}
+                  </li>
+                  <li>
+                    <span>Tên:</span> {user.name}
+                  </li>
+                  <li>
+                    <span>Ngày sinh:</span>{" "}
+                    {moment(user.birthday).format("DD-MM-YYYY")}
+                  </li>
+                </ul>
+                <div className="update-account-container">
+                  <Button
+                    type="primary"
+                    onClick={showModal}
+                    className="update-account-button"
+                  >
+                    Cập nhật tài khoản
+                  </Button>
+                </div>
+              </>
+            )}
           </div>
           <div className="user-ads-dashboard">
             <h3>Thống kê bài quảng cáo đã đăng</h3>
@@ -227,6 +223,10 @@ function UserProfile() {
             ) : (
               <p>Đang tải dữ liệu biểu đồ...</p>
             )}
+          </div>
+          <div className="user-ads-list">
+            <h3>Bài quảng cáo đã đăng</h3>
+            <Table columns={columns} dataSource={advertisements} rowKey="id" />
           </div>
         </div>
       </div>
