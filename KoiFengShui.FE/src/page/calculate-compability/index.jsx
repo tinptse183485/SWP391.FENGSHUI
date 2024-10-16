@@ -224,7 +224,10 @@ function ComputeCompability() {
 
         // Fetch advertisements
         const adsResponse = await api.get('Advertisement/GetAllAdvertisement');
-        setAdvertisements(adsResponse.data);
+        const approvedAds = adsResponse.data.filter(
+          (ad) => ad.status === "Approved"
+        );
+        setAdvertisements(approvedAds);
       } else {
         toast.error("No data received from the server");
       }

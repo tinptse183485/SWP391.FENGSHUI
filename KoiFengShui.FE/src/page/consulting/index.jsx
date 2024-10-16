@@ -78,7 +78,8 @@ function Consulting() {
     const fetchData = async () => {
       try {
         const adsResponse = await api.get('Advertisement/GetAllAdvertisement');
-        setAdvertisements(adsResponse.data);
+        const approvedAds = adsResponse.data.filter((ad) => ad.status === "Approved");
+        setAdvertisements(approvedAds);
 
 
         // Get user element from the location state
