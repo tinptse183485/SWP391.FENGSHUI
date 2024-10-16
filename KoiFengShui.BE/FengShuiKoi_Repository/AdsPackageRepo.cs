@@ -13,14 +13,14 @@ namespace FengShuiKoi_Repository
             return AdsPackageDAO.Instance.AddAdsPackage(ads);
         }
 
-        public Task<bool> DeleteAdsPackage(string AdID, string Rank)
+        public Task<bool> DeleteAdsPackage(string AdID, string Rank, DateTime CreateAt)
         {
-            return AdsPackageDAO.Instance.DeleteAdsPackage(AdID, Rank);
+            return AdsPackageDAO.Instance.DeleteAdsPackage(AdID, Rank, CreateAt);
         }
 
-        public Task<AdsPackage> GetAdsPackageByAdIDRank(string AdID, string Rank)
-        {
-            return AdsPackageDAO.Instance.GetAdsPackageByAdIDRank(AdID, Rank);
+        public Task<AdsPackage> GetAdsPackageByAdIDRankTime(string AdID, string Rank, DateTime CreateAt)
+		{
+            return AdsPackageDAO.Instance.GetAdsPackageByAdIDRankTime(AdID, Rank, CreateAt);
         }
 
         public Task<Dictionary<string, double>> GetRevenueByPackage()

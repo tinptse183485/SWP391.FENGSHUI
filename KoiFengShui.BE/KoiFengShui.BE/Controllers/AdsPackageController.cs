@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace KoiFengShui.BE.Controllers
-{
+{   
     [Route("api/[controller]")]
     [ApiController]
     public class AdsPackageController : ControllerBase

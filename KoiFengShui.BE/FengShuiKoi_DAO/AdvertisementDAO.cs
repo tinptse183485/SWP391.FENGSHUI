@@ -32,12 +32,23 @@ namespace FengShuiKoi_DAO
             return await dbContext.Advertisements.SingleOrDefaultAsync(m => m.AdId.Equals(AdID));
         }
 
-        public async Task<List<Advertisement>> GetAdvertisements()
+
+       
+
+           public async Task<List<Advertisement>> GetAdvertisements()
         {
             return await dbContext.Advertisements.ToListAsync();
         }
 
-        public async Task<List<Advertisement>> GetAdvertisementStatus(string status)
+        public async Task<List<Advertisement>> GetAdvertisementByUserID(string userdID)
+        {
+            return await dbContext.Advertisements
+                .Where(m => m.UserId.Equals(userdID))
+                .ToListAsync();
+        }
+        
+
+            public async Task<List<Advertisement>> GetAdvertisementStatus(string status)
         {
             return await dbContext.Advertisements.Where(m => m.Status.Equals(status)).ToListAsync();
         }
@@ -83,6 +94,7 @@ namespace FengShuiKoi_DAO
         public async Task<bool> UpdateAdvertisement(Advertisement updatedAdvertisement)
         {
             bool isSuccess = false;
+
             try
             {
                 var advertisement = await GetAdvertisementByAdID(updatedAdvertisement.AdId);
@@ -104,5 +116,16 @@ namespace FengShuiKoi_DAO
             }
             return isSuccess;
         }
+
+
+        
+
+        public async Task<List<Advertisement>> GetExpiredAdvertisements()
+        {
+            return await dbContext.Advertisements
+                .Where(a => a.Status == "Approved" || a.Status =="Pending" && a.AdsPackages.Any(ap => ap.ExpiredDate < DateTime.Now))
+                .ToListAsync();
+        }
     }
 }
+

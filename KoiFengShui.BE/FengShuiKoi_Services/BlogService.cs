@@ -29,13 +29,16 @@ namespace FengShuiKoi_Services
 
         public async Task<List<Blog>> GetBlogs()
         {
+
             return await blogRepo.GetBlogs();
         }
 
         public async Task<string> GetLastBlogId()
             => await blogRepo.GetLastBlogId();
 
-        public async Task<bool> UpdateBlog(Blog BlogID)
+        
+        
+public async Task<bool> UpdateBlog(Blog BlogID)
         {
             return await blogRepo.UpdateBlog(BlogID);
         }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace FungShuiKoi_DAO
 {
+
     public class MemberDAO
     {
         private SWP391_FengShuiKoiConsulting_DBContext dbContext;
@@ -138,3 +139,5 @@ namespace FungShuiKoi_DAO
         }
     }
 }
+
+	

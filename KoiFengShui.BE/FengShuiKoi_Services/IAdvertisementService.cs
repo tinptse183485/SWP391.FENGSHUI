@@ -7,6 +7,7 @@ namespace FengShuiKoi_Services
 {
     public interface IAdvertisementService
     {
+
         Task<Advertisement> GetAdvertisementByAdID(string AdID);
         Task<List<Advertisement>> GetAdvertisements();
         Task<bool> AddAdvertisement(Advertisement advertisement);
@@ -14,5 +15,10 @@ namespace FengShuiKoi_Services
         Task<bool> UpdateAdvertisement(Advertisement updatedAdvertisement);
         Task<List<Advertisement>> GetAdvertisementByUserIdAndStatus(string userId, string status);
         Task<List<Advertisement>> GetAdvertisementStatus(string status);
-    }
+
+        public Task<List<Advertisement>> GetAdvertisementByUserID(string userdID);
+        public Task UpdateExpiredAdvertisementsAsync();
+
+	}
 }
+

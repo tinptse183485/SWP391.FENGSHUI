@@ -58,9 +58,9 @@ namespace FengShuiKoi_DAO
             return await dbContext.AdsPackages.ToListAsync();
         }
 
-        public async Task<AdsPackage> GetAdsPackageByAdIDRank(string AdID, string Rank)
+        public async Task<AdsPackage> GetAdsPackageByAdIDRankTime(string AdID, string Rank, DateTime CreateAt)
         {
-            return await dbContext.AdsPackages.SingleOrDefaultAsync(m => m.AdId.Equals(AdID) && m.Rank.Equals(Rank));
+            return await dbContext.AdsPackages.SingleOrDefaultAsync(m => m.AdId.Equals(AdID) && m.Rank.Equals(Rank) && m.CreateAt.Equals(CreateAt));
         }
 
         public async Task<List<AdsPackage>> GetListAdsPackageByAdID(string AdID)
@@ -75,7 +75,7 @@ namespace FengShuiKoi_DAO
 
         public async Task<bool> AddAdsPackage(AdsPackage ads)
         {
-            AdsPackage adsPackage = await this.GetAdsPackageByAdIDRank(ads.AdId, ads.Rank);
+            AdsPackage adsPackage = await this.GetAdsPackageByAdIDRankTime(ads.AdId, ads.Rank,ads.CreateAt);
             if (adsPackage != null) return false;
 
             try
@@ -92,13 +92,14 @@ namespace FengShuiKoi_DAO
 
         public async Task<bool> UpdateAdsPackage(AdsPackage newAdsPackage)
         {
-            AdsPackage ads = await this.GetAdsPackageByAdIDRank(newAdsPackage.AdId, newAdsPackage.Rank);
+            AdsPackage ads = await this.GetAdsPackageByAdIDRankTime(newAdsPackage.AdId, newAdsPackage.Rank, newAdsPackage.CreateAt);
             if (ads == null) return false;
 
             ads.StartDate = newAdsPackage.StartDate;
             ads.ExpiredDate = newAdsPackage.ExpiredDate;
             ads.Quantity = newAdsPackage.Quantity;
             ads.Total = newAdsPackage.Total;
+            ads.CreateAt = newAdsPackage.CreateAt;
 
             try
             {
@@ -112,9 +113,9 @@ namespace FengShuiKoi_DAO
             }
         }
 
-        public async Task<bool> DeleteAdsPackage(string AdID, string Rank)
+        public async Task<bool> DeleteAdsPackage(string AdID, string Rank,DateTime CreateAt)
         {
-            AdsPackage ads = await this.GetAdsPackageByAdIDRank(AdID, Rank);
+            AdsPackage ads = await this.GetAdsPackageByAdIDRankTime(AdID, Rank,CreateAt);
             if (ads == null) return false;
 
             try

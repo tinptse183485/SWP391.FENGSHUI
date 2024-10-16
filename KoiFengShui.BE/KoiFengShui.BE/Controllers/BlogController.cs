@@ -1,5 +1,6 @@
 ﻿using FengShuiKoi_BO;
 using FengShuiKoi_Services;
+using KoiFengShui.BE.Attributes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection.Metadata;
@@ -56,7 +57,8 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, "An error occurred while processing your request.");
             }
         }
-
+       
+        
         [HttpPut("UpdateBlog")]
         public async Task<IActionResult> UpdateBlog(Blog blog)
         {

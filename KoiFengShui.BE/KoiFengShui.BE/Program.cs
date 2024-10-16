@@ -1,5 +1,6 @@
 using FengShuiKoi_Repository;
 using FengShuiKoi_Services;
+using KoiFengShui.BE.Middleware;
 using KoiFengShui.BE.TokenService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -26,7 +27,7 @@ namespace KoiFengShui.BE
             if (string.IsNullOrEmpty(jwtSigningKey) || string.IsNullOrEmpty(jwtIssuer) || string.IsNullOrEmpty(jwtAudience))
             {
                 throw new InvalidOperationException("JWT configuration is missing in environment variables");
-            }   
+            }
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -42,7 +43,7 @@ namespace KoiFengShui.BE
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSigningKey))
                     };
                 });
-
+         
             // Register services
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IMemberService, MemberService>();
@@ -66,8 +67,7 @@ namespace KoiFengShui.BE
             builder.Services.AddScoped<IQuantityOfFishService, QuantityOfFishService>();
             builder.Services.AddScoped<IPackageService, PackageService>();
             builder.Services.AddScoped<IAdvertisementService, AdvertisementService>();
-
-
+            builder.Services.AddHostedService<AdvertisementExpirationService>();
 
             // Add CORS
             builder.Services.AddCors(options =>
@@ -87,13 +87,13 @@ namespace KoiFengShui.BE
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseCors("AllowReactApp");
-
+            app.UseMiddleware<JwtMiddleware>();
             app.MapControllers();
 
             app.Run();

@@ -4,6 +4,7 @@ using KoiFengShui.BE.Model;
 using KoiFengShui.BE.TokenService;
 using Microsoft.AspNetCore.Mvc;
 using System;
+
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -59,20 +60,18 @@ namespace KoiFengShui.BE.Controllers
                 {
                     return BadRequest("Tài khoản không tồn tại");
                 }
-
-                if (string.IsNullOrWhiteSpace(Account.Password))
-                {
-                    return BadRequest("Mật khẩu không được để trống");
-                }
                 if (string.IsNullOrWhiteSpace(Account.Email))
                 {
                     return BadRequest("Email không được để trống");
                 }
-                if (string.IsNullOrWhiteSpace(Account.Name))
+				if (string.IsNullOrWhiteSpace(Account.Password))
+				{
+					return BadRequest("Mật khẩu không được để trống");
+				}
+				if (string.IsNullOrWhiteSpace(Account.Name))
                 {
                     return BadRequest("Tên không được để trống");
                 }
-
                 var accountWithSameEmail = await _accountService.GetAccountByEmail(Account.Email);
                 if (accountWithSameEmail != null && accountWithSameEmail.UserId != Account.UserID)
                 {
@@ -110,14 +109,10 @@ namespace KoiFengShui.BE.Controllers
         {
             try
             {
-                if (await _accountService.GetAccountByUserID(Account.UserID) == null)
+                var existingAccount = await _accountService.GetAccountByUserID(Account.UserID);
+                if (existingAccount == null)
                 {
                     return BadRequest("Tài khoản không tồn tại");
-                }
-
-                if (string.IsNullOrWhiteSpace(Account.Password))
-                {
-                    return BadRequest("Mật khẩu không được để trống");
                 }
 
                 if (string.IsNullOrWhiteSpace(Account.status))
@@ -125,14 +120,10 @@ namespace KoiFengShui.BE.Controllers
                     return BadRequest("Trạng thái không được để trống");
                 }
 
-                var acc = new Account
-                {
-                    UserId = Account.UserID,
-                    Password = Account.Password,
-                    Status = Account.status
-                };
+                // Admin chỉ có thể cập nhật trạng thái
+                existingAccount.Status = Account.status;
 
-                bool result = await _accountService.UpdateAccountByAdmin(acc);
+                bool result = await _accountService.UpdateAccountByAdmin(existingAccount);
 
                 if (result)
                 {
@@ -173,8 +164,31 @@ namespace KoiFengShui.BE.Controllers
 
             return Ok(accountInfoList);
         }
+		[HttpGet("GetAccountMemberInfoByUserID")]
+		public async Task<IActionResult> GetAccountMemberInfoByUserID(string userID)
+		{
+			var accounts = await _accountService.GetAccountByUserID(userID);
+            var member = await _memberService.GetMemberByUserID(userID);
+			RegisterDTO userInfo = new RegisterDTO();
+			if (member == null || accounts == null)
+            {
+                return NotFound("Không tìm thấy thông tin người dùng");
+            }
+            else
+            {
+                userInfo.UserID = userID;
+                userInfo.Password = accounts.Password;
+                userInfo.Name = member.Name;
+                userInfo.Email = accounts.Email;
+                userInfo.Role = accounts.Role;
+                userInfo.status = accounts.Status;
+                userInfo.Birthday = member.Birthday;
+			}
 
-        [HttpPost("register")]
+			return Ok(userInfo);
+		}
+
+		[HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDTO newAccount)
         {
             if (await _accountService.GetAccountByUserID(newAccount.UserID) != null)
@@ -249,4 +263,4 @@ namespace KoiFengShui.BE.Controllers
             });
         }
     }
-}
+    }

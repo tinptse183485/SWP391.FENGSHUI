@@ -23,7 +23,10 @@ namespace FengShuiKoi_DAO
                 return instance;
             }
         }
-
+        public BlogDAO()
+        {
+            dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
+        }
         public async Task<Blog> GetBlogByBlogID(string BlogID)
         {
             return await dbContext.Blogs.SingleOrDefaultAsync(m => m.BlogId.Equals(BlogID));
