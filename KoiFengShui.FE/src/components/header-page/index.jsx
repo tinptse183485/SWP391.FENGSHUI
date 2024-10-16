@@ -57,6 +57,7 @@ function HeaderTemplate() {
   const handleScrollToAdvertisements = handleScrollToSection("Advertisements");
   const handleScrollToBlog = handleScrollToSection("blog");
   const handleScrollToContact = handleScrollToSection("contact");
+  const handleScrollToTrendingFeature = handleScrollToSection("trending-feature");
 
   const handleLogin = () => {
     navigate("/login");
@@ -81,9 +82,7 @@ function HeaderTemplate() {
             </p>
           </div>
         </div>
-
-        <div className="user-actions">
-          <nav className="main-nav">
+        <nav className="main-nav">
             <ul>
               <li>
                 <Link to="/">
@@ -92,6 +91,9 @@ function HeaderTemplate() {
               </li>
               <li>
                 <a href="#about-us" onClick={handleScrollToAboutUs}>About Us</a>
+              </li>
+              <li>
+                <a href="#trending-feature" onClick={handleScrollToTrendingFeature}>Tính năng</a>
               </li>
               <li>
                 <a href="#Advertisements" onClick={handleScrollToAdvertisements}>Quảng cáo</a>
@@ -104,6 +106,8 @@ function HeaderTemplate() {
               </li>
             </ul>
           </nav>
+        <div className="user-actions">
+          
 
           {userId ? (
             <Dropdown
