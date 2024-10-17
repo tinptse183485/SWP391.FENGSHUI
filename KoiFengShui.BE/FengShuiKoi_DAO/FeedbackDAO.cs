@@ -43,6 +43,19 @@ namespace FengShuiKoi_DAO
         {
             return await dbContext.Feedbacks.Where(f => f.AdId.Equals(AdId)).ToListAsync();
         }
+        public async Task<List<Feedback>> GetFeedbackByAdIdAndSortByRate(string AdId)
+        {
+            return await dbContext.Feedbacks
+                                 .Where(f => f.AdId.Equals(AdId))
+                                 .OrderByDescending(f => f.Rate)
+                                 .ToListAsync();
+        }
+        public async Task<List<Feedback>> GetFeedbackByAdIdAndRate(string AdId, byte Rate)
+        {
+            return await dbContext.Feedbacks
+                                 .Where(f => f.AdId.Equals(AdId) && f.Rate == Rate)
+                                 .ToListAsync();
+        }
 
         public async Task<List<Feedback>> GetFeedbacks()
         {

@@ -34,8 +34,8 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, "Đã xảy ra lỗi trong quá trình xử lý yêu cầu của bạn.");
             }
         }
-        [HttpGet("GetBlogByFbID")]
-        public async Task<IActionResult> GetBlogByID(string FbID)
+        [HttpGet("GetFeedbackByFbID")]
+        public async Task<IActionResult> GetFeedbackByFbID(string FbID)
         {
             try
             {
@@ -43,14 +43,58 @@ namespace KoiFengShui.BE.Controllers
                 {
                     return BadRequest("Vui lòng điền FeedBackID");
                 }
-                var blogs = await _feedBackService.GetFeedbackByFeedbackID(FbID);
+                var fb = await _feedBackService.GetFeedbackByFeedbackID(FbID);
 
-                if (blogs == null)
+                if (fb == null)
                 {
                     return BadRequest("Không tìm thấy Feedback.");
                 }
 
-                return Ok(blogs);
+                return Ok(fb);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Đã xảy ra lỗi trong quá trình xử lý yêu cầu của bạn.");
+            }
+        }
+        [HttpGet("GetFeedbackByAdIdAndSortRatedDescending")]
+        public async Task<IActionResult> GetFeedbackByAdIdAndSortRatedDescending(string AdId)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(AdId))
+                {
+                    return BadRequest("Vui lòng điền AdId");
+                }
+                var fb = await _feedBackService.GetFeedbackByAdIdAndSortByRate(AdId);
+
+               
+
+                return Ok(fb);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Đã xảy ra lỗi trong quá trình xử lý yêu cầu của bạn.");
+            }
+        }
+        [HttpGet("GetFeedbackByAdIdAndRate")]
+        public async Task<IActionResult> GetFeedbackByAdIdAndExactRate(string AdId, byte rate)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(AdId))
+                {
+                    return BadRequest("Vui lòng điền AdId");
+                }
+                if (rate < 0 || rate > 5)
+                {
+                    return BadRequest("Vui lòng điền Rate phù hợp.");
+                }
+                var fb = await _feedBackService.GetFeedbackByAdIdAndRate(AdId,rate);
+
+
+
+                return Ok(fb);
             }
             catch (Exception ex)
             {
@@ -169,8 +213,8 @@ namespace KoiFengShui.BE.Controllers
         {
             try
             {
-                var blogs = await _feedBackService.GetFeedbackByFeedbackID(FbID);
-                if (blogs == null)
+                var fb = await _feedBackService.GetFeedbackByFeedbackID(FbID);
+                if (fb == null)
                 {
                     return BadRequest("Không tìm thấy feedback ");
                 }
