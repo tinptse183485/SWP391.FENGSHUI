@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../config/axios";
 import moment from "moment"; // Add this import for date formatting
-
 import {
   Table,
   Button,
@@ -167,7 +166,6 @@ const Ads = () => {
           {status}
         </Text>
       ),
-
       sorter: (a, b) => statusPriority[a.status] - statusPriority[b.status],
       sortDirections: ["descend", "ascend"],
     },

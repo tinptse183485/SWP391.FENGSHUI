@@ -98,22 +98,22 @@ const handleChoosePackage = () => {
     image: adData.image || document.querySelector('input[name="image"]').value,
     link: adData.link || editorRef.current.getContent(),
     userId: localStorage.getItem("userId"),
-    elementId: adData.elementId || 'None',
+    elementId: adData.elementId || document.querySelector('select[name="elementId"]').value,
     status: 'Draft'
   };
 
-  if (updatedAdData.heading && updatedAdData.image && updatedAdData.link) {
+  if (updatedAdData.heading && updatedAdData.image && updatedAdData.link && updatedAdData.elementId) {
     localStorage.setItem('adData', JSON.stringify(updatedAdData));
     navigate('/choose-package', { state: { adData: updatedAdData } });
   } else {
-    message.error('Vui lòng điền đầy đủ thông tin quảng cáo trước khi chọn gói.');
+    message.error('Vui lòng điền đầy đủ thông tin quảng cáo và chọn mệnh trước khi chọn gói.');
   }
 };
 
   return (
     <div className="ads-container">
       <h1>{adData.adId !== '.' ? 'Chỉnh sửa quảng cáo' : 'Đăng quảng cáo mới'}</h1>
-
+      <div className="input-container"></div>
       <input
         type="text"
         name="heading"
@@ -131,14 +131,20 @@ const handleChoosePackage = () => {
         required
       />
        <div className="element-selection">
-      <h3>Chọn phần tử cho quảng cáo:</h3>
-      <Radio.Group onChange={handleElementChange} value={adData.elementId}>
+      <h3>Chọn mệnh cho quảng cáo:</h3>
+      <select
+        name="elementId"
+        value={adData.elementId}
+        onChange={handleElementChange}
+        required
+      >
+        <option value=""></option>
         {elements.map(element => (
-          <Radio key={element.elementId} value={element.elementId}>
+          <option key={element.elementId} value={element.elementId}>
             {element.elementId}
-          </Radio>
+          </option>
         ))}
-      </Radio.Group>
+      </select>
     </div>
       
       <Editor

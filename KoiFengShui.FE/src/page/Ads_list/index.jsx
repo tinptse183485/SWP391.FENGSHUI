@@ -20,13 +20,43 @@ const Ads_list = () => {
 
   const fetchData = async () => {
     try {
-      const response = await api.get('Advertisement/GetAllAdvertisement');
+      const response = await api.get('Advertisement/GetAllAdvertisemenWithPackageSortted');
       if (response.data.length > 0) {
         setFeaturedAd(response.data[0]);
         setAds(response.data.slice(1));
       }
     } catch (error) {
       console.error('Error fetching data:', error);
+    }
+  };
+
+  const formatTimeAgo = (dateString) => {
+    const now = new Date();
+    const past = new Date(dateString);
+    const diffInSeconds = Math.floor((now - past) / 1000);
+
+    if (diffInSeconds < 60) {
+      return 'vừa xong';
+    } else if (diffInSeconds < 3600) {
+      const minutes = Math.floor(diffInSeconds / 60);
+      return `${minutes} phút trước`;
+    } else if (diffInSeconds < 86400) {
+      const hours = Math.floor(diffInSeconds / 3600);
+      return `${hours} giờ trước`;
+    } else if (diffInSeconds < 2592000) {
+      const days = Math.floor(diffInSeconds / 86400);
+      return `${days} ngày trước`;
+    } else {
+      const options = { 
+        year: 'numeric', 
+        month: '2-digit', 
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+        timeZone: 'Asia/Ho_Chi_Minh'
+      };
+      return past.toLocaleString('vi-VN', options);
     }
   };
 
@@ -46,7 +76,9 @@ const Ads_list = () => {
               <h2 className="featured-ad-title">{featuredAd.heading}</h2>
               <p className="featured-ad-description">{featuredAd.description}</p>
               <Link to={`/advertisement-detail/${featuredAd.adId}`} className="view-details-btn">View Details</Link>
-
+              <p className="ad-item-date">
+                  {formatTimeAgo(featuredAd.createAt)}
+                </p>
             </div>
           </div>
         )}
@@ -57,8 +89,10 @@ const Ads_list = () => {
               <img src={ad.image} alt={ad.heading} className="ad-item-image" />
               <div className="ad-item-content">
                 <h3 className="ad-item-title">{ad.heading}</h3>
-                <p className="ad-item-date">{new Date(ad.startDate).toLocaleDateString()}</p>
                 <Link to={`/advertisement-detail/${ad.adId}`} className="view-details-link">View Details</Link>
+                <p className="ad-item-date">
+                  {formatTimeAgo(ad.createAt)}
+                </p>
               </div>
             </article>
           ))}
