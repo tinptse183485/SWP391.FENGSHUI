@@ -112,8 +112,13 @@ function UserProfile() {
       title: "Ngày đăng",
       dataIndex: "createdDate",
       key: "createdDate",
-      render: (text) => moment(text).format("YYYY-MM-DD"),
+      render: (text) => moment(text).format("DD-MM-YYYY"),
     },
+    {
+      title: "Bậc",
+      dataIndex: "rank",
+      key: "rank",
+    }
   ];
 
   const fetchAdsPackages = async () => {
