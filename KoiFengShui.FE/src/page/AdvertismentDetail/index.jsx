@@ -2,47 +2,91 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import api from "../../config/axios";
 import HeaderTemplate from "../../components/header-page";
-import { Spin, Input, Button, message } from 'antd';
+import { Spin, Input, Button, message, Rate } from 'antd';
 import './index.css';
 import FooterTemplate from '../../components/footer-page';
+
 
 
 function AdvertisementDetail() {
   const [adHtml, setAdHtml] = useState('');
   const [loading, setLoading] = useState(true);
   const [feedback, setFeedback] = useState('');
+  const [rating, setRating] = useState(0);
   const { id } = useParams();
+  const [allFeedback, setAllFeedback] = useState([]);
+
+
 
   useEffect(() => {
-    const fetchAdHtml = async () => {
+    const fetchData = async () => {
+      setLoading(true);
       try {
-        const response = await api.get(`Advertisement/GetAdvertisementByAdId?adId=${id}`);
-        setAdHtml(response.data.link);
-        setLoading(false);
+        const [adResponse, feedbackResponse] = await Promise.all([
+          retryFetch(() => api.get(`Advertisement/GetAdvertisementByAdId?adId=${id}`)),
+          retryFetch(() => api.get(`Feedback/GetFeedBackByAdId?adId=${id}`))
+        ]);
+
+        setAdHtml(adResponse.data.link);
+        setAllFeedback(feedbackResponse.data);
       } catch (error) {
-        console.error('Error fetching advertisement:', error);
+        console.error('Error fetching data:', error);
+        message.error('Failed to load some data. Please try refreshing the page.');
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchAdHtml();
+    fetchData();
   }, [id]);
 
   const handleFeedbackChange = (e) => {
     setFeedback(e.target.value);
   };
 
+  const handleRatingChange = (value) => {
+    setRating(value);
+    console.log(rating);
+  };
+
   const submitFeedback = async () => {
+    if (rating === 0) {
+      message.warning('Please provide a rating');
+      return;
+    }
+
     try {
-      await api.post('Feedback/SubmitFeedback', {
+      const user = localStorage.getItem('userId');
+      const newFeedback = {
+        fbId: ".",
+        description: feedback,
         adId: id,
-        feedbackText: feedback
-      });
+        userId: user,
+        rate: rating
+      };
+      await retryFetch(() => api.post('Feedback/AddFeedback', newFeedback));
       message.success('Feedback submitted successfully');
+      
+      // Fetch updated feedback
+      const updatedFeedback = await retryFetch(() => api.get(`Feedback/GetFeedBackByAdId?adId=${id}`));
+      setAllFeedback(updatedFeedback.data);
+      
       setFeedback('');
+      setRating(0);
     } catch (error) {
       console.error('Error submitting feedback:', error);
-      message.error('Failed to submit feedback');
+      message.error('Failed to submit feedback. Please try again.');
+    }
+  };
+
+  const retryFetch = async (fetchFunction, retries = 3, delay = 1000) => {
+    for (let i = 0; i < retries; i++) {
+      try {
+        return await fetchFunction();
+      } catch (error) {
+        if (i === retries - 1) throw error;
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
     }
   };
 
@@ -59,17 +103,40 @@ function AdvertisementDetail() {
         )}
       </div>
       <div className="feedback-section">
-              <h2>Leave Your Feedback</h2>
-              <Input.TextArea
-                rows={4}
-                value={feedback}
-                onChange={handleFeedbackChange}
-                placeholder="Enter your feedback here..."
-              />
-              <Button type="primary" onClick={submitFeedback}>
-                Submit Feedback
-              </Button>
-            </div>
+        <h2>Đánh giá và Phản hồi</h2>
+        <div className="rating-container">
+          <span>Đánh giá bài đăng:</span>
+          <Rate 
+            value={rating} 
+            onChange={handleRatingChange}
+            className="feedback-rate"
+          />
+        </div>
+        <Input.TextArea
+          rows={4}
+          value={feedback}
+          onChange={handleFeedbackChange}
+          placeholder="Chia sẻ ý kiến của bạn về bài đăng này..."
+        />
+        <Button type="primary" onClick={submitFeedback}>
+          Gửi đánh giá
+        </Button>
+        
+        <div className="all-feedback-section">
+          <h2>Phản hồi từ cộng đồng</h2>
+          {allFeedback.length > 0 ? (
+            allFeedback.map((feedback, index) => (
+              <div key={index} className="feedback-item">
+                <Rate disabled value={feedback.rate} />
+                <p>{feedback.description}</p>
+              </div>
+            ))
+          ) : (
+            <p>Chưa có đánh giá nào. Hãy là người đầu tiên chia sẻ ý kiến!</p>
+          )}
+        </div>
+      </div>
+      
       <FooterTemplate />
     </>
   );
