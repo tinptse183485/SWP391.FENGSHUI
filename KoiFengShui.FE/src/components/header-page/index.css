@@ -79,8 +79,7 @@
   background-color: #f0f0f0;
 }
 
-.login-btn {
-  background-color: #e6f2ff;
+.user-actions .login-btn {
   color: #ffffff;
   padding: 10px 20px;
   border: none;
@@ -93,19 +92,19 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.login-btn:hover {
+.user-actions .login-btn:hover {
   background-color: #ff6347 !important;
   transform: translateY(-2px);
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
 
-.login-btn:active {
+.user-actions .login-btn:active {
   transform: translateY(1px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.login-btn a {
+.user-actions .login-btn a {
   color: #ffffff;
   text-decoration: none;
   display: block;
