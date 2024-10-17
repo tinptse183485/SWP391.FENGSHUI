@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import api from "../../config/axios";
 import HeaderTemplate from "../../components/header-page";
-import { Spin, Input, Button, message, Rate } from 'antd';
+import { Spin, Input, Button, message, Rate, Select } from 'antd';
 import './index.css';
 import FooterTemplate from '../../components/footer-page';
+const { Option } = Select;
 
 
 
@@ -15,6 +16,8 @@ function AdvertisementDetail() {
   const [rating, setRating] = useState(0);
   const { id } = useParams();
   const [allFeedback, setAllFeedback] = useState([]);
+  const [filteredFeedback, setFilteredFeedback] = useState([]);
+  const [filterRate, setFilterRate] = useState(0); // 0 means all ratings
 
 
 
@@ -29,16 +32,27 @@ function AdvertisementDetail() {
 
         setAdHtml(adResponse.data.link);
         setAllFeedback(feedbackResponse.data);
+        setFilteredFeedback(feedbackResponse.data); // Initially, show all feedback
       } catch (error) {
         console.error('Error fetching data:', error);
         message.error('Failed to load some data. Please try refreshing the page.');
       } finally {
         setLoading(false);
+        // Add this line to scroll to the top after loading
+        window.scrollTo(0, 0);
       }
     };
 
     fetchData();
   }, [id]);
+
+  useEffect(() => {
+    if (filterRate === 0) {
+      setFilteredFeedback(allFeedback);
+    } else {
+      setFilteredFeedback(allFeedback.filter(feedback => feedback.rate === filterRate));
+    }
+  }, [filterRate, allFeedback]);
 
   const handleFeedbackChange = (e) => {
     setFeedback(e.target.value);
@@ -64,12 +78,15 @@ function AdvertisementDetail() {
         userId: user,
         rate: rating
       };
-      await retryFetch(() => api.post('Feedback/AddFeedback', newFeedback));
+      const response = await retryFetch(() => api.post('Feedback/AddFeedback', newFeedback));
       message.success('Feedback submitted successfully');
       
-      // Fetch updated feedback
-      const updatedFeedback = await retryFetch(() => api.get(`Feedback/GetFeedBackByAdId?adId=${id}`));
-      setAllFeedback(updatedFeedback.data);
+      // Update both allFeedback and filteredFeedback
+      const updatedFeedback = [response.data, ...allFeedback];
+      setAllFeedback(updatedFeedback);
+      if (filterRate === 0 || response.data.rate === filterRate) {
+        setFilteredFeedback([response.data, ...filteredFeedback]);
+      }
       
       setFeedback('');
       setRating(0);
@@ -88,6 +105,10 @@ function AdvertisementDetail() {
         await new Promise(resolve => setTimeout(resolve, delay));
       }
     }
+  };
+
+  const handleFilterChange = (value) => {
+    setFilterRate(value);
   };
 
   return (
@@ -117,6 +138,7 @@ function AdvertisementDetail() {
           value={feedback}
           onChange={handleFeedbackChange}
           placeholder="Chia sẻ ý kiến của bạn về bài đăng này..."
+          required
         />
         <Button type="primary" onClick={submitFeedback}>
           Gửi đánh giá
@@ -124,15 +146,29 @@ function AdvertisementDetail() {
         
         <div className="all-feedback-section">
           <h2>Phản hồi từ cộng đồng</h2>
-          {allFeedback.length > 0 ? (
-            allFeedback.map((feedback, index) => (
-              <div key={index} className="feedback-item">
+          <Select
+            className="custom-select"
+            style={{ width: 180, marginBottom: 16 }}
+            placeholder="Filter by rating"
+            onChange={handleFilterChange}
+            value={filterRate}
+          >
+            <Option value={0}>All Ratings</Option>
+            <Option value={1}><Rate disabled defaultValue={1} count={1} /></Option>
+            <Option value={2}><Rate disabled defaultValue={2} count={2} /></Option>
+            <Option value={3}><Rate disabled defaultValue={3} count={3} /></Option>
+            <Option value={4}><Rate disabled defaultValue={4} count={4} /></Option>
+            <Option value={5}><Rate disabled defaultValue={5} count={5} /></Option>
+          </Select>
+          {filteredFeedback.length > 0 ? (
+            filteredFeedback.map((feedback, index) => (
+              <div key={feedback.fbId || index} className="feedback-item">
                 <Rate disabled value={feedback.rate} />
                 <p>{feedback.description}</p>
               </div>
             ))
           ) : (
-            <p>Chưa có đánh giá nào. Hãy là người đầu tiên chia sẻ ý kiến!</p>
+            <p>No feedback matching the selected filter. Be the first to share your thoughts!</p>
           )}
         </div>
       </div>
