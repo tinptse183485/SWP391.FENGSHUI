@@ -15,7 +15,6 @@ namespace FengShuiKoi_Repository
         Task<bool> DeleteFeedback(string feedbackId);
         Task<List<Feedback>> GetFeedbackByAdId(string AdId);
         Task<string> GetLastFBId();
-        Task<List<Feedback>> GetFeedbackByAdIdAndSortByRate(string AdId);
-         Task<List<Feedback>> GetFeedbackByAdIdAndRate(string AdId, byte Rate);
+        
     }
 }

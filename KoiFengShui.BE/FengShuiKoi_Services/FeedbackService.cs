@@ -52,7 +52,5 @@ namespace FengShuiKoi_Services
         {
             return await feedbackRepo.GetLastFBId();
         }
-        public async Task<List<Feedback>> GetFeedbackByAdIdAndSortByRate(string AdId) => await feedbackRepo.GetFeedbackByAdIdAndSortByRate(AdId);
-        public async Task<List<Feedback>> GetFeedbackByAdIdAndRate(string AdId, byte Rate) => await feedbackRepo.GetFeedbackByAdIdAndRate(AdId, Rate);
     }
 }

@@ -50,9 +50,10 @@ namespace FengShuiKoi_Services
         {
             return await iAdsPackageRepo.UpdateAdsPackage(newAdsPackage);
         }
-        public Task<Dictionary<string, double>> GetTotalRevenueByMonth(int year, int month)
+        public async Task<Dictionary<string, double>> GetTotalRevenueByMonth(int year, int month)
         {
-            return AdsPackageDAO.Instance.GetTotalRevenueByMonth(year, month);
+            return await iAdsPackageRepo.GetTotalRevenueByMonth(year, month);
         }
+        public async Task<Dictionary<DateTime, double>> GetDailyRevenueToDate() => await iAdsPackageRepo.GetDailyRevenueToDate();
     }
 }

@@ -154,5 +154,41 @@ namespace FengShuiKoi_DAO
                 return new Dictionary<string, double>();
             }
         }
+        public async Task<Dictionary<DateTime, double>> GetDailyRevenueToDate()
+        {
+            try
+            {
+                var currentDate = DateTime.Now.Date;
+                var startDate = dbContext.AdsPackages.Min(p => p.CreateAt).Date;
+
+                var dailyRevenue = await dbContext.AdsPackages
+                    .Where(p => p.CreateAt.Date <= currentDate)
+                    .GroupBy(p => p.CreateAt.Date)
+                    .Select(g => new { Date = g.Key, TotalRevenue = g.Sum(p => p.Total) })
+                    .OrderBy(x => x.Date)
+                    .ToDictionaryAsync(x => x.Date, x => x.TotalRevenue);
+
+                // Đảm bảo tất cả các ngày đều có trong dictionary, kể cả ngày không có doanh thu
+                var result = new Dictionary<DateTime, double>();
+                for (var date = startDate; date <= currentDate; date = date.AddDays(1))
+                {
+                    if (dailyRevenue.TryGetValue(date, out double revenue))
+                    {
+                        result[date] = revenue;
+                    }
+                    else
+                    {
+                        result[date] = 0;
+                    }
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Lỗi trong GetDailyRevenueToDate: {ex.Message}");
+                return new Dictionary<DateTime, double>();
+            }
+        }
     }
 }

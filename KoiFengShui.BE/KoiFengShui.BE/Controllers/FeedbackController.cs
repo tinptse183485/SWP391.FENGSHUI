@@ -57,50 +57,8 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, "Đã xảy ra lỗi trong quá trình xử lý yêu cầu của bạn.");
             }
         }
-        [HttpGet("GetFeedbackByAdIdAndSortRatedDescending")]
-        public async Task<IActionResult> GetFeedbackByAdIdAndSortRatedDescending(string AdId)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(AdId))
-                {
-                    return BadRequest("Vui lòng điền AdId");
-                }
-                var fb = await _feedBackService.GetFeedbackByAdIdAndSortByRate(AdId);
-
-               
-
-                return Ok(fb);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Đã xảy ra lỗi trong quá trình xử lý yêu cầu của bạn.");
-            }
-        }
-        [HttpGet("GetFeedbackByAdIdAndRate")]
-        public async Task<IActionResult> GetFeedbackByAdIdAndExactRate(string AdId, byte rate)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(AdId))
-                {
-                    return BadRequest("Vui lòng điền AdId");
-                }
-                if (rate < 0 || rate > 5)
-                {
-                    return BadRequest("Vui lòng điền Rate phù hợp.");
-                }
-                var fb = await _feedBackService.GetFeedbackByAdIdAndRate(AdId,rate);
-
-
-
-                return Ok(fb);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Đã xảy ra lỗi trong quá trình xử lý yêu cầu của bạn.");
-            }
-        }
+        
+        
         [HttpGet("GetFeedBackByAdId")]
         public async Task<IActionResult> GetFeedBackByAdId(string AdId)
         {
