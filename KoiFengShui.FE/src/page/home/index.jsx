@@ -12,6 +12,8 @@ import { Carousel } from "antd";
 import KoiImage1 from "./hinh-nen-ca-chep-2k-dep-cho-may-tinh_025211326.jpg";
 import KoiImage2 from "./animals-aquatic-animal-fish-koi-fish.jpg";
 import api from "../../config/axios";
+import { motion } from 'framer-motion';
+import { UserOutlined, StarFilled } from '@ant-design/icons';
 
 
 const contentStyle = {
@@ -30,6 +32,30 @@ const handleUserAds = () => {
   }
   return;
 }
+
+const testimonials = [
+  {
+    id: 1,
+    name: "Nguyễn Văn A",
+    role: "Chủ cửa hàng cá Koi",
+    content: "Trang web này đã giúp tôi tìm hiểu rất nhiều về cách chăm sóc cá Koi. Thông tin rất hữu ích!",
+    rating: 5,
+  },
+  {
+    id: 2,
+    name: "Trần Thị B",
+    role: "Người nuôi cá cảnh",
+    content: "Tôi rất thích tính năng tư vấn cá theo bản mệnh. Nó giúp tôi chọn được những chú cá phù hợp nhất.",
+    rating: 4,
+  },
+  {
+    id: 3,
+    name: "Lê Văn C",
+    role: "Nhà thiết kế hồ cá",
+    content: "Đăng quảng cáo trên trang web này giúp tôi tiếp cận được nhiều khách hàng tiềm năng hơn. Rất hiệu quả!",
+    rating: 5,
+  },
+];
 
 function Home() {
   const processedRef = useRef(false);
@@ -138,51 +164,47 @@ function Home() {
             </div>
           </div>
           {/* Trending Feature */}
-          <div id="trending-feature" className="container">
-            <div className="feature">
-            
+          <section id="trending-feature" className="feature-section">
+            <div className="feature-header">
               <h2>Tính năng nổi bật</h2>
-              <div class="rectangle"></div>
-              
-              </div>
-              <div className="Card-container">
-              <div className="Card">
-                <img
-                  src={KoiImage1}
-                  alt="Selecting Koi fish according to your Feng Shui element"
-                ></img>
-                <a href="#">
-                  {" "}
-
-                  <Link to="calculation">
-                    <h3>Tư vấn cá và hồ theo bản mệnh</h3>
-                  </Link>
-
-                </a>
-              </div>
-              <div className="Card">
-                <img src={koiImage} alt="Post Advertisement Function"></img>
-                <a href="#">
-                  {" "}
-
-                  <Link to="calculate-compability">
-                    <h3>Tính độ tương hợp của cá và hồ theo bản mệnh</h3>
-                  </Link>
-
-                </a>
-              </div>
-              <div className="Card">
-                <img src={KoiImage2} alt="Calculate compatibility"></img>
-                <a href="#">
-                  {" "}
-                  <Link  to="/user-ads">
-                    <h3>Đăng tin quảng cáo</h3>
-                  </Link>
-
-                </a>
-              </div>
+              <div className="koi-divider"></div>
             </div>
-          </div>
+            <div className="feature-container">
+              <motion.div 
+                className="feature-card"
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <div className="feature-icon">
+                  <img src={KoiImage1} alt="Tư vấn cá và hồ" />
+                </div>
+                <h3>Tư vấn cá và hồ theo bản mệnh</h3>
+                <Link to="calculation" className="feature-link">Khám phá</Link>
+              </motion.div>
+              <motion.div 
+                className="feature-card"
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <div className="feature-icon">
+                  <img src={koiImage} alt="Tính độ tương hợp" />
+                </div>
+                <h3>Tính độ tương hợp của cá và hồ theo bản mệnh</h3>
+                <Link to="calculate-compability" className="feature-link">Tìm hiểu thêm</Link>
+              </motion.div>
+              <motion.div 
+                className="feature-card"
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <div className="feature-icon">
+                  <img src={KoiImage2} alt="Đăng tin quảng cáo" />
+                </div>
+                <h3>Đăng tin quảng cáo</h3>
+                <Link to="/user-ads" className="feature-link">Bắt đầu ngay</Link>
+              </motion.div>
+            </div>
+          </section>
           <div id="Advertisements" className="container">
             <div className="feature">
             <div class="rectangle"></div>
@@ -235,6 +257,42 @@ function Home() {
               </button>
             </div>
           </div>
+          
+          
+         
+          <section className="testimonial-section">
+            <div className="container">
+              <div className="feature">
+                <h2 style={{color: "#00838f"}}>Khách hàng nói gì về chúng tôi</h2>
+                <div style={{width: "1000px"}} className="koi-divider"></div>
+              </div>
+              <Carousel autoplay effect="fade">
+                {testimonials.map((testimonial) => (
+                  <div key={testimonial.id}>
+                    <motion.div 
+                      className="testimonial-card"
+                      initial={{ opacity: 0, y: 50 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <div className="testimonial-avatar">
+                        <UserOutlined />
+                      </div>
+                      <h3>{testimonial.name}</h3>
+                      <p className="testimonial-role">{testimonial.role}</p>
+                      <p className="testimonial-content">"{testimonial.content}"</p>
+                      <div className="testimonial-rating">
+                        {[...Array(testimonial.rating)].map((_, i) => (
+                          <StarFilled key={i} />
+                        ))}
+                      </div>
+                    </motion.div>
+                  </div>
+                ))}
+              </Carousel>
+            </div>
+          </section>
+
           {/* Blog */}
           <div id="blog" className="container">
             <div className="feature">
@@ -260,17 +318,6 @@ function Home() {
               <Link to="/blogs-list" className="view-all-blogs-btn">
                 Xem tất cả blogs
               </Link>
-            </div>
-          </div>
-          
-         
-          <div className="container">
-            <div className="feature">
-              <h2>Khách hàng nói gì về chúng tôi</h2>
-              <div className="rectangle"></div>
-            </div>
-            <div className="testimonial-container">
-              {/* Add 2-3 testimonial cards here */}
             </div>
           </div>
         </body>
