@@ -148,7 +148,7 @@ const handleChoosePackage = () => {
     </div>
       
       <Editor
-        apiKey='48zvgxqbyrxhxjktp3nysk7hscrlqcz0143gyuhannv3rfv5'
+        apiKey='7badstws748pqjv54m7auuzpobs4nozi2we7cz1vz5mh63lh'
 
         onInit={(evt, editor) => {
           editorRef.current = editor;

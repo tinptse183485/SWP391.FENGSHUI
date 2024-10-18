@@ -116,8 +116,6 @@ function HeaderTemplate() {
             </ul>
           </nav>
         <div className="user-actions">
-          
-
           {userId ? (
             <Dropdown
               overlay={menu}
@@ -131,7 +129,7 @@ function HeaderTemplate() {
             </Dropdown>
           ) : (
             <Button className="login-btn">
-              <Link onClick={handleLogin}>Log in / Sign up</Link>
+              <Link onClick={handleLogin}>Đăng nhập/Đăng ký</Link>
             </Button>
           )}
         </div>

@@ -12,9 +12,12 @@ import {
   Modal,
   Select,
   Form,
+  Rate,
 } from "antd";
+import { StarOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import "./index.css"; // Đảm bảo bạn đã import file CSS
 
 const { Text } = Typography;
 
@@ -30,6 +33,9 @@ const Ads = () => {
   const [form] = Form.useForm();
   const [isApproving, setIsApproving] = useState(false);
   const [currentElementId, setCurrentElementId] = useState(null);
+  const [feedbackModalVisible, setFeedbackModalVisible] = useState(false);
+  const [currentAdFeedback, setCurrentAdFeedback] = useState([]);
+  const [selectedStars, setSelectedStars] = useState("all");
 
   const menuItems = [
     { key: "all", label: "Tất cả" },
@@ -87,6 +93,20 @@ const Ads = () => {
     Refunded: 4,
   };
 
+  const fetchFeedbackForAd = async (adId) => {
+    try {
+      const response = await api.get("Feedback/GetAllFeedBack");
+      const adFeedback = response.data.filter(
+        (feedback) => feedback.adId === adId
+      );
+      setCurrentAdFeedback(adFeedback);
+      setFeedbackModalVisible(true);
+    } catch (error) {
+      console.error("Lỗi khi tải đánh giá:", error);
+      toast.error("Không thể tải đánh giá");
+    }
+  };
+
   const columns = [
     {
       title: "Tiêu đề",
@@ -98,15 +118,7 @@ const Ads = () => {
       title: "Hình ảnh",
       dataIndex: "image",
       key: "image",
-      render: (image) => (
-        <Image
-          src={image}
-          alt="Ad"
-          width={80}
-          height={80}
-          style={{ objectFit: "cover", borderRadius: "4px" }}
-        />
-      ),
+      render: (image) => <Image src={image} alt="Ad" className="ads-image" />,
     },
     {
       title: "Nội dung",
@@ -114,6 +126,7 @@ const Ads = () => {
       render: (_, record) => (
         <Button
           type="link"
+          className="ads-view-details"
           onClick={() => navigate(`/advertisement-detail/${record.adId}`)}
         >
           Xem chi tiết
@@ -129,16 +142,16 @@ const Ads = () => {
           style={{
             color:
               elementId === "Kim"
-                ? "#FFD700" // Vàng đậm
+                ? "#FFD700"
                 : elementId === "Mộc"
-                ? "#228B22" // Xanh lá cây đậm
+                ? "#228B22"
                 : elementId === "Thủy"
-                ? "#1E90FF" // Xanh dương
+                ? "#1E90FF"
                 : elementId === "Hỏa"
-                ? "#FF4500" // Đỏ cam
+                ? "#FF4500"
                 : elementId === "Thổ"
-                ? "#8B4513" // Nâu đất
-                : "#000000", // Màu mặc định nếu không khớp
+                ? "#8B4513"
+                : "#000000",
             fontWeight: "bold",
           }}
         >
@@ -151,20 +164,16 @@ const Ads = () => {
       dataIndex: "status",
       key: "status",
       render: (status) => (
-        <Text
-          style={{
-            color:
-              status === "Approved"
-                ? "#52c41a"
-                : status === "Refunded"
-                ? "#faad14"
-                : status === "Canceled"
-                ? "#f5222d"
-                : "#1890ff", // Màu cho trạng thái Pending
-          }}
-        >
-          {status}
-        </Text>
+        <Text style={{
+          color:
+            status === "Approved"
+              ? "#52c41a"
+              : status === "Refunded"
+              ? "#faad14"
+              : status === "Canceled"
+              ? "#f5222d"
+              : "#1890ff", // Màu cho trạng thái Pending
+        }} className={`ads-status-${status.toLowerCase()}`}>{status}</Text>
       ),
       sorter: (a, b) => statusPriority[a.status] - statusPriority[b.status],
       sortDirections: ["descend", "ascend"],
@@ -173,7 +182,11 @@ const Ads = () => {
       title: "Rank",
       dataIndex: "rank",
       key: "rank",
-      render: (rank) => <Text>{rank || "N/A"}</Text>,
+      render: (rank) => (
+        <Text className={`ads-rank-${rank.toLowerCase()}`}>
+          {rank || "N/A"}
+        </Text>
+      ),
       sorter: (a, b) =>
         (rankPriority[a.rank] || Infinity) - (rankPriority[b.rank] || Infinity),
       sortDirections: ["descend", "ascend"],
@@ -183,34 +196,36 @@ const Ads = () => {
       dataIndex: "createAt",
       key: "createAt",
       render: (createAt) =>
-        createAt ? moment(createAt).format("DD/MM/YYYY HH:mm:ss") : "N/A",
+        createAt ? moment(createAt).format("DD/MM/YY HH:mm") : "N/A",
     },
     {
       title: "Ngày bắt đầu",
       dataIndex: "startDate",
       key: "startDate",
       render: (startDate) =>
-        startDate ? moment(startDate).format("DD/MM/YYYY HH:mm:ss") : "N/A",
+        startDate ? moment(startDate).format("DD/MM/YY HH:mm") : "N/A",
     },
     {
       title: "Ngày hết hạn",
       dataIndex: "expiredDate",
       key: "expiredDate",
       render: (expiredDate) =>
-        expiredDate ? moment(expiredDate).format("DD/MM/YYYY HH:mm:ss") : "N/A",
+        expiredDate ? moment(expiredDate).format("DD/MM/YY HH:mm") : "N/A",
     },
     {
       title: "Duyệt bài",
       key: "action",
-      width: 200,
-
       render: (_, record) => {
         const isApproved = record.status === "Approved";
         const isRefunded = record.status === "Refunded";
         const isCanceled = record.status === "Canceled";
         const isDisabled = isApproved || isRefunded || isCanceled;
         return (
-          <Space size="small" direction="vertical">
+          <Space
+            size="small"
+            direction="vertical"
+            className="ads-action-buttons"
+          >
             <Button
               type="primary"
               onClick={() => handleUpdateStatus(record.adId, "Approved")}
@@ -241,6 +256,18 @@ const Ads = () => {
         );
       },
     },
+    {
+      title: "Đánh giá",
+      key: "feedback",
+      render: (_, record) => (
+        <Button
+          onClick={() => fetchFeedbackForAd(record.adId)}
+          className="ads-view-details"
+        >
+          Xem đánh giá
+        </Button>
+      ),
+    },
   ];
 
   const fetchElements = async () => {
@@ -249,7 +276,7 @@ const Ads = () => {
       setElements(response.data);
     } catch (error) {
       console.error("Error fetching elements:", error);
-      toast.error(error.response.data ||"Không thể tải danh sách element");
+      toast.error(error.response.data || "Không thể tải danh sách element");
     }
   };
 
@@ -288,7 +315,8 @@ const Ads = () => {
     } catch (error) {
       console.error("Error updating status:", error);
       toast.error(
-        error.response.data || `Cập nhật trạng thái thất bại của bài quảng cáo ${currentAdId}`
+        error.response.data ||
+          `Cập nhật trạng thái thất bại của bài quảng cáo ${currentAdId}`
       );
     }
   };
@@ -305,8 +333,13 @@ const Ads = () => {
     form.resetFields();
   };
 
+  const filterFeedbackByStars = (feedback) => {
+    if (selectedStars === "all") return feedback;
+    return feedback.filter((item) => item.rate === selectedStars);
+  };
+
   return (
-    <div>
+    <div className="ads-management">
       <h1>Quản lý quảng cáo</h1>
       <Menu
         mode="horizontal"
@@ -318,7 +351,13 @@ const Ads = () => {
           <Menu.Item key={item.key}>{item.label}</Menu.Item>
         ))}
       </Menu>
-      <Table dataSource={filteredData} columns={columns} />
+      <Table
+        dataSource={filteredData}
+        columns={columns}
+        className="ads-table"
+        pagination={{ pageSize: 10 }}
+        scroll={{ x: true }}
+      />
       <Modal
         title={
           isApproving
@@ -357,6 +396,60 @@ const Ads = () => {
             Bạn có chắc chắn muốn{" "}
             {currentStatus === "Canceled" ? "hủy bỏ" : "hoàn tiền"} quảng cáo
             này?
+          </p>
+        )}
+      </Modal>
+      <Modal
+        title="Đánh giá quảng cáo"
+        visible={feedbackModalVisible}
+        onCancel={() => {
+          setFeedbackModalVisible(false);
+          setSelectedStars("all");
+        }}
+        footer={null}
+      >
+        <div className="feedback-filter">
+          <Select
+            style={{ width: 200 }}
+            placeholder="Lọc theo số sao"
+            onChange={(value) => setSelectedStars(value)}
+            value={selectedStars}
+          >
+            <Select.Option value="all">Tất cả</Select.Option>
+            <Select.Option value={5}>
+              <Rate disabled defaultValue={5} count={5} />
+            </Select.Option>
+            <Select.Option value={4}>
+              <Rate disabled defaultValue={4} count={4} />
+            </Select.Option>
+            <Select.Option value={3}>
+              <Rate disabled defaultValue={3} count={3} />
+            </Select.Option>
+            <Select.Option value={2}>
+              <Rate disabled defaultValue={2} count={2} />
+            </Select.Option>
+            <Select.Option value={1}>
+              <Rate disabled defaultValue={1} count={1} />
+            </Select.Option>
+          </Select>
+        </div>
+
+        {filterFeedbackByStars(currentAdFeedback).length > 0 ? (
+          filterFeedbackByStars(currentAdFeedback).map((feedback) => (
+            <div key={feedback.fbId} className="feedback-item">
+              <p>
+                <strong>Người dùng:</strong> {feedback.userId}
+              </p>
+              <p>
+                <strong>Nội dung:</strong> {feedback.description}
+              </p>
+              <Rate disabled defaultValue={feedback.rate} />
+            </div>
+          ))
+        ) : (
+          <p>
+            Không có đánh giá nào cho quảng cáo này hoặc không có đánh giá phù
+            hợp với bộ lọc.
           </p>
         )}
       </Modal>

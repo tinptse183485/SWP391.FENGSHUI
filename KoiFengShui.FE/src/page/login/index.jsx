@@ -147,8 +147,9 @@ function Login() {
         >
           <Input.Password/>
         </Form.Item>
-        <div>
+        <div className="register-forgotpassword">
           <Link to="/register">Bạn chưa có tài khoản? Đăng ký ngay!</Link>
+          <Link to="/forgot-password">Quên mật khẩu?</Link>
         </div>
         <Button type="primary" htmlType="submit" className="btnLogin">
           Đăng nhập

@@ -27,7 +27,7 @@ function AdvertisementDetail() {
       try {
         const [adResponse, feedbackResponse] = await Promise.all([
           retryFetch(() => api.get(`Advertisement/GetAdvertisementByAdId?adId=${id}`)),
-          retryFetch(() => api.get(`Feedback/GetFeedBackByAdId?adId=${id}`))
+          retryFetch(() => api.get(`Feedback/GetFeedBackByAdId?AdId=${id}`))
         ]);
 
         setAdHtml(adResponse.data.link);

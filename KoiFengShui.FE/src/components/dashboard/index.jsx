@@ -17,6 +17,14 @@ import "./index.css";
 
 const { Header, Content, Footer, Sider } = Layout;
 function getItem(label, key, icon, children) {
+  if (children) {
+    return {
+      key,
+      icon,
+      children,
+      label,
+    };
+  }
   return {
     key,
     icon,
@@ -25,14 +33,12 @@ function getItem(label, key, icon, children) {
   };
 }
 const items = [
-
   getItem("Thống kê trang web", "AdminDashboard", <PieChartOutlined />),
   getItem("Quản lý quảng cáo", "ads", <PieChartOutlined />),
   getItem("Quản lý người dùng", "user", <PieChartOutlined />),
   getItem("Quản lý Blog", "blog", <PieChartOutlined />),
   getItem("Quản lý cá Koi", "koi", <PieChartOutlined />),
   getItem("Quản lý hồ", "pond", <PieChartOutlined />),
-
 ];
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -59,15 +65,21 @@ const Dashboard = () => {
     <Layout
       style={{
         minHeight: "100vh",
-
       }}
     >
       <Sider
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
+        style={{
+          overflow: 'auto',
+          height: '100vh',
+          position: 'fixed',
+          left: 0,
+          top: 0,
+          bottom: 0,
+        }}
       >
-
         <div className="logo">
         {collapsed ? (
           <img src={KoiImage} alt="Logo" />
@@ -106,7 +118,7 @@ const Dashboard = () => {
 
       </Sider>
 
-      <Layout>
+      <Layout style={{ marginLeft: collapsed ? 80 : 210 }}>
         <Header
           style={{
             padding: 0,
