@@ -3,11 +3,19 @@ import { Bar, Pie, Line } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement, PointElement, LineElement } from "chart.js";
 import api from "../../../config/axios";
 import "./index.css";
+import { subDays, format } from 'date-fns';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, PointElement, LineElement, Title, Tooltip, Legend);
 
 const Dashboard = () => {
-  const [data, setData] = useState({ ads: [], revenue: {}, ageGroups: {}, fish: [], monthlyRevenue: {} });
+  const [data, setData] = useState({ 
+    ads: [], 
+    revenue: {}, 
+    ageGroups: {}, 
+    fish: [], 
+    monthlyRevenue: {},
+    dailyRevenue: {} // Thêm state mới này
+  });
   const chartRefs = useRef([]);
   const currentYear = new Date().getFullYear();
 
@@ -34,6 +42,7 @@ const Dashboard = () => {
     }));
 
     fetchMonthlyRevenueData();
+    fetchDailyRevenueData();
 
     console.log("Initial data state:", data);
 
@@ -43,7 +52,7 @@ const Dashboard = () => {
   const fetchMonthlyRevenueData = async () => {
     const monthlyData = {};
     for (let month = 1; month <= 12; month++) {
-      const response = await api.get(`AdsPackage/GetTotalRevenueByMonth?year=${currentYear}&month=${month.toString().padStart(2, '0')}`);
+      const response = await api.get(`Dashboard/GetTotalRevenueByMonth?year=${currentYear}&month=${month.toString().padStart(2, '0')}`);
       console.log(`Month ${month} data:`, response.data);
       const totalRevenue = Object.values(response.data).reduce((sum, value) => sum + value, 0);
       monthlyData[month] = totalRevenue;
@@ -54,6 +63,29 @@ const Dashboard = () => {
       console.log("Updated data state:", newData);
       return newData;
     });
+  };
+
+  const fetchDailyRevenueData = async () => {
+    try {
+      const response = await api.get('Dashboard/GetDailyRevenueToDate');
+      console.log("Daily revenue data:", response.data);
+      
+      // Lọc và sắp xếp dữ liệu cho 7 ngày gần nhất
+      const today = new Date();
+      const last7Days = Array.from({length: 7}, (_, i) => {
+        const date = subDays(today, i);
+        return format(date, 'yyyy-MM-dd\'T\'00:00:00');
+      }).reverse();
+
+      const filteredData = last7Days.reduce((acc, date) => {
+        acc[date] = response.data[date] || 0;
+        return acc;
+      }, {});
+
+      setData(prev => ({ ...prev, dailyRevenue: filteredData }));
+    } catch (error) {
+      console.error("Error fetching daily revenue data:", error);
+    }
   };
 
   const countItems = (items, key) => {
@@ -122,6 +154,42 @@ const Dashboard = () => {
       pointRadius: 5,
       pointHoverRadius: 7,
     }],
+  };
+
+  const dailyRevenueChartData = {
+    labels: Object.keys(data.dailyRevenue).map(date => format(new Date(date), 'dd/MM')),
+    datasets: [{
+      label: 'Doanh thu 7 ngày gần nhất',
+      data: Object.values(data.dailyRevenue),
+      fill: false,
+      borderColor: 'rgb(75, 192, 192)',
+      tension: 0.1
+    }]
+  };
+
+  const dailyRevenueChartOptions = {
+    ...chartOptions,
+    scales: {
+      x: {
+        title: {
+          display: true,
+        }
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Doanh thu (VNĐ)'
+        },
+        beginAtZero: true
+      }
+    },
+    plugins: {
+      ...chartOptions.plugins,
+      title: {
+        display: true,
+        text: 'Doanh thu 7 ngày gần nhất'
+      }
+    }
   };
 
   console.log("Monthly revenue chart data:", monthlyRevenueChartData);
@@ -204,6 +272,13 @@ const Dashboard = () => {
             }, 4)
           ) : (
             <p>No monthly revenue data available</p>
+          )}
+        </div>
+        <div className="chart-container" style={{ height: '400px' }}>
+          {Object.keys(data.dailyRevenue).length > 0 ? (
+            renderChart(true, Line, dailyRevenueChartData, dailyRevenueChartOptions, 5)
+          ) : (
+            <p>Đang tải dữ liệu doanh thu 7 ngày gần nhất...</p>
           )}
         </div>
       </div>

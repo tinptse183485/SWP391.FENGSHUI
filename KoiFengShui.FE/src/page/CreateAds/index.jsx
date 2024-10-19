@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { Button, message, Radio } from 'antd';
@@ -126,14 +125,29 @@ const handleChoosePackage = () => {
         placeholder="Tiêu đề quảng cáo"
         required
       />
+      <div>
+        <p>Chọn hình ảnh cho quảng cáo:</p>
       <input
-        type="text"
+        type="file"
         name="image"
-        value={adData.image}
-        onChange={handleInputChange}
-        placeholder="URL hình ảnh"
+        accept="image/*" // Chỉ cho phép chọn hình ảnh
+        onChange={(e) => {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              setAdData(prevData => ({
+                ...prevData,
+                image: reader.result // Lưu trữ hình ảnh dưới dạng base64
+              }));
+            };
+            reader.readAsDataURL(file); // Đọc file hình ảnh
+          }
+        }}
         required
       />
+      </div>
+      
        <div className="element-selection">
       <h3>Chọn phần tử cho quảng cáo:</h3>
       <Radio.Group onChange={handleElementChange} value={adData.elementId}>
@@ -146,7 +160,7 @@ const handleChoosePackage = () => {
     </div>
       
       <Editor
-        apiKey='48zvgxqbyrxhxjktp3nysk7hscrlqcz0143gyuhannv3rfv5'
+        apiKey='7badstws748pqjv54m7auuzpobs4nozi2we7cz1vz5mh63lh'
 
         onInit={(evt, editor) => {
           editorRef.current = editor;
@@ -201,4 +215,3 @@ const handleChoosePackage = () => {
 
 
 export default CreateAds;
-
