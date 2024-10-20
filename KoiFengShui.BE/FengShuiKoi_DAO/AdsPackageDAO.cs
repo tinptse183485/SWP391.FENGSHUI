@@ -62,8 +62,9 @@ namespace FengShuiKoi_DAO
         {
             return await dbContext.AdsPackages.SingleOrDefaultAsync(m => m.AdId.Equals(AdID) && m.Rank.Equals(Rank) && m.CreateAt.Equals(CreateAt));
         }
+        public async Task<AdsPackage> GetAdsPackageByAdID(string AdID) => await dbContext.AdsPackages.SingleOrDefaultAsync(m => m.AdId.Equals(AdID));
 
-        public async Task<List<AdsPackage>> GetListAdsPackageByAdID(string AdID)
+		public async Task<List<AdsPackage>> GetListAdsPackageByAdID(string AdID)
         {
             return await dbContext.AdsPackages.Where(m => m.AdId.Equals(AdID)).ToListAsync();
         }

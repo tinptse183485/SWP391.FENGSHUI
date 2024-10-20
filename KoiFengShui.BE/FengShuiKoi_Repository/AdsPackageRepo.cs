@@ -37,8 +37,9 @@ namespace FengShuiKoi_Repository
         {
             return await AdsPackageDAO.Instance.GetListAdsPackageByAdID(AdID);
         }
+        public async Task<AdsPackage> GetAdsPackageByAdID(string AdID) => await AdsPackageDAO.Instance.GetAdsPackageByAdID(AdID);
 
-        public async  Task<List<AdsPackage>> GetListAdsPackageByRank(string Rank)
+		public async  Task<List<AdsPackage>> GetListAdsPackageByRank(string Rank)
         {
             return await AdsPackageDAO.Instance.GetListAdsPackageByRank(Rank);
         }

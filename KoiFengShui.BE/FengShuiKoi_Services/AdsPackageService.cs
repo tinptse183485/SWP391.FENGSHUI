@@ -27,8 +27,9 @@ namespace FengShuiKoi_Services
         {
             return await iAdsPackageRepo.DeleteAdsPackage(AdID, Rank, CreateAt);
         }
+		public async Task<AdsPackage> GetAdsPackageByAdID(string AdID) => await iAdsPackageRepo.GetAdsPackageByAdID(AdID);
 
-        public async Task<AdsPackage> GetAdsPackageByAdIDRankTime(string AdID, string Rank, DateTime CreateAt)
+		public async Task<AdsPackage> GetAdsPackageByAdIDRankTime(string AdID, string Rank, DateTime CreateAt)
         {
             return await iAdsPackageRepo.GetAdsPackageByAdIDRankTime(AdID, Rank, CreateAt);
         }

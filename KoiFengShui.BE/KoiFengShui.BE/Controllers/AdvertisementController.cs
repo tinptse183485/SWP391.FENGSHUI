@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace KoiFengShui.BE.Controllers
 {
-    
+
     [Route("api/[controller]")]
     [ApiController]
     public class AdvertisementController : ControllerBase
@@ -506,7 +506,7 @@ namespace KoiFengShui.BE.Controllers
 
         [HttpPost("CreateAdvertisement")]
 
-        public async Task<IActionResult> CreateAdvertisement(AdvertisementDTO advertisement, string Rank, DateTime startDate, DateTime CreateAt, int quantity, float total,string TransactionCode, string BankCode)
+        public async Task<IActionResult> CreateAdvertisement(AdvertisementDTO advertisement, string Rank, DateTime startDate, DateTime CreateAt, int quantity, float total, string TransactionCode, string BankCode)
 
         {
             try
@@ -728,5 +728,73 @@ namespace KoiFengShui.BE.Controllers
 
             return Ok("Thông báo thanh toán đã được gửi đến email của bạn.");
         }
+
+        [HttpPost("RefundNotification")]
+        public async Task<IActionResult> RefundNotification(string adId)
+        {
+            try
+            {
+                // Get the advertisement details
+                var advertisement = await _advertisementService.GetAdvertisementByAdID(adId);
+                if (advertisement == null)
+                {
+                    return NotFound("Advertisement not found");
+                }
+
+                // Get the AdsPackage details
+                var adsPackage = await _adsPackageService.GetAdsPackageByAdID(adId);
+                if (adsPackage == null)
+                {
+                    return NotFound("AdsPackage not found");
+                }
+
+                // Get the user's account details
+                var account = await _accountService.GetAccountByUserID(advertisement.UserId);
+                if (account == null)
+                {
+                    return NotFound("User account not found");
+                }
+
+                // Prepare the email body
+                string emailBody = $@"
+                <html>
+                <body>
+                    <h2>Thông báo hoàn tiền quảng cáo</h2>
+                    <p>Kính gửi quý khách hàng,</p>
+                    <p>Chúng tôi xin thông báo rằng khoản tiền quảng cáo của bạn đã được hoàn trả. Chi tiết như sau:</p>
+                    <table border='1' style='border-collapse: collapse;'>
+                        <tr>
+                            <td><strong>Mã Quảng Cáo:</strong></td>
+                            <td>{adId}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Gói Quảng Cáo:</strong></td>
+                            <td>{adsPackage.Rank}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Số tiền hoàn trả:</strong></td>
+                            <td>{adsPackage.Total:N0} đ</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Thời gian:</strong></td>
+                            <td>{DateTime.Now}</td>
+                        </tr>
+                    </table>
+                    <p>Nếu bạn có bất kỳ câu hỏi nào, vui lòng liên hệ với chúng tôi.</p>
+                    <p>Trân trọng,<br>Đội ngũ hỗ trợ khách hàng</p>
+                </body>
+                </html>";
+
+                await _emailService.SendEmailAsync(account.Email, "Thông báo hoàn tiền quảng cáo", emailBody);
+                advertisement.Status = "Refunded";
+                bool success = await _advertisementService.UpdateAdvertisement(advertisement);
+			    return Ok("Thông báo hoàn tiền đã được gửi đến email của khách hàng.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi server: {ex.Message}");
+            }
+        }
+
     }
 }

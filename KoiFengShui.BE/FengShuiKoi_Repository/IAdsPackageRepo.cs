@@ -8,11 +8,11 @@ namespace FengShuiKoi_Repository
     public interface IAdsPackageRepo
     {
         Task<AdsPackage> GetAdsPackageByAdIDRankTime(string AdID, string Rank, DateTime CreateAt);
-
-		    Task<List<AdsPackage>> GetListAdsPackageByAdID(string AdID);
-
+	    Task<List<AdsPackage>> GetListAdsPackageByAdID(string AdID);
         Task<List<AdsPackage>> GetListAdsPackageByRank(string Rank);
-        Task<List<AdsPackage>> GetAdsPackages();
+        Task<AdsPackage> GetAdsPackageByAdID(string AdID);
+
+		Task<List<AdsPackage>> GetAdsPackages();
         Task<bool> AddAdsPackage(AdsPackage ads);
         Task<bool> UpdateAdsPackage(AdsPackage newAdsPackage);
         Task<Dictionary<string, double>> GetRevenueByPackage();
