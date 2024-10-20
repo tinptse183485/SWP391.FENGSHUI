@@ -13,8 +13,9 @@ import {
   Select,
   Form,
   Rate,
+  Popconfirm,
 } from "antd";
-import { StarOutlined } from "@ant-design/icons";
+import { DeleteOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./index.css"; // Đảm bảo bạn đã import file CSS
@@ -107,6 +108,21 @@ const Ads = () => {
     }
   };
 
+  const handleDeleteFeedback = async (fbId) => {
+    try {
+      await api.delete(`Feedback/DeleteFeedBack/${fbId}`);
+      toast.success("Feedback deleted successfully");
+      // Refresh the feedback list
+      setFeedbackModalVisible(false);
+    // Reset các state liên quan nếu cần
+    setCurrentAdFeedback([]);
+    setSelectedStars("all");
+    } catch (error) {
+      console.error("Error deleting feedback:", error);
+      toast.error(error.response?.data || "Failed to delete feedback");
+    }
+  };
+
   const columns = [
     {
       title: "Tiêu đề",
@@ -164,16 +180,21 @@ const Ads = () => {
       dataIndex: "status",
       key: "status",
       render: (status) => (
-        <Text style={{
-          color:
-            status === "Approved"
-              ? "#52c41a"
-              : status === "Refunded"
-              ? "#faad14"
-              : status === "Canceled"
-              ? "#f5222d"
-              : "#1890ff", // Màu cho trạng thái Pending
-        }} className={`ads-status-${status.toLowerCase()}`}>{status}</Text>
+        <Text
+          style={{
+            color:
+              status === "Approved"
+                ? "#52c41a"
+                : status === "Refunded"
+                ? "#faad14"
+                : status === "Canceled"
+                ? "#f5222d"
+                : "#1890ff", // Màu cho trạng thái Pending
+          }}
+          className={`ads-status-${status.toLowerCase()}`}
+        >
+          {status}
+        </Text>
       ),
       sorter: (a, b) => statusPriority[a.status] - statusPriority[b.status],
       sortDirections: ["descend", "ascend"],
@@ -305,6 +326,10 @@ const Ads = () => {
         await api.put(
           `Advertisement/UpdateAdvertisementStatus?adId=${currentAdId}&status=${currentStatus}`
         );
+
+        if (currentStatus === "Refunded") {
+          await api.post(`Advertisement/RefundNotification?adId=${currentAdId}`);
+        }
       }
 
       toast.success(
@@ -444,6 +469,23 @@ const Ads = () => {
                 <strong>Nội dung:</strong> {feedback.description}
               </p>
               <Rate disabled defaultValue={feedback.rate} />
+              <Popconfirm
+                title="Bạn có chắc muốn xóa đánh giá này?"
+                onConfirm={() => handleDeleteFeedback(feedback.fbId)}
+                okText="OK"
+                cancelText="Hủy"
+                okButtonProps={{ style: { width: "90px" , height: "30px"} }}
+                cancelButtonProps={{ style: { width: "90px", height: "30px" } }}
+              >
+                <Button
+                  type="text"
+                  icon={<DeleteOutlined />}
+                  danger
+                  style={{ marginLeft: "10px" }}
+                >
+                  Xóa
+                </Button>
+              </Popconfirm>
             </div>
           ))
         ) : (
