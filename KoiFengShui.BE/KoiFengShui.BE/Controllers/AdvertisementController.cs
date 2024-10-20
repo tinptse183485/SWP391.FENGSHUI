@@ -764,8 +764,8 @@ namespace KoiFengShui.BE.Controllers
                     <p>Chúng tôi xin thông báo rằng khoản tiền quảng cáo của bạn đã được hoàn trả. Chi tiết như sau:</p>
                     <table border='1' style='border-collapse: collapse;'>
                         <tr>
-                            <td><strong>Mã Quảng Cáo:</strong></td>
-                            <td>{adId}</td>
+                             <td><strong>Tiêu Đề Quảng Cáo:</strong></td>
+ 			     <td>{advertisement.Heading}</td>
                         </tr>
                         <tr>
                             <td><strong>Gói Quảng Cáo:</strong></td>
