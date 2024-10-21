@@ -3,6 +3,7 @@ using FengShuiKoi_Services;
 using KoiFengShui.BE.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace KoiFengShui.BE.Controllers
 {
@@ -20,23 +21,19 @@ namespace KoiFengShui.BE.Controllers
             _colorService = colorService;
             _typeColorService = typeColorService;
         }
-        [HttpGet("GetAllTypeColor")]
-        public IActionResult GetAllTypeColor()
-        {
-            List<TypeColor> listType = new List<TypeColor>();
 
+        [HttpGet("GetAllTypeColor")]
+        public async Task<IActionResult> GetAllTypeColor()
+        {
             try
             {
-
-                listType = _typeColorService.GetAllType();
-
+                var listType = await _typeColorService.GetAllType();
                 return Ok(listType);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
-
     }
 }

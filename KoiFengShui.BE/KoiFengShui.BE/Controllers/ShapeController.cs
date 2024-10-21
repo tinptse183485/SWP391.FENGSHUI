@@ -3,6 +3,7 @@ using FengShuiKoi_Services;
 using KoiFengShui.BE.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace KoiFengShui.BE.Controllers
 {
@@ -10,76 +11,67 @@ namespace KoiFengShui.BE.Controllers
     [ApiController]
     public class ShapeController : ControllerBase
     {
-
         private readonly IPointOfShapeService _pointOfShapeService;
         private readonly IShapeService _shapeService;
         private readonly IElementService _elementService;
-       
+
         public ShapeController(IPointOfShapeService pointOfShapeService, IShapeService shapeService, IElementService elementService)
         {
             _pointOfShapeService = pointOfShapeService;
             _shapeService = shapeService;
             _elementService = elementService;
-            
         }
+
         [HttpGet("GetAllShape")]
-        public IActionResult GetAllShape()
+        public async Task<IActionResult> GetAllShape()
         {
-            List<Shape> listShape = new List<Shape>();
-            
             try
             {
-
-                listShape = _shapeService.GetShapes();
-               
+                var listShape = await _shapeService.GetShapes();
                 return Ok(listShape);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
+
         [HttpGet("GetShapeById")]
-        public IActionResult GetShapeById(string shapeID)
+        public async Task<IActionResult> GetShapeById(string shapeID)
         {
-
-
             try
             {
-                var shape = _shapeService.GetShapeById(shapeID);
+                var shape = await _shapeService.GetShapeById(shapeID);
                 if (shapeID == null)
                 {
-                    return BadRequest("Không tìm thấy quảng cáo");
+                    return NotFound("Không tìm thấy quảng cáo");
                 }
-
                 return Ok(shape);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
+
         [HttpPut("UpdateShape")]
-        public IActionResult UpdateShape(ShapeDTO shape)
+        public async Task<IActionResult> UpdateShape(ShapeDTO shape)
         {
             try
             {
-                var existingShape = _shapeService.GetShapeById(shape.ShapeId);
+                var existingShape = await _shapeService.GetShapeById(shape.ShapeId);
                 if (existingShape == null)
                 {
                     return NotFound("Không tìm thấy hồ cá");
                 }
-                if (shape.Image == "" || shape.Image == null)
+                if (string.IsNullOrWhiteSpace(shape.Image))
                 {
-                    return BadRequest("Please input image.");
-
+                    return BadRequest("Vui lòng nhập hình ảnh.");
                 }
-               
 
                 existingShape.Image = shape.Image;
 
-
-                bool result = _shapeService.UpdateShape(existingShape);
+                bool result = await _shapeService.UpdateShape(existingShape);
                 if (result)
                 {
                     return Ok("Cập nhật hồ thành công");
@@ -91,36 +83,34 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
+
         [HttpPost("AddShape")]
-        public IActionResult AddShape(ShapeDTO shape)
+        public async Task<IActionResult> AddShape(ShapeDTO shape)
         {
             try
             {
-                if (shape.ShapeId == null || shape.ShapeId == "")
+                if (string.IsNullOrWhiteSpace(shape.ShapeId))
                 {
-                    return BadRequest("Please input the shape !");
-
+                    return BadRequest("Vui lòng nhập hình dạng.");
                 }
 
-                if (shape.Image == ""|| shape.Image == null)
+                if (string.IsNullOrWhiteSpace(shape.Image))
                 {
-                    return BadRequest("Please input image.");
-
-                }
-                if (_shapeService.GetShapeById(shape.ShapeId) != null)
-                {
-                    return BadRequest("Has this shape already.");
-
-                }
-                if (_shapeService.GetShapeByImg(shape.Image) != null)
-                {
-                    return BadRequest("Has this img already.");
-
+                    return BadRequest("Vui lòng nhập hình ảnh.");
                 }
 
+                if (await _shapeService.GetShapeById(shape.ShapeId) != null)
+                {
+                    return BadRequest("Hình dạng này đã tồn tại.");
+                }
+
+                if (await _shapeService.GetShapeByImg(shape.Image) != null)
+                {
+                    return BadRequest("Hình ảnh này đã tồn tại.");
+                }
 
                 var _shape = new Shape
                 {
@@ -128,7 +118,7 @@ namespace KoiFengShui.BE.Controllers
                     Image = shape.Image,
                 };
 
-                bool result = _shapeService.AddShape(_shape);
+                bool result = await _shapeService.AddShape(_shape);
                 if (result)
                 {
                     return Ok(new { Message = "Tạo hồ cá thành công", ShapeId = shape.ShapeId, Image = shape.Image });
@@ -140,23 +130,23 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-
-                return StatusCode(500, "Internal server error. Please try again later.");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
+
         [HttpDelete("DeleteShape/{ShapeId}")]
-        public IActionResult DeleteShape(string ShapeId)
+        public async Task<IActionResult> DeleteShape(string ShapeId)
         {
             try
             {
-                var existingShape = _shapeService.GetShapeById(ShapeId);
+                var existingShape = await _shapeService.GetShapeById(ShapeId);
                 if (existingShape == null)
                 {
                     return NotFound("Không tìm thấy hồ");
                 }
 
-                bool pointsDeleted = _pointOfShapeService.DeletePointOfShapeByShapeID(ShapeId);
-                bool shapeDeleted = _shapeService.DeleteShape(ShapeId);
+                bool pointsDeleted = await _pointOfShapeService.DeletePointOfShapeByShapeID(ShapeId);
+                bool shapeDeleted = await _shapeService.DeleteShape(ShapeId);
 
                 if (pointsDeleted || shapeDeleted)
                 {
@@ -169,7 +159,7 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Lỗi máy chủ nội bộ: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
     }

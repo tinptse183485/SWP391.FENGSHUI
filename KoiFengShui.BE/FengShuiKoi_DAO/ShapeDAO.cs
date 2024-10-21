@@ -1,7 +1,9 @@
 ﻿using FengShuiKoi_BO;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FengShuiKoi_DAO
 {
@@ -26,30 +28,30 @@ namespace FengShuiKoi_DAO
             dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
         }
 
-        public Shape GetShapeById(string id)
+        public async Task<Shape> GetShapeById(string id)
         {
-            return dbContext.Shapes.FirstOrDefault(s => s.ShapeId == id);
+            return await dbContext.Shapes.FirstOrDefaultAsync(s => s.ShapeId == id);
         }
-        public Shape GetShapeByImg(string img)
+        public async Task<Shape> GetShapeByImg(string img)
         {
-            return dbContext.Shapes.FirstOrDefault(s => s.Image == img);
-        }
-
-        public List<Shape> GetShapes()
-        {
-            return dbContext.Shapes.ToList();
+            return await dbContext.Shapes.FirstOrDefaultAsync(s => s.Image == img);
         }
 
-        public bool AddShape(Shape shape)
+        public async Task<List<Shape>> GetShapes()
+        {
+            return await dbContext.Shapes.ToListAsync();
+        }
+
+        public async Task<bool> AddShape(Shape shape)
         {
             bool isSuccess = false;
-            Shape existingShape = this.GetShapeById(shape.ShapeId);
+            Shape existingShape = await this.GetShapeById(shape.ShapeId);
             try
             {
                 if (existingShape == null)
                 {
-                    dbContext.Shapes.Add(shape);
-                    dbContext.SaveChanges();
+                    await dbContext.Shapes.AddAsync(shape);
+                    await dbContext.SaveChangesAsync();
                     isSuccess = true;
                 }
             }
@@ -60,16 +62,16 @@ namespace FengShuiKoi_DAO
             return isSuccess;
         }
 
-        public bool DeleteShape(string id)
+        public async Task<bool> DeleteShape(string id)
         {
             bool isSuccess = false;
-            Shape shape = this.GetShapeById(id);
+            Shape shape = await this.GetShapeById(id);
             try
             {
                 if (shape != null)
                 {
                     dbContext.Shapes.Remove(shape);
-                    dbContext.SaveChanges();
+                    await dbContext.SaveChangesAsync();
                     isSuccess = true;
                 }
             }
@@ -80,13 +82,13 @@ namespace FengShuiKoi_DAO
             return isSuccess;
         }
 
-        public bool UpdateShape(Shape shape)
+        public async Task<bool> UpdateShape(Shape shape)
         {
             bool isSuccess = false;
             try
             {
                 dbContext.Entry<Shape>(shape).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
                 isSuccess = true;
             }
             catch (Exception ex)
@@ -95,5 +97,26 @@ namespace FengShuiKoi_DAO
             }
             return isSuccess;
         }
-    }
+		public async Task<bool> UpdateShapeImg(string shapeId, string Img)
+		{
+			try
+			{
+				var shape = await dbContext.Shapes.FindAsync(shapeId);
+
+				if (shape == null)
+				{
+					return false;
+				}
+				shape.Image = Img;
+				dbContext.Entry(shape).Property(x => x.Image).IsModified = true;
+				await dbContext.SaveChangesAsync();
+
+				return true;
+			}
+			catch (Exception ex)
+			{
+				throw new Exception($"Lỗi khi cập nhật ảnh Shape: {ex.Message}", ex);
+			}
+		}
+	}
 }

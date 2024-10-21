@@ -4,6 +4,7 @@ using KoiFengShui.BE.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Principal;
+using System.Threading.Tasks;
 
 namespace KoiFengShui.BE.Controllers
 {
@@ -14,36 +15,34 @@ namespace KoiFengShui.BE.Controllers
         private readonly IPackageService _packageService;
         private readonly IAdsPackageService _adsPackageService;
         private readonly IAdvertisementService _advertisementService;
-        public PackageController(IPackageService packageService,IAdvertisementService advertisementService, IAdsPackageService adsPackageService)
+
+        public PackageController(IPackageService packageService, IAdvertisementService advertisementService, IAdsPackageService adsPackageService)
         {
             _packageService = packageService;
             _adsPackageService = adsPackageService;
             _advertisementService = advertisementService;
         }
-        
-        [HttpGet("GetAllPackage")]
-        public IActionResult GetAllPackage()
-        {
-            List<Package> listPackage = new List<Package>();
 
+        [HttpGet("GetAllPackage")]
+        public async Task<IActionResult> GetAllPackage()
+        {
             try
             {
-                listPackage = _packageService.GetPackages();
-
-
+                var listPackage = await _packageService.GetPackages();
                 return Ok(listPackage);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
+
         [HttpPost("AddPackage")]
-        public IActionResult AddPackage(PackageDTO packageDto)
+        public async Task<IActionResult> AddPackage(PackageDTO packageDto)
         {
             try
             {
-                if (_packageService.GetPackageByRank(packageDto.Rank) != null)
+                if (await _packageService.GetPackageByRank(packageDto.Rank) != null)
                 {
                     return BadRequest("Gói này đã tồn tại");
                 }
@@ -56,7 +55,7 @@ namespace KoiFengShui.BE.Controllers
                     Price = packageDto.Price
                 };
 
-                bool result = _packageService.AddPackage(package);
+                bool result = await _packageService.AddPackage(package);
 
                 if (result)
                 {
@@ -69,27 +68,26 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
 
         [HttpPut("UpdatePackage")]
-        public IActionResult UpdatePackage(PackageDTO packageDto)
+        public async Task<IActionResult> UpdatePackage(PackageDTO packageDto)
         {
             try
             {
-                var existingPackage = _packageService.GetPackageByRank(packageDto.Rank);
+                var existingPackage = await _packageService.GetPackageByRank(packageDto.Rank);
                 if (existingPackage == null)
                 {
                     return NotFound("Không tìm thấy gói phù hợp");
                 }
 
-                
                 existingPackage.Duration = packageDto.Duration;
                 existingPackage.Description = packageDto.Description;
                 existingPackage.Price = packageDto.Price;
 
-                bool result = _packageService.UpdatePackage(existingPackage);
+                bool result = await _packageService.UpdatePackage(existingPackage);
                 if (result)
                 {
                     return Ok("Cập nhật gói thành công");
@@ -101,9 +99,10 @@ namespace KoiFengShui.BE.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
+
         private IActionResult CheckPackageExpiration(List<AdsPackage> listAdsPackage)
         {
             DateTime currentTime = DateTime.Now;
@@ -112,57 +111,59 @@ namespace KoiFengShui.BE.Controllers
             {
                 if (ads.ExpiredDate > currentTime)
                 {
-                    return BadRequest("Failed to delete package because it contains ads that have not expired yet");
+                    return BadRequest("Không thể xóa gói vì nó chứa các tin đăng chưa hết hạn");
                 }
             }
 
             return null;
         }
+
         [HttpDelete("DeletePackage/{rank}")]
-        public IActionResult DeletePackage(string rank)
+        public async Task<IActionResult> DeletePackage(string rank)
         {
             try
             {
                 List<Advertisement> listAdsvertisement = new List<Advertisement>();
-                List<AdsPackage> ListAdsPackage = _adsPackageService.GetListAdsPackageByRank(rank);
+                List<AdsPackage> ListAdsPackage = await _adsPackageService.GetListAdsPackageByRank(rank);
 
                 foreach (var advertisement in ListAdsPackage)
                 {
-                    Advertisement advertise = _advertisementService.GetAdvertisementByAdID(advertisement.AdId);
+                    Advertisement advertise = await _advertisementService.GetAdvertisementByAdID(advertisement.AdId);
                     if (advertise != null)
                     {
-                        listAdsvertisement.Add(advertise); 
-                    }   
+                        listAdsvertisement.Add(advertise);
+                    }
                 }
+
                 IActionResult expirationCheck = CheckPackageExpiration(ListAdsPackage);
                 if (expirationCheck != null)
                 {
                     return expirationCheck;
-                }else
+                }
+                else
                 {
-                    foreach(var ads in ListAdsPackage)
+                    foreach (var ads in ListAdsPackage)
                     {
-                        _adsPackageService.DeleteAdsPackage(ads.AdId, rank);
+                        await _adsPackageService.DeleteAdsPackage(ads.AdId, rank,ads.CreateAt);
                     }
                     foreach (var advertise in listAdsvertisement)
                     {
-                        _advertisementService.DeleteAdvertisement(advertise.AdId);
+                        await _advertisementService.DeleteAdvertisement(advertise.AdId);
                     }
-                    bool result = _packageService.DeletePackage(rank);
+                    bool result = await _packageService.DeletePackage(rank);
                     if (result)
                     {
-                        return Ok("Package deleted successfully");
+                        return Ok("Xóa gói thành công");
                     }
                     else
                     {
-                        return BadRequest("Failed to delete package");
+                        return BadRequest("Xóa gói thất bại");
                     }
                 }
-               
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
     }

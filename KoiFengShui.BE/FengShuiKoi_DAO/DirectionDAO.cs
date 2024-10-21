@@ -1,7 +1,8 @@
 ﻿using FengShuiKoi_BO;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace FengShuiKoi_DAO
 {
@@ -26,26 +27,26 @@ namespace FengShuiKoi_DAO
             dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
         }
 
-        public Direction GetDirectionById(string id)
+        public async Task<Direction> GetDirectionById(string id)
         {
-            return dbContext.Directions.SingleOrDefault(d => d.DirectionId == id);
+            return await dbContext.Directions.SingleOrDefaultAsync(d => d.DirectionId == id);
         }
 
-        public List<Direction> GetDirections()
+        public async Task<List<Direction>> GetDirections()
         {
-            return dbContext.Directions.ToList();
+            return await dbContext.Directions.ToListAsync();
         }
 
-        public bool AddDirection(Direction direction)
+        public async Task<bool> AddDirection(Direction direction)
         {
             bool isSuccess = false;
-            Direction existingDirection = this.GetDirectionById(direction.DirectionId);
+            Direction existingDirection = await this.GetDirectionById(direction.DirectionId);
             try
             {
                 if (existingDirection == null)
                 {
-                    dbContext.Directions.Add(direction);
-                    dbContext.SaveChanges();
+                    await dbContext.Directions.AddAsync(direction);
+                    await dbContext.SaveChangesAsync();
                     isSuccess = true;
                 }
             }
@@ -56,16 +57,16 @@ namespace FengShuiKoi_DAO
             return isSuccess;
         }
 
-        public bool DeleteDirection(string id)
+        public async Task<bool> DeleteDirection(string id)
         {
             bool isSuccess = false;
-            Direction direction = this.GetDirectionById(id);
+            Direction direction = await this.GetDirectionById(id);
             try
             {
                 if (direction != null)
                 {
                     dbContext.Directions.Remove(direction);
-                    dbContext.SaveChanges();
+                    await dbContext.SaveChangesAsync();
                     isSuccess = true;
                 }
             }
@@ -76,13 +77,13 @@ namespace FengShuiKoi_DAO
             return isSuccess;
         }
 
-        public bool UpdateDirection(Direction direction)
+        public async Task<bool> UpdateDirection(Direction direction)
         {
             bool isSuccess = false;
             try
             {
-                dbContext.Entry<Direction>(direction).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                dbContext.SaveChanges();
+                dbContext.Entry<Direction>(direction).State = EntityState.Modified;
+                await dbContext.SaveChangesAsync();
                 isSuccess = true;
             }
             catch (Exception ex)

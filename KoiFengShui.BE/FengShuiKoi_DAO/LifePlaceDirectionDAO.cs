@@ -1,7 +1,9 @@
 ﻿using FengShuiKoi_BO;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FengShuiKoi_DAO
 {
@@ -26,26 +28,26 @@ namespace FengShuiKoi_DAO
             dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
         }
 
-        public LifePalaceDirection GetLifePlaceDirectionById(string lifePalace, string direction)
+        public async Task<LifePalaceDirection> GetLifePlaceDirectionById(string lifePalace, string direction)
         {
-            return dbContext.LifePalaceDirections.SingleOrDefault(lpd => lpd.LifePalaceId == lifePalace && lpd.DirectionId == direction);
+            return await dbContext.LifePalaceDirections.SingleOrDefaultAsync(lpd => lpd.LifePalaceId == lifePalace && lpd.DirectionId == direction);
         }
 
-        public List<LifePalaceDirection> GetLifePlaceDirections()
+        public async Task<List<LifePalaceDirection>> GetLifePlaceDirections()
         {
-            return dbContext.LifePalaceDirections.ToList();
+            return await dbContext.LifePalaceDirections.ToListAsync();
         }
 
-        public bool AddLifePlaceDirection(LifePalaceDirection lifePlaceDirection)
+        public async Task<bool> AddLifePlaceDirection(LifePalaceDirection lifePlaceDirection)
         {
             bool isSuccess = false;
-            LifePalaceDirection existingLifePlaceDirection = this.GetLifePlaceDirectionById(lifePlaceDirection.LifePalaceId, lifePlaceDirection.DirectionId);
+            LifePalaceDirection existingLifePlaceDirection = await this.GetLifePlaceDirectionById(lifePlaceDirection.LifePalaceId, lifePlaceDirection.DirectionId);
             try
             {
                 if (existingLifePlaceDirection == null)
                 {
-                    dbContext.LifePalaceDirections.Add(lifePlaceDirection);
-                    dbContext.SaveChanges();
+                    await dbContext.LifePalaceDirections.AddAsync(lifePlaceDirection);
+                    await dbContext.SaveChangesAsync();
                     isSuccess = true;
                 }
             }
@@ -56,16 +58,16 @@ namespace FengShuiKoi_DAO
             return isSuccess;
         }
 
-        public bool DeleteLifePlaceDirection(string lifePalace, string direction)
+        public async Task<bool> DeleteLifePlaceDirection(string lifePalace, string direction)
         {
             bool isSuccess = false;
-            LifePalaceDirection lifePlaceDirection = this.GetLifePlaceDirectionById(lifePalace, direction);
+            LifePalaceDirection lifePlaceDirection = await this.GetLifePlaceDirectionById(lifePalace, direction);
             try
             {
                 if (lifePlaceDirection != null)
                 {
                     dbContext.LifePalaceDirections.Remove(lifePlaceDirection);
-                    dbContext.SaveChanges();
+                    await dbContext.SaveChangesAsync();
                     isSuccess = true;
                 }
             }
@@ -76,13 +78,13 @@ namespace FengShuiKoi_DAO
             return isSuccess;
         }
 
-        public bool UpdateLifePlaceDirection(LifePalaceDirection lifePlaceDirection)
+        public async Task<bool> UpdateLifePlaceDirection(LifePalaceDirection lifePlaceDirection)
         {
             bool isSuccess = false;
             try
             {
                 dbContext.Entry<LifePalaceDirection>(lifePlaceDirection).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
                 isSuccess = true;
             }
             catch (Exception ex)
@@ -92,18 +94,34 @@ namespace FengShuiKoi_DAO
             return isSuccess;
         }
 
-
-        public List<LifePalaceDirection> GetGoodDirectionByLifePalace(string LifePalace)
+        public async Task<List<LifePalaceDirection>> GetGoodDirectionByLifePalace(string LifePalace)
         {
-            List<LifePalaceDirection> listDirection = new List<LifePalaceDirection>();
+            var allDirections = await this.GetLifePlaceDirections();
+            return allDirections.Where(item => item.PointOfDirection == 1 && item.LifePalaceId.Equals(LifePalace)).ToList();
+        }
 
-            foreach (LifePalaceDirection item in this.GetLifePlaceDirections())
+        public async Task<List<(string EightMansions, string Description)>> GetEightMansionsAndDescriptions()
+        {
+            List<string> sortOrder = new List<string>
             {
-                if (item.PointOfDirection == 1 && item.LifePalaceId.Equals(LifePalace))
-                    listDirection.Add(item);
+                "Sinh khí", "Thiên y", "Diên niên", "Phục vị",
+                "Tuyệt mệnh", "Ngũ quỷ", "Lục sát", "Họa hại"
+            };
+
+            Dictionary<string, string> uniquePairs = new Dictionary<string, string>();
+            var allDirections = await this.GetLifePlaceDirections();
+
+            foreach (LifePalaceDirection item in allDirections)
+            {
+                uniquePairs[item.EightMansions] = item.Description;
+                if (uniquePairs.Count == 8)
+                    break;
             }
-            return listDirection;
+
+            return sortOrder
+                .Where(mansion => uniquePairs.ContainsKey(mansion))
+                .Select(mansion => (mansion, uniquePairs[mansion]))
+                .ToList();
         }
     }
-
 }

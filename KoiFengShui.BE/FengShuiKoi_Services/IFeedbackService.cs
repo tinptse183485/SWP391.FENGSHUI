@@ -1,29 +1,20 @@
 ﻿using FengShuiKoi_BO;
-using System;
+using FengShuiKoi_DAO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FengShuiKoi_Services
 {
     public interface IFeedbackService
     {
-
-        public Feedback GetFeedbackByFeedbackID(string feedbackId);
-
-        public List<Feedback> GetFeedbackByUserID(string userId);
-
-
-        public List<Feedback> GetAllFeedbacks();
-
-
-        public bool AddFeedback(Feedback feedback);
-
-
-        public bool UpdateFeedback(string feedbackId);
-
-
-        public bool DeleteFeedback(string feedbackId);
+        Task<Feedback> GetFeedbackByFeedbackID(string feedbackId);
+        Task<List<Feedback>> GetFeedbackByUserID(string userId);
+        Task<List<Feedback>> GetAllFeedbacks();
+        Task<bool> AddFeedback(Feedback feedback);
+        Task<bool> UpdateFeedback(string feedbackId);
+        Task<bool> DeleteFeedback(string feedbackId);
+        Task<List<Feedback>> GetFeedbackByAdId(string AdId);
+        Task<string> GetLastFBId();
+       
     }
 }

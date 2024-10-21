@@ -1,6 +1,7 @@
 ﻿using FengShuiKoi_BO;
 using FengShuiKoi_Repository;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FengShuiKoi_Services
 {
@@ -13,14 +14,14 @@ namespace FengShuiKoi_Services
             packageRepo = new PackageRepo();
         }
 
-        public Package GetPackageByRank(string rank) => packageRepo.GetPackageByRank(rank);
+        public async Task<Package> GetPackageByRank(string rank) => await packageRepo.GetPackageByRank(rank);
 
-        public List<Package> GetPackages() => packageRepo.GetPackages();
+        public async Task<List<Package>> GetPackages() => await packageRepo.GetPackages();
 
-        public bool AddPackage(Package package) => packageRepo.AddPackage(package);
+        public async Task<bool> AddPackage(Package package) => await packageRepo.AddPackage(package);
 
-        public bool DeletePackage(string rank) => packageRepo.DeletePackage(rank);
+        public async Task<bool> DeletePackage(string rank) => await packageRepo.DeletePackage(rank);
 
-        public bool UpdatePackage(Package package) => packageRepo.UpdatePackage(package);
+        public async Task<bool> UpdatePackage(Package package) => await packageRepo.UpdatePackage(package);
     }
 }

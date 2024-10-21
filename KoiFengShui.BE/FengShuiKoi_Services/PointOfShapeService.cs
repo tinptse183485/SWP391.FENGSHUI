@@ -1,6 +1,7 @@
 ﻿using FengShuiKoi_BO;
 using FengShuiKoi_Repository;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FengShuiKoi_Services
 {
@@ -13,17 +14,17 @@ namespace FengShuiKoi_Services
             pointOfShapeRepo = new PointOfShapeRepo();
         }
 
-        public PointOfShape GetPointOfShape(string element, string shape) => pointOfShapeRepo.GetPointOfShape(element, shape);
+        public async Task<PointOfShape> GetPointOfShape(string element, string shape) => await pointOfShapeRepo.GetPointOfShape(element, shape);
 
-        public List<PointOfShape> GetPointOfShapes() => pointOfShapeRepo.GetPointOfShapes();
+        public async Task<List<PointOfShape>> GetPointOfShapes() => await pointOfShapeRepo.GetPointOfShapes();
 
-        public bool AddPointOfShape(PointOfShape pointOfShape) => pointOfShapeRepo.AddPointOfShape(pointOfShape);
+        public async Task<bool> AddPointOfShape(PointOfShape pointOfShape) => await pointOfShapeRepo.AddPointOfShape(pointOfShape);
 
-        public bool DeletePointOfShape(string element, string shape) => pointOfShapeRepo.DeletePointOfShape(element, shape);
+        public async Task<bool> DeletePointOfShape(string element, string shape) => await pointOfShapeRepo.DeletePointOfShape(element, shape);
 
-        public bool UpdatePointOfShape(PointOfShape pointOfShape) => pointOfShapeRepo.UpdatePointOfShape(pointOfShape);
-        public PointOfShape GetPointOfShapeByShapeID(string shape) => pointOfShapeRepo.GetPointOfShapeByShapeID(shape);
-        public bool DeletePointOfShapeByShapeID(string shapeID) => pointOfShapeRepo.DeletePointOfShapeByShapeID(shapeID);
-        public List<PointOfShape> GetGoodShapeByElemnet(string element) => pointOfShapeRepo.GetGoodShapeByElemnet(element);
-	}
+        public async Task<bool> UpdatePointOfShape(PointOfShape pointOfShape) => await pointOfShapeRepo.UpdatePointOfShape(pointOfShape);
+        public async Task<PointOfShape> GetPointOfShapeByShapeID(string shape) => await pointOfShapeRepo.GetPointOfShapeByShapeID(shape);
+        public async Task<bool> DeletePointOfShapeByShapeID(string shapeID) => await pointOfShapeRepo.DeletePointOfShapeByShapeID(shapeID);
+        public async Task<List<PointOfShape>> GetGoodShapeByElemnet(string element) => await pointOfShapeRepo.GetGoodShapeByElemnet(element);
+    }
 }

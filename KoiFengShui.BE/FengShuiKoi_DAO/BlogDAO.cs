@@ -1,8 +1,8 @@
 ﻿using FengShuiKoi_BO;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FengShuiKoi_DAO
@@ -27,29 +27,28 @@ namespace FengShuiKoi_DAO
         {
             dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
         }
-        public Blog GetBlogByBlogID(string BlogID)
+        public async Task<Blog> GetBlogByBlogID(string BlogID)
         {
-            return dbContext.Blogs.SingleOrDefault(m => m.BlogId.Equals(BlogID));
+            return await dbContext.Blogs.SingleOrDefaultAsync(m => m.BlogId.Equals(BlogID));
         }
-       
 
-        public List<Blog> GetBlogs()
+        public async Task<List<Blog>> GetBlogs()
         {
-            return dbContext.Blogs.ToList();
+            return await dbContext.Blogs.ToListAsync();
         }
-        public bool AddBlog(Blog blog)
+
+        public async Task<bool> AddBlog(Blog blog)
         {
             bool isSuccess = false;
-            Blog  _blog = this.GetBlogByBlogID(blog.BlogId);
+            Blog _blog = await this.GetBlogByBlogID(blog.BlogId);
             try
             {
                 if (_blog == null)
                 {
-                    dbContext.Blogs.Add(blog);
-                    dbContext.SaveChanges();
+                    await dbContext.Blogs.AddAsync(blog);
+                    await dbContext.SaveChangesAsync();
                     isSuccess = true;
                 }
-
             }
             catch (Exception ex)
             {
@@ -57,16 +56,17 @@ namespace FengShuiKoi_DAO
             }
             return isSuccess;
         }
-        public bool DeleteBlog(string BlogID)
+
+        public async Task<bool> DeleteBlog(string BlogID)
         {
             bool isSuccess = false;
-            Blog blog = this.GetBlogByBlogID(BlogID);
+            Blog blog = await this.GetBlogByBlogID(BlogID);
             try
             {
                 if (blog != null)
                 {
                     dbContext.Blogs.Remove(blog);
-                    dbContext.SaveChanges();
+                    await dbContext.SaveChangesAsync();
                     isSuccess = true;
                 }
             }
@@ -76,24 +76,45 @@ namespace FengShuiKoi_DAO
             }
             return isSuccess;
         }
-        public bool UpdateBlog(string BlogID)
+
+        public async Task<bool> UpdateBlog(Blog updatedBlog)
         {
-            bool isSuccess = false;
-            Blog blog = this.GetBlogByBlogID(BlogID);
+            if (updatedBlog == null)
+            {
+                return false;
+            }
+
             try
             {
-                if (blog != null)
+                var existingBlog = await dbContext.Blogs.FindAsync(updatedBlog.BlogId);
+                if (existingBlog == null)
                 {
-                    dbContext.Entry<Blog>(blog).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    dbContext.SaveChanges();
-                    isSuccess = true;
+                    return false;
                 }
+
+                dbContext.Entry(existingBlog).CurrentValues.SetValues(updatedBlog);
+
+                int affectedRows = await dbContext.SaveChangesAsync();
+
+                return affectedRows > 0;
+            }
+            catch (DbUpdateException ex)
+            {
+                return false;
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return false;
             }
-            return isSuccess;
+        }
+
+        public async Task<string> GetLastBlogId()
+        {
+            var lastBlog = await dbContext.Blogs
+                .OrderByDescending(b => b.BlogId)
+                .FirstOrDefaultAsync();
+
+            return lastBlog?.BlogId;
         }
     }
 }

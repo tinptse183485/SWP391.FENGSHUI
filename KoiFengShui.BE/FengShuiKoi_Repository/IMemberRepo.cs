@@ -1,18 +1,17 @@
 ﻿using FengShuiKoi_BO;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FengShuiKoi_Repository
 {
-	public interface IMemberRepo
-	{
-		public Member GetMemberByUserID(string userid);
-		public List<Member> GetMembers();
-		public bool AddMember(Member member);
-		public bool DeleteAccount(string id);
-		public bool UpdateMember(string id);
-	}
+    public interface IMemberRepo
+    {
+        Task<Member> GetMemberByUserID(string userid);
+        Task<List<Member>> GetMembers();
+        Task<bool> AddMember(Member member);
+        Task<bool> DeleteAccount(string id);
+        Task<bool> UpdateMember(Member updatedMember);
+        Task<Dictionary<string, int>> GetUsersByAgeGroup();
+    }
 }

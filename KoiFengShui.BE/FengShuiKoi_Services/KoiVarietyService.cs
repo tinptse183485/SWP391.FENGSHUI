@@ -1,9 +1,6 @@
 ﻿using FengShuiKoi_BO;
 using FengShuiKoi_Repository;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FengShuiKoi_Services
@@ -16,22 +13,17 @@ namespace FengShuiKoi_Services
         {
             ikoiVarietyRepo = new KoiVarietyRepo();
         }
-        public bool AddKoiVariety(KoiVariety variety) => ikoiVarietyRepo.AddKoiVariety(variety);
-       
 
-        public bool DeleteKoiVariety(string type) => ikoiVarietyRepo.DeleteKoiVariety(type);
-        
+        public async Task<bool> AddKoiVariety(KoiVariety variety) => await ikoiVarietyRepo.AddKoiVariety(variety);
 
-        public List<KoiVariety> GetKoiVarieties() => ikoiVarietyRepo.GetKoiVarieties();
-        
+        public async Task<bool> DeleteKoiVariety(string type) => await ikoiVarietyRepo.DeleteKoiVariety(type);
 
-        public List<KoiVariety> GetKoiVarietiesByElemnet(string element) => ikoiVarietyRepo.GetKoiVarietiesByElemnet(element);
-      
+        public async Task<List<KoiVariety>> GetKoiVarieties() => await ikoiVarietyRepo.GetKoiVarieties();
 
-        public KoiVariety GetKoiVarietyByType(string type) => ikoiVarietyRepo.GetKoiVarietyByType(type);
-        
+        public async Task<List<KoiVariety>> GetKoiVarietiesByElemnet(string element) => await ikoiVarietyRepo.GetKoiVarietiesByElemnet(element);
 
-        public bool UpdateKoiVariety(string type) => ikoiVarietyRepo.UpdateKoiVariety(type);
-        
+        public async Task<KoiVariety> GetKoiVarietyByType(string type) => await ikoiVarietyRepo.GetKoiVarietyByType(type);
+
+        public async Task<bool> UpdateKoiVariety(KoiVariety updatedKoi) => await ikoiVarietyRepo.UpdateKoiVariety(updatedKoi);
     }
 }

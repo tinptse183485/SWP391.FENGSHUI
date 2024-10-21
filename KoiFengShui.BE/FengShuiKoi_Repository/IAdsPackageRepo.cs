@@ -1,24 +1,24 @@
 ﻿using FengShuiKoi_BO;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FengShuiKoi_Repository
 {
     public interface IAdsPackageRepo
     {
+        Task<AdsPackage> GetAdsPackageByAdIDRankTime(string AdID, string Rank, DateTime CreateAt);
+	    Task<List<AdsPackage>> GetListAdsPackageByAdID(string AdID);
+        Task<List<AdsPackage>> GetListAdsPackageByRank(string Rank);
+        Task<AdsPackage> GetAdsPackageByAdID(string AdID);
 
-        public AdsPackage GetAdsPackageByAdIDRank(string AdID, string Rank);
+		Task<List<AdsPackage>> GetAdsPackages();
+        Task<bool> AddAdsPackage(AdsPackage ads);
+        Task<bool> UpdateAdsPackage(AdsPackage newAdsPackage);
+        Task<Dictionary<string, double>> GetRevenueByPackage();
 
-
-        public List<AdsPackage> GetListAdsPackageByAdID(string AdID);
-        public List<AdsPackage> GetListAdsPackageByRank(string Rank);
-		public List<AdsPackage> GetAdsPackages();
-        public bool AddAdsPackage(AdsPackage ads);
-        public bool UpdateAdsPackage(AdsPackage newAdsPackage);
-
-		public bool DeleteAdsPackage(string AdID, string Rank);
+		Task<bool> DeleteAdsPackage(string AdID, string Rank, DateTime CreateAt);
+        Task<Dictionary<string, double>> GetTotalRevenueByMonth(int year, int month);
+        Task<Dictionary<DateTime, double>> GetDailyRevenueToDate();
     }
 }

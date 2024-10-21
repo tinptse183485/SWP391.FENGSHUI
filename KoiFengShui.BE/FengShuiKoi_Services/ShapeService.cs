@@ -1,6 +1,7 @@
 ﻿using FengShuiKoi_BO;
 using FengShuiKoi_Repository;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FengShuiKoi_Services
 {
@@ -12,15 +13,17 @@ namespace FengShuiKoi_Services
         {
             shapeRepo = new ShapeRepo();
         }
-        public Shape GetShapeByImg(string img) => shapeRepo.GetShapeByImg(img);
-        public Shape GetShapeById(string id) => shapeRepo.GetShapeById(id);
+        public async Task<Shape> GetShapeByImg(string img) => await shapeRepo.GetShapeByImg(img);
+        public async Task<Shape> GetShapeById(string id) => await shapeRepo.GetShapeById(id);
 
-        public List<Shape> GetShapes() => shapeRepo.GetShapes();
+        public async Task<List<Shape>> GetShapes() => await shapeRepo.GetShapes();
 
-        public bool AddShape(Shape shape) => shapeRepo.AddShape(shape);
+        public async Task<bool> AddShape(Shape shape) => await shapeRepo.AddShape(shape);
 
-        public bool DeleteShape(string id) => shapeRepo.DeleteShape(id);
+        public async Task<bool> DeleteShape(string id) => await shapeRepo.DeleteShape(id);
 
-        public bool UpdateShape(Shape shape) => shapeRepo.UpdateShape(shape);
-    }
+        public async Task<bool> UpdateShape(Shape shape) => await shapeRepo.UpdateShape(shape);
+        public async Task<bool> UpdateShapeImg(string shapeId, string Img) => await shapeRepo.UpdateShapeImg(shapeId, Img);
+
+	}
 }

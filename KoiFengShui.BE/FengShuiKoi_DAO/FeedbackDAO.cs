@@ -1,8 +1,9 @@
 ﻿using FengShuiKoi_BO;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 
 namespace FengShuiKoi_DAO
@@ -12,7 +13,6 @@ namespace FengShuiKoi_DAO
         private SWP391_FengShuiKoiConsulting_DBContext dbContext;
         private static FeedbackDAO instance = null;
 
-        // Singleton design pattern
         public static FeedbackDAO Instance
         {
             get
@@ -30,33 +30,38 @@ namespace FengShuiKoi_DAO
             dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
         }
 
-        // Method to get feedback by FeedbackID
-        public Feedback GetFeedbackByFeedbackID(string feedbackId)
+        public async Task<Feedback> GetFeedbackByFeedbackID(string feedbackId)
         {
-            return dbContext.Feedbacks.SingleOrDefault(f => f.FbId.Equals(feedbackId));
+            return await dbContext.Feedbacks.SingleOrDefaultAsync(f => f.FbId.Equals(feedbackId));
         }
 
-        // Method to get feedback by UserID
-        public List<Feedback> GetFeedbackByUserID(string userId)
+        public async Task<List<Feedback>> GetFeedbackByUserID(string userId)
         {
-            return dbContext.Feedbacks.Where(f => f.UserId.Equals(userId)).ToList();
+            return await dbContext.Feedbacks.Where(f => f.UserId.Equals(userId)).ToListAsync();
+        }
+        public async Task<List<Feedback>> GetFeedbackByAdId(string AdId)
+        {
+            return await dbContext.Feedbacks.Where(f => f.AdId.Equals(AdId)).ToListAsync();
+        }
+     
+
+        public async Task<List<Feedback>> GetFeedbacks()
+        {
+            return await dbContext.Feedbacks.ToListAsync();
         }
 
-        // Method to retrieve all feedbacks
-        public List<Feedback> GetFeedbacks()
-        {
-            return dbContext.Feedbacks.ToList();
-        }
-
-        // Method to add new feedback
-        public bool AddFeedback(Feedback feedback)
+        public async Task<bool> AddFeedback(Feedback feedback)
         {
             bool isSuccess = false;
+            Feedback _fb = await this.GetFeedbackByFeedbackID(feedback.FbId);
             try
             {
-                dbContext.Feedbacks.Add(feedback);
-                dbContext.SaveChanges();
-                isSuccess = true;
+                if (_fb == null)
+                {
+                    await dbContext.Feedbacks.AddAsync(feedback);
+                    await dbContext.SaveChangesAsync();
+                    isSuccess = true;
+                }
             }
             catch (Exception ex)
             {
@@ -65,47 +70,50 @@ namespace FengShuiKoi_DAO
             return isSuccess;
         }
 
-        // Method to delete feedback by FeedbackID
-        public bool DeleteFeedback(string feedbackId)
+        public async Task<bool> DeleteFeedback(string feedbackId)
         {
-            bool isSuccess = false;
-            Feedback feedback = this.GetFeedbackByFeedbackID(feedbackId);
+            var feedback = await GetFeedbackByFeedbackID(feedbackId);
             try
             {
                 if (feedback != null)
                 {
                     dbContext.Feedbacks.Remove(feedback);
-                    dbContext.SaveChanges();
-                    isSuccess = true;
+                    await dbContext.SaveChangesAsync();
+                    return true;
                 }
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-            return isSuccess;
+            return false;
         }
 
-        // Method to update feedback by FeedbackID
-        public bool UpdateFeedback(string feedbackId)
+        public async Task<bool> UpdateFeedback(string feedbackId)
         {
-            bool isSuccess = false;
-            Feedback feedback = this.GetFeedbackByFeedbackID(feedbackId);
+            var feedback = await GetFeedbackByFeedbackID(feedbackId);
             try
             {
                 if (feedback != null)
                 {
-                    dbContext.Entry<Feedback>(feedback).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    dbContext.SaveChanges();
-                    isSuccess = true;
+                    dbContext.Entry<Feedback>(feedback).State = EntityState.Modified;
+                    await dbContext.SaveChangesAsync();
+                    return true;
                 }
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-            return isSuccess;
+            return false;
+        }
+        public async Task<string> GetLastFBId()
+        {
+            var lastfeedback = await dbContext.Feedbacks
+                .OrderByDescending(b => b.FbId)
+                .FirstOrDefaultAsync();
+
+            return lastfeedback?.FbId;
         }
     }
-
 }

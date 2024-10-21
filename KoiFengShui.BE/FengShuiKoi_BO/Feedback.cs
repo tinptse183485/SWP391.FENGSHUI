@@ -9,6 +9,7 @@ namespace FengShuiKoi_BO
         public string Description { get; set; } = null!;
         public string AdId { get; set; } = null!;
         public string UserId { get; set; } = null!;
+        public byte Rate { get; set; }
 
         public virtual Advertisement Ad { get; set; } = null!;
         public virtual Member User { get; set; } = null!;

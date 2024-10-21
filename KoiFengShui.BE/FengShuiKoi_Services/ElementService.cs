@@ -13,17 +13,15 @@ namespace FengShuiKoi_Services
 {
 	public class ElementService : IElementService
 	{
-		private IElementRepo iElementRepo;
-		public ElementService()
-		{
-			iElementRepo = new ElementRepo();
-		}
-		public Element GetElementAndMutualism(string element) => iElementRepo.GetElementAndMutualism(element);
+        private IElementRepo iElementRepo;
+        public ElementService()
+        {
+            iElementRepo = new ElementRepo();
+        }
+        public async Task<Element> GetElementAndMutualism(string element) => await iElementRepo.GetElementAndMutualism(element);
 
-
-
-		public List<Element> GetElement() => ElementDAO.Instance.GetElement();
-		public string GetElementByBirthYear(int birthYear)
+        public async Task<List<Element>> GetElement() => await iElementRepo.GetElement();
+        public string GetElementByBirthYear(int birthYear)
 		{
 			int lastTwoDigits = birthYear % 100;
 			int firstNumber = 0;

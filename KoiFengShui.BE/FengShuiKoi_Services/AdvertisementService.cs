@@ -2,8 +2,6 @@
 using FengShuiKoi_Repository;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FengShuiKoi_Services
@@ -15,34 +13,57 @@ namespace FengShuiKoi_Services
         {
             iAdvertisementRepo = new AdvertisementRepo();
         }
-        public bool AddAdvertisement(Advertisement advertisement)
+        public async Task<bool> AddAdvertisement(Advertisement advertisement)
         {
-            return iAdvertisementRepo.AddAdvertisement(advertisement);
+            return await iAdvertisementRepo.AddAdvertisement(advertisement);
         }
 
-        public bool DeleteAdvertisement(string adID)
+        public async Task<bool> DeleteAdvertisement(string adID)
         {
-            return iAdvertisementRepo.DeleteAdvertisement(adID);
+            return await iAdvertisementRepo.DeleteAdvertisement(adID);
+        }
+        public async Task<List<Advertisement>> GetAdvertisementStatus(string status)
+            => await iAdvertisementRepo.GetAdvertisementStatus(status);
+        public async Task<Advertisement> GetAdvertisementByAdID(string AdID)
+        {
+            return await iAdvertisementRepo.GetAdvertisementByAdID(AdID);
         }
 
-        public Advertisement GetAdvertisementByAdID(string AdID)
+
+        public async Task<List<Advertisement>> GetAdvertisementByUserIdAndStatus(string userId, string status)
         {
-            return iAdvertisementRepo.GetAdvertisementByAdID(AdID);
+            return await iAdvertisementRepo.GetAdvertisementByUserIdAndStatus(userId, status);
         }
 
-		public List<Advertisement> GetAdvertisementByUserIdAndStatus(string userId, string status)
-		{
-			return iAdvertisementRepo.GetAdvertisementByUserIdAndStatus(userId, status);
+
+        public async Task<List<Advertisement>> GetAdvertisementByUserID(string userdID) => await iAdvertisementRepo.GetAdvertisementByUserID(userdID);
+		
+        public async Task<List<Advertisement>> GetAdvertisementsSortted() => await iAdvertisementRepo.GetAdvertisementsSortted();
+		    public async Task<List<AdvertisementWithPackageDTO>> GetAdvertisementsWithPackageSorted() => await iAdvertisementRepo.GetAdvertisementsWithPackageSorted();
+
+		    public async Task<List<Advertisement>> GetAdvertisements()
+
+        {
+            return await iAdvertisementRepo.GetAdvertisements();
+        }
+
+        public async Task<bool> UpdateAdvertisement(Advertisement updatedAdvertisement)
+        {
+            return await iAdvertisementRepo.UpdateAdvertisement(updatedAdvertisement);
+        }
+
+
+		    public async Task UpdateExpiredAdvertisementsAsync()
+		    {
+			    var expiredAds = await iAdvertisementRepo.GetExpiredAdvertisements();
+			    foreach (var ad in expiredAds)
+			  {
+
+				ad.Status = "Expired";
+				iAdvertisementRepo.UpdateAdvertisement(ad);
+			  }
 		}
 
-		public List<Advertisement> GetAdvertisements()
-        {
-            return iAdvertisementRepo.GetAdvertisements();
-        }
-
-        public bool UpdateAdvertisement(string adID)
-        {
-            return iAdvertisementRepo.UpdateAdvertisement(adID);
-        }
-    }
+	}
 }
+

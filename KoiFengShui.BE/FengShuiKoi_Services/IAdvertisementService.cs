@@ -1,20 +1,27 @@
 ﻿using FengShuiKoi_BO;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FengShuiKoi_Services
 {
     public interface IAdvertisementService
     {
-        public Advertisement GetAdvertisementByAdID(string AdID);
-        public List<Advertisement> GetAdvertisements();
-        public bool AddAdvertisement(Advertisement advertisement);
-        public bool DeleteAdvertisement(string adID);
-        public bool UpdateAdvertisement(string adID);
-        public List<Advertisement> GetAdvertisementByUserIdAndStatus(string userId, string status);
+
+        Task<Advertisement> GetAdvertisementByAdID(string AdID);
+        Task<List<Advertisement>> GetAdvertisements();
+        Task<bool> AddAdvertisement(Advertisement advertisement);
+        Task<bool> DeleteAdvertisement(string adID);
+        Task<bool> UpdateAdvertisement(Advertisement updatedAdvertisement);
+        Task<List<Advertisement>> GetAdvertisementByUserIdAndStatus(string userId, string status);
+        Task<List<Advertisement>> GetAdvertisementStatus(string status);
+
+        Task<List<Advertisement>> GetAdvertisementsSortted();
+        Task<List<AdvertisementWithPackageDTO>> GetAdvertisementsWithPackageSorted();
+		    public Task<List<Advertisement>> GetAdvertisementByUserID(string userdID);
+
+        public Task UpdateExpiredAdvertisementsAsync();
 
 	}
 }
+

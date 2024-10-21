@@ -1,9 +1,7 @@
 ﻿using FengShuiKoi_BO;
+using FengShuiKoi_DAO;
 using FengShuiKoi_Repository;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FengShuiKoi_Services
@@ -17,35 +15,42 @@ namespace FengShuiKoi_Services
             feedbackRepo = new FeedbackRepo();
         }
 
-        public bool AddFeedback(Feedback feedback)
+        public async Task<bool> AddFeedback(Feedback feedback)
         {
-            return feedbackRepo.AddFeedback(feedback);
+            return await feedbackRepo.AddFeedback(feedback);
         }
 
-        public bool DeleteFeedback(string feedbackId)
+        public async Task<bool> DeleteFeedback(string feedbackId)
         {
-            return feedbackRepo.DeleteFeedback(feedbackId);
+            return await feedbackRepo.DeleteFeedback(feedbackId);
         }
 
-        public Feedback GetFeedbackByFeedbackID(string feedbackId)
+        public async Task<Feedback> GetFeedbackByFeedbackID(string feedbackId)
         {
-            return feedbackRepo.GetFeedbackByFeedbackID(feedbackId);
+            return await feedbackRepo.GetFeedbackByFeedbackID(feedbackId);
         }
 
-        public List<Feedback> GetFeedbackByUserID(string userId)
+        public async Task<List<Feedback>> GetFeedbackByUserID(string userId)
         {
-            return feedbackRepo.GetFeedbackByUserID(userId);
+            return await feedbackRepo.GetFeedbackByUserID(userId);
         }
 
-        public List<Feedback> GetAllFeedbacks()
+        public async Task<List<Feedback>> GetAllFeedbacks()
         {
-            return feedbackRepo.GetAllFeedbacks();
+            return await feedbackRepo.GetAllFeedbacks();
         }
 
-        public bool UpdateFeedback(string feedbackId)
+        public async Task<bool> UpdateFeedback(string feedbackId)
         {
-            return feedbackRepo.UpdateFeedback(feedbackId);
+            return await feedbackRepo.UpdateFeedback(feedbackId);
+        }
+        public async Task<List<Feedback>> GetFeedbackByAdId(string AdId)
+        {
+            return await feedbackRepo.GetFeedbackByAdId(AdId);
+        }
+        public async Task<string> GetLastFBId()
+        {
+            return await feedbackRepo.GetLastFBId();
         }
     }
-
 }

@@ -1,23 +1,24 @@
 ﻿using FengShuiKoi_BO;
 using FengShuiKoi_DAO;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FengShuiKoi_Repository
 {
     public class LifePlaceDirectionRepo : ILifePlaceDirectionRepo
     {
-        public LifePalaceDirection GetLifePlaceDirectionById(string lifePalace, string direction) => LifePlaceDirectionDAO.Instance.GetLifePlaceDirectionById(lifePalace, direction);
+        public async Task<LifePalaceDirection> GetLifePlaceDirectionById(string lifePalace, string direction) => await LifePlaceDirectionDAO.Instance.GetLifePlaceDirectionById(lifePalace, direction);
 
-        public List<LifePalaceDirection> GetLifePlaceDirections() => LifePlaceDirectionDAO.Instance.GetLifePlaceDirections();
+        public async Task<List<LifePalaceDirection>> GetLifePlaceDirections() => await LifePlaceDirectionDAO.Instance.GetLifePlaceDirections();
 
-        public bool AddLifePlaceDirection(LifePalaceDirection lifePlaceDirection) => LifePlaceDirectionDAO.Instance.AddLifePlaceDirection(lifePlaceDirection);
+        public async Task<bool> AddLifePlaceDirection(LifePalaceDirection lifePlaceDirection) => await LifePlaceDirectionDAO.Instance.AddLifePlaceDirection(lifePlaceDirection);
 
-        public bool DeleteLifePlaceDirection(string lifePalace, string direction) => LifePlaceDirectionDAO.Instance.DeleteLifePlaceDirection(lifePalace, direction);
+        public async Task<bool> DeleteLifePlaceDirection(string lifePalace, string direction) => await LifePlaceDirectionDAO.Instance.DeleteLifePlaceDirection(lifePalace, direction);
 
-        public bool UpdateLifePlaceDirection(LifePalaceDirection lifePlaceDirection) => LifePlaceDirectionDAO.Instance.UpdateLifePlaceDirection(lifePlaceDirection);
+        public async Task<bool> UpdateLifePlaceDirection(LifePalaceDirection lifePlaceDirection) => await LifePlaceDirectionDAO.Instance.UpdateLifePlaceDirection(lifePlaceDirection);
 
+        public async Task<List<(string EightMansions, string Description)>> GetEightMansionsAndDescriptions() => await LifePlaceDirectionDAO.Instance.GetEightMansionsAndDescriptions();
 
-        public List<LifePalaceDirection> GetGoodDirectionByLifePalace(string LifePalace) => LifePlaceDirectionDAO.Instance.GetGoodDirectionByLifePalace(LifePalace);
+        public async Task<List<LifePalaceDirection>> GetGoodDirectionByLifePalace(string LifePalace) => await LifePlaceDirectionDAO.Instance.GetGoodDirectionByLifePalace(LifePalace);
     }
-
 }

@@ -2,42 +2,46 @@
 using FengShuiKoi_Repository;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FengShuiKoi_Services
 {
-	public class MemberService : IMemberService
-	{
-		private IMemberRepo iMemberRepo;
-		public MemberService()
-		{
-			iMemberRepo = new MemberRepo();
-		}
-		public bool AddMember(Member member)
-		{
-			return iMemberRepo.AddMember(member);
-		}
+    public class MemberService : IMemberService
+    {
+        private IMemberRepo iMemberRepo;
+        public MemberService()
+        {
+            iMemberRepo = new MemberRepo();
+        }
 
-		public bool DeleteAccount(string id)
-		{
-			return iMemberRepo.DeleteAccount(id);
-		}
+        public Task<bool> AddMember(Member member)
+        {
+            return iMemberRepo.AddMember(member);
+        }
 
-		public Member GetMemberByUserID(string userid)
-		{
-			return iMemberRepo.GetMemberByUserID(userid);
-		}
+        public Task<bool> DeleteAccount(string id)
+        {
+            return iMemberRepo.DeleteAccount(id);
+        }
 
-		public List<Member> GetMembers()
-		{
-			return iMemberRepo.GetMembers();
-		}
+        public Task<Member> GetMemberByUserID(string userid)
+        {
+            return iMemberRepo.GetMemberByUserID(userid);
+        }
 
-		public bool UpdateMember(string id)
-		{
-			return iMemberRepo.UpdateMember(id);
-		}
-	}
+        public Task<List<Member>> GetMembers()
+        {
+            return iMemberRepo.GetMembers();
+        }
+
+        public Task<bool> UpdateMember(Member updatedMember)
+        {
+            return iMemberRepo.UpdateMember(updatedMember);
+        }
+
+        public Task<Dictionary<string, int>> GetUsersByAgeGroup()
+        {
+            return iMemberRepo.GetUsersByAgeGroup();
+        }
+    }
 }
