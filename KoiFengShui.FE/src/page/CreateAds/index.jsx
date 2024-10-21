@@ -127,7 +127,7 @@ function CreateAds() {
       type="button"
     >
       <PlusOutlined />
-      <div style={{ marginTop: 8 }}>Tải lên</div>
+      <div style={{ marginTop: 8 }}>Tải ảnh bìa lên</div>
     </button>
   );
 
@@ -158,14 +158,14 @@ function CreateAds() {
     const updatedAdData = {
       ...adData,
       heading: adData.heading || document.querySelector('input[name="heading"]').value,
-      image: adData.image || document.querySelector('input[name="image"]').value,
+      image: adData.image || (fileList.length > 0 ? fileList[0].url || fileList[0].thumbUrl : ''),
       link: adData.link || editorRef.current.getContent(),
       userId: localStorage.getItem("userId"),
       elementId: adData.elementId || document.querySelector('select[name="elementId"]').value,
       status: 'Draft'
     };
 
-    if (updatedAdData.heading && updatedAdData.image && updatedAdData.link && updatedAdData.elementId) {
+    if (updatedAdData.heading && updatedAdData.image && updatedAdData.link && updatedAdData.elementId !== 'None') {
       localStorage.setItem('adData', JSON.stringify(updatedAdData));
       navigate('/choose-package', { state: { adData: updatedAdData } });
     } else {
@@ -177,38 +177,46 @@ function CreateAds() {
     <div className="ads-container">
       <h1>{adData.adId !== '.' ? 'Chỉnh sửa quảng cáo' : 'Đăng quảng cáo mới'}</h1>
       <div className="input-container">
-        <input
-          type="text"
-          name="heading"
-          value={adData.heading}
-          onChange={handleInputChange}
-          placeholder="Tiêu đề quảng cáo"
-          required
-        />
-        <Upload
-          listType="picture-card"
-          fileList={fileList}
-          onPreview={handlePreview}
-          onChange={handleChange}
-          beforeUpload={() => false}
-        >
-          {fileList.length >= 1 ? null : uploadButton}
-        </Upload>
-        <div className="element-selection">
-          <h3>Chọn mệnh cho quảng cáo:</h3>
-          <select
-            name="elementId"
-            value={adData.elementId}
-            onChange={handleElementChange}
-            required
+        <div className="input-column image-upload">
+          <Upload
+            listType="picture-card"
+            fileList={fileList}
+            onPreview={handlePreview}
+            onChange={handleChange}
+            beforeUpload={() => false}
+           
           >
-            <option value=""></option>
-            {elements.map(element => (
-              <option key={element.elementId} value={element.elementId}>
-                {element.elementId}
-              </option>
-            ))}
-          </select>
+            {fileList.length >= 1 ? null : uploadButton}
+          </Upload>
+        </div>
+        <div className="input-row">
+          <div className="input-column">
+            <input
+              type="text"
+              name="heading"
+              value={adData.heading}
+              onChange={handleInputChange}
+              placeholder="Tiêu đề quảng cáo"
+              required
+            />
+          </div>
+          <div className="input-column">
+            <div className="element-selection">
+              <select
+                name="elementId"
+                value={adData.elementId }
+                onChange={handleElementChange}
+                required
+              >
+                <option value="">Chọn mệnh cho quảng cáo</option>
+                {elements.map(element => (
+                  <option key={element.elementId} value={element.elementId}>
+                    {element.elementId}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
       </div>
       <Editor
