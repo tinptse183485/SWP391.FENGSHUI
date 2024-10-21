@@ -11,32 +11,34 @@ function ForgotPassword() {
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const handleForgotPassword = async (values) => {
+    setLoading(true);
     try {
-      const response = await api.post(
-        "Account/forgot-password", values
-      );
+      const response = await api.post("Account/forgot-password", values);
       console.log(response);
       setIsOtpSent(true);
       setEmail(values.email);
       toast.success("Mã OTP đã được gửi đến email của bạn!");
     } catch (error) {
       toast.error(error.response.data);
+    } finally {
+      setLoading(false);
     }
   };
   const handleVerifyOtp = async (values) => {
+    setLoading(true);
     try {
-      const response = await api.post(
-        "Account/verify-code",
-        {
-            email: email,
-            code: values.code,
-        }
-      );
+      const response = await api.post("Account/verify-code", {
+        email: email,
+        code: values.code,
+      });
       console.log(response);
       navigate(`/reset-password/${encodeURIComponent(email)}`);
     } catch (error) {
       toast.error(error.response.data);
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -60,7 +62,13 @@ function ForgotPassword() {
               <Input placeholder="Nhập Mã OTP" />
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit" className="forgot-password-button">
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="forgot-password-button"
+                loading={loading}
+                disabled={loading}
+              >
                 Xác nhận OTP
               </Button>
             </Form.Item>
@@ -84,7 +92,13 @@ function ForgotPassword() {
               <Input placeholder="Email" />
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit" className="forgot-password-button">
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="forgot-password-button"
+                loading={loading}
+                disabled={loading}
+              >
                 Gửi mật khẩu
               </Button>
             </Form.Item>
