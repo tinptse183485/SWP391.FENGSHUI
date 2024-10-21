@@ -37,6 +37,7 @@ const Ads = () => {
   const [feedbackModalVisible, setFeedbackModalVisible] = useState(false);
   const [currentAdFeedback, setCurrentAdFeedback] = useState([]);
   const [selectedStars, setSelectedStars] = useState("all");
+  const [loading, setLoading] = useState(false);
 
   const menuItems = [
     { key: "all", label: "Tất cả" },
@@ -315,6 +316,7 @@ const Ads = () => {
   };
 
   const handleModalOk = async () => {
+    setLoading(true);
     try {
       if (isApproving) {
         const values = await form.validateFields();
@@ -343,6 +345,8 @@ const Ads = () => {
         error.response.data ||
           `Cập nhật trạng thái thất bại của bài quảng cáo ${currentAdId}`
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -394,6 +398,7 @@ const Ads = () => {
         visible={isModalVisible}
         onOk={handleModalOk}
         onCancel={handleModalCancel}
+        confirmLoading={loading}
       >
         {isApproving ? (
           <Form form={form} initialValues={{ elementId: currentElementId }}>
