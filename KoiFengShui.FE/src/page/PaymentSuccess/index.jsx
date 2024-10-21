@@ -20,19 +20,44 @@ const PaymentSuccess = () => {
 
     const queryParams = new URLSearchParams(location.search);
     const vnp_ResponseCode = queryParams.get('vnp_ResponseCode');
+    
 
     const packageInfo = JSON.parse(localStorage.getItem('pendingAdPackage') || '{}');
     const adData = JSON.parse(localStorage.getItem('adData') || '{}');
 
     if (vnp_ResponseCode === '00') {
       try {
+        const formatDate = (dateString) => {
+          // Format: "20241001000000"
+          const [year, month, day, hour, minute, second] = dateString.match(/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/).slice(1);
+          const date = new Date(+year, +month - 1, +day, +hour, +minute, +second);
+          
+          // Format the date to YYYY-MM-DD HH:mm:ss
+          const pad = (num) => num.toString().padStart(2, '0');
+          return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+        };
+        
+        const paymentInfoData = {
+          amount: queryParams.get('vnp_Amount'),
+          orderInfo: queryParams.get('vnp_OrderInfo'),
+          transactionNo: queryParams.get('vnp_TransactionNo'),
+          bankCode: queryParams.get('vnp_BankCode'),
+          payDate: queryParams.get('vnp_PayDate')
+        };
+
+        console.log(paymentInfoData);
+        setPaymentInfo(paymentInfoData);
+
         const adQueryParams = new URLSearchParams({
           Rank: packageInfo.rank,
           startDate: packageInfo.startDate,
           quantity: packageInfo.quantity,
-          total: packageInfo.total
+          total: packageInfo.total,
+          CreateAt: formatDate(queryParams.get('vnp_PayDate')),
+          TransactionCode: paymentInfoData.transactionNo,
+          BankCode: paymentInfoData.bankCode
         }).toString();
-
+      
         const response = await api.post(`Advertisement/CreateAdvertisement?${adQueryParams}`, {
           adId: adData.adId,
           heading: adData.heading,
@@ -41,7 +66,7 @@ const PaymentSuccess = () => {
           userId: adData.userId,
           elementId: adData.elementId
         });
-        console.log(response.status);
+        
 
         notification.success({
           message: 'Thanh toán thành công',
@@ -49,13 +74,7 @@ const PaymentSuccess = () => {
           duration: 5,
         });
 
-        setPaymentInfo({
-          amount: queryParams.get('vnp_Amount'),
-          orderInfo: queryParams.get('vnp_OrderInfo'),
-          transactionNo: queryParams.get('vnp_TransactionNo'),
-          bankCode: queryParams.get('vnp_BankCode'),
-          payDate: queryParams.get('vnp_PayDate')
-        });
+        
         return;
       } catch (error) {
         console.error('Error creating advertisement:', error);
@@ -82,6 +101,12 @@ const PaymentSuccess = () => {
       processedRef.current = true;
     }
   }, []);
+
+  useEffect(() => {
+    if (paymentInfo) {
+      console.log(paymentInfo);
+    }
+  }, [paymentInfo]);
 
   const handleNavigateUserAds = () => {
     navigate('/user-ads');

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table, Space, Button, Input, Select } from "antd"; // Added Select import
 import api from "../../../config/axios";
 import "./index.css";
+import { toast } from "react-toastify";
 
 const { Option } = Select; // Destructure Option from Select
 
@@ -39,6 +40,8 @@ const User = () => {
         password: editingUser.password,
         status: editingUser.status,
       });
+
+      toast.success('Cập nhật thành công');
       setEditingUser(null); // Clear editing state after saving
       fetchUserData(); // Refresh user data
     } catch (error) {
@@ -84,7 +87,8 @@ const User = () => {
             onChange={(value) => setEditingUser({ ...editingUser, status: value })}
           >
             <Option value="Active">Active</Option>
-            <Option value="Block">Block</Option>
+            <Option value="Banned">Banned</Option>
+
           </Select>
         ) : text
       ),

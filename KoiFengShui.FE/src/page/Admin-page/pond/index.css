@@ -19,9 +19,17 @@
   text-align: center; /* Căn giữa nội dung trong thẻ card */
 }
 
-.pond-item img {
-  width: 150px; /* Chiều rộng hình ảnh */
-  height: 200px; /* Chiều cao hình ảnh */
-  object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
-  border-radius: 4px; /* Bo góc cho hình ảnh */
+.pond-item .ant-image {
+  /* Styles cho container của Image */
+  width: 150px;
+  height: 150px;
+  margin-bottom: 10px;
+}
+
+.pond-item .ant-image-img {
+  /* Styles cho thẻ img bên trong Image component */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
 }

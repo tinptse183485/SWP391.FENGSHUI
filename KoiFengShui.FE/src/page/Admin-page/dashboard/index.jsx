@@ -208,6 +208,7 @@ const Dashboard = () => {
     // Có thể thêm logic để cập nhật các biểu đồ ở đây nếu cần
   }, [data]);
 
+
   return (
     <div className="dashboard-container">
       <h2>Dashboard</h2>
@@ -279,6 +280,7 @@ const Dashboard = () => {
             renderChart(true, Line, dailyRevenueChartData, dailyRevenueChartOptions, 5)
           ) : (
             <p>Đang tải dữ liệu doanh thu 7 ngày gần nhất...</p>
+
           )}
         </div>
       </div>
@@ -286,4 +288,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default AdminDashboard;
