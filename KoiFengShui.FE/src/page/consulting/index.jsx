@@ -12,12 +12,13 @@ import api from "../../config/axios";
 
 function Consulting() {
   const location = useLocation(); // Get location object
-  const { koiData, koiQuantity, pondShape, pondDirection, fate } = location.state || {
+  const { koiData, koiQuantity, pondShape, pondDirection, fate, lifePalace } = location.state || {
     koiData: [],
     koiQuantity: [],
     pondShape: [],
     pondDirection: [],
     fate: null,
+    lifePalace: null,
   }; // Extract  data
   const [advertisements, setAdvertisements] = useState([]);
   const [userElement, setUserElement] = useState(null);
@@ -77,12 +78,15 @@ function Consulting() {
     const fetchData = async () => {
       try {
         const adsResponse = await api.get('Advertisement/GetAllAdvertisement');
-        setAdvertisements(adsResponse.data);
-        
+
+        const approvedAds = adsResponse.data.filter((ad) => ad.status === "Approved");
+        setAdvertisements(approvedAds);
+
         // Get user element from the location state
         if (location.state && location.state.fate) {
           console.log(location.state.fate);
           setUserElement(location.state.fate);
+          setLifePalace(lifePalaceResponse.data);
         } else {
           console.error("User element not found in location state");
           // Handle the case when user element is not available
@@ -91,42 +95,49 @@ function Consulting() {
         console.error("Error fetching data:", error);
       }
     };
-  
+
     fetchData();
   }, [location]);
   return (
-    <div>
+    <div >
       <header>
         <HeaderTemplate />
       </header>
       <body>
+        <div className="consulting-container">
+        <div className="consulting-title">
+          <h1>Thông tin tư vấn</h1>
+        </div>
         <div className="Guest-element">
-          <h1>Mệnh của bạn là </h1>
+
+
+          <h2>Mệnh của bạn là {userElement} </h2>
+          <h2>Cung mệnh của bạn là {lifePalace} </h2>
         </div>
 
         <div className="Header-fish">
           <h2>Các loại cá phù hợp</h2>
           <div className="koi-cards">
 
-  {koiData.length > 0 ? (
-    koiData.map((koi) => (
-      // eslint-disable-next-line react/jsx-key
-      <div className="koi-card" onClick={() => showModal(koi)}>
-        {" "}
-        <div className="image"> <img  src={koi.image} alt={koi.image} /></div>  
-        <h3>{koi.koiType}</h3>
-        <div className="element-koi">
-        <h3 style={{ color: getElementColor(koi.element) }}>{koi.element}</h3>
-        <img src={`/Element1/${getElementIcon(koi.element)}.png`} alt={koi.element} />
-        
-        
-        </div>
-      </div>
-    ))
-  ) : (
-    <p>No Koi data available</p>
-  )}
-</div>
+            {koiData.length > 0 ? (
+              koiData.map((koi) => (
+                // eslint-disable-next-line react/jsx-key
+                <div className="koi-card" onClick={() => showModal(koi)}>
+                  {" "}
+                  <div className="image"> <img src={koi.image} alt={koi.image} /></div>
+                  <h3>{koi.koiType}</h3>
+                  <div className="element-koi">
+                    <h3 style={{ color: getElementColor(koi.element) }}>{koi.element}</h3>
+                    <img src={`/Element1/${getElementIcon(koi.element)}.png`} alt={koi.element} />
+
+
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>No Koi data available</p>
+            )}
+          </div>
 
         </div>
         <div className="Header-pond">
@@ -149,7 +160,7 @@ function Consulting() {
 
                 <div key={pond.shapeId} className="parallelogram" >
                   <img src={pond.image} alt={pond.shapeId} />
-                  
+
 
                 </div>
               ))}
@@ -193,17 +204,17 @@ function Consulting() {
             ))}
           </div>
         </div>
-
+        </div>
         {userElement && (
-        <AdvertisementDisplay advertisements={advertisements} userElement={fate} />
-      )}
+          <AdvertisementDisplay advertisements={advertisements} userElement={fate} />
+        )}
       </body>
-      
+
       <footer>
         <FooterPage />
       </footer>
-     
-     
+
+
       {/* Modal for displaying koi details */}
       <Modal
         title={selectedKoi ? "" : ""}
@@ -214,9 +225,9 @@ function Consulting() {
       >
         {selectedKoi && (
 
-          <div className="modal-content"> 
-            <div className="modal-image"> 
-               <img style={{width:"100%", height:"auto"}} src={selectedKoi.image}/>
+          <div className="modal-content">
+            <div className="modal-image">
+              <img style={{ width: "100%", height: "auto" }} src={selectedKoi.image} />
 
             </div>
 
@@ -231,7 +242,7 @@ function Consulting() {
             </div>
           </div>
         )}
-         
+
       </Modal>
       {/* Modal for displaying pond details */}
 

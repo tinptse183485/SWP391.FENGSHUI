@@ -1,9 +1,13 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import {
+  RouterProvider,
+  createBrowserRouter,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
+import { toast } from "react-toastify";
 import Home from "./page/home";
 import Login from "./page/login";
 import Register from "./page/register";
-
-// import Dashboard from "./page/Admin-page/dashboard";
 
 import Calculation from "./page/calculation";
 import Consulting from "./page/consulting";
@@ -20,15 +24,40 @@ import User_Ads from "./page/User_Ads";
 import Dashboard from "./components/dashboard";
 
 import AdvertisementDetail from "./page/AdvertismentDetail";
-import VNPayPayment from './page/Payment';
-import PaymentSuccess from './page/PaymentSuccess';
-import ChoosePackage from './page/ChoosePackage';
-
-
-
+import PaymentSuccess from "./page/PaymentSuccess";
+import VNPayPayment from "./page/Payment";
+import ChoosePackage from "./page/ChoosePackage";
+import CreateBlog from "./page/Admin-page/CreateBlog";
+import BlogDetail from "./page/Admin-page/BlogDetail";
+import BlogList from "./page/Blogs-list";
+import AdminDashboard from "./page/Admin-page/dashboard";
+import UserProfile from "./page/User-Profile";
+import ForgotPassword from "./page/Forgot-Password";
+import ResetPassword from "./page/Reset-Password";
 
 function App() {
+  const ProtectedRoute = ({ children }) => {
+    const location = useLocation();
+    const userId = localStorage.getItem("userId");
 
+    if (!userId) {
+      toast.error("Vui lòng đăng nhập để truy cập trang này.");
+      return <Navigate to="/login" state={{ from: location }} replace />;
+    }
+
+    return children;
+  };
+
+  const ProtectedRouteAdmin = ({ children }) => {
+    const userId = localStorage.getItem("userId");
+    const userRole = localStorage.getItem("role");
+
+    if (userId && userRole === "Admin") {
+      return children;
+    }
+    toast.error("Vui lòng đăng nhập để truy cập trang này.");
+    return <Navigate to="/login" replace />;
+  };
   const router = createBrowserRouter([
     {
       path: "/",
@@ -43,13 +72,30 @@ function App() {
       element: <Register />,
     },
     {
+      path: "forgot-password",
+      element: <ForgotPassword />,
+    },
+    {
+      path: "reset-password/:email",
+      element: <ResetPassword />,
+    },
+    {
       path: "dashboard",
-      element: <Dashboard/>,
+      element: (
+        <ProtectedRouteAdmin>
+          <Dashboard />
+        </ProtectedRouteAdmin>
+      ),
       children: [
+        {
+          path: "AdminDashboard",
+          element: <AdminDashboard />,
+        },
         {
           path: "user",
           element: <User />,
         },
+
         {
           path: "ads",
           element: <ADS />,
@@ -57,6 +103,10 @@ function App() {
         {
           path: "blog",
           element: <Blog />,
+        },
+        {
+          path: "create-blog",
+          element: <CreateBlog />,
         },
         {
           path: "koi",
@@ -68,8 +118,8 @@ function App() {
         },
       ],
     },
-    {
 
+    {
       path: "calculation",
       element: <Calculation />,
     },
@@ -80,20 +130,39 @@ function App() {
     {
       path: "calculate-compability",
       element: <CalculateCompability />,
-
     },
 
+    {
+      path: "blogs-list",
+      element: <BlogList />,
+    },
     {
       path: "ads-list",
       element: <Ads_list />,
     },
     {
+      path: "user-profile",
+      element: (
+        <ProtectedRoute>
+          <UserProfile />
+        </ProtectedRoute>
+      ),
+    },
+    {
       path: "create-ads",
-      element: <CreateAds />,
+      element: (
+        <ProtectedRoute>
+          <CreateAds />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "user-ads",
-      element: <User_Ads />,
+      element: (
+        <ProtectedRoute>
+          <User_Ads />
+        </ProtectedRoute>
+      ),
     },
 
     {
@@ -109,15 +178,16 @@ function App() {
       element: <PaymentSuccess />,
     },
     {
+      path: "blog-detail/:id",
+      element: <BlogDetail />,
+    },
+    {
       path: "/choose-package",
-      element: <ChoosePackage />
-    }
-
-
+      element: <ChoosePackage />,
+    },
   ]);
 
   return <RouterProvider router={router} />;
 }
-
 
 export default App;

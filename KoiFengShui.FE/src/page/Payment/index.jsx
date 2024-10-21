@@ -12,7 +12,6 @@ function VNPayPayment() {
     try {
       const response = await api.post('VNPay/create-payment', {
         amount: values.amount,
-        orderDescription: values.description
       });
       
       // Redirect to VNPay payment URL

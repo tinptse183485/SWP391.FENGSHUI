@@ -1,6 +1,5 @@
-
-.container{
-  margin-top: 100px;
+.container-ads{
+  margin-top: 100px !important;
 }
 .Heading{
     display: flex;
@@ -17,5 +16,38 @@
     height: 30px;
     
 }
+.action-button {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
 
+.action-button button {
+  flex: 0 0 auto;
+}
 
+.ant-table-wrapper {
+  overflow-x: auto;
+}
+
+.ant-table-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.ant-table-cell.action-cell {
+  max-width: none;
+  white-space: normal;
+}
+
+@media (max-width: 768px) {
+  .action-button {
+    flex-direction: column;
+  }
+  
+  .action-button button {
+    width: 100%;
+  }
+}

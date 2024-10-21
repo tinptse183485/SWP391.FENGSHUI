@@ -9,18 +9,22 @@ import { useNavigate } from "react-router-dom";
 function HeaderTemplate() {
   const navigate = useNavigate();
   const [userId, setUserId] = useState(null);
+  const [userRole, setUserRole] = useState(null);
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
   useEffect(() => {
     const user = localStorage.getItem("userId");
+    const role = localStorage.getItem("role");
     if (user) {
       setUserId(user);
+      setUserRole(role);
     }
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("userId");
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
     setUserId(null);
     navigate("/");
   };
@@ -34,20 +38,43 @@ function HeaderTemplate() {
 
   const menu = (
     <Menu onClick={handleMenuClick}>
-      <Menu.Item key="logout">Logout</Menu.Item>
+      {userRole === "Admin" && (
+        <Menu.Item key="dashboard">
+          <Link to="/dashboard">Dashboard</Link>
+        </Menu.Item>
+      )}
+      <Menu.Item key="user-profile">
+        <Link to="/user-profile">Thông tin người dùng</Link>
+      </Menu.Item>
+      <Menu.Item key="logout">Đăng xuất</Menu.Item>
     </Menu>
   );
 
-  const handleScrollToAdvertisements = (event) => {
+  const handleScrollToSection = (sectionId) => (event) => {
     event.preventDefault();
-    const advertisementsSection = document.getElementById("Advertisements");
-    if (advertisementsSection) {
-      advertisementsSection.scrollIntoView({ behavior: "smooth" });
+    const section = document.getElementById(sectionId);
+    if (section) {
+      const headerHeight = document.querySelector(".top-bar").offsetHeight;
+      const sectionPosition =
+        section.getBoundingClientRect().top + window.pageYOffset;
+      window.scrollTo({
+        top: sectionPosition - headerHeight,
+        behavior: "smooth",
+      });
     } else {
-      // If the section is not on the current page, navigate to home and then scroll
-      navigate("/", { state: { scrollTo: "Advertisements" } });
+      navigate("/", { state: { scrollTo: sectionId } });
     }
   };
+  const handleLogin = () => {
+    navigate("/login");
+  };
+
+  const handleScrollToAboutUs = handleScrollToSection("about-us");
+  const handleScrollToAdvertisements = handleScrollToSection("Advertisements");
+  const handleScrollToBlog = handleScrollToSection("blog");
+  const handleScrollToContact = handleScrollToSection("contact");
+  const handleScrollToTrendingFeature =
+    handleScrollToSection("trending-feature");
 
   return (
     <div>
@@ -68,39 +95,44 @@ function HeaderTemplate() {
             </p>
           </div>
         </div>
-
+        <nav className="main-nav">
+          <ul>
+            <li>
+              <Link to="/">
+                <a href="#home">Trang chủ</a>
+              </Link>
+            </li>
+            <li>
+              <a href="#about-us" onClick={handleScrollToAboutUs}>
+                About Us
+              </a>
+            </li>
+            <li>
+              <a
+                href="#trending-feature"
+                onClick={handleScrollToTrendingFeature}
+              >
+                Tính năng
+              </a>
+            </li>
+            <li>
+              <a href="#Advertisements" onClick={handleScrollToAdvertisements}>
+                Quảng cáo
+              </a>
+            </li>
+            <li>
+              <a href="#blog" onClick={handleScrollToBlog}>
+                Blog
+              </a>
+            </li>
+            <li>
+              <a href="#contact" onClick={handleScrollToContact}>
+                Liên hệ
+              </a>
+            </li>
+          </ul>
+        </nav>
         <div className="user-actions">
-          <nav className="main-nav">
-            <ul>
-              <li>
-                <Link to="/">
-                  <a href="#home">Trang chủ</a>
-                </Link>
-              </li>
-              <li>
-                <Link to="/ads-list">
-                  <a href="#about">About Us</a>
-                </Link>
-              </li>
-              <li>
-                <a
-                  href="#Advertisements"
-                  onClick={handleScrollToAdvertisements}
-                >
-                  Quảng cáo
-                </a>
-              </li>
-              <li>
-                <Link to="/user-ads">
-                  <a href="#blog">Blog</a>
-                </Link>
-              </li>
-              <li>
-                <a href="#contact">Liên hệ</a>
-              </li>
-            </ul>
-          </nav>
-
           {userId ? (
             <Dropdown
               overlay={menu}
@@ -114,7 +146,7 @@ function HeaderTemplate() {
             </Dropdown>
           ) : (
             <Button className="login-btn">
-              <Link to="login">Log in / Sign up</Link>
+              <Link onClick={handleLogin}>Đăng nhập/Đăng ký</Link>
             </Button>
           )}
         </div>
