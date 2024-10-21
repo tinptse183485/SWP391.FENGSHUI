@@ -1,8 +1,9 @@
+
 import React, { useState, useEffect } from "react";
 import { Button, Modal, Upload, message, Image, Popconfirm } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import "./index.css";
-import api from "../../../config/axios";
+import api from "../../../config/axios"
 import uploadFile from "../../../utils/file";
 
 const Pond = () => {

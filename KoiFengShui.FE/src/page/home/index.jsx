@@ -1,4 +1,6 @@
+
 import React, { useState, useEffect, useRef } from 'react';
+
 import { Button } from 'antd';
 
 import { Link, useNavigate } from "react-router-dom";
@@ -58,12 +60,16 @@ const testimonials = [
 ];
 
 function Home() {
+
   const processedRef = useRef(false);
+
   const [advertisements, setAdvertisements] = useState({
     diamond: [],
     gold: []
   });
+
   const [blogs, setBlogs] = useState([]);
+
   const [adIndex, setAdIndex] = useState(0);
 
   const showPrevious = () => {
@@ -97,14 +103,36 @@ function Home() {
     }
   };
 
+  const fetchAds = async () => {
+    try {
+      const [diamondResponse, goldResponse] = await Promise.all([
+        await api.get('Advertisement/GetAdvertisementByRank', { params: { rank: 'Diamond' } }),
+        await api.get('Advertisement/GetAdvertisementByRank', { params: { rank: 'Gold' } })
+      ]);
+
+      setAdvertisements({
+        diamond: diamondResponse.data,
+        gold: goldResponse.data
+      });
+    } catch (error) {
+      console.error("Error fetching advertisements:", error);
+    }
+  };
+  const fetchBlogs = async () => {
+    try {
+      const response = await api.get('Blog/GetAllBlog');
+      setBlogs(response.data.slice(0, 3)); // Get first 3 blogs
+    } catch (error) {
+      console.error("Error fetching blogs:", error);
+    }
+  };
+
   useEffect(() => {
     if (!processedRef.current) {
       fetchBlogs();
       fetchAds();
       processedRef.current = true;
     }
-
-
 
   }, []);
 
@@ -125,11 +153,13 @@ function Home() {
               />
               <div className="carousel-content">
                 <Link style={{color: "white"}} to={`/advertisement-detail/${ad.adId}`}>
+
                   <h3>{ad.heading}</h3>
                 </Link>
               </div>
             </div>
           ))}
+
       </Carousel>
       <div className="home-content">
 
@@ -161,6 +191,7 @@ function Home() {
               </p>
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" viewBox="0 0 800 800"><g stroke-width="10" stroke="hsl(0, 0%, 100%)" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5.5 21" transform="matrix(0.22495105434386492,0.9743700647852352,-0.9743700647852352,0.22495105434386492,626.7676041765482,-265.72844765164007)"><path d="M204 204Q487 359 400 400Q394 23 596 596 " marker-end="url(#SvgjsMarker3948)"></path></g><defs><marker markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" viewBox="0 0 5 5" orient="auto" id="SvgjsMarker3948"><polygon points="0,5 1.6666666666666667,2.5 0,0 5,2.5" fill="hsl(0, 0%, 100%)"></polygon></marker></defs></svg>
+
             </div>
           </div>
           {/* Trending Feature */}
@@ -207,14 +238,17 @@ function Home() {
           </section>
           <div id="Advertisements" className="container">
             <div className="feature">
+
             <div class="rectangle"></div>
             <h2>Quảng cáo</h2>
             
+
             </div>
             <div className="advertisement-container">
               <button
                 className="nav-button nav-button-left"
                 onClick={showPrevious}
+
                 disabled={adIndex === 0}
               >
                 <svg viewBox="0 0 24 24" width="24" height="24">
@@ -222,12 +256,15 @@ function Home() {
                 </svg>
               </button>
               <div className="Card-container">
+
                 {advertisements.gold.filter(ad => ad.status === "Approved").length > 0 ? (
                   advertisements.gold
                     .filter(ad => ad.status === "Approved")
                     .slice(adIndex, adIndex + 3)
                     .map((ad) => (
+
                       <div className="Card" key={ad.adId}>
+
                         <img
                           src={ad.image}
                           alt={ad.heading}
@@ -235,12 +272,14 @@ function Home() {
                         <Link to={`/advertisement-detail/${ad.adId}`}>
                           <h3>{ad.heading}</h3>
                         </Link>
+
                       </div>
                     ))
                 ) : (
                   <p>No approved gold advertisements available at the moment.</p>
                 )}
               </div>
+
               <div className="view-all-blogs-container">
               <Link to="/ads-list" className="view-all-blogs-btn">
                 Xem tất cả quảng cáo
@@ -249,6 +288,7 @@ function Home() {
               <button
                 className="nav-button nav-button-right"
                 onClick={showNext}
+
                 disabled={adIndex >= advertisements.gold.length - 3}
               >
                 <svg viewBox="0 0 24 24" width="24" height="24">
@@ -294,9 +334,11 @@ function Home() {
           </section>
 
           {/* Blog */}
+
           <div id="blog" className="container">
             <div className="feature">
             <div class="rectangle"></div>
+
               <h2>Blog</h2>
               <div class="rectangle"></div>
               </div>
@@ -316,7 +358,9 @@ function Home() {
             </div>
             <div className="view-all-blogs-container">
               <Link to="/blogs-list" className="view-all-blogs-btn">
+
                 Xem tất cả blogs
+
               </Link>
             </div>
           </div>

@@ -23,7 +23,7 @@ const AdvertisementDisplay = ({ advertisements, userElement }) => {
             key={ad.adId} 
             className="advertisement-card" 
             onClick={() => handleAdClick(ad.adId)}
-            
+
           >
             <div className="image-container">
               <img src={ad.image} alt={ad.heading} />

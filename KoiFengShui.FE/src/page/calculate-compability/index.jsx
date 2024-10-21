@@ -28,7 +28,9 @@ function ComputeCompability() {
   const [form] = Form.useForm();
 
   const [advertisements, setAdvertisements] = useState([]);
+
   const [userInfo, setUserInfo] = useState(null);
+
   const [filteredFishList, setFilteredFishList] = useState([]);
   const [fishList, setFishList] = useState([]);
   const [selectedFishes, setSelectedFishes] = useState([]);
@@ -176,9 +178,6 @@ function ComputeCompability() {
         selectedPondShape,
         pondDirection,
       } = values;
-
-     
-
       // Prepare payload
       const payload = selectedFishes.map(fish => ({
         koiType: fish.koiType,
@@ -210,7 +209,7 @@ function ComputeCompability() {
         `Compatibility/GetTheCompatibilityOfUser?${queryParams.toString()}`,
         payload
       );
-
+  
       console.log("API Response:", response.data);
       
       const response1 = await api.get(`Fate/element?dob=${birthdate.format("YYYY-MM-DD")}`);
@@ -272,6 +271,7 @@ function ComputeCompability() {
       case "Thổ":
         comment += "- Với gia chủ mang mệnh Thổ, hình vuông là hình dáng lý tưởng, vì nó tương hợp với Thổ, giúp mang lại sự ổn định và bền vững. Hình tam giác tương sinh với Hỏa, mang lại năng lượng tích cực. Tuy nhiên, cần tránh hình lượn sóng và hình chữ nhật, vì chúng tương khắc với mệnh Thổ, có thể gây ra sự bất ổn trong vận khí.";
         break;
+
     }
     return comment;
   }

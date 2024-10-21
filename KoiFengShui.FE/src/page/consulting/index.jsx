@@ -78,9 +78,9 @@ function Consulting() {
     const fetchData = async () => {
       try {
         const adsResponse = await api.get('Advertisement/GetAllAdvertisement');
+
         const approvedAds = adsResponse.data.filter((ad) => ad.status === "Approved");
         setAdvertisements(approvedAds);
-
 
         // Get user element from the location state
         if (location.state && location.state.fate) {
@@ -96,8 +96,6 @@ function Consulting() {
       }
     };
 
-
-
     fetchData();
   }, [location]);
   return (
@@ -112,9 +110,9 @@ function Consulting() {
         </div>
         <div className="Guest-element">
 
+
           <h2>Mệnh của bạn là {userElement} </h2>
           <h2>Cung mệnh của bạn là {lifePalace} </h2>
-
         </div>
 
         <div className="Header-fish">

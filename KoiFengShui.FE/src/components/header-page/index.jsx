@@ -62,6 +62,9 @@ function HeaderTemplate() {
       navigate("/", { state: { scrollTo: sectionId } });
     }
   };
+  const handleLogin = () => {
+    navigate("/login");
+  };
 
   const handleScrollToAboutUs = handleScrollToSection("about-us");
   const handleScrollToAdvertisements = handleScrollToSection("Advertisements");

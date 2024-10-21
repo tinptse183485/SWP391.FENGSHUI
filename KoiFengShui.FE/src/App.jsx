@@ -17,12 +17,13 @@ import Ads_list from "./page/Ads_list";
 import CreateAds from "./page/CreateAds";
 import User_Ads from "./page/User_Ads";
 
-
 import Dashboard from "./components/dashboard";
 
+
 import AdvertisementDetail from "./page/AdvertismentDetail";
-import VNPayPayment from './page/Payment';
 import PaymentSuccess from './page/PaymentSuccess';
+import Dashboard from "./components/dashboard";
+import VNPayPayment from './page/Payment';
 import ChoosePackage from './page/ChoosePackage';
 import CreateBlog from "./page/Admin-page/CreateBlog";
 import BlogDetail from "./page/Admin-page/BlogDetail";
@@ -89,6 +90,8 @@ function App() {
           path: "user",
           element: <User />,
         },
+        
+
         {
           path: "ads",
           element: <ADS />,
@@ -98,10 +101,12 @@ function App() {
           element: <Blog />,
         },
         {
+
           path: "create-blog",
           element: <CreateBlog />,
         },
         {
+
           path: "koi",
           element: <Koi />,
         },
@@ -111,6 +116,7 @@ function App() {
         },
       ],
     },
+   
     {
 
       path: "calculation",
@@ -125,11 +131,14 @@ function App() {
       element: <CalculateCompability />,
 
     },
+
     {
+
       path: "blogs-list",
       element: <BlogList />,
     },
     {
+
       path: "ads-list",
       element: <Ads_list />,
     },
@@ -159,10 +168,12 @@ function App() {
       element: <PaymentSuccess />,
     },
     {
+
       path: "blog-detail/:id",
       element: <BlogDetail />,
     },
     {
+
       path: "/choose-package",
       element: <ChoosePackage />
     },

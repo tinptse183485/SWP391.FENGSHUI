@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
+
 import { Button, message, Radio, Upload, Modal, Image } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+
 import api from '../../config/axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './index.css';
@@ -23,10 +25,12 @@ function CreateAds() {
   const editorRef = useRef(null);
 
   const [elements, setElements] = useState([]);
+
   const [fileList, setFileList] = useState([]);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
+
 
   useEffect(() => {
     const { advertisement } = location.state || {};
@@ -46,12 +50,14 @@ function CreateAds() {
         ]);
       }
     }
+
     fetchElements();
   }, [location.state]);
 
   useEffect(() => {
     fetchElements();
   }, []);
+
 
   const fetchElements = async () => {
     try {

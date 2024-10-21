@@ -423,8 +423,10 @@ body {
   padding: 10px 20px;
   border-radius: 0px;
   color:white;
+
   font-size: 22px;
   
+
 }
 .carousel-item{
   position: relative;
@@ -496,6 +498,7 @@ body {
   fill: #000;
 }
 
+
 .view-all-blogs-container {
   display: flex;
   justify-content: center;
@@ -521,6 +524,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: flex-start;
+
   gap: 10px;
   margin-top: 20px;
   margin-bottom: 60px;
@@ -531,10 +535,12 @@ body {
   flex-grow: 1;
   background-color: #fad7a7;
   margin-top:25px;
+
 }
 
 .feature h2 {
   color: #fad7a7;
+
   font-size: 43px;
   white-space: nowrap;
   margin: 0 30px;
@@ -765,3 +771,4 @@ body {
 .ant-carousel .slick-dots li.slick-active button {
   background: #00838f;
 }
+

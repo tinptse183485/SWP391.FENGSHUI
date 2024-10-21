@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../config/axios";
+
 import moment from "moment"; // Add this import for date formatting
 import {
   Table,
@@ -19,6 +20,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./index.css"; // Đảm bảo bạn đã import file CSS
+
 
 const { Text } = Typography;
 
@@ -184,6 +186,7 @@ const Ads = () => {
         <Text
           style={{
             color:
+
               status === "Approved"
                 ? "#52c41a"
                 : status === "Refunded"
@@ -191,13 +194,16 @@ const Ads = () => {
                 : status === "Canceled"
                 ? "#f5222d"
                 : "#1890ff", // Màu cho trạng thái Pending
+
           }}
           className={`ads-status-${status.toLowerCase()}`}
         >
           {status}
         </Text>
       ),
+
       sorter: (a, b) => statusPriority[a.status] - statusPriority[b.status],
+
       sortDirections: ["descend", "ascend"],
     },
     {
@@ -233,10 +239,12 @@ const Ads = () => {
       key: "expiredDate",
       render: (expiredDate) =>
         expiredDate ? moment(expiredDate).format("DD/MM/YY HH:mm") : "N/A",
+
     },
     {
       title: "Duyệt bài",
       key: "action",
+
       render: (_, record) => {
         const isApproved = record.status === "Approved";
         const isRefunded = record.status === "Refunded";
