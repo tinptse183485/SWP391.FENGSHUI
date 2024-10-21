@@ -43,7 +43,9 @@ function HeaderTemplate() {
           <Link to="/dashboard">Dashboard</Link>
         </Menu.Item>
       )}
-      <Menu.Item key="user-profile"><Link to="/user-profile">Thông tin người dùng</Link></Menu.Item>
+      <Menu.Item key="user-profile">
+        <Link to="/user-profile">Thông tin người dùng</Link>
+      </Menu.Item>
       <Menu.Item key="logout">Đăng xuất</Menu.Item>
     </Menu>
   );
@@ -52,25 +54,27 @@ function HeaderTemplate() {
     event.preventDefault();
     const section = document.getElementById(sectionId);
     if (section) {
-      const headerHeight = document.querySelector('.top-bar').offsetHeight;
-      const sectionPosition = section.getBoundingClientRect().top + window.pageYOffset;
+      const headerHeight = document.querySelector(".top-bar").offsetHeight;
+      const sectionPosition =
+        section.getBoundingClientRect().top + window.pageYOffset;
       window.scrollTo({
         top: sectionPosition - headerHeight,
-        behavior: 'smooth'
+        behavior: "smooth",
       });
     } else {
       navigate("/", { state: { scrollTo: sectionId } });
     }
+  };
+  const handleLogin = () => {
+    navigate("/login");
   };
 
   const handleScrollToAboutUs = handleScrollToSection("about-us");
   const handleScrollToAdvertisements = handleScrollToSection("Advertisements");
   const handleScrollToBlog = handleScrollToSection("blog");
   const handleScrollToContact = handleScrollToSection("contact");
-  const handleScrollToTrendingFeature = handleScrollToSection("trending-feature");
-  const handleLogin = () => {
-    navigate("/login");
-  };
+  const handleScrollToTrendingFeature =
+    handleScrollToSection("trending-feature");
 
   return (
     <div>
@@ -92,29 +96,42 @@ function HeaderTemplate() {
           </div>
         </div>
         <nav className="main-nav">
-            <ul>
-              <li>
-                <Link to="/">
-                  <a href="#home">Trang chủ</a>
-                </Link>
-              </li>
-              <li>
-                <a href="#about-us" onClick={handleScrollToAboutUs}>About Us</a>
-              </li>
-              <li>
-                <a href="#trending-feature" onClick={handleScrollToTrendingFeature}>Tính năng</a>
-              </li>
-              <li>
-                <a href="#Advertisements" onClick={handleScrollToAdvertisements}>Quảng cáo</a>
-              </li>
-              <li>
-                <a href="#blog" onClick={handleScrollToBlog}>Blog</a>
-              </li>
-              <li>
-                <a href="#contact" onClick={handleScrollToContact}>Liên hệ</a>
-              </li>
-            </ul>
-          </nav>
+          <ul>
+            <li>
+              <Link to="/">
+                <a href="#home">Trang chủ</a>
+              </Link>
+            </li>
+            <li>
+              <a href="#about-us" onClick={handleScrollToAboutUs}>
+                About Us
+              </a>
+            </li>
+            <li>
+              <a
+                href="#trending-feature"
+                onClick={handleScrollToTrendingFeature}
+              >
+                Tính năng
+              </a>
+            </li>
+            <li>
+              <a href="#Advertisements" onClick={handleScrollToAdvertisements}>
+                Quảng cáo
+              </a>
+            </li>
+            <li>
+              <a href="#blog" onClick={handleScrollToBlog}>
+                Blog
+              </a>
+            </li>
+            <li>
+              <a href="#contact" onClick={handleScrollToContact}>
+                Liên hệ
+              </a>
+            </li>
+          </ul>
+        </nav>
         <div className="user-actions">
           {userId ? (
             <Dropdown

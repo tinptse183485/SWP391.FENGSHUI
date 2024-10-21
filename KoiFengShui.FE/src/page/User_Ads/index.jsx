@@ -70,6 +70,7 @@ const User_Ads = () => {
       });
       setAdvertisements(adsWithExpirationDate);
       console.log(adsWithExpirationDate);
+
     } catch (error) {
       console.error("Error fetching advertisements:", error);
     }

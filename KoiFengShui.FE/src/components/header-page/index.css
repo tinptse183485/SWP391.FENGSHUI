@@ -92,7 +92,9 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+
 .user-actions .login-btn:hover {
+
   background-color: #ff6347 !important;
   transform: translateY(-2px);
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
@@ -111,15 +113,14 @@
   
 }
 
-
-
-
 .website-description {
   margin: 0;
   font-style: italic;
   display: flex;
   margin-left: 90px;
+
   color: #efeeee;
+
 }
 
 .main-nav ul {
@@ -136,6 +137,7 @@
 
 .main-nav a {
   text-decoration: none;
+
   color: #efeeee !important;
   position: relative;
   transition: color 0.3s ease;
@@ -163,6 +165,7 @@
 .main-nav a:focus,
 .main-nav a.active {
   color: antiquewhite !important;
+
 }
 
 .main-content {

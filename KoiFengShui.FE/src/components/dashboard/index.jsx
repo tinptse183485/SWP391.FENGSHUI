@@ -39,6 +39,7 @@ const items = [
   getItem("Quản lý Blog", "blog", <PieChartOutlined />),
   getItem("Quản lý cá Koi", "koi", <PieChartOutlined />),
   getItem("Quản lý hồ", "pond", <PieChartOutlined />),
+
 ];
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -65,6 +66,7 @@ const Dashboard = () => {
     <Layout
       style={{
         minHeight: "100vh",
+
       }}
     >
       <Sider
@@ -80,6 +82,7 @@ const Dashboard = () => {
           bottom: 0,
         }}
       >
+
         <div className="logo">
         {collapsed ? (
           <img src={KoiImage} alt="Logo" />

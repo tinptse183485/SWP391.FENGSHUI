@@ -1,51 +1,55 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Editor } from '@tinymce/tinymce-react';
-import { Button, message, Radio, Upload, Modal, Image } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
-import api from '../../config/axios';
-import { useNavigate, useLocation } from 'react-router-dom';
-import './index.css';
-import uploadFile from '../../utils/file'; // Đảm bảo import đúng đường dẫn
+import React, { useState, useRef, useEffect } from "react";
+import { Editor } from "@tinymce/tinymce-react";
+
+import { Button, message, Radio, Upload, Modal, Image } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+
+import api from "../../config/axios";
+import { useNavigate, useLocation } from "react-router-dom";
+import "./index.css";
+import uploadFile from "../../utils/file"; // Đảm bảo import đúng đường dẫn
 
 function CreateAds() {
   const location = useLocation();
   const navigate = useNavigate();
 
   const [adData, setAdData] = useState({
-    adId: '.',
-    heading: '',
-    image: '',
-    link: '',
+    adId: ".",
+    heading: "",
+    image: "",
+    link: "",
     userId: localStorage.getItem("userId"),
-    elementId: 'None',
-    status: 'Draft'
+    elementId: "None",
+    status: "Draft",
   });
   const editorRef = useRef(null);
 
   const [elements, setElements] = useState([]);
+
   const [fileList, setFileList] = useState([]);
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState('');
-  const [previewTitle, setPreviewTitle] = useState('');
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
 
   useEffect(() => {
     const { advertisement } = location.state || {};
     if (advertisement) {
-      setAdData(prevData => ({
+      setAdData((prevData) => ({
         ...prevData,
-        ...advertisement
+        ...advertisement,
       }));
       if (advertisement.image) {
         setFileList([
           {
-            uid: '-1',
-            name: 'image.png',
-            status: 'done',
+            uid: "-1",
+            name: "image.png",
+            status: "done",
             url: advertisement.image,
           },
         ]);
       }
     }
+
     fetchElements();
   }, [location.state]);
 
@@ -55,32 +59,32 @@ function CreateAds() {
 
   const fetchElements = async () => {
     try {
-      const response = await api.get('Element/GetAllElement');
+      const response = await api.get("Element/GetAllElement");
       setElements(response.data);
     } catch (error) {
-      console.error('Error fetching elements:', error);
-      message.error('Failed to fetch elements. Please try again.');
+      console.error("Error fetching elements:", error);
+      message.error("Failed to fetch elements. Please try again.");
     }
   };
   const handleElementChange = (e) => {
-    setAdData(prevData => ({
+    setAdData((prevData) => ({
       ...prevData,
-      elementId: e.target.value
+      elementId: e.target.value,
     }));
   };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setAdData(prevData => ({
+    setAdData((prevData) => ({
       ...prevData,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleEditorChange = (content, editor) => {
-    setAdData(prevData => ({
+    setAdData((prevData) => ({
       ...prevData,
 
-      link: content
+      link: content,
     }));
   };
 
@@ -98,20 +102,22 @@ function CreateAds() {
     }
     setPreviewImage(file.url || file.preview);
     setPreviewOpen(true);
-    setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
+    setPreviewTitle(
+      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
+    );
   };
 
   const handleChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
     if (newFileList.length > 0) {
-      setAdData(prevData => ({
+      setAdData((prevData) => ({
         ...prevData,
-        image: newFileList[0].url || newFileList[0].thumbUrl
+        image: newFileList[0].url || newFileList[0].thumbUrl,
       }));
     } else {
-      setAdData(prevData => ({
+      setAdData((prevData) => ({
         ...prevData,
-        image: ''
+        image: "",
       }));
     }
   };
@@ -141,41 +147,54 @@ function CreateAds() {
 
       const adDataToSave = {
         ...adData,
-        image: imageUrl
+        image: imageUrl,
       };
 
-      const response = await api.post('Advertisement/SaveAdvertisementDraft', adDataToSave);
-      console.log('Response:', response.data);
-      message.success('Quảng cáo đã được lưu thành công!');
-      navigate('/user-ads');
+      const response = await api.post(
+        "Advertisement/SaveAdvertisementDraft",
+        adDataToSave
+      );
+      console.log("Response:", response.data);
+      message.success("Quảng cáo đã được lưu thành công!");
+      navigate("/user-ads");
     } catch (error) {
-      console.error('Error:', error);
-      message.error('Có lỗi xảy ra khi lưu quảng cáo. Vui lòng thử lại.');
+      console.error("Error:", error);
+      message.error("Có lỗi xảy ra khi lưu quảng cáo. Vui lòng thử lại.");
     }
   };
 
   const handleChoosePackage = () => {
     const updatedAdData = {
       ...adData,
+
       heading: adData.heading || document.querySelector('input[name="heading"]').value,
       image: adData.image || (fileList.length > 0 ? fileList[0].url || fileList[0].thumbUrl : ''),
+
       link: adData.link || editorRef.current.getContent(),
       userId: localStorage.getItem("userId"),
-      elementId: adData.elementId || document.querySelector('select[name="elementId"]').value,
-      status: 'Draft'
+      elementId:
+        adData.elementId ||
+        document.querySelector('select[name="elementId"]').value,
+      status: "Draft",
     };
+
 
     if (updatedAdData.heading && updatedAdData.image && updatedAdData.link && updatedAdData.elementId !== 'None') {
       localStorage.setItem('adData', JSON.stringify(updatedAdData));
       navigate('/choose-package', { state: { adData: updatedAdData } });
+
     } else {
-      message.error('Vui lòng điền đầy đủ thông tin quảng cáo và chọn mệnh trước khi chọn gói.');
+      message.error(
+        "Vui lòng điền đầy đủ thông tin quảng cáo và chọn mệnh trước khi chọn gói."
+      );
     }
   };
 
   return (
     <div className="ads-container">
-      <h1>{adData.adId !== '.' ? 'Chỉnh sửa quảng cáo' : 'Đăng quảng cáo mới'}</h1>
+      <h1>
+        {adData.adId !== "." ? "Chỉnh sửa quảng cáo" : "Đăng quảng cáo mới"}
+      </h1>
       <div className="input-container">
         <div className="input-column image-upload">
           <Upload
@@ -186,6 +205,7 @@ function CreateAds() {
             beforeUpload={() => false}
            
           >
+
             {fileList.length >= 1 ? null : uploadButton}
           </Upload>
         </div>
@@ -217,11 +237,11 @@ function CreateAds() {
               </select>
             </div>
           </div>
+
         </div>
       </div>
       <Editor
-        apiKey='7badstws748pqjv54m7auuzpobs4nozi2we7cz1vz5mh63lh'
-
+        apiKey="7badstws748pqjv54m7auuzpobs4nozi2we7cz1vz5mh63lh"
         onInit={(evt, editor) => {
           editorRef.current = editor;
           if (adData.link) {
@@ -229,26 +249,43 @@ function CreateAds() {
           }
         }}
         value={adData.link || "<p>Viết nội dung quảng cáo của bạn ở đây.</p>"}
-
         init={{
           height: 500,
           plugins: [
-            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-            'insertdatetime', 'media', 'table', 'help', 'wordcount',
+            "advlist",
+            "autolink",
+            "lists",
+            "link",
+            "image",
+            "charmap",
+            "preview",
+            "anchor",
+            "searchreplace",
+            "visualblocks",
+            "code",
+            "fullscreen",
+            "insertdatetime",
+            "media",
+            "table",
+            "help",
+            "wordcount",
 
-            'directionality', 'emoticons', 'template', 'paste', 'textcolor', 'colorpicker'
-
+            "directionality",
+            "emoticons",
+            "template",
+            "paste",
+            "textcolor",
+            "colorpicker",
           ],
-          toolbar: 'undo redo | blocks | ' +
-            'bold italic backcolor | alignleft aligncenter ' +
-            'alignright alignjustify | bullist numlist outdent indent | ' +
-
-            'removeformat | link image | help | emoticons | template | ltr rtl',
-          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
-          directionality: 'ltr', // Đặt hướng văn bản mặc định là từ trái sang phải
-          language: 'vi_VN', // Đặt ngôn ngữ là tiếng Việt
-
+          toolbar:
+            "undo redo | blocks | " +
+            "bold italic backcolor | alignleft aligncenter " +
+            "alignright alignjustify | bullist numlist outdent indent | " +
+            "removeformat | link image | help | emoticons | template | ltr rtl",
+          content_style:
+            "body { font-family:Helvetica,Arial,sans-serif; font-size:16px }",
+          directionality: "ltr", // Đặt hướng văn bản mặc định là từ trái sang phải
+          language: "vi_VN", // Đặt ngôn ngữ là tiếng Việt
         }}
         onEditorChange={handleEditorChange}
       />
@@ -261,7 +298,7 @@ function CreateAds() {
           Chọn gói quảng cáo
         </Button>
       </div>
-      
+
       {adData.link && (
         <div className="ad-preview">
           <h2>Nội dung quảng cáo:</h2>

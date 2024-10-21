@@ -40,6 +40,7 @@ const User = () => {
         password: editingUser.password,
         status: editingUser.status,
       });
+
       toast.success('Cập nhật thành công');
       setEditingUser(null); // Clear editing state after saving
       fetchUserData(); // Refresh user data
@@ -87,6 +88,7 @@ const User = () => {
           >
             <Option value="Active">Active</Option>
             <Option value="Banned">Banned</Option>
+
           </Select>
         ) : text
       ),
