@@ -12,6 +12,7 @@ const PaymentSuccess = () => {
   const [paymentInfo, setPaymentInfo] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const processedRef = useRef(false);
+  const [isPaymentProcessed, setIsPaymentProcessed] = useState(false);
 
   const processPayment = async () => {
     // Nếu đang xử lý, không thực hiện thêm hành động nào
@@ -71,21 +72,22 @@ const PaymentSuccess = () => {
         notification.success({
           message: 'Thanh toán thành công',
           description: 'Quảng cáo của bạn đã được tạo.',
-          duration: 5,
+          duration: 2,
         });
 
-        
+        localStorage.setItem('paymentProcessed', 'true');
+        setIsPaymentProcessed(true);
         return;
       } catch (error) {
         console.error('Error creating advertisement:', error);
-        message.error('Payment successful but failed to create advertisement');
+        message.error('Vui lòng tạo lại quảng cáo mới');
         navigate('/user-ads');
       }
     } else {
       notification.error({
         message: 'Thanh toán thất bại',
         description: 'Quảng cáo không được tạo.',
-        duration: 5,
+        duration: 2,
       });
       navigate('/user-ads');
     }
@@ -108,7 +110,48 @@ const PaymentSuccess = () => {
     }
   }, [paymentInfo]);
 
+  useEffect(() => {
+    const processed = localStorage.getItem('paymentProcessed') === 'true';
+    setIsPaymentProcessed(processed);
+
+    if (processed) {
+      const handleBeforeUnload = () => {
+        localStorage.removeItem('paymentProcessed');
+      };
+
+      window.addEventListener('beforeunload', handleBeforeUnload);
+
+      return () => {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+      };
+    }
+  }, []);
+
+  useEffect(() => {
+    const handlePageHide = () => {
+      if (isPaymentProcessed) {
+        localStorage.setItem('redirectToHome', 'true');
+      }
+    };
+
+    window.addEventListener('pagehide', handlePageHide);
+
+    return () => {
+      window.removeEventListener('pagehide', handlePageHide);
+    };
+  }, [isPaymentProcessed]);
+
+  useEffect(() => {
+    const shouldRedirect = localStorage.getItem('redirectToHome') === 'true';
+    if (shouldRedirect) {
+      localStorage.removeItem('redirectToHome');
+      navigate('/');
+    }
+  }, [navigate]);
+
   const handleNavigateUserAds = () => {
+    localStorage.removeItem('paymentProcessed');
+    localStorage.removeItem('redirectToHome');
     navigate('/user-ads');
   };
 
