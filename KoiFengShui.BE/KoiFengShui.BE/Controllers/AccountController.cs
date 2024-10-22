@@ -271,7 +271,8 @@ namespace KoiFengShui.BE.Controllers
             {
                 Token = token,
                 Role = account.Role,
-                UserId = account.UserId
+                UserId = account.UserId,
+                Name = googleUser.Name
             });
         }
         [HttpPost("forgot-password")]
