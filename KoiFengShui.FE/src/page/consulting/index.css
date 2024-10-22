@@ -115,4 +115,16 @@
   }
   
   
-  
+  .consulting-divider {
+    border: 0;
+    height: 1px;
+    background-color: #ccc;
+    
+    width: 80%;
+    
+  }
+  .direction-info p{
+    margin-bottom: 20px;
+    margin-left: 20px;
+    font-size: 18px;
+  }

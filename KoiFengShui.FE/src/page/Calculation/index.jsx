@@ -19,7 +19,22 @@ const Calculation = () => {
   const [lifePalace, setLifePalace] = useState(null);
   const [isFateCalculated, setIsFateCalculated] = useState(false);
 
-
+  const getElementColor = (element) => {
+    switch (element) {
+      case "Hỏa":
+        return "red";
+      case "Thủy":
+        return "blue";
+      case "Mộc":
+        return "green";
+      case "Kim":
+        return "gold";
+      case "Thổ":
+        return "brown";
+      default:
+        return "black";
+    }
+  };
   const handleCalculate = async () => {
     try {
       const values = await form.validateFields();
@@ -125,15 +140,15 @@ const Calculation = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="button" onClick={handleFateCalculation}>
+          <Button className="calculate-button" type="primary" htmlType="button" onClick={handleFateCalculation}>
             Tính mệnh của bạn
           </Button>
         </Form.Item>
       </Form>
 
       <div className="Guest-fate">
-        {fate && <h3>Mệnh của bạn là: {fate}</h3>}
-        {lifePalace && <h3>Cung mệnh của bạn là: {lifePalace}</h3>}
+        {fate && <h3 >Mệnh của bạn là: <span style={{color: getElementColor(fate) }}>{fate}</span></h3>}
+        {lifePalace && <h3>Cung mệnh của bạn là: <span style={{color: "purple"}}>{lifePalace}</span></h3>}
       </div>
 
       {isFateCalculated && (
