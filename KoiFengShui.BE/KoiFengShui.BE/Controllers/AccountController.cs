@@ -37,7 +37,6 @@ namespace KoiFengShui.BE.Controllers
         public async Task<IActionResult> Login(LoginDTO loginAccount)
         {
             var account = await _accountService.GetAccountByUserID(loginAccount.UserId);
-
             if (account == null || account.Password != loginAccount.Password)
             {
                 return Unauthorized("Thông tin đăng nhập không hợp lệ");
@@ -47,14 +46,15 @@ namespace KoiFengShui.BE.Controllers
             {
                 return Unauthorized("Tài khoản không hoạt động");
             }
-
+            Member member = await _memberService.GetMemberByUserID(loginAccount.UserId);
             var token = _tokenService.CreateToken(account);
 
             return Ok(new
             {
                 Token = token,
                 Role = account.Role,
-                UserId = account.UserId
+                UserId = account.UserId,
+                Name = member.Name
             });
         }
 
