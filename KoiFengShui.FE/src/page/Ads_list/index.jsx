@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'; // Thêm useEffect và useSt
 import { Link } from 'react-router-dom';
 import './index.css';
 import api from "../../config/axios";
-
 import HeaderTemplate from '../../components/header-page';
 
 
@@ -62,6 +61,7 @@ const Ads_list = () => {
 
 
 
+
   return (
 
     <>
@@ -76,9 +76,11 @@ const Ads_list = () => {
               <h2 className="featured-ad-title">{featuredAd.heading}</h2>
               <p className="featured-ad-description">{featuredAd.description}</p>
               <Link to={`/advertisement-detail/${featuredAd.adId}`} className="view-details-btn">View Details</Link>
+
               <p className="ad-item-date">
                   {formatTimeAgo(featuredAd.createAt)}
                 </p>
+
             </div>
           </div>
         )}

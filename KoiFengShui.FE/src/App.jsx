@@ -1,9 +1,13 @@
-import { RouterProvider, createBrowserRouter, Navigate, useLocation } from "react-router-dom";
-import { toast } from 'react-toastify';
+import {
+  RouterProvider,
+  createBrowserRouter,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
+import { toast } from "react-toastify";
 import Home from "./page/home";
 import Login from "./page/login";
 import Register from "./page/register";
-
 
 import Calculation from "./page/calculation";
 import Consulting from "./page/consulting";
@@ -17,13 +21,12 @@ import Ads_list from "./page/Ads_list";
 import CreateAds from "./page/CreateAds";
 import User_Ads from "./page/User_Ads";
 
-
 import Dashboard from "./components/dashboard";
 
 import AdvertisementDetail from "./page/AdvertismentDetail";
-import VNPayPayment from './page/Payment';
-import PaymentSuccess from './page/PaymentSuccess';
-import ChoosePackage from './page/ChoosePackage';
+import PaymentSuccess from "./page/PaymentSuccess";
+import VNPayPayment from "./page/Payment";
+import ChoosePackage from "./page/ChoosePackage";
 import CreateBlog from "./page/Admin-page/CreateBlog";
 import BlogDetail from "./page/Admin-page/BlogDetail";
 import BlogList from "./page/Blogs-list";
@@ -31,15 +34,15 @@ import AdminDashboard from "./page/Admin-page/dashboard";
 import UserProfile from "./page/User-Profile";
 import ForgotPassword from "./page/Forgot-Password";
 import ResetPassword from "./page/Reset-Password";
-
+import PackageManagement from "./page/Admin-page/package";
 
 function App() {
   const ProtectedRoute = ({ children }) => {
     const location = useLocation();
-    const userId = localStorage.getItem('userId');
+    const userId = localStorage.getItem("userId");
 
     if (!userId) {
-      toast.error('Vui lòng đăng nhập để truy cập trang này.');
+      toast.error("Vui lòng đăng nhập để truy cập trang này.");
       return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
@@ -47,15 +50,15 @@ function App() {
   };
 
   const ProtectedRouteAdmin = ({ children }) => {
-    const userId = localStorage.getItem('userId');
-    const userRole = localStorage.getItem('role');
+    const userId = localStorage.getItem("userId");
+    const userRole = localStorage.getItem("role");
 
     if (userId && userRole === "Admin") {
       return children;
     }
-    toast.error('Vui lòng đăng nhập để truy cập trang này.');
-      return <Navigate to="/login"  replace />;
-  }
+    toast.error("Vui lòng đăng nhập để truy cập trang này.");
+    return <Navigate to="/login" replace />;
+  };
   const router = createBrowserRouter([
     {
       path: "/",
@@ -79,16 +82,21 @@ function App() {
     },
     {
       path: "dashboard",
-      element:<ProtectedRouteAdmin><Dashboard/></ProtectedRouteAdmin> ,
+      element: (
+        <ProtectedRouteAdmin>
+          <Dashboard />
+        </ProtectedRouteAdmin>
+      ),
       children: [
         {
           path: "AdminDashboard",
-          element: <AdminDashboard/>,
+          element: <AdminDashboard />,
         },
         {
           path: "user",
           element: <User />,
         },
+
         {
           path: "ads",
           element: <ADS />,
@@ -109,10 +117,14 @@ function App() {
           path: "pond",
           element: <Pond />,
         },
+        {
+          path: "packageManagement",
+          element: <PackageManagement />,
+        },
       ],
     },
-    {
 
+    {
       path: "calculation",
       element: <Calculation />,
     },
@@ -123,8 +135,8 @@ function App() {
     {
       path: "calculate-compability",
       element: <CalculateCompability />,
-
     },
+
     {
       path: "blogs-list",
       element: <BlogList />,
@@ -135,15 +147,27 @@ function App() {
     },
     {
       path: "user-profile",
-      element: <ProtectedRoute><UserProfile /></ProtectedRoute>,
+      element: (
+        <ProtectedRoute>
+          <UserProfile />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "create-ads",
-      element: <ProtectedRoute><CreateAds /></ProtectedRoute>,
+      element: (
+        <ProtectedRoute>
+          <CreateAds />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "user-ads",
-      element: <ProtectedRoute><User_Ads /></ProtectedRoute>,
+      element: (
+        <ProtectedRoute>
+          <User_Ads />
+        </ProtectedRoute>
+      ),
     },
 
     {
@@ -164,9 +188,8 @@ function App() {
     },
     {
       path: "/choose-package",
-      element: <ChoosePackage />
+      element: <ChoosePackage />,
     },
-  
   ]);
 
   return <RouterProvider router={router} />;

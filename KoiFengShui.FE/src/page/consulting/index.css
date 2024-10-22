@@ -19,7 +19,7 @@
     
     align-items: center;
     color: blueviolet;
-    margin-bottom: 40px;
+    margin-bottom: 70px;
   }
  
   .koi-cards {
@@ -97,6 +97,21 @@
   .modal-text{
     font-size: 20px;
     flex: 1;
+  }
+  .Header-pond{
+    margin-top: 40px;
+  }
+  .Header-fish{
+    margin-bottom: 40px;
+  }
+  .Header-pond h2{
+    color: #0a0a0a;
+    font-size: 35px;
+  }
+  .Header-fish h2{
+    color: #0a0a0a;
+    font-size: 35px;
+    
   }
   
   

@@ -12,6 +12,7 @@ import {
   Space,
   Select,
   Popconfirm,
+  Flex,
 } from "antd";
 import { toast } from "react-toastify";
 import {
@@ -126,13 +127,19 @@ const Koi = () => {
 
       title: "Hành động",
       dataIndex: "koiType",
-      key: "koiType",
-      width: 150, 
+      key: "koiType", 
+      width: 160, // Giảm chiều rộng của cột
       render: (_, koi) => (
-        <>
+        <Space size={4} style={{ display: 'flex', justifyContent: 'center' }}> {/* Giảm khoảng cách giữa các nút */}
           <Button
             type="primary"
             onClick={() => handleEdit(koi)}
+            style={{
+              fontSize: '15px',
+              padding: '0 8px',
+              height: '24px',
+              width: '80px'
+            }}
           >
             Chỉnh sửa
           </Button>
@@ -140,15 +147,23 @@ const Koi = () => {
             title="Xóa cá Koi"
             description="Bạn có chắc muốn xóa loại cá này?"
             onConfirm={() => handleDeleteKoi(koi.koiType)}
-            okButtonProps={{ size: 'small' }}
-            cancelButtonProps={{ size: 'small' }}
+            okText="Có"
+            cancelText="Không"
           >
-            <Button type="primary" danger>
+            <Button 
+              type="primary" 
+              danger
+              style={{
+                fontSize: '15px',
+                padding: '0 8px',
+                height: '24px',
+                width: '80px'
+              }}
+            >
               Xóa cá Koi
-
             </Button>
           </Popconfirm>
-        </>
+        </Space>
       ),
     },
   ];
@@ -239,6 +254,7 @@ const Koi = () => {
     } catch (err) {
 
       toast.error(err.response?.data || "Có lỗi xảy ra");
+
 
 
     } finally {

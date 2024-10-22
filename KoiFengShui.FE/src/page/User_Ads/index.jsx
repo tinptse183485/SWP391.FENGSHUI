@@ -70,6 +70,7 @@ const User_Ads = () => {
       });
       setAdvertisements(adsWithExpirationDate);
       console.log(adsWithExpirationDate);
+
     } catch (error) {
       console.error("Error fetching advertisements:", error);
     }
@@ -117,16 +118,19 @@ const User_Ads = () => {
       title: "Tiêu đề",
       dataIndex: "heading",
       key: "heading",
+      ellipsis: true,
     },
     {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
+      width: 120,
     },
     {
       title: "Ngày bắt đầu",
       dataIndex: "startDate",
       key: "startDate",
+      width: 120,
       render: (startDate) =>
         startDate ? moment(startDate).format("DD/MM/YY") : "N/A",
     },
@@ -134,6 +138,7 @@ const User_Ads = () => {
       title: "Ngày hết hạn",
       dataIndex: "expirationDate",
       key: "expirationDate",
+      width: 120,
       render: (expirationDate) => {
         if (!expirationDate) return "N/A";
         const date = new Date(expirationDate);
@@ -147,18 +152,17 @@ const User_Ads = () => {
     {
       title: "Hành động",
       key: "action",
+      className: "action-cell",
       render: (_, record) => {
         const currentDate = new Date();
         const expirationDate = new Date(record.expirationDate);
-        console.log(record.expirationDate);
         const sevenDaysAfterExpiration = new Date(
           expirationDate.getTime() + 7 * 24 * 60 * 60 * 1000
         );
-        console.log(sevenDaysAfterExpiration);
 
         if (record.status === "Draft") {
           return (
-            <>
+            <div className="action-button">
               <Button onClick={() => handleUpdateDraft(record)}>
                 Cập nhật bản nháp
               </Button>
@@ -176,7 +180,7 @@ const User_Ads = () => {
               >
                 <Button danger>Xóa bản nháp</Button>
               </Popconfirm>
-            </>
+            </div>
           );
         } else if (
           record.status === "Approved" &&
