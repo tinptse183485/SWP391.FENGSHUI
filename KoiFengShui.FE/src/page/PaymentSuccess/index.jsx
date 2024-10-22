@@ -71,8 +71,8 @@ const PaymentSuccess = () => {
 
         notification.success({
           message: 'Thanh toán thành công',
-          description: 'Quảng cáo của bạn đã được tạo.',
-          duration: 2,
+          description: 'Quảng cáo của bạn đã được tạo.'
+          
         });
 
         localStorage.setItem('paymentProcessed', 'true');
