@@ -16,10 +16,11 @@
     
   }
   .Guest-element{
-    
+    padding: 20px;
     align-items: center;
     color: blueviolet;
     margin-bottom: 70px;
+    background-color: rgb(221, 234, 246);
   }
  
   .koi-cards {

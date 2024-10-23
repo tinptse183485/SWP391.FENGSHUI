@@ -34,6 +34,7 @@ import AdminDashboard from "./page/Admin-page/dashboard";
 import UserProfile from "./page/User-Profile";
 import ForgotPassword from "./page/Forgot-Password";
 import ResetPassword from "./page/Reset-Password";
+import Policies from "./page/Policies";
 
 function App() {
   const ProtectedRoute = ({ children }) => {
@@ -184,6 +185,10 @@ function App() {
     {
       path: "/choose-package",
       element: <ChoosePackage />,
+    },
+    {
+      path: "/policies",
+      element: <Policies />,
     },
   ]);
 

@@ -53,6 +53,8 @@ function ComputeCompability() {
   const [shapePoint, setShapePoint] = useState(null);
   const [directionPoint, setDirectionPoint] = useState(null);
 
+  const [searchTerm, setSearchTerm] = useState('');
+
   const  getColor = (point) => {
    if (point >=75) return "green";
    else if (point >=50) return "blue";
@@ -76,7 +78,7 @@ function ComputeCompability() {
       setUserElement(userElementResponse.data);
     } catch (error) {
       console.error("Error fetching user info:", error);
-      toast.error("Error fetching user info");
+      toast.error("Không tải được thông tin người dùng");
     }
   };
 
@@ -86,36 +88,38 @@ function ComputeCompability() {
 
   useEffect(() => {
     const fetchFilteredFishList = async () => {
-      let tempFilteredFishList = [];
+      let tempFilteredFishList = fishList;
 
-      if (colorFilter === "all") {
-        // Nếu không chọn màu, chỉ lọc theo element
-        tempFilteredFishList = fishList.filter(
-          (fish) => elementFilter === "all" || fish.element === elementFilter
-        );
-      } else {
-        // Gọi API để lấy cá theo màu
+      // Apply color filter
+      if (colorFilter !== "all") {
         try {
-          const response = await api.get(
-            `KoiVariety/GetListKoiByColor?color=${colorFilter}`
-          );
-          const fishByColor = response.data;
-
-          // Lọc theo bảng mệnh sau khi có danh sách cá theo màu
-          tempFilteredFishList = fishByColor.filter(
-            (fish) => elementFilter === "all" || fish.element === elementFilter
-          );
+          const response = await api.get(`KoiVariety/GetListKoiByColor?color=${colorFilter}`);
+          tempFilteredFishList = response.data;
         } catch (error) {
-          toast.error("Error fetching fish by color");
-          return; // Trả về để không cập nhật danh sách cá nếu có lỗi
+          toast.error("Không tải được cá theo màu");
+          return;
         }
+      }
+
+      // Apply element filter
+      if (elementFilter !== "all") {
+        tempFilteredFishList = tempFilteredFishList.filter(
+          (fish) => fish.element === elementFilter
+        );
+      }
+
+      // Apply search term filter
+      if (searchTerm) {
+        tempFilteredFishList = tempFilteredFishList.filter((fish) =>
+          fish.koiType.toLowerCase().includes(searchTerm.toLowerCase())
+        );
       }
 
       setFilteredFishList(tempFilteredFishList);
     };
 
     fetchFilteredFishList();
-  }, [colorFilter, elementFilter, fishList]);
+  }, [colorFilter, elementFilter, fishList, searchTerm]);
 
   useEffect(() => {
     if (selectedFishDetail && colorWeights) {
@@ -743,7 +747,7 @@ function ComputeCompability() {
               >
                 <div className="filter-section">
                   <Form layout="inline">
-                    <Form.Item label="Bảng mệnh">
+                    <Form.Item label="Bản mệnh">
                       <Select value={elementFilter} onChange={setElementFilter}>
                         <Option value="all">Tất cả</Option>
                         {elements.map((element) => (
@@ -770,13 +774,8 @@ function ComputeCompability() {
                     <Form.Item label="Tên giống cá">
                       <Input
                         placeholder="Tìm kiếm theo tên giống cá"
-                        onChange={(e) => {
-                          const searchTerm = e.target.value.toLowerCase();
-                          const filtered = fishList.filter((fish) =>
-                            fish.koiType.toLowerCase().includes(searchTerm)
-                          );
-                          setFilteredFishList(filtered);
-                        }}
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                       />
                     </Form.Item>
                   </Form>

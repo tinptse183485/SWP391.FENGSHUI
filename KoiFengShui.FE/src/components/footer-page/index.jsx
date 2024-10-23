@@ -1,5 +1,5 @@
 import "./index.css";
-
+import { Link } from "react-router-dom";
 function FooterPage() {
   return (
     <div>
@@ -18,9 +18,10 @@ function FooterPage() {
           </div>
 
           <div className="customer-services">
-            <h3>Dịch vụ khách hàng</h3>
+            <Link style={{ color: 'white', textDecoration: 'none' }} to="/policies">
+              <h3>Chính sách và điều khoản</h3>
+            </Link>
             <ul>
-              <li>Chính sách bảo hành và đổi trả</li>
               <li>Chính sách bảo mật</li>
               <li>Hướng dẫn mua hàng</li>
               <li>Điều khoản sử dụng</li>
