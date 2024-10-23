@@ -14,11 +14,13 @@ namespace FengShuiKoi_Services
         Task<bool> DeleteAdvertisement(string adID);
         Task<bool> UpdateAdvertisement(Advertisement updatedAdvertisement);
         Task<List<Advertisement>> GetAdvertisementByUserIdAndStatus(string userId, string status);
-        Task<List<Advertisement>> GetAdvertisementStatus(string status);
+        Task<List<AdvertisementWithPackageDTO>> GetAdvertisementsWithPackageSortedAdmin();
+
+		Task<List<Advertisement>> GetAdvertisementStatus(string status);
 
         Task<List<Advertisement>> GetAdvertisementsSortted();
         Task<List<AdvertisementWithPackageDTO>> GetAdvertisementsWithPackageSorted();
-		    public Task<List<Advertisement>> GetAdvertisementByUserID(string userdID);
+		public Task<List<Advertisement>> GetAdvertisementByUserID(string userdID);
 
         public Task UpdateExpiredAdvertisementsAsync();
 

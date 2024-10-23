@@ -84,7 +84,26 @@ namespace KoiFengShui.BE.Controllers
             }
         }
 
-        [HttpGet("GetAdvertisementByAdId")]
+		[HttpGet("GetAdvertisementsWithPackageSortedAdmin")]
+		public async Task<IActionResult> GetAdvertisementsWithPackageSortedAdmin()
+		{
+			try
+			{
+				var listAdvertisement = await _advertisementService.GetAdvertisementsWithPackageSortedAdmin();
+				if (listAdvertisement == null)
+				{
+					return NotFound("Không có quảng cáo nào.");
+				}
+				return Ok(listAdvertisement);
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Lỗi server: {ex.Message}");
+			}
+		}
+
+
+		[HttpGet("GetAdvertisementByAdId")]
         public async Task<IActionResult> GetAdvertisementByAdId(string adId)
         {
             try

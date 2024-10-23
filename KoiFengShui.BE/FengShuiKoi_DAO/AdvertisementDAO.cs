@@ -52,9 +52,8 @@ namespace FengShuiKoi_DAO
 				.ToListAsync();
 		}
 
-		public async Task<List<AdvertisementWithPackageDTO>> GetAdvertisementsWithPackageSorted()
+		public async Task<List<AdvertisementWithPackageDTO>> GetAdvertisementsWithPackageSortedAdmin()
 		{
-			var now = DateTime.Now;
 			return await dbContext.Advertisements
 				.Join(dbContext.AdsPackages,
 					ad => ad.AdId,
@@ -75,14 +74,42 @@ namespace FengShuiKoi_DAO
 						Total = ap.Total,
 						CreateAt = ap.CreateAt 
 					})
-				.Where(x => x.StartDate <= now && x.ExpiredDate >= now)
 				.OrderBy(x => x.Rank == "Diamond" ? 0 :
 							  x.Rank == "Gold" ? 1 :
 							  x.Rank == "Silver" ? 2 : 3)
 				.ThenByDescending(x => x.StartDate)
 				.ToListAsync();
 		}
-
+		public async Task<List<AdvertisementWithPackageDTO>> GetAdvertisementsWithPackageSorted()
+		{
+			var now = DateTime.Now;
+			return await dbContext.Advertisements
+				.Join(dbContext.AdsPackages,
+					ad => ad.AdId,
+					ap => ap.AdId,
+					(ad, ap) => new AdvertisementWithPackageDTO
+					{
+						AdId = ad.AdId,
+						Heading = ad.Heading,
+						Image = ad.Image,
+						Link = ad.Link,
+						UserId = ad.UserId,
+						ElementId = ad.ElementId,
+						Status = ad.Status,
+						Rank = ap.Rank,
+						StartDate = ap.StartDate,
+						ExpiredDate = ap.ExpiredDate,
+						Quantity = ap.Quantity,
+						Total = ap.Total,
+						CreateAt = ap.CreateAt
+					})
+				.Where(x => x.StartDate <= now && x.ExpiredDate >= now && x.Status == "Approved")
+				.OrderBy(x => x.Rank == "Diamond" ? 0 :
+							  x.Rank == "Gold" ? 1 :
+							  x.Rank == "Silver" ? 2 : 3)
+				.ThenByDescending(x => x.StartDate)
+				.ToListAsync();
+		}
 		public async Task<List<Advertisement>> GetAdvertisementByUserID(string userdID)
 
         {
