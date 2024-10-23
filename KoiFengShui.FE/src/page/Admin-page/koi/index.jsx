@@ -13,6 +13,7 @@ import {
   Select,
   Popconfirm,
   Flex,
+  Typography,
 } from "antd";
 import { toast } from "react-toastify";
 import {
@@ -25,6 +26,7 @@ import { useForm } from "antd/es/form/Form";
 import uploadFile from "../../../utils/file";
 
 const { Option } = Select;
+const { Text } = Typography;
 
 const Koi = () => {
   const [data, setData] = useState([]); // Khởi tạo state để lưu trữ dữ liệu
@@ -35,20 +37,19 @@ const Koi = () => {
   const [previewImage, setPreviewImage] = useState("");
   const [fileList, setFileList] = useState([]);
   const [colors, setColors] = useState([]);
-
-
-
+  const [loading, setLoading] = useState(false);
   const [colorModalVisible, setColorModalVisible] = useState(false);
   const [colorForm] = Form.useForm();
   const [editingKoi, setEditingKoi] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [elements, setElements] = useState([]);
   useEffect(() => {
     fetchDataAndColors();
     fetchColors();
+    fetchElements();
   }, []); // Chạy một lần khi component mount
 
   const fetchDataAndColors = async () => {
-
     try {
       const [koiResponse, colorResponse] = await Promise.all([
         api.get("KoiVariety/GetAllKoi"),
@@ -87,6 +88,16 @@ const Koi = () => {
     }
   };
 
+  const fetchElements = async () => {
+    try {
+      const response = await api.get("Element/GetAllElement");
+      setElements(response.data);
+    } catch (error) {
+      console.error("Lỗi khi tải danh sách mệnh:", error);
+      toast.error("Không thể tải danh sách mệnh");
+    }
+  };
+
   const columns = [
     {
       title: "Giống cá Koi",
@@ -103,6 +114,27 @@ const Koi = () => {
     {
       title: "Mệnh của cá",
       dataIndex: "element",
+      render: (element) => (
+        <Text
+          style={{
+            color:
+              element === "Kim"
+                ? "#FFD700"
+                : element === "Mộc"
+                ? "#228B22"
+                : element === "Thủy"
+                ? "#1E90FF"
+                : element === "Hỏa"
+                ? "#FF4500"
+                : element === "Thổ"
+                ? "#8B4513"
+                : "#000000",
+            fontWeight: "bold",
+          }}
+        >
+          {element}
+        </Text>
+      ),
     },
     {
       title: "Thông tin giới thiệu",
@@ -124,21 +156,22 @@ const Koi = () => {
       ),
     },
     {
-
       title: "Hành động",
       dataIndex: "koiType",
-      key: "koiType", 
+      key: "koiType",
       width: 160, // Giảm chiều rộng của cột
       render: (_, koi) => (
-        <Space size={4} style={{ display: 'flex', justifyContent: 'center' }}> {/* Giảm khoảng cách giữa các nút */}
+        <Space size={4} style={{ display: "flex", justifyContent: "center" }}>
+          {" "}
+          {/* Giảm khoảng cách giữa các nút */}
           <Button
             type="primary"
             onClick={() => handleEdit(koi)}
             style={{
-              fontSize: '15px',
-              padding: '0 8px',
-              height: '24px',
-              width: '80px'
+              fontSize: "15px",
+              padding: "0 8px",
+              height: "24px",
+              width: "80px",
             }}
           >
             Chỉnh sửa
@@ -149,15 +182,20 @@ const Koi = () => {
             onConfirm={() => handleDeleteKoi(koi.koiType)}
             okText="Có"
             cancelText="Không"
+            okButtonProps={{
+              style: { width: "90px", height: "30px" },
+              loading: loading,
+            }}
+            cancelButtonProps={{ style: { width: "90px", height: "30px" } }}
           >
-            <Button 
-              type="primary" 
+            <Button
+              type="primary"
               danger
               style={{
-                fontSize: '15px',
-                padding: '0 8px',
-                height: '24px',
-                width: '80px'
+                fontSize: "15px",
+                padding: "0 8px",
+                height: "24px",
+                width: "80px",
               }}
             >
               Xóa cá Koi
@@ -168,21 +206,24 @@ const Koi = () => {
     },
   ];
 
-
   const handleDeleteKoi = async (koiType) => {
+    setLoading(true);
     try {
-      const response = await api.delete(`KoiVariety/DeleteKoiAndTypeColor/${koiType}`);
+      const response = await api.delete(
+        `KoiVariety/DeleteKoiAndTypeColor/${koiType}`
+      );
       toast.success(response.data);
       fetchDataAndColors();
     } catch (error) {
       toast.error(error.response.data);
+    } finally {
+      setLoading(false);
     }
   };
   const handleOpenModal = () => {
     setIsEditing(false);
     form.resetFields();
     setFileList([]);
-
 
     setOpenModal(true);
   };
@@ -198,18 +239,20 @@ const Koi = () => {
       koiType: koi.koiType,
       element: koi.element,
       description: koi.description,
-      colors: koi.colors.map(color => ({
+      colors: koi.colors.map((color) => ({
         colorId: color.colorId,
-        percentage: color.percentage
-      }))
+        percentage: color.percentage,
+      })),
     });
-    setFileList(koi.image ? [{ url: koi.image, uid: '-1', name: 'image.png' }] : []);
+    setFileList(
+      koi.image ? [{ url: koi.image, uid: "-1", name: "image.png" }] : []
+    );
     setOpenModal(true);
   };
 
   const handleSubmit = async (values) => {
     // Kiểm tra tổng tỉ trọng
-
+    setLoading(true);
     const totalPercentage = values.colors.reduce(
       (sum, color) => sum + parseFloat(color.percentage || 0),
       0
@@ -230,7 +273,6 @@ const Koi = () => {
       }
 
       const koiData = {
-
         ...values,
         image: imageUrl,
         colors: values.colors.map((color) => ({
@@ -240,10 +282,10 @@ const Koi = () => {
       };
 
       if (isEditing) {
-        await api.put("KoiVariety/UpdateKoiAndTypeColor", koiData);
+         await api.put("KoiVariety/UpdateKoiAndTypeColor", koiData);
         toast.success("Cập nhật thành công");
       } else {
-        await api.post("KoiVariety/AddKoiAndTypeColor", koiData);
+         await api.post("KoiVariety/AddKoiAndTypeColor", koiData);
         toast.success("Tạo mới thành công");
       }
       setOpenModal(false);
@@ -252,17 +294,15 @@ const Koi = () => {
       setEditingKoi(null);
       setIsEditing(false);
     } catch (err) {
-
       toast.error(err.response?.data || "Có lỗi xảy ra");
-
-
-
     } finally {
+      setLoading(false);
       setSubmitting(false);
     }
   };
 
   const handleAddColor = async (values) => {
+    setLoading(true);
     const formattedValues = {
       colorID: values.colorID,
       elementPoint: Object.entries(values.elementPoints).map(
@@ -282,6 +322,8 @@ const Koi = () => {
     } catch (error) {
       console.error("Error adding new color:", error);
       toast.error("Không thể thêm màu mới");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -362,11 +404,20 @@ const Koi = () => {
             rules={[
               {
                 required: true,
-                message: "Hãy nhập mệnh của cá Koi",
+                message: "Hãy chọn mệnh của cá Koi",
               },
             ]}
           >
-            <Input />
+            <Select placeholder="Chọn mệnh của cá">
+              {elements.map((element) => (
+                <Select.Option
+                  key={element.elementId}
+                  value={element.elementId}
+                >
+                  {element.elementId}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
           <Form.Item
             label="Thông tin giới thiệu"
