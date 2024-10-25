@@ -52,7 +52,7 @@ const Ads = () => {
   const fetchData = async () => {
     try {
       const response = await api.get(
-        "Advertisement/GetAllAdvertisemenWithPackageSortted"
+        "Advertisement/GetAdvertisementsWithPackageSortedAdmin"
       );
       setData(response.data);
       filterAds("all");

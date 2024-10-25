@@ -58,6 +58,9 @@ const Dashboard = () => {
     setUserId(null);
     navigate("/");
   };
+  const handleUserHome = () => {
+    navigate("/");
+  };
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -117,6 +120,16 @@ const Dashboard = () => {
           onClick={handleLogout}
         >
           {collapsed ? "" : "Logout"}
+        </Button>
+        <Button
+          style={{
+            marginTop: "80px",
+          }}
+          type="primary"
+          icon={<LogoutOutlined />}
+          onClick={handleUserHome}
+        >
+          {collapsed ? "" : "User Home"}
         </Button>
 
       </Sider>

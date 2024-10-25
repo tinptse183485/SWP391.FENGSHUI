@@ -191,16 +191,14 @@ function Consulting() {
                     {Array.isArray(pond.eightMansions)
                       ? pond.eightMansions[0]
                       : pond.eightMansions}{" "}
-                    (hướng Thượng Cát): Đây là hướng mang lại may mắn nhất cho
-                    chủ nhà và tạo ra khí tốt.
+                    (hướng Thượng Cát): {pond.description}.
                   </p>
                 )}
                 {pond.pointOfDirection === 1 &&
                   Array.isArray(pond.eightMansions) &&
                   pond.eightMansions.length > 1 && (
                     <p>
-                      + {pond.eightMansions[1]} (hướng Thượng Cát): Đây là hướng
-                      mang lại may mắn nhất cho chủ nhà và tạo ra khí tốt.
+                      + {pond.eightMansions[1]} (hướng Thượng Cát): {pond.description}.
                     </p>
                   )}
               </div>

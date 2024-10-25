@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import api from "../../config/axios";
 import { toast } from "react-toastify";
 import { useState } from "react"; // Import useState
+import HeaderTemplate from "../../components/header-page";
+import FooterTemplate from "../../components/footer-page";
 
 
 const Calculation = () => {
@@ -82,7 +84,7 @@ const Calculation = () => {
         },
       });
     } catch (error) {
-      toast.error(error.response?.data || "Error fetching data");
+      toast.error(error.response?.data || "Vui lòng nhập đầy đủ thông tin !");
     }
   };
 
@@ -102,11 +104,13 @@ const Calculation = () => {
 
     } catch (error) {
       console.error("Error details:", error);
-      toast.error(error.response?.data || "Error fetching fate and life palace data");
+      toast.error(error.response?.data || "Vui lòng nhập đầy đủ thông tin !");
     }
   };
 
   return (
+    <>
+    <HeaderTemplate></HeaderTemplate>
     <AuthenTemplate>
       <div className="Header-Title">
         <h1>Tư vấn cá và hồ theo tuổi của bạn</h1>
@@ -157,6 +161,8 @@ const Calculation = () => {
         </Button>
       )}
     </AuthenTemplate>
+    <FooterTemplate/>
+    </>
   );
 };
 
