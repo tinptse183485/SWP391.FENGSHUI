@@ -215,7 +215,11 @@ function ComputeCompability() {
         setCompatibilityResult(response.data.compatibility);
 
         // Fetch advertisements
+<<<<<<< HEAD
         const adsResponse = await api.get("Advertisement/GetAllAdvertisement");
+=======
+        const adsResponse = await api.get('Advertisement/GetAllAdvertisement');
+>>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
         const approvedAds = adsResponse.data.filter(
           (ad) => ad.status === "Approved"
         );
@@ -693,6 +697,7 @@ function ComputeCompability() {
               className="compatibility-form"
             >
               <div className="user-info">
+<<<<<<< HEAD
                 <div className="birthdate-gender-row">
                   <Form.Item
                     name="birthdate"
@@ -747,6 +752,55 @@ function ComputeCompability() {
                   </div>
                 )}
               </div>
+=======
+              <div className="birthdate-gender-row">
+                <Form.Item
+                  name="birthdate"
+                  label="Ngày tháng năm sinh"
+                  rules={[
+                    { required: true, message: "Vui lòng chọn ngày sinh" },
+                  ]}
+                >
+                  <DatePicker 
+                    format="YYYY-MM-DD" 
+                    style={{ width: "100%" }} 
+                    onChange={(date) => {
+                      const gender = form.getFieldValue("Gender");
+                      if (date && gender) {
+                        fetchUserInfo(date, gender);
+                      }
+                    }}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="Giới tính"
+                  name="Gender"
+                  rules={[
+                    { required: true, message: "Hãy chọn giới tính của bạn!" },
+                  ]}
+                >
+                  <Radio.Group onChange={(e) => {
+                    const birthdate = form.getFieldValue("birthdate");
+                    if (birthdate && e.target.value) {
+                      fetchUserInfo(birthdate, e.target.value);
+                    }
+                  }}>
+                    <Radio value="male">Nam</Radio>
+                    <Radio value="female">Nữ</Radio>
+                  </Radio.Group>
+                </Form.Item>
+                
+              </div>
+              {userElement && userLifePalife && (
+  <div className="user-info-section">
+    <h2 className="user-info-title">Thông tin người dùng</h2>
+    <p><strong>Mệnh:</strong> {userElement}</p>
+    <p><strong>Cung mệnh:</strong> {userLifePalife}</p>
+  </div>
+)}
+</div>
+
+>>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
 
               <Form.Item
                 label="Chọn loại cá"

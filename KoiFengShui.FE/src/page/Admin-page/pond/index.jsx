@@ -63,6 +63,19 @@ const Pond = () => {
     }
   };
 
+<<<<<<< HEAD
+=======
+  const handleDeletePond = async (shapeId) => {
+    try {
+      await api.delete(`Shape/DeleteShape/${shapeId}`);
+      message.success("Xóa hồ thành công");
+      fetchData();
+    } catch (error) {
+      console.error("Lỗi khi xóa hồ:", error);
+      message.error("Không thể xóa hồ");
+    }
+  };
+>>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
   const getBase64 = (file) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -104,6 +117,18 @@ const Pond = () => {
               <h3>{item.shapeId}</h3>
               <Image src={item.image} alt={item.shapeId} />
               <Button type="primary" onClick={() => handleEdit(item)}>Cập nhật</Button>
+<<<<<<< HEAD
+=======
+              <Popconfirm
+              title="Xóa hồ"
+              description="Bạn có chắc muốn xóa hồ này?"
+              onConfirm={() => handleDeletePond(item.shapeId)}
+              okText="Có"
+              cancelText="Không"
+            >
+              <Button type="primary" danger>Xóa</Button>
+            </Popconfirm>
+>>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
             </div>
           ))
         ) : (

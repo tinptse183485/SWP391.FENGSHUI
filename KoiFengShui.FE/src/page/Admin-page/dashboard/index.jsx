@@ -172,6 +172,7 @@ const Dashboard = () => {
     };
   };
 
+
   return (
     <div className="dashboard-container">
       <h2>Dashboard</h2>
@@ -259,7 +260,12 @@ const Dashboard = () => {
               }
             }, 5)
           ) : (
+<<<<<<< HEAD
             <p>Đang tải dữ liệu doanh thu hàng ngày...</p>
+=======
+            <p>Đang tải dữ liệu doanh thu 7 ngày gần nhất...</p>
+
+>>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
           )}
         </div>
       </div>
@@ -267,4 +273,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default AdminDashboard;

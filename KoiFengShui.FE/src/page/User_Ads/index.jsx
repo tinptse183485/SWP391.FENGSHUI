@@ -130,7 +130,10 @@ const User_Ads = () => {
       title: "Ngày bắt đầu",
       dataIndex: "startDate",
       key: "startDate",
+<<<<<<< HEAD
       width: 120,
+=======
+>>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
       render: (startDate) =>
         startDate ? moment(startDate).format("DD/MM/YY") : "N/A",
     },
@@ -138,7 +141,10 @@ const User_Ads = () => {
       title: "Ngày hết hạn",
       dataIndex: "expirationDate",
       key: "expirationDate",
+<<<<<<< HEAD
       width: 120,
+=======
+>>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
       render: (expirationDate) => {
         if (!expirationDate) return "N/A";
         const date = new Date(expirationDate);
@@ -152,6 +158,7 @@ const User_Ads = () => {
     {
       title: "Hành động",
       key: "action",
+<<<<<<< HEAD
       className: "action-cell",
       render: (_, record) => {
         const currentDate = new Date();
@@ -163,6 +170,20 @@ const User_Ads = () => {
         if (record.status === "Draft") {
           return (
             <div className="action-button">
+=======
+      render: (_, record) => {
+        const currentDate = new Date();
+        const expirationDate = new Date(record.expirationDate);
+        console.log(record.expirationDate);
+        const sevenDaysAfterExpiration = new Date(
+          expirationDate.getTime() + 7 * 24 * 60 * 60 * 1000
+        );
+        console.log(sevenDaysAfterExpiration);
+
+        if (record.status === "Draft") {
+          return (
+            <>
+>>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
               <Button onClick={() => handleUpdateDraft(record)}>
                 Cập nhật bản nháp
               </Button>
@@ -180,7 +201,11 @@ const User_Ads = () => {
               >
                 <Button danger>Xóa bản nháp</Button>
               </Popconfirm>
+<<<<<<< HEAD
             </div>
+=======
+            </>
+>>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
           );
         } else if (
           record.status === "Approved" &&

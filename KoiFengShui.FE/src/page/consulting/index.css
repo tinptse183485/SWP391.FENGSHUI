@@ -19,7 +19,11 @@
     
     align-items: center;
     color: blueviolet;
+<<<<<<< HEAD
     margin-bottom: 70px;
+=======
+    margin-bottom: 40px;
+>>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
   }
  
   .koi-cards {

@@ -40,6 +40,10 @@ const User = () => {
         password: editingUser.password,
         status: editingUser.status,
       });
+<<<<<<< HEAD
+=======
+
+>>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
       toast.success('Cập nhật thành công');
       setEditingUser(null); // Clear editing state after saving
       fetchUserData(); // Refresh user data
