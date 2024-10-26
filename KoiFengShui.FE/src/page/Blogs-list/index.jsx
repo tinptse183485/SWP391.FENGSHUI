@@ -33,7 +33,7 @@ const BlogList = () => {
                         <div className="featured-blog-content">
                             <h2 className="featured-blog-title">{featuredBlog.heading}</h2>
                             <p className="featured-blog-excerpt">{featuredBlog.excerpt}</p>
-                            <Link to={`/blog/${featuredBlog.id}`} className="read-more-btn">Read More</Link>
+                            <Link to={`/blog-detail/${featuredBlog.blogId}`} className="read-more-btn">Read More</Link>
                         </div>
                     </div>
                 )}
@@ -45,7 +45,7 @@ const BlogList = () => {
                             <div className="blog-post-content">
                                 <h3 className="blog-post-title">{post.heading}</h3>
                                 <p className="blog-post-excerpt">{post.excerpt}</p>
-                                <Link to={`/blog/${post.id}`} className="read-more-link">Read More</Link>
+                                <Link to={`/blog-detail/${post.blogId}`} className="read-more-link">Read More</Link>
                             </div>
                         </article>
                     ))}

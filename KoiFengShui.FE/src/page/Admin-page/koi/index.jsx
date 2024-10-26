@@ -238,7 +238,7 @@ const Koi = () => {
       setIsEditing(false);
     } catch (err) {
 
-      toast.error(err.response?.data?.message || "Có lỗi xảy ra");
+      toast.error(err.response?.data || "Có lỗi xảy ra");
 
 
 

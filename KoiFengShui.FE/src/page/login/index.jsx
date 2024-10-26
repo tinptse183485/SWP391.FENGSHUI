@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthenTemplate from "../../components/authen-templates";
 import { GoogleOutlined } from "@ant-design/icons";
 import api from "../../config/axios";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "./index.css";
 
 import { GoogleLogin } from '@react-oauth/google';
@@ -32,11 +32,10 @@ function Login() {
       const { role, token, userId } = response.data;
       localStorage.setItem("token", token);
       localStorage.setItem("userId", userId);
-      localStorage.setItem("role", role);
 
 
       if (role === "ADMIN") {
-        navigate("/dashboard");
+        navigate("/dashboard/AdminDashboard");
       } else {
         navigate("/");
       }
@@ -103,6 +102,7 @@ function Login() {
       const { role, token, userId } = response.data;
       localStorage.setItem("token", token);
       localStorage.setItem("userId", userId);
+      
 
       if (role === "ADMIN") {
         navigate("/dashboard");
@@ -121,40 +121,38 @@ function Login() {
         <h1>KOI PHONG THỦY !</h1>
         <p>Đăng nhập để tiếp tục</p>
       </div>
-      <Form labelCol={{ span: 24 }} onFinish={handleLogin}>
+      <Form labelCol={{ span: 24 }} onFinish={handleLogin} className="login-form">
         <Form.Item
-          label="UserID"
-
+          label="Tài khoản"
           name="UserId"
 
           rules={[
             {
               require: true,
-              message: "Xin hãy nhập UserID",
+              message: "Xin hãy nhập tài khoản",
             },
           ]}
         >
           <Input />
         </Form.Item>
         <Form.Item
-          label="Password"
-
+          label="Mật khẩu"
           name="Password"
-
           rules={[
             {
               require: true,
-              message: "Xin hãy nhập password",
+              message: "Xin hãy nhập mật khẩu",
             },
           ]}
         >
-          <Input.Password />
+          <Input.Password/>
         </Form.Item>
-        <div>
-          <Link to="/register">Don't have account? Register now!</Link>
+        <div className="register-forgotpassword">
+          <Link to="/register">Bạn chưa có tài khoản? Đăng ký ngay!</Link>
+          <Link to="/forgot-password">Quên mật khẩu?</Link>
         </div>
         <Button type="primary" htmlType="submit" className="btnLogin">
-          Login
+          Đăng nhập
         </Button>
         <div className="divider">
           <span>OR</span>
@@ -166,13 +164,15 @@ function Login() {
         >
           Login with Google
         </Button> */}
-        <GoogleLogin
+        <GoogleLogin 
+          className="btnLoginwithGoogle"
+          shape="circle"
           onSuccess={handleGoogleLoginSuccess}
           onError={() => {
 
-            console.log('Login Failed');
+            console.log('Đăng nhập thất bại');
 
-            toast.error("Google login failed");
+            toast.error("Đăng nhập thất bại");
           }}
         />
       </Form>

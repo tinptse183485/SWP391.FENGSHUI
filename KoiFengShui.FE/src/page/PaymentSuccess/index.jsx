@@ -12,6 +12,7 @@ const PaymentSuccess = () => {
   const [paymentInfo, setPaymentInfo] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const processedRef = useRef(false);
+  const [isPaymentProcessed, setIsPaymentProcessed] = useState(false);
 
   const processPayment = async () => {
     // Nếu đang xử lý, không thực hiện thêm hành động nào
@@ -20,19 +21,44 @@ const PaymentSuccess = () => {
 
     const queryParams = new URLSearchParams(location.search);
     const vnp_ResponseCode = queryParams.get('vnp_ResponseCode');
+    
 
     const packageInfo = JSON.parse(localStorage.getItem('pendingAdPackage') || '{}');
     const adData = JSON.parse(localStorage.getItem('adData') || '{}');
 
     if (vnp_ResponseCode === '00') {
       try {
+        const formatDate = (dateString) => {
+          // Format: "20241001000000"
+          const [year, month, day, hour, minute, second] = dateString.match(/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/).slice(1);
+          const date = new Date(+year, +month - 1, +day, +hour, +minute, +second);
+          
+          // Format the date to YYYY-MM-DD HH:mm:ss
+          const pad = (num) => num.toString().padStart(2, '0');
+          return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+        };
+        
+        const paymentInfoData = {
+          amount: queryParams.get('vnp_Amount'),
+          orderInfo: queryParams.get('vnp_OrderInfo'),
+          transactionNo: queryParams.get('vnp_TransactionNo'),
+          bankCode: queryParams.get('vnp_BankCode'),
+          payDate: queryParams.get('vnp_PayDate')
+        };
+
+        console.log(paymentInfoData);
+        setPaymentInfo(paymentInfoData);
+
         const adQueryParams = new URLSearchParams({
           Rank: packageInfo.rank,
           startDate: packageInfo.startDate,
           quantity: packageInfo.quantity,
-          total: packageInfo.total
+          total: packageInfo.total,
+          CreateAt: formatDate(queryParams.get('vnp_PayDate')),
+          TransactionCode: paymentInfoData.transactionNo,
+          BankCode: paymentInfoData.bankCode
         }).toString();
-
+      
         const response = await api.post(`Advertisement/CreateAdvertisement?${adQueryParams}`, {
           adId: adData.adId,
           heading: adData.heading,
@@ -41,32 +67,27 @@ const PaymentSuccess = () => {
           userId: adData.userId,
           elementId: adData.elementId
         });
-        console.log(response.status);
+        
 
         notification.success({
           message: 'Thanh toán thành công',
-          description: 'Quảng cáo của bạn đã được tạo.',
-          duration: 5,
+          description: 'Quảng cáo của bạn đã được tạo.'
+          
         });
 
-        setPaymentInfo({
-          amount: queryParams.get('vnp_Amount'),
-          orderInfo: queryParams.get('vnp_OrderInfo'),
-          transactionNo: queryParams.get('vnp_TransactionNo'),
-          bankCode: queryParams.get('vnp_BankCode'),
-          payDate: queryParams.get('vnp_PayDate')
-        });
+        localStorage.setItem('paymentProcessed', 'true');
+        setIsPaymentProcessed(true);
         return;
       } catch (error) {
         console.error('Error creating advertisement:', error);
-        message.error('Payment successful but failed to create advertisement');
+        message.error('Vui lòng tạo lại quảng cáo mới');
         navigate('/user-ads');
       }
     } else {
       notification.error({
         message: 'Thanh toán thất bại',
         description: 'Quảng cáo không được tạo.',
-        duration: 5,
+        duration: 2,
       });
       navigate('/user-ads');
     }
@@ -83,7 +104,54 @@ const PaymentSuccess = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (paymentInfo) {
+      console.log(paymentInfo);
+    }
+  }, [paymentInfo]);
+
+  useEffect(() => {
+    const processed = localStorage.getItem('paymentProcessed') === 'true';
+    setIsPaymentProcessed(processed);
+
+    if (processed) {
+      const handleBeforeUnload = () => {
+        localStorage.removeItem('paymentProcessed');
+      };
+
+      window.addEventListener('beforeunload', handleBeforeUnload);
+
+      return () => {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+      };
+    }
+  }, []);
+
+  useEffect(() => {
+    const handlePageHide = () => {
+      if (isPaymentProcessed) {
+        localStorage.setItem('redirectToHome', 'true');
+      }
+    };
+
+    window.addEventListener('pagehide', handlePageHide);
+
+    return () => {
+      window.removeEventListener('pagehide', handlePageHide);
+    };
+  }, [isPaymentProcessed]);
+
+  useEffect(() => {
+    const shouldRedirect = localStorage.getItem('redirectToHome') === 'true';
+    if (shouldRedirect) {
+      localStorage.removeItem('redirectToHome');
+      navigate('/');
+    }
+  }, [navigate]);
+
   const handleNavigateUserAds = () => {
+    localStorage.removeItem('paymentProcessed');
+    localStorage.removeItem('redirectToHome');
     navigate('/user-ads');
   };
 

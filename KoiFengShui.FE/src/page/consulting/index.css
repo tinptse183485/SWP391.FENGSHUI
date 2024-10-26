@@ -1,7 +1,25 @@
+.consulting-title{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28px;
+  font-weight: bold;
+  color: #000;
+}
+  
+  .consulting-container{
+    background-color: aliceblue;
+    margin: 120px 80px 100px 80px;
+    border-radius: 60px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    
+  }
   .Guest-element{
-    margin-top: 130px;
+    
     align-items: center;
     color: blueviolet;
+    margin-bottom: 70px;
   }
  
   .koi-cards {
@@ -9,6 +27,7 @@
     flex-wrap: wrap; 
     gap: 20px; 
     justify-content: center; 
+    
   }
   
   .koi-card {
@@ -20,7 +39,7 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     display: block;
     justify-content: center;
-    
+    background-color: aliceblue;
   }
   .element-koi{
     display: flex;
@@ -47,6 +66,7 @@
   justify-content: center;
   align-items: center;
   gap: 20px;
+  padding: 10px 60px;
 }
   .parallelogram {
     width: 750px;
@@ -77,6 +97,21 @@
   .modal-text{
     font-size: 20px;
     flex: 1;
+  }
+  .Header-pond{
+    margin-top: 40px;
+  }
+  .Header-fish{
+    margin-bottom: 40px;
+  }
+  .Header-pond h2{
+    color: #0a0a0a;
+    font-size: 35px;
+  }
+  .Header-fish h2{
+    color: #0a0a0a;
+    font-size: 35px;
+    
   }
   
   

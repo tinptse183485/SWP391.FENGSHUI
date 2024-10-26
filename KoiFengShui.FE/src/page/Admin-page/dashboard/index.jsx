@@ -18,7 +18,6 @@ const Dashboard = () => {
   });
   const chartRefs = useRef([]);
   const currentYear = new Date().getFullYear();
-
   const fetchData = async (endpoint, setter) => {
     try {
       const response = await api.get(endpoint);
@@ -42,6 +41,7 @@ const Dashboard = () => {
     }));
 
     fetchMonthlyRevenueData();
+
     fetchDailyRevenueData();
 
     console.log("Initial data state:", data);
@@ -65,29 +65,6 @@ const Dashboard = () => {
     });
   };
 
-  const fetchDailyRevenueData = async () => {
-    try {
-      const response = await api.get('Dashboard/GetDailyRevenueToDate');
-      console.log("Daily revenue data:", response.data);
-      
-      // Lọc và sắp xếp dữ liệu cho 7 ngày gần nhất
-      const today = new Date();
-      const last7Days = Array.from({length: 7}, (_, i) => {
-        const date = subDays(today, i);
-        return format(date, 'yyyy-MM-dd\'T\'00:00:00');
-      }).reverse();
-
-      const filteredData = last7Days.reduce((acc, date) => {
-        acc[date] = response.data[date] || 0;
-        return acc;
-      }, {});
-
-      setData(prev => ({ ...prev, dailyRevenue: filteredData }));
-    } catch (error) {
-      console.error("Error fetching daily revenue data:", error);
-    }
-  };
-
   const countItems = (items, key) => {
     return items.reduce((acc, item) => {
       const value = item[key];
@@ -106,7 +83,7 @@ const Dashboard = () => {
       borderWidth: 1,
     }],
   });
-
+     
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -155,43 +132,6 @@ const Dashboard = () => {
       pointHoverRadius: 7,
     }],
   };
-
-  const dailyRevenueChartData = {
-    labels: Object.keys(data.dailyRevenue).map(date => format(new Date(date), 'dd/MM')),
-    datasets: [{
-      label: 'Doanh thu 7 ngày gần nhất',
-      data: Object.values(data.dailyRevenue),
-      fill: false,
-      borderColor: 'rgb(75, 192, 192)',
-      tension: 0.1
-    }]
-  };
-
-  const dailyRevenueChartOptions = {
-    ...chartOptions,
-    scales: {
-      x: {
-        title: {
-          display: true,
-        }
-      },
-      y: {
-        title: {
-          display: true,
-          text: 'Doanh thu (VNĐ)'
-        },
-        beginAtZero: true
-      }
-    },
-    plugins: {
-      ...chartOptions.plugins,
-      title: {
-        display: true,
-        text: 'Doanh thu 7 ngày gần nhất'
-      }
-    }
-  };
-
   console.log("Monthly revenue chart data:", monthlyRevenueChartData);
 
   const renderChart = (condition, ChartComponent, chartData, options, index) => {
@@ -203,10 +143,34 @@ const Dashboard = () => {
     return <ChartComponent data={chartData} options={options} ref={el => chartRefs.current[index] = el} />;
   };
 
-  useEffect(() => {
-    console.log("Data changed, re-rendering charts");
-    // Có thể thêm logic để cập nhật các biểu đồ ở đây nếu cần
-  }, [data]);
+  // Add this new function to fetch daily revenue data
+  const fetchDailyRevenueData = async () => {
+    try {
+      const response = await api.get('Dashboard/GetDailyRevenueToDate');
+      console.log("Daily revenue data:", response.data);
+      setData(prev => ({ ...prev, dailyRevenue: response.data }));
+    } catch (error) {
+      console.error("Error fetching daily revenue data:", error);
+    }
+  };
+
+  // Add this new function to create the daily revenue chart data
+  const createDailyRevenueChartData = () => {
+    const last7Days = Object.keys(data.dailyRevenue)
+      .sort((a, b) => new Date(a) - new Date(b))
+      .slice(-7);
+
+    return {
+      labels: last7Days.map(date => format(new Date(date), 'dd/MM')),
+      datasets: [{
+        label: 'Doanh thu hàng ngày',
+        data: last7Days.map(date => data.dailyRevenue[date]),
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1
+      }]
+    };
+  };
 
   return (
     <div className="dashboard-container">
@@ -274,11 +238,28 @@ const Dashboard = () => {
             <p>No monthly revenue data available</p>
           )}
         </div>
+        
         <div className="chart-container" style={{ height: '400px' }}>
-          {Object.keys(data.dailyRevenue).length > 0 ? (
-            renderChart(true, Line, dailyRevenueChartData, dailyRevenueChartOptions, 5)
+          {data.dailyRevenue && Object.keys(data.dailyRevenue).length > 0 ? (
+            renderChart(true, Line, createDailyRevenueChartData(), {
+              ...chartOptions,
+              maintainAspectRatio: false,
+              plugins: {
+                ...chartOptions.plugins,
+                title: { display: true, text: 'Doanh thu 7 ngày gần nhất' }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  title: { display: true, text: 'Doanh thu (VNĐ)' }
+                },
+                x: {
+                  title: { display: true, text: 'Ngày' }
+                }
+              }
+            }, 5)
           ) : (
-            <p>Đang tải dữ liệu doanh thu 7 ngày gần nhất...</p>
+            <p>Đang tải dữ liệu doanh thu hàng ngày...</p>
           )}
         </div>
       </div>
