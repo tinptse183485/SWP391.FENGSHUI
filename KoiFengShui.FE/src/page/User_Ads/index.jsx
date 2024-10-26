@@ -56,6 +56,14 @@ const User_Ads = () => {
       console.error("Error fetching ads packages:", error);
     }
   };
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Draft": return "default";
+      case "Pending": return "processing";
+      case "Approved": return "success";
+      default: return "default";
+    }
+  };
 
   const fetchAdvertisements = async () => {
     try {
@@ -114,6 +122,8 @@ const User_Ads = () => {
       setLoading(false);
     }
   };
+  
+
 
   const columns = [
     {
@@ -127,6 +137,9 @@ const User_Ads = () => {
       dataIndex: "status",
       key: "status",
       width: 120,
+      render: (status) => {
+        return <span style={{ color: getStatusColor(status)  }}>{status}</span>;
+      },
     },
     {
       title: "Ngày bắt đầu",
@@ -134,7 +147,7 @@ const User_Ads = () => {
       key: "startDate",
       width: 120,
       render: (startDate) =>
-        startDate ? moment(startDate).format("DD/MM/YY") : "N/A",
+        startDate ? moment(startDate).format("DD/MM/YY") : "Chưa có",
     },
     {
       title: "Ngày hết hạn",
@@ -142,7 +155,7 @@ const User_Ads = () => {
       key: "expirationDate",
       width: 120,
       render: (expirationDate) => {
-        if (!expirationDate) return "N/A";
+        if (!expirationDate) return "Chưa có";
         const date = new Date(expirationDate);
         return date.toLocaleDateString("vi-VN", {
           year: "numeric",

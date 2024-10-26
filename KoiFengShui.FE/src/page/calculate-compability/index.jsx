@@ -237,7 +237,7 @@ function ComputeCompability() {
       setUserElement(response1.data);
       setUserLifePalife(response2.data);
       if (response.data) {
-        toast.success("Calculation successful");
+        toast.success("Tính toán hoàn tất");
         setCompatibilityResult(response.data.compatibility);
 
         // Fetch advertisements
@@ -247,11 +247,11 @@ function ComputeCompability() {
         );
         setAdvertisements(approvedAds);
       } else {
-        toast.error("No data received from the server");
+        toast.error("Không có dữ liệu từ server");
       }
     } catch (error) {
       console.error("API error:", error);
-      toast.error(error.response?.data || "Error calculating compatibility");
+      toast.error(error.response?.data || "Lỗi tính toán tương thích");
       setCompatibilityResult(null);
       setAdvertisements([]);
     }
@@ -383,7 +383,7 @@ function ComputeCompability() {
       setIsModalVisible(true);
     } catch (error) {
       console.error("Error fetching fish details:", error);
-      toast.error("Error fetching fish details");
+      toast.error("Không tải được thông tin cá");
     }
   };
   const showFishColor = async (fish) => {
@@ -407,7 +407,7 @@ function ComputeCompability() {
       );
     } catch (error) {
       console.error("Error fetching fish details:", error);
-      toast.error("Error fetching fish details");
+      toast.error("Không tải được thông tin cá");
     }
   };
 
@@ -610,7 +610,7 @@ function ComputeCompability() {
         setShapePoint(response.data);
       } catch (error) {
         console.error("Error fetching shape point:", error);
-        toast.error("Error fetching shape point");
+        toast.error("Lỗi tải điểm hình dạng hồ");
       }
     }
   };
@@ -622,7 +622,7 @@ function ComputeCompability() {
       const gender = form.getFieldValue("Gender");
 
       if (!dob || !gender) {
-        toast.error("Please select date of birth and gender");
+        toast.error("Vui lòng chọn ngày sinh và giới tính");
         return;
       }
 
@@ -655,8 +655,8 @@ function ComputeCompability() {
 
       form.setFieldsValue({ pondDirection: direction || null });
     } catch (error) {
-      console.error("Error fetching direction point:", error);
-      toast.error("Error fetching direction point");
+      console.error("Lỗi tải điểm hướng:", error);
+      toast.error("Lỗi tải điểm hướng hồ ");
     }
   };
 
