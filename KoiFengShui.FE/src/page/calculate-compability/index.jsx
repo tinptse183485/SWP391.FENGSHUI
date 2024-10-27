@@ -549,7 +549,11 @@ function ComputeCompability() {
       );
       // Also remove the fish point
     }
-  };
+  } catch (error) {
+    console.error("Error fetching fish point:", error);
+    toast.error("Vui lòng chọn ngày sinh và giới tính");
+  }
+}
 
   const handleSelectFish = async (fish) => {
     const validation = validateColorWeights(fish.koiType);
