@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import api from "../../config/axios";
 import { toast } from "react-toastify";
 import { useState } from "react"; // Import useState
+import HeaderTemplate from "../../components/header-page";
+import FooterTemplate from "../../components/footer-page";
 
 
 const Calculation = () => {
@@ -19,7 +21,22 @@ const Calculation = () => {
   const [lifePalace, setLifePalace] = useState(null);
   const [isFateCalculated, setIsFateCalculated] = useState(false);
 
-
+  const getElementColor = (element) => {
+    switch (element) {
+      case "Hỏa":
+        return "red";
+      case "Thủy":
+        return "blue";
+      case "Mộc":
+        return "green";
+      case "Kim":
+        return "gold";
+      case "Thổ":
+        return "brown";
+      default:
+        return "black";
+    }
+  };
   const handleCalculate = async () => {
     try {
       const values = await form.validateFields();
@@ -67,7 +84,7 @@ const Calculation = () => {
         },
       });
     } catch (error) {
-      toast.error(error.response?.data || "Error fetching data");
+      toast.error(error.response?.data || "Vui lòng nhập đầy đủ thông tin !");
     }
   };
 
@@ -87,11 +104,13 @@ const Calculation = () => {
 
     } catch (error) {
       console.error("Error details:", error);
-      toast.error(error.response?.data || "Error fetching fate and life palace data");
+      toast.error(error.response?.data || "Vui lòng nhập đầy đủ thông tin !");
     }
   };
 
   return (
+    <>
+    <HeaderTemplate></HeaderTemplate>
     <AuthenTemplate>
       <div className="Header-Title">
         <h1>Tư vấn cá và hồ theo tuổi của bạn</h1>
@@ -125,15 +144,15 @@ const Calculation = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="button" onClick={handleFateCalculation}>
+          <Button className="calculate-button" type="primary" htmlType="button" onClick={handleFateCalculation}>
             Tính mệnh của bạn
           </Button>
         </Form.Item>
       </Form>
 
       <div className="Guest-fate">
-        {fate && <h3>Mệnh của bạn là: {fate}</h3>}
-        {lifePalace && <h3>Cung mệnh của bạn là: {lifePalace}</h3>}
+        {fate && <h3 >Mệnh của bạn là: <span style={{color: getElementColor(fate) }}>{fate}</span></h3>}
+        {lifePalace && <h3>Cung mệnh của bạn là: <span style={{color: "purple"}}>{lifePalace}</span></h3>}
       </div>
 
       {isFateCalculated && (
@@ -142,6 +161,8 @@ const Calculation = () => {
         </Button>
       )}
     </AuthenTemplate>
+    <FooterTemplate/>
+    </>
   );
 };
 
