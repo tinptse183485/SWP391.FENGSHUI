@@ -34,7 +34,9 @@ import AdminDashboard from "./page/Admin-page/dashboard";
 import UserProfile from "./page/User-Profile";
 import ForgotPassword from "./page/Forgot-Password";
 import ResetPassword from "./page/Reset-Password";
+import PackageManagement from "./page/Admin-page/package";
 import Policies from "./page/Policies";
+
 
 function App() {
   const ProtectedRoute = ({ children }) => {
@@ -116,6 +118,10 @@ function App() {
         {
           path: "pond",
           element: <Pond />,
+        },
+        {
+          path: "packageManagement",
+          element: <PackageManagement />,
         },
       ],
     },

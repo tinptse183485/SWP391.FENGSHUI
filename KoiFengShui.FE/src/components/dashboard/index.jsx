@@ -39,7 +39,7 @@ const items = [
   getItem("Quản lý Blog", "blog", <PieChartOutlined />),
   getItem("Quản lý cá Koi", "koi", <PieChartOutlined />),
   getItem("Quản lý hồ", "pond", <PieChartOutlined />),
-
+  getItem("Quản lý gói", "packageManagement", <PieChartOutlined />),
 ];
 const Dashboard = () => {
   const navigate = useNavigate();
