@@ -79,7 +79,6 @@ function HeaderTemplate() {
   const handleScrollToContact = handleScrollToSection("contact");
   const handleScrollToTrendingFeature =
     handleScrollToSection("trending-feature");
-
   return (
     <div>
       <div className="top-bar">
@@ -108,7 +107,7 @@ function HeaderTemplate() {
             </li>
             <li>
               <a href="#about-us" onClick={handleScrollToAboutUs}>
-                About Us
+                Giới thiệu
               </a>
             </li>
             <li>

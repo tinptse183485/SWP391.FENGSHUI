@@ -1,18 +1,19 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Editor } from "@tinymce/tinymce-react";
-
 import { Button, message, Radio, Upload, Modal, Image } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-
 import api from "../../config/axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./index.css";
 import uploadFile from "../../utils/file"; // Đảm bảo import đúng đường dẫn
 
+import HeaderTemplate from "../../components/header-page";
+import FooterTemplate from "../../components/footer-page";
+
+
 function CreateAds() {
   const location = useLocation();
   const navigate = useNavigate();
-
   const [adData, setAdData] = useState({
     adId: ".",
     heading: "",
@@ -166,9 +167,11 @@ function CreateAds() {
   const handleChoosePackage = () => {
     const updatedAdData = {
       ...adData,
-
-      heading: adData.heading || document.querySelector('input[name="heading"]').value,
-      image: adData.image || (fileList.length > 0 ? fileList[0].url || fileList[0].thumbUrl : ''),
+      heading:
+        adData.heading || document.querySelector('input[name="heading"]').value,
+      image:
+        adData.image ||
+        (fileList.length > 0 ? fileList[0].url || fileList[0].thumbUrl : ""),
 
       link: adData.link || editorRef.current.getContent(),
       userId: localStorage.getItem("userId"),
@@ -178,11 +181,14 @@ function CreateAds() {
       status: "Draft",
     };
 
-
-    if (updatedAdData.heading && updatedAdData.image && updatedAdData.link && updatedAdData.elementId !== 'None') {
-      localStorage.setItem('adData', JSON.stringify(updatedAdData));
-      navigate('/choose-package', { state: { adData: updatedAdData } });
-
+    if (
+      updatedAdData.heading &&
+      updatedAdData.image &&
+      updatedAdData.link &&
+      updatedAdData.elementId !== "None"
+    ) {
+      localStorage.setItem("adData", JSON.stringify(updatedAdData));
+      navigate("/choose-package", { state: { adData: updatedAdData } });
     } else {
       message.error(
         "Vui lòng điền đầy đủ thông tin quảng cáo và chọn mệnh trước khi chọn gói."
@@ -191,8 +197,10 @@ function CreateAds() {
   };
 
   return (
-    <div className="ads-container">
-      <h1>
+    <>
+    <HeaderTemplate/>
+    <div className="ads-create-container">
+      <h1 className="ads-create-title">
         {adData.adId !== "." ? "Chỉnh sửa quảng cáo" : "Đăng quảng cáo mới"}
       </h1>
       <div className="input-container">
@@ -203,9 +211,7 @@ function CreateAds() {
             onPreview={handlePreview}
             onChange={handleChange}
             beforeUpload={() => false}
-           
           >
-
             {fileList.length >= 1 ? null : uploadButton}
           </Upload>
         </div>
@@ -224,12 +230,12 @@ function CreateAds() {
             <div className="element-selection">
               <select
                 name="elementId"
-                value={adData.elementId }
+                value={adData.elementId}
                 onChange={handleElementChange}
                 required
               >
                 <option value="">Chọn mệnh cho quảng cáo</option>
-                {elements.map(element => (
+                {elements.map((element) => (
                   <option key={element.elementId} value={element.elementId}>
                     {element.elementId}
                   </option>
@@ -237,7 +243,6 @@ function CreateAds() {
               </select>
             </div>
           </div>
-
         </div>
       </div>
       <Editor
@@ -318,6 +323,8 @@ function CreateAds() {
         />
       )}
     </div>
+    <FooterTemplate/>
+    </>
   );
 }
 

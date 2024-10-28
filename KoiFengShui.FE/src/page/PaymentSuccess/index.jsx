@@ -5,6 +5,8 @@ import api from '../../config/axios';
 import { Button, notification } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 import './index.css';
+import HeaderTemplate from '../../components/header-page';
+import FooterTemplate from '../../components/footer-page';
 
 const PaymentSuccess = () => {
   const location = useLocation();
@@ -109,7 +111,6 @@ const PaymentSuccess = () => {
       console.log(paymentInfo);
     }
   }, [paymentInfo]);
-
   useEffect(() => {
     const processed = localStorage.getItem('paymentProcessed') === 'true';
     setIsPaymentProcessed(processed);
@@ -148,7 +149,6 @@ const PaymentSuccess = () => {
       navigate('/');
     }
   }, [navigate]);
-
   const handleNavigateUserAds = () => {
     localStorage.removeItem('paymentProcessed');
     localStorage.removeItem('redirectToHome');
@@ -160,6 +160,8 @@ const PaymentSuccess = () => {
   }
 
   return (
+    <>
+    <HeaderTemplate/>
     <div className="payment-result-container">
       <Card title="Thông tin thanh toán" className="payment-result-info">
         <div className="payment-details">
@@ -205,6 +207,8 @@ const PaymentSuccess = () => {
         </Button>
       </Card>
     </div>
+    <FooterTemplate/>
+    </>
   );
 };
 

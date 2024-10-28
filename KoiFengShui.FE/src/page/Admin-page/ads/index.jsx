@@ -52,7 +52,7 @@ const Ads = () => {
   const fetchData = async () => {
     try {
       const response = await api.get(
-        "Advertisement/GetAllAdvertisemenWithPackageSortted"
+        "Advertisement/GetAdvertisementsWithPackageSortedAdmin"
       );
       setData(response.data);
       filterAds("all");
@@ -114,7 +114,7 @@ const Ads = () => {
   const handleDeleteFeedback = async (fbId) => {
     try {
       await api.delete(`Feedback/DeleteFeedBack/${fbId}`);
-      toast.success("Feedback deleted successfully");
+      toast.success("Đánh giá đã xóa thành công");
       // Refresh the feedback list
       setFeedbackModalVisible(false);
     // Reset các state liên quan nếu cần
@@ -122,10 +122,33 @@ const Ads = () => {
     setSelectedStars("all");
     } catch (error) {
       console.error("Error deleting feedback:", error);
-      toast.error(error.response?.data || "Failed to delete feedback");
+      toast.error(error.response?.data || "Có lỗi khi xóa đánh giá");
     }
   };
 
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Draft": return "default";
+      case "Pending": return "#1890ff";
+      case "Approved": return "#52c41a";
+      case "Refunded": return "#faad14";
+      case "Canceled": return "#f5222d";
+      case "Expired": return "#f5222d"; 
+      default: return "black";
+    }
+  };
+
+  const getStatusText = (status) => {
+    switch (status) {
+      case "Draft": return "Bản nháp";
+      case "Pending": return "Chờ duyệt";
+      case "Approved": return "Đã duyệt";
+      case "Refunded": return "Đã hoàn tiền";
+      case "Canceled": return "Đã hủy";
+      case "Expired": return "Đã hết hạn";
+      default: return "Trạng thái khác";
+    }
+  };
   const columns = [
     {
       title: "Tiêu đề",
@@ -182,25 +205,9 @@ const Ads = () => {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
-      render: (status) => (
-        <Text
-          style={{
-            color:
-
-              status === "Approved"
-                ? "#52c41a"
-                : status === "Refunded"
-                ? "#faad14"
-                : status === "Canceled"
-                ? "#f5222d"
-                : "#1890ff", // Màu cho trạng thái Pending
-
-          }}
-          className={`ads-status-${status.toLowerCase()}`}
-        >
-          {status}
-        </Text>
-      ),
+      render: (status) => {
+        return <span style={{ color: getStatusColor(status)  }}>{getStatusText(status)}</span>;
+      },
 
       sorter: (a, b) => statusPriority[a.status] - statusPriority[b.status],
 
