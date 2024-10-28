@@ -53,6 +53,4 @@ const Policies = () => {
         </div>
     );
   };
-  
-
 export default Policies;
