@@ -1,8 +1,15 @@
-.ads-container {
+.ads-create-container {
   max-width: 800px;
-  margin: 0 auto;
+  margin: 80px auto ;
   padding: 20px;
+  
+  border-radius: 30px;
+ 
 }
+.ads-create-title {
+  text-align: center;
+}
+
 
 
 .button-container {

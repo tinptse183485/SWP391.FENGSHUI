@@ -6,6 +6,11 @@ import api from "../../config/axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./index.css";
 import uploadFile from "../../utils/file"; // Đảm bảo import đúng đường dẫn
+
+import HeaderTemplate from "../../components/header-page";
+import FooterTemplate from "../../components/footer-page";
+
+
 function CreateAds() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -192,8 +197,10 @@ function CreateAds() {
   };
 
   return (
-    <div className="ads-container">
-      <h1>
+    <>
+    <HeaderTemplate/>
+    <div className="ads-create-container">
+      <h1 className="ads-create-title">
         {adData.adId !== "." ? "Chỉnh sửa quảng cáo" : "Đăng quảng cáo mới"}
       </h1>
       <div className="input-container">
@@ -316,6 +323,8 @@ function CreateAds() {
         />
       )}
     </div>
+    <FooterTemplate/>
+    </>
   );
 }
 
