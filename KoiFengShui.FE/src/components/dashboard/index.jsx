@@ -84,7 +84,7 @@ const Dashboard = () => {
           left: 0,
           top: 0,
           bottom: 0,
-          width: collapsed ? '80px' : '250px', // Tăng độ rộng khi mở rộng
+          width: collapsed ? '60px' : '200px', // Tăng độ rộng khi mở rộng
         }}
       >
 
@@ -133,17 +133,6 @@ const Dashboard = () => {
         >
           {collapsed ? "" : "Trang chủ"}
         </Button>
-        <Button
-          style={{
-            marginTop: "80px",
-          }}
-          type="primary"
-          icon={<LogoutOutlined />}
-          onClick={handleUserHome}
-        >
-          {collapsed ? "" : "User Home"}
-        </Button>
-
       </Sider>
 
       <Layout style={{ marginLeft: collapsed ? 80 : 250 }}>
@@ -169,7 +158,7 @@ const Dashboard = () => {
           </Breadcrumb>
           <div
             style={{
-              padding: 24,
+              padding: 0,
               minHeight: 360,
               background: colorBgContainer,
               borderRadius: borderRadiusLG,
