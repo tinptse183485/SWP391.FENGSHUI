@@ -357,7 +357,6 @@ function Home() {
           <div id="blog" className="container">
             <div className="feature">
               <div class="rectangle"></div>
-
               <h2>Blog</h2>
               <div class="rectangle"></div>
             </div>

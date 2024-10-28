@@ -109,7 +109,6 @@ const PaymentSuccess = () => {
       console.log(paymentInfo);
     }
   }, [paymentInfo]);
-
   useEffect(() => {
     const processed = localStorage.getItem('paymentProcessed') === 'true';
     setIsPaymentProcessed(processed);
@@ -148,7 +147,6 @@ const PaymentSuccess = () => {
       navigate('/');
     }
   }, [navigate]);
-
   const handleNavigateUserAds = () => {
     localStorage.removeItem('paymentProcessed');
     localStorage.removeItem('redirectToHome');

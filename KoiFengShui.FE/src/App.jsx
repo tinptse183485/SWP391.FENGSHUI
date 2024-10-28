@@ -1,3 +1,4 @@
+
 import {
   RouterProvider,
   createBrowserRouter,
@@ -5,10 +6,11 @@ import {
   useLocation,
 } from "react-router-dom";
 import { toast } from "react-toastify";
+import { RouterProvider, createBrowserRouter, Navigate, useLocation } from "react-router-dom";
+import { toast } from 'react-toastify';
 import Home from "./page/home";
 import Login from "./page/login";
 import Register from "./page/register";
-
 import Calculation from "./page/calculation";
 import Consulting from "./page/consulting";
 import CalculateCompability from "./page/calculate-compability";
@@ -20,9 +22,7 @@ import Pond from "./page/Admin-page/pond";
 import Ads_list from "./page/Ads_list";
 import CreateAds from "./page/CreateAds";
 import User_Ads from "./page/User_Ads";
-
 import Dashboard from "./components/dashboard";
-
 import AdvertisementDetail from "./page/AdvertismentDetail";
 import PaymentSuccess from "./page/PaymentSuccess";
 import VNPayPayment from "./page/Payment";
@@ -36,11 +36,13 @@ import ForgotPassword from "./page/Forgot-Password";
 import ResetPassword from "./page/Reset-Password";
 import PackageManagement from "./page/Admin-page/package";
 import Policies from "./page/Policies";
-
-
 function App() {
   const ProtectedRoute = ({ children }) => {
     const location = useLocation();
+    const userId = localStorage.getItem('userId');
+
+    if (!userId) {
+      toast.error('Vui lòng đăng nhập để truy cập trang này.');
     const userId = localStorage.getItem("userId");
     const userRole = localStorage.getItem("role");
 
@@ -65,12 +67,16 @@ function App() {
   };
 
   const ProtectedRouteAdmin = ({ children }) => {
+    const userId = localStorage.getItem('userId');
+    const userRole = localStorage.getItem('role');
     const userId = localStorage.getItem("userId");
     const userRole = localStorage.getItem("role");
-
     if (userId && userRole === "Admin") {
       return children;
     }
+    toast.error('Vui lòng đăng nhập để truy cập trang này.');
+      return <Navigate to="/login"  replace />;
+  }
     toast.error("Vui lòng đăng nhập để truy cập trang này.");
     return <Navigate to="/login" replace />;
   };
@@ -102,6 +108,7 @@ function App() {
           <Dashboard />
         </ProtectedRouteAdmin>
       ),
+      element:<ProtectedRouteAdmin><Dashboard/></ProtectedRouteAdmin> ,
       children: [
         {
           path: "AdminDashboard",
@@ -167,6 +174,7 @@ function App() {
           <UserProfile />
         </ProtectedRoute>
       ),
+      element: <ProtectedRoute><UserProfile /></ProtectedRoute>,
     },
     {
       path: "create-ads",
@@ -213,5 +221,4 @@ function App() {
 
   return <RouterProvider router={router} />;
 }
-
 export default App;

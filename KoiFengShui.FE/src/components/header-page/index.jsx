@@ -79,7 +79,6 @@ function HeaderTemplate() {
   const handleScrollToContact = handleScrollToSection("contact");
   const handleScrollToTrendingFeature =
     handleScrollToSection("trending-feature");
-
   return (
     <div>
       <div className="top-bar">

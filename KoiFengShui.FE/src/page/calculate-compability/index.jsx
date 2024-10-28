@@ -782,7 +782,6 @@ function ComputeCompability() {
                   </div>
                 )}
               </div>
-
               <Form.Item
                 label="Chọn loại cá"
                 name="selectedFishes"

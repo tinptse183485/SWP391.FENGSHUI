@@ -1,18 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Editor } from "@tinymce/tinymce-react";
-
 import { Button, message, Radio, Upload, Modal, Image } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-
 import api from "../../config/axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./index.css";
 import uploadFile from "../../utils/file"; // Đảm bảo import đúng đường dẫn
-
 function CreateAds() {
   const location = useLocation();
   const navigate = useNavigate();
-
   const [adData, setAdData] = useState({
     adId: ".",
     heading: "",
@@ -28,6 +24,9 @@ function CreateAds() {
 
   const [fileList, setFileList] = useState([]);
   const [previewOpen, setPreviewOpen] = useState(false);
+
+  const [previewImage, setPreviewImage] = useState('');
+  const [previewTitle, setPreviewTitle] = useState('');
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
 
@@ -166,7 +165,6 @@ function CreateAds() {
   const handleChoosePackage = () => {
     const updatedAdData = {
       ...adData,
-
       heading: adData.heading || document.querySelector('input[name="heading"]').value,
       image: adData.image || (fileList.length > 0 ? fileList[0].url || fileList[0].thumbUrl : ''),
 
@@ -205,7 +203,6 @@ function CreateAds() {
             beforeUpload={() => false}
            
           >
-
             {fileList.length >= 1 ? null : uploadButton}
           </Upload>
         </div>
@@ -237,7 +234,6 @@ function CreateAds() {
               </select>
             </div>
           </div>
-
         </div>
       </div>
       <Editor
