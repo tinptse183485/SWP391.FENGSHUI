@@ -24,9 +24,6 @@ function CreateAds() {
 
   const [fileList, setFileList] = useState([]);
   const [previewOpen, setPreviewOpen] = useState(false);
-
-  const [previewImage, setPreviewImage] = useState('');
-  const [previewTitle, setPreviewTitle] = useState('');
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
 
@@ -165,8 +162,11 @@ function CreateAds() {
   const handleChoosePackage = () => {
     const updatedAdData = {
       ...adData,
-      heading: adData.heading || document.querySelector('input[name="heading"]').value,
-      image: adData.image || (fileList.length > 0 ? fileList[0].url || fileList[0].thumbUrl : ''),
+      heading:
+        adData.heading || document.querySelector('input[name="heading"]').value,
+      image:
+        adData.image ||
+        (fileList.length > 0 ? fileList[0].url || fileList[0].thumbUrl : ""),
 
       link: adData.link || editorRef.current.getContent(),
       userId: localStorage.getItem("userId"),
@@ -176,11 +176,14 @@ function CreateAds() {
       status: "Draft",
     };
 
-
-    if (updatedAdData.heading && updatedAdData.image && updatedAdData.link && updatedAdData.elementId !== 'None') {
-      localStorage.setItem('adData', JSON.stringify(updatedAdData));
-      navigate('/choose-package', { state: { adData: updatedAdData } });
-
+    if (
+      updatedAdData.heading &&
+      updatedAdData.image &&
+      updatedAdData.link &&
+      updatedAdData.elementId !== "None"
+    ) {
+      localStorage.setItem("adData", JSON.stringify(updatedAdData));
+      navigate("/choose-package", { state: { adData: updatedAdData } });
     } else {
       message.error(
         "Vui lòng điền đầy đủ thông tin quảng cáo và chọn mệnh trước khi chọn gói."
@@ -201,7 +204,6 @@ function CreateAds() {
             onPreview={handlePreview}
             onChange={handleChange}
             beforeUpload={() => false}
-           
           >
             {fileList.length >= 1 ? null : uploadButton}
           </Upload>
@@ -221,12 +223,12 @@ function CreateAds() {
             <div className="element-selection">
               <select
                 name="elementId"
-                value={adData.elementId }
+                value={adData.elementId}
                 onChange={handleElementChange}
                 required
               >
                 <option value="">Chọn mệnh cho quảng cáo</option>
-                {elements.map(element => (
+                {elements.map((element) => (
                   <option key={element.elementId} value={element.elementId}>
                     {element.elementId}
                   </option>

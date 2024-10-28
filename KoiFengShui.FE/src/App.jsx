@@ -1,4 +1,3 @@
-
 import {
   RouterProvider,
   createBrowserRouter,
@@ -6,8 +5,6 @@ import {
   useLocation,
 } from "react-router-dom";
 import { toast } from "react-toastify";
-import { RouterProvider, createBrowserRouter, Navigate, useLocation } from "react-router-dom";
-import { toast } from 'react-toastify';
 import Home from "./page/home";
 import Login from "./page/login";
 import Register from "./page/register";
@@ -39,10 +36,6 @@ import Policies from "./page/Policies";
 function App() {
   const ProtectedRoute = ({ children }) => {
     const location = useLocation();
-    const userId = localStorage.getItem('userId');
-
-    if (!userId) {
-      toast.error('Vui lòng đăng nhập để truy cập trang này.');
     const userId = localStorage.getItem("userId");
     const userRole = localStorage.getItem("role");
 
@@ -50,15 +43,15 @@ function App() {
       toast.error("Vui lòng đăng nhập để truy cập trang này.");
       localStorage.removeItem("userId");
       localStorage.removeItem("token");
-      localStorage.removeItem("Name");
+      localStorage.removeItem("name");
       localStorage.removeItem("role");
       return <Navigate to="/login" state={{ from: location }} replace />;
     }
-    if (userRole === "Admin" ) {
+    if (userRole === "Admin") {
       toast.error("Admin không được phép đăng quảng cáo.");
       localStorage.removeItem("userId");
       localStorage.removeItem("token");
-      localStorage.removeItem("Name");
+      localStorage.removeItem("name");
       localStorage.removeItem("role");
       return <Navigate to="/login" state={{ from: location }} replace />;
     }
@@ -67,17 +60,16 @@ function App() {
   };
 
   const ProtectedRouteAdmin = ({ children }) => {
-    const userId = localStorage.getItem('userId');
-    const userRole = localStorage.getItem('role');
     const userId = localStorage.getItem("userId");
     const userRole = localStorage.getItem("role");
     if (userId && userRole === "Admin") {
       return children;
     }
-    toast.error('Vui lòng đăng nhập để truy cập trang này.');
-      return <Navigate to="/login"  replace />;
-  }
     toast.error("Vui lòng đăng nhập để truy cập trang này.");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("token");
+    localStorage.removeItem("name");
+    localStorage.removeItem("role");
     return <Navigate to="/login" replace />;
   };
   const router = createBrowserRouter([
@@ -108,7 +100,6 @@ function App() {
           <Dashboard />
         </ProtectedRouteAdmin>
       ),
-      element:<ProtectedRouteAdmin><Dashboard/></ProtectedRouteAdmin> ,
       children: [
         {
           path: "AdminDashboard",
@@ -174,7 +165,6 @@ function App() {
           <UserProfile />
         </ProtectedRoute>
       ),
-      element: <ProtectedRoute><UserProfile /></ProtectedRoute>,
     },
     {
       path: "create-ads",
