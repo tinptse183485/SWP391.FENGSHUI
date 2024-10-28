@@ -42,9 +42,22 @@ function App() {
   const ProtectedRoute = ({ children }) => {
     const location = useLocation();
     const userId = localStorage.getItem("userId");
+    const userRole = localStorage.getItem("role");
 
     if (!userId) {
       toast.error("Vui lòng đăng nhập để truy cập trang này.");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("token");
+      localStorage.removeItem("Name");
+      localStorage.removeItem("role");
+      return <Navigate to="/login" state={{ from: location }} replace />;
+    }
+    if (userRole === "Admin" ) {
+      toast.error("Admin không được phép đăng quảng cáo.");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("token");
+      localStorage.removeItem("Name");
+      localStorage.removeItem("role");
       return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
