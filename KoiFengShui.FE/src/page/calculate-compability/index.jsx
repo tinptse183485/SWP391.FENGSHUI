@@ -481,7 +481,7 @@ function ComputeCompability() {
       ))}
     </div>
   );
-  const handleResetColors = async (koiType) => {
+  const handleResetColors = (koiType) => {
     const originalColors = allFishColors[koiType].map((color) => ({
       ...color,
       percentage: color.originalPercentage || 0,
@@ -490,54 +490,10 @@ function ComputeCompability() {
       ...prev,
       [koiType]: originalColors,
     }));
-    // setFishPoints((prev) => {
-    //   const newPoints = { ...prev };
-    //   delete newPoints[koiType];
-    //   return newPoints;
-    // });
-      // Lấy ngày sinh từ form
-  const dob = form.getFieldValue("birthdate");
-  const formattedDob = dob ? dob.format("YYYY-MM-DD") : "";
-
-  // Chuẩn bị payload cho API
-  const payload = {
-    koiType: koiType,
-    colors: originalColors.map((color) => ({
-      colorId: color.colorId,
-      percentage: color.percentage,
-    })),
-  };
-
-  try {
-    // Gọi API để lấy điểm tương hợp mới
-    const response = await api.post(
-      "Compatibility/GetAttributeCustomColor",
-      payload,
-      {
-        params: { dob: formattedDob },
-      }
-    );
-    const newFishPoint = response.data;
-
-    // Cập nhật điểm tương hợp mới
-    setFishPoints((prev) => ({
-      ...prev,
-      [koiType]: newFishPoint,
-    }));
-
-    // Nếu cá này đã được chọn, cập nhật nó trong danh sách đã chọn
-    setSelectedFishes((prev) => {
-      const index = prev.findIndex((fish) => fish.koiType === koiType);
-      if (index !== -1) {
-        const updatedFish = {
-          ...prev[index],
-          colors: originalColors,
-        };
-        const newSelected = [...prev];
-        newSelected[index] = updatedFish;
-        return newSelected;
-      }
-      return prev;
+    setFishPoints((prev) => {
+      const newPoints = { ...prev };
+      delete newPoints[koiType];
+      return newPoints;
     });
     const isSelected = selectedFishes.some(
       (fish) => fish.koiType === koiType
@@ -549,11 +505,7 @@ function ComputeCompability() {
       );
       // Also remove the fish point
     }
-  } catch (error) {
-    console.error("Error fetching fish point:", error);
-    toast.error("Vui lòng chọn ngày sinh và giới tính");
-  }
-}
+  };
 
   const handleSelectFish = async (fish) => {
     const validation = validateColorWeights(fish.koiType);
