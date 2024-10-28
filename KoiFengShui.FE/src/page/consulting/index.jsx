@@ -113,10 +113,7 @@ function Consulting() {
           <h2>Mệnh của bạn là <span style={{color: getElementColor(userElement) }}>{userElement} </span></h2>
           <h2>Cung mệnh của bạn là <span style={{color: "purple"}  }>{lifePalace} </span></h2>
         </div>
-
         <hr className="consulting-divider" /> {/* Added divider */}
-
-        
 
         <div className="Header-fish">
           <h2>Các loại cá phù hợp</h2>
