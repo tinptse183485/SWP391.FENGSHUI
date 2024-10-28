@@ -5,6 +5,8 @@ import api from '../../config/axios';
 import { Button, notification } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 import './index.css';
+import HeaderTemplate from '../../components/header-page';
+import FooterTemplate from '../../components/footer-page';
 
 const PaymentSuccess = () => {
   const location = useLocation();
@@ -160,6 +162,8 @@ const PaymentSuccess = () => {
   }
 
   return (
+    <>
+    <HeaderTemplate/>
     <div className="payment-result-container">
       <Card title="Thông tin thanh toán" className="payment-result-info">
         <div className="payment-details">
@@ -205,6 +209,8 @@ const PaymentSuccess = () => {
         </Button>
       </Card>
     </div>
+    <FooterTemplate/>
+    </>
   );
 };
 

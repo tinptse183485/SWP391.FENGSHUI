@@ -59,9 +59,24 @@ const User_Ads = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case "Draft": return "default";
-      case "Pending": return "processing";
-      case "Approved": return "success";
-      default: return "default";
+      case "Pending": return "#1890ff";
+      case "Approved": return "#52c41a";
+      case "Refunded": return "#faad14";
+      case "Canceled": return "#f5222d";
+      case "Expired": return "#f5222d"; 
+      default: return "black";
+    }
+  };
+
+  const getStatusText = (status) => {
+    switch (status) {
+      case "Draft": return "Bản nháp";
+      case "Pending": return "Chờ duyệt";
+      case "Approved": return "Đã duyệt";
+      case "Refunded": return "Đã hoàn tiền";
+      case "Canceled": return "Đã hủy";
+      case "Expired": return "Đã hết hạn";
+      default: return "Trạng thái khác";
     }
   };
 
@@ -138,7 +153,7 @@ const User_Ads = () => {
       key: "status",
       width: 120,
       render: (status) => {
-        return <span style={{ color: getStatusColor(status)  }}>{status}</span>;
+        return <span style={{ color: getStatusColor(status)  }}>{getStatusText(status)}</span>;
       },
     },
     {
