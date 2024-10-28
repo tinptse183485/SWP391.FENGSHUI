@@ -35,7 +35,7 @@ function AdvertisementDetail() {
         setFilteredFeedback(feedbackResponse.data); // Initially, show all feedback
       } catch (error) {
         console.error('Error fetching data:', error);
-        message.error('Failed to load some data. Please try refreshing the page.');
+        message.error('Không tải được một số dữ liệu. Vui lòng tải lại trang.');
       } finally {
         setLoading(false);
         // Add this line to scroll to the top after loading
@@ -65,7 +65,7 @@ function AdvertisementDetail() {
 
   const submitFeedback = async () => {
     if (rating === 0) {
-      message.warning('Please provide a rating');
+      message.warning('Vui lòng cung cấp số sao đánh giá.');
       return;
     }
 
@@ -79,7 +79,7 @@ function AdvertisementDetail() {
         rate: rating
       };
       const response = await retryFetch(() => api.post('Feedback/AddFeedback', newFeedback));
-      message.success('Feedback submitted successfully');
+      message.success('Phản hồi đã gửi thành công');
       
       // Update both allFeedback and filteredFeedback
       const updatedFeedback = [response.data, ...allFeedback];
@@ -92,7 +92,7 @@ function AdvertisementDetail() {
       setRating(0);
     } catch (error) {
       console.error('Error submitting feedback:', error);
-      message.error('Failed to submit feedback. Please try again.');
+      message.error('Không gửi được phản hồi. Vui lòng thử lại.');
     }
   };
 
@@ -168,7 +168,7 @@ function AdvertisementDetail() {
               </div>
             ))
           ) : (
-            <p>No feedback matching the selected filter. Be the first to share your thoughts!</p>
+            <p>Chưa có phản hồi nào. Hãy là người đầu tiên chia sẻ suy nghĩ của bạn!</p>
           )}
         </div>
       </div>

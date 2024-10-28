@@ -13,7 +13,7 @@ const Blog = () => {
   const [blogs, setBlogs] = useState([]);
   const [filteredBlogs, setFilteredBlogs] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState("all");
-
+  const [loading, setLoading] = useState(false);
   const menuItems = [
     { key: "all", label: "Tất cả" },
     { key: "Draft", label: "Bản nháp" },
@@ -59,12 +59,15 @@ const Blog = () => {
   };
 
   const handleDelete = async (blogId) => {
+    setLoading(true);
     try {
       const response = await api.delete(`Blog/DeleteBlog/${blogId}`);
       toast.success(response.data);
       fetchBlogs(); // Cập nhật lại danh sách blog sau khi xóa
     } catch (error) {
       toast.error(error.response.data);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -145,6 +148,11 @@ const Blog = () => {
             onConfirm={() => handleDelete(record.blogId)}
             okText="Có"
             cancelText="Không"
+            okButtonProps={{
+              style: { width: "90px", height: "30px" },
+              loading: loading,
+            }}
+            cancelButtonProps={{ style: { width: "90px", height: "30px" } }}
           >
             <Button icon={<DeleteOutlined />} danger>
               Xóa

@@ -39,7 +39,7 @@ const items = [
   getItem("Quản lý Blog", "blog", <PieChartOutlined />),
   getItem("Quản lý cá Koi", "koi", <PieChartOutlined />),
   getItem("Quản lý hồ", "pond", <PieChartOutlined />),
-
+  getItem("Quản lý gói", "packageManagement", <PieChartOutlined />),
 ];
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -56,6 +56,9 @@ const Dashboard = () => {
     localStorage.removeItem("role");
 
     setUserId(null);
+    navigate("/");
+  };
+  const handleUserHome = () => {
     navigate("/");
   };
   const [collapsed, setCollapsed] = useState(false);
@@ -117,6 +120,16 @@ const Dashboard = () => {
           onClick={handleLogout}
         >
           {collapsed ? "" : "Logout"}
+        </Button>
+        <Button
+          style={{
+            marginTop: "80px",
+          }}
+          type="primary"
+          icon={<LogoutOutlined />}
+          onClick={handleUserHome}
+        >
+          {collapsed ? "" : "User Home"}
         </Button>
 
       </Sider>

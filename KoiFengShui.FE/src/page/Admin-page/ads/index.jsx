@@ -52,7 +52,7 @@ const Ads = () => {
   const fetchData = async () => {
     try {
       const response = await api.get(
-        "Advertisement/GetAllAdvertisemenWithPackageSortted"
+        "Advertisement/GetAdvertisementsWithPackageSortedAdmin"
       );
       setData(response.data);
       filterAds("all");
@@ -114,7 +114,7 @@ const Ads = () => {
   const handleDeleteFeedback = async (fbId) => {
     try {
       await api.delete(`Feedback/DeleteFeedBack/${fbId}`);
-      toast.success("Feedback deleted successfully");
+      toast.success("Đánh giá đã xóa thành công");
       // Refresh the feedback list
       setFeedbackModalVisible(false);
     // Reset các state liên quan nếu cần
@@ -122,7 +122,7 @@ const Ads = () => {
     setSelectedStars("all");
     } catch (error) {
       console.error("Error deleting feedback:", error);
-      toast.error(error.response?.data || "Failed to delete feedback");
+      toast.error(error.response?.data || "Có lỗi khi xóa đánh giá");
     }
   };
 

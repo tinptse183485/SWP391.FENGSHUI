@@ -1,43 +1,19 @@
-<<<<<<< HEAD
 import React, { useState, useRef, useEffect } from "react";
 import { Editor } from "@tinymce/tinymce-react";
-
 import { Button, message, Radio, Upload, Modal, Image } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-
 import api from "../../config/axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./index.css";
 import uploadFile from "../../utils/file"; // Đảm bảo import đúng đường dẫn
-=======
-import React, { useState, useRef, useEffect } from 'react';
-import { Editor } from '@tinymce/tinymce-react';
-
-import { Button, message, Radio, Upload, Modal, Image } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
-
-import api from '../../config/axios';
-import { useNavigate, useLocation } from 'react-router-dom';
-import './index.css';
-import uploadFile from '../../utils/file'; // Đảm bảo import đúng đường dẫn
->>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
-
 function CreateAds() {
   const location = useLocation();
   const navigate = useNavigate();
-
   const [adData, setAdData] = useState({
-<<<<<<< HEAD
     adId: ".",
     heading: "",
     image: "",
     link: "",
-=======
-    adId: '.',
-    heading: '',
-    image: '',
-    link: '',
->>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
     userId: localStorage.getItem("userId"),
     elementId: "None",
     status: "Draft",
@@ -48,14 +24,11 @@ function CreateAds() {
 
   const [fileList, setFileList] = useState([]);
   const [previewOpen, setPreviewOpen] = useState(false);
-<<<<<<< HEAD
-  const [previewImage, setPreviewImage] = useState("");
-  const [previewTitle, setPreviewTitle] = useState("");
-=======
+
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
-
->>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
 
   useEffect(() => {
     const { advertisement } = location.state || {};
@@ -67,15 +40,9 @@ function CreateAds() {
       if (advertisement.image) {
         setFileList([
           {
-<<<<<<< HEAD
             uid: "-1",
             name: "image.png",
             status: "done",
-=======
-            uid: '-1',
-            name: 'image.png',
-            status: 'done',
->>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
             url: advertisement.image,
           },
         ]);
@@ -88,7 +55,6 @@ function CreateAds() {
   useEffect(() => {
     fetchElements();
   }, []);
-
 
   const fetchElements = async () => {
     try {
@@ -135,19 +101,14 @@ function CreateAds() {
     }
     setPreviewImage(file.url || file.preview);
     setPreviewOpen(true);
-<<<<<<< HEAD
     setPreviewTitle(
       file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
     );
-=======
-    setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
->>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
   };
 
   const handleChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
     if (newFileList.length > 0) {
-<<<<<<< HEAD
       setAdData((prevData) => ({
         ...prevData,
         image: newFileList[0].url || newFileList[0].thumbUrl,
@@ -156,16 +117,6 @@ function CreateAds() {
       setAdData((prevData) => ({
         ...prevData,
         image: "",
-=======
-      setAdData(prevData => ({
-        ...prevData,
-        image: newFileList[0].url || newFileList[0].thumbUrl
-      }));
-    } else {
-      setAdData(prevData => ({
-        ...prevData,
-        image: ''
->>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
       }));
     }
   };
@@ -181,11 +132,7 @@ function CreateAds() {
       type="button"
     >
       <PlusOutlined />
-<<<<<<< HEAD
       <div style={{ marginTop: 8 }}>Tải ảnh bìa lên</div>
-=======
-      <div style={{ marginTop: 8 }}>Tải lên</div>
->>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
     </button>
   );
 
@@ -199,7 +146,6 @@ function CreateAds() {
 
       const adDataToSave = {
         ...adData,
-<<<<<<< HEAD
         image: imageUrl,
       };
 
@@ -213,26 +159,12 @@ function CreateAds() {
     } catch (error) {
       console.error("Error:", error);
       message.error("Có lỗi xảy ra khi lưu quảng cáo. Vui lòng thử lại.");
-=======
-        image: imageUrl
-      };
-
-      const response = await api.post('Advertisement/SaveAdvertisementDraft', adDataToSave);
-      console.log('Response:', response.data);
-      message.success('Quảng cáo đã được lưu thành công!');
-      navigate('/user-ads');
-    } catch (error) {
-      console.error('Error:', error);
-      message.error('Có lỗi xảy ra khi lưu quảng cáo. Vui lòng thử lại.');
->>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
     }
   };
 
   const handleChoosePackage = () => {
     const updatedAdData = {
       ...adData,
-<<<<<<< HEAD
-
       heading: adData.heading || document.querySelector('input[name="heading"]').value,
       image: adData.image || (fileList.length > 0 ? fileList[0].url || fileList[0].thumbUrl : ''),
 
@@ -253,27 +185,11 @@ function CreateAds() {
       message.error(
         "Vui lòng điền đầy đủ thông tin quảng cáo và chọn mệnh trước khi chọn gói."
       );
-=======
-      heading: adData.heading || document.querySelector('input[name="heading"]').value,
-      image: adData.image || document.querySelector('input[name="image"]').value,
-      link: adData.link || editorRef.current.getContent(),
-      userId: localStorage.getItem("userId"),
-      elementId: adData.elementId || document.querySelector('select[name="elementId"]').value,
-      status: 'Draft'
-    };
-
-    if (updatedAdData.heading && updatedAdData.image && updatedAdData.link && updatedAdData.elementId) {
-      localStorage.setItem('adData', JSON.stringify(updatedAdData));
-      navigate('/choose-package', { state: { adData: updatedAdData } });
-    } else {
-      message.error('Vui lòng điền đầy đủ thông tin quảng cáo và chọn mệnh trước khi chọn gói.');
->>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
     }
   };
 
   return (
     <div className="ads-container">
-<<<<<<< HEAD
       <h1>
         {adData.adId !== "." ? "Chỉnh sửa quảng cáo" : "Đăng quảng cáo mới"}
       </h1>
@@ -287,7 +203,6 @@ function CreateAds() {
             beforeUpload={() => false}
            
           >
-
             {fileList.length >= 1 ? null : uploadButton}
           </Upload>
         </div>
@@ -319,43 +234,6 @@ function CreateAds() {
               </select>
             </div>
           </div>
-
-=======
-      <h1>{adData.adId !== '.' ? 'Chỉnh sửa quảng cáo' : 'Đăng quảng cáo mới'}</h1>
-      <div className="input-container">
-        <input
-          type="text"
-          name="heading"
-          value={adData.heading}
-          onChange={handleInputChange}
-          placeholder="Tiêu đề quảng cáo"
-          required
-        />
-        <Upload
-          listType="picture-card"
-          fileList={fileList}
-          onPreview={handlePreview}
-          onChange={handleChange}
-          beforeUpload={() => false}
-        >
-          {fileList.length >= 1 ? null : uploadButton}
-        </Upload>
-        <div className="element-selection">
-          <h3>Chọn mệnh cho quảng cáo:</h3>
-          <select
-            name="elementId"
-            value={adData.elementId}
-            onChange={handleElementChange}
-            required
-          >
-            <option value=""></option>
-            {elements.map(element => (
-              <option key={element.elementId} value={element.elementId}>
-                {element.elementId}
-              </option>
-            ))}
-          </select>
->>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
         </div>
       </div>
       <Editor

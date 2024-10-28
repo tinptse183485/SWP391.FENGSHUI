@@ -75,12 +75,8 @@ const PaymentSuccess = () => {
           
         });
 
-<<<<<<< HEAD
         localStorage.setItem('paymentProcessed', 'true');
         setIsPaymentProcessed(true);
-=======
-        
->>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
         return;
       } catch (error) {
         console.error('Error creating advertisement:', error);
@@ -113,8 +109,6 @@ const PaymentSuccess = () => {
       console.log(paymentInfo);
     }
   }, [paymentInfo]);
-
-<<<<<<< HEAD
   useEffect(() => {
     const processed = localStorage.getItem('paymentProcessed') === 'true';
     setIsPaymentProcessed(processed);
@@ -153,9 +147,6 @@ const PaymentSuccess = () => {
       navigate('/');
     }
   }, [navigate]);
-
-=======
->>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
   const handleNavigateUserAds = () => {
     localStorage.removeItem('paymentProcessed');
     localStorage.removeItem('redirectToHome');
