@@ -107,7 +107,7 @@ function HeaderTemplate() {
             </li>
             <li>
               <a href="#about-us" onClick={handleScrollToAboutUs}>
-                About Us
+                Giới thiệu
               </a>
             </li>
             <li>
