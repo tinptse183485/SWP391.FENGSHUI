@@ -1,13 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
-import { Button, message } from 'antd';
+import { Button, message, Upload, Image } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import api from '../../../config/axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './index.css';
+import uploadFile from "../../../utils/file";
 
 function CreateBlog() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false); 
 
   const [blogData, setBlogData] = useState({
     blogId: '.',
@@ -17,6 +20,9 @@ function CreateBlog() {
     status: 'Draft'
   });
   const editorRef = useRef(null);
+  const [fileList, setFileList] = useState([]);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
 
   useEffect(() => {
     const { blog } = location.state || {};
@@ -25,6 +31,16 @@ function CreateBlog() {
         ...prevData,
         ...blog
       }));
+      if (blog.image) {
+        setFileList([
+          {
+            uid: "-1",
+            name: "blog-image.png",
+            status: "done",
+            url: blog.image,
+          },
+        ]);
+      }
     }
   }, [location.state]);
 
@@ -43,25 +59,79 @@ function CreateBlog() {
     }));
   };
 
-  const handleSave = async (status) => {
-    const updatedBlogData = {
-      ...blogData,
-      status: status
-    };
+  const getBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
 
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+  };
+
+  const handleChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+    if (newFileList.length > 0) {
+      setBlogData((prevData) => ({
+        ...prevData,
+        image: newFileList[0].url || newFileList[0].thumbUrl,
+      }));
+    } else {
+      setBlogData((prevData) => ({
+        ...prevData,
+        image: "",
+      }));
+    }
+  };
+
+  const uploadButton = (
+    <button
+      style={{
+        border: 0,
+        background: "none",
+      }}
+      type="button"
+    >
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Tải ảnh bìa lên</div>
+    </button>
+  );
+  const handleSave = async (status) => {
     try {
+      setIsLoading(true);
+      let imageUrl = blogData.image;
+      if (fileList.length > 0 && fileList[0].originFileObj) {
+        const file = fileList[0].originFileObj;
+        imageUrl = await uploadFile(file);
+      }
+
+      const updatedBlogData = {
+        ...blogData,
+        status: status,
+        image: imageUrl
+      };
+
       let response;
       if (blogData.blogId === '.') {
         response = await api.post('Blog/AddBlog', updatedBlogData);
       } else {
         response = await api.put('Blog/UpdateBlog', updatedBlogData);
       }
+
       console.log('Response:', response.data);
       message.success(status === 'Draft' ? 'Bài viết đã được lưu thành công!' : 'Bài viết đã được đăng thành công!');
       navigate('/dashboard/blog');
     } catch (error) {
       console.error('Error:', error);
       message.error('Có lỗi xảy ra khi lưu bài viết. Vui lòng thử lại.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -77,14 +147,15 @@ function CreateBlog() {
         placeholder="Tiêu đề bài viết"
         required
       />
-      <input
-        type="text"
-        name="image"
-        value={blogData.image}
-        onChange={handleInputChange}
-        placeholder="URL hình ảnh"
-        required
-      />
+      <Upload
+            listType="picture-card"
+            fileList={fileList}
+            onPreview={handlePreview}
+            onChange={handleChange}
+            beforeUpload={() => false}
+          >
+            {fileList.length >= 1 ? null : uploadButton}
+          </Upload>
       <Editor
         apiKey='48zvgxqbyrxhxjktp3nysk7hscrlqcz0143gyuhannv3rfv5'
         onInit={(evt, editor) => {
@@ -114,10 +185,18 @@ function CreateBlog() {
       />
 
       <div className="button-container">
-        <Button className="action-button save-button" onClick={() => handleSave('Draft')}>
+        <Button 
+          className="action-button save-button" 
+          onClick={() => handleSave('Draft')}
+          loading={isLoading}
+        >
           Lưu bản nháp
         </Button>
-        <Button className="action-button publish-button" onClick={() => handleSave('Published')}>
+        <Button 
+          className="action-button publish-button" 
+          onClick={() => handleSave('Published')}
+          loading={isLoading}
+        >
           Đăng bài
         </Button>
       </div>
@@ -127,6 +206,18 @@ function CreateBlog() {
           <h2>Nội dung bài viết:</h2>
           <div dangerouslySetInnerHTML={{ __html: blogData.link }} />
         </div>
+      )}
+      {previewImage && (
+        <Image
+          style={{
+            display: "none",
+          }}
+          src={previewImage}
+          preview={{
+            visible: previewOpen,
+            onVisibleChange: (visible) => setPreviewOpen(visible),
+          }}
+        />
       )}
     </div>
   );
