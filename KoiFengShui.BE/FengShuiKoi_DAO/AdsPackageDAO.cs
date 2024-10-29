@@ -160,45 +160,48 @@ namespace FengShuiKoi_DAO
                 return new Dictionary<string, double>();
             }
         }
-        public async Task<Dictionary<DateTime, double>> GetDailyRevenueToDate(DateTime currentDate)
+        public async Task<Dictionary<string, double>> GetDailyRevenueToDate(int year, int month, int day)
         {
             try
             {
-                
-                var startDate = currentDate.AddDays(-7);
+               
+
+                var specifiedDate = new DateTime(year, month, day);
+                var startDate = specifiedDate.AddDays(-7); 
+                var currentDate = specifiedDate; 
 
                 var dailyRevenue = await dbContext.AdsPackages
-    .Join(dbContext.Advertisements,
-          package => package.AdId,
-          advertisement => advertisement.AdId,
-          (package, advertisement) => new { package, advertisement })
-    .Where(x => x.package.CreateAt.Date <= currentDate.Date &&
-                (x.advertisement.Status == "Approved" || x.advertisement.Status == "Expired")) 
-    .GroupBy(x => x.package.CreateAt.Date)
-    .Select(g => new { Date = g.Key, TotalRevenue = g.Sum(p => p.package.Total) })
-    .OrderBy(x => x.Date)
-    .ToDictionaryAsync(x => x.Date, x => x.TotalRevenue);
+                    .Join(dbContext.Advertisements,
+                          package => package.AdId,
+                          advertisement => advertisement.AdId,
+                          (package, advertisement) => new { package, advertisement })
+                    .Where(x => x.package.CreateAt.Date <= currentDate.Date &&
+                                (x.advertisement.Status == "Approved" || x.advertisement.Status == "Expired"))
+                    .GroupBy(x => x.package.CreateAt.Date)
+                    .Select(g => new { Date = g.Key, TotalRevenue = g.Sum(p => p.package.Total) })
+                    .OrderBy(x => x.Date)
+                    .ToDictionaryAsync(x => x.Date.ToShortDateString(), x => x.TotalRevenue); 
 
-                // Ensure all days are included in the dictionary, even those with no revenue
-                var result = new Dictionary<DateTime, double>();
+             
+                var result = new Dictionary<string, double>();
                 for (var date = startDate; date <= currentDate.Date; date = date.AddDays(1))
                 {
-                    if (dailyRevenue.TryGetValue(date, out double revenue))
+                    if (dailyRevenue.TryGetValue(date.ToShortDateString(), out double revenue))
                     {
-                        result[date] = revenue;
+                        result[date.ToShortDateString()] = revenue;
                     }
                     else
                     {
-                        result[date] = 0;
+                        result[date.ToShortDateString()] = 0; 
                     }
                 }
 
-                return result;
+                return result; 
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Lỗi trong GetDailyRevenueToDate: {ex.Message}");
-                return new Dictionary<DateTime, double>();
+                Console.WriteLine($"Lỗi trong GetDailyRevenueFromSpecifiedDate: {ex.Message}");
+                return new Dictionary<string, double>(); // Return an empty dictionary on error
             }
         }
     }

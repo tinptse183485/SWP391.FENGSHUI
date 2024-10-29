@@ -1,4 +1,5 @@
 ﻿using FengShuiKoi_BO;
+using FengShuiKoi_DAO;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -19,6 +20,6 @@ namespace FengShuiKoi_Repository
 
 		Task<bool> DeleteAdsPackage(string AdID, string Rank, DateTime CreateAt);
         Task<Dictionary<string, double>> GetTotalRevenueByMonth(int year, int month);
-        Task<Dictionary<DateTime, double>> GetDailyRevenueToDate(DateTime currentDate);
+        Task<Dictionary<string, double>> GetDailyRevenueToDate(int year, int month, int day);
     }
 }

@@ -52,9 +52,9 @@ namespace FengShuiKoi_Repository
         {
             return await AdsPackageDAO.Instance.GetTotalRevenueByMonth(year, month);
         }
-        public async Task<Dictionary<DateTime, double>> GetDailyRevenueToDate(DateTime currentDate)
+        public async Task<Dictionary<string, double>> GetDailyRevenueToDate(int year, int month, int day)
         {
-            return await AdsPackageDAO.Instance.GetDailyRevenueToDate(currentDate);
+            return await AdsPackageDAO.Instance.GetDailyRevenueToDate(year,month,day);
         }
     }
 }
