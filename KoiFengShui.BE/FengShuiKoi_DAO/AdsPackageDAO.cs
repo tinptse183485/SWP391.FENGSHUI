@@ -29,32 +29,26 @@ namespace FengShuiKoi_DAO
             dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
         }
 
-        public async Task<Dictionary<string, double>> GetRevenueByPackage()
+         public async Task<Dictionary<string, double>> GetRevenueByPackage()
         {
             try
             {
                 var adsPackages = await dbContext.AdsPackages.AsNoTracking().ToListAsync();
-                Console.WriteLine($"Total Ads Packages: {adsPackages.Count}");
-
                 var revenueByPackage = new Dictionary<string, double>();
 
                 foreach (var package in adsPackages)
                 {
-                    var adver = await AdvertisementDAO.Instance.GetAdvertisementByAdID(package.AdId);
-                    if (adver != null && ( adver.Status.Equals("Approved") || adver.Status.Equals("Expired")))
+                    if (!revenueByPackage.ContainsKey(package.Rank))
                     {
-                        if (!revenueByPackage.ContainsKey(package.Rank))
-                        {
-                            revenueByPackage[package.Rank] = 0;
-                        }
-                        revenueByPackage[package.Rank] += package.Total;
+                        revenueByPackage[package.Rank] = 0;
                     }
+                    revenueByPackage[package.Rank] += package.Total;
                 }
                 return revenueByPackage;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Lỗi trong GetRevenueByPackage: {ex}");
+                Console.WriteLine($"Lỗi trong GetRevenueByPackage: {ex.Message}");
                 return new Dictionary<string, double>();
             }
         }
