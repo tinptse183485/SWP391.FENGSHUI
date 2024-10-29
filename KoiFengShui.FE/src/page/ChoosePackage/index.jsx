@@ -146,6 +146,11 @@ const ChoosePackage = () => {
     }
   };
 
+  const disabledDate = (current) => {
+    // Can't select days before today
+    return current && current < dayjs().startOf('day');
+  };
+
   return (
     <> <Header_page />
     <div className="choose-package-container">
@@ -176,8 +181,29 @@ const ChoosePackage = () => {
                   ))}
                 </Select>
               </Form.Item>
-              <Form.Item name="startDate" label="Ngày Bắt Đầu" rules={[{ required: true }]}>
-                <DatePicker onChange={(date) => handleDateChange(date)} format="DD-MM-YYYY" />
+              <Form.Item 
+                name="startDate" 
+                label="Ngày Bắt Đầu" 
+                rules={[
+                  { 
+                    required: true,
+                    message: 'Vui lòng chọn ngày bắt đầu' 
+                  },
+                  {
+                    validator: (_, value) => {
+                      if (value && value < dayjs().startOf('day')) {
+                        return Promise.reject('Không thể chọn ngày trong quá khứ');
+                      }
+                      return Promise.resolve();
+                    }
+                  }
+                ]}
+              >
+                <DatePicker 
+                  onChange={(date) => handleDateChange(date)} 
+                  format="DD-MM-YYYY"
+                  disabledDate={disabledDate}
+                />
               </Form.Item>
               <Form.Item name="quantity" label="Số Lượng" rules={[{ required: true }]}>
                 <InputNumber min={1} onChange={handleQuantityChange} />
