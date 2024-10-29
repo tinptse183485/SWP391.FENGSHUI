@@ -41,7 +41,7 @@ namespace FengShuiKoi_DAO
                 foreach (var package in adsPackages)
                 {
                     var adver = await AdvertisementDAO.Instance.GetAdvertisementByAdID(package.AdId);
-                    if (adver != null && adver.Status.Equals("Approved"))
+                    if (adver != null && ( adver.Status.Equals("Approved") || adver.Status.Equals("Expired")))
                     {
                         if (!revenueByPackage.ContainsKey(package.Rank))
                         {
@@ -153,7 +153,7 @@ namespace FengShuiKoi_DAO
                           package => package.AdId,
                           advertisement => advertisement.AdId,
                           (package, advertisement) => new { package, advertisement })
-                    .Where(x => x.advertisement.Status == "Approved")
+                    .Where(x => x.advertisement.Status == "Approved" || x.advertisement.Status == "Expired")
                     .GroupBy(x => x.package.Rank)
                     .Select(g => new { Rank = g.Key, TongDoanhThu = g.Sum(p => p.package.Total) })
                     .ToDictionaryAsync(x => x.Rank, x => x.TongDoanhThu);
@@ -166,27 +166,28 @@ namespace FengShuiKoi_DAO
                 return new Dictionary<string, double>();
             }
         }
-        public async Task<Dictionary<DateTime, double>> GetDailyRevenueToDate()
+        public async Task<Dictionary<DateTime, double>> GetDailyRevenueToDate(DateTime currentDate)
         {
             try
             {
-                var currentDate = DateTime.Now.Date;
-                var startDate = DateTime.Now.Date.AddDays(-7);
+                
+                var startDate = currentDate.AddDays(-7);
 
                 var dailyRevenue = await dbContext.AdsPackages
-                    .Join(dbContext.Advertisements, 
-                          package => package.AdId,
-                          advertisement => advertisement.AdId,
-                          (package, advertisement) => new { package, advertisement }) 
-                    .Where(x => x.package.CreateAt.Date <= currentDate && x.advertisement.Status == "Approved") 
-                    .GroupBy(x => x.package.CreateAt.Date)
-                    .Select(g => new { Date = g.Key, TotalRevenue = g.Sum(p => p.package.Total) })
-                    .OrderBy(x => x.Date)
-                    .ToDictionaryAsync(x => x.Date, x => x.TotalRevenue);
+    .Join(dbContext.Advertisements,
+          package => package.AdId,
+          advertisement => advertisement.AdId,
+          (package, advertisement) => new { package, advertisement })
+    .Where(x => x.package.CreateAt.Date <= currentDate.Date &&
+                (x.advertisement.Status == "Approved" || x.advertisement.Status == "Expired")) 
+    .GroupBy(x => x.package.CreateAt.Date)
+    .Select(g => new { Date = g.Key, TotalRevenue = g.Sum(p => p.package.Total) })
+    .OrderBy(x => x.Date)
+    .ToDictionaryAsync(x => x.Date, x => x.TotalRevenue);
 
                 // Ensure all days are included in the dictionary, even those with no revenue
                 var result = new Dictionary<DateTime, double>();
-                for (var date = startDate; date <= currentDate; date = date.AddDays(1))
+                for (var date = startDate; date <= currentDate.Date; date = date.AddDays(1))
                 {
                     if (dailyRevenue.TryGetValue(date, out double revenue))
                     {
@@ -207,4 +208,4 @@ namespace FengShuiKoi_DAO
             }
         }
     }
-    }
+}
