@@ -77,5 +77,32 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
+        [HttpPut("UpdatePondImg")]
+        public async Task<IActionResult> UpdatePondImg(string shapeID, string img)
+        {
+            try
+            {
+                var updatePond = await _shapeService.GetShapeById(shapeID);
+                if (updatePond == null)
+                {
+                    return BadRequest("Không tìm thấy hình dạng hồ");
+                }
+                else
+                {
+                    bool isSuccess = await _shapeService.UpdateShapeImg(shapeID, img);
+                    if (isSuccess)
+                    {
+                        return Ok("Cập nhật hồ thành công");
+                    }
+                    else
+                    {
+                        return BadRequest("Cập nhật hồ thất bại");
+                    }
+                }
+            }catch (Exception ex) 
+                {
+                    return StatusCode(500,$"Lỗi máy chủ: {ex.Message}");
+                }
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using FengShuiKoi_BO;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -14,5 +15,6 @@ namespace FengShuiKoi_Repository
         Task<bool> DeleteFeedback(string feedbackId);
         Task<List<Feedback>> GetFeedbackByAdId(string AdId);
         Task<string> GetLastFBId();
+        
     }
 }

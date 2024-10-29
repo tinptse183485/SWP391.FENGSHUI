@@ -26,8 +26,9 @@ namespace FengShuiKoi_Repository
         public async Task<List<Advertisement>> GetAdvertisementStatus(string status)
             => await AdvertisementDAO.Instance.GetAdvertisementStatus(status);
 
+		public async Task<List<AdvertisementWithPackageDTO>> GetAdvertisementsWithPackageSortedAdmin() => await AdvertisementDAO.Instance.GetAdvertisementsWithPackageSortedAdmin();
 
-        public async Task<List<Advertisement>> GetAdvertisementByUserIdAndStatus(string userId, string status)
+		public async Task<List<Advertisement>> GetAdvertisementByUserIdAndStatus(string userId, string status)
         {
             return await AdvertisementDAO.Instance.GetAdvertisementByUserIdAndStatus(userId, status);
         }
@@ -45,8 +46,10 @@ namespace FengShuiKoi_Repository
             return await AdvertisementDAO.Instance.UpdateAdvertisement(updatedAdvertisement);
         }
 
-		public async Task<List<Advertisement>> GetExpiredAdvertisements() => await AdvertisementDAO.Instance.GetExpiredAdvertisements();
 
+		public async Task<List<Advertisement>> GetExpiredAdvertisements() => await AdvertisementDAO.Instance.GetExpiredAdvertisements();
+    public async Task<List<Advertisement>> GetAdvertisementsSortted() => await AdvertisementDAO.Instance.GetAdvertisementsSortted();
+		public async Task<List<AdvertisementWithPackageDTO>> GetAdvertisementsWithPackageSorted() => await AdvertisementDAO.Instance.GetAdvertisementsWithPackageSorted();
 	}
 }
 

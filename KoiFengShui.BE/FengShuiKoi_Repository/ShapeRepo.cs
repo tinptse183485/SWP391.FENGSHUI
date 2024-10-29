@@ -16,5 +16,6 @@ namespace FengShuiKoi_Repository
         public async Task<bool> DeleteShape(string id) => await ShapeDAO.Instance.DeleteShape(id);
         public async Task<Shape> GetShapeByImg(string img) => await ShapeDAO.Instance.GetShapeByImg(img);
         public async Task<bool> UpdateShape(Shape shape) => await ShapeDAO.Instance.UpdateShape(shape);
-    }
+        public async Task<bool> UpdateShapeImg(string shapeId, string Img) => await ShapeDAO.Instance.UpdateShapeImg(shapeId, Img);
+	}
 }

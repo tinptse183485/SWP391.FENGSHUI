@@ -67,10 +67,17 @@ namespace KoiFengShui.BE
             builder.Services.AddScoped<IQuantityOfFishService, QuantityOfFishService>();
             builder.Services.AddScoped<IPackageService, PackageService>();
             builder.Services.AddScoped<IAdvertisementService, AdvertisementService>();
+
             builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 
             builder.Services.AddHostedService<AdvertisementExpirationService>();
 
+
+
+            builder.Services.AddHostedService<AdvertisementExpirationService>();
+            builder.Services.AddSingleton<IVerificationCodeService, VerificationCodeService>();
+            builder.Services.AddSingleton<IEmailService, EmailService>();
+            builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
             // Add CORS
             builder.Services.AddCors(options =>
 

@@ -1,5 +1,6 @@
 ﻿using FengShuiKoi_BO;
 using FengShuiKoi_DAO;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -20,5 +21,5 @@ namespace FengShuiKoi_Repository
         public async Task<bool> UpdateFeedback(string feedbackId) => await FeedbackDAO.Instance.UpdateFeedback(feedbackId);
         public async Task<List<Feedback>> GetFeedbackByAdId(string AdId) => await FeedbackDAO.Instance.GetFeedbackByAdId(AdId);
         public async Task<string> GetLastFBId() => await FeedbackDAO.Instance.GetLastFBId();
-    }
+    }     
 }

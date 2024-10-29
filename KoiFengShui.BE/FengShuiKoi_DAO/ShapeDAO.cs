@@ -97,5 +97,26 @@ namespace FengShuiKoi_DAO
             }
             return isSuccess;
         }
-    }
+		public async Task<bool> UpdateShapeImg(string shapeId, string Img)
+		{
+			try
+			{
+				var shape = await dbContext.Shapes.FindAsync(shapeId);
+
+				if (shape == null)
+				{
+					return false;
+				}
+				shape.Image = Img;
+				dbContext.Entry(shape).Property(x => x.Image).IsModified = true;
+				await dbContext.SaveChangesAsync();
+
+				return true;
+			}
+			catch (Exception ex)
+			{
+				throw new Exception($"Lỗi khi cập nhật ảnh Shape: {ex.Message}", ex);
+			}
+		}
+	}
 }

@@ -57,5 +57,31 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
+        [HttpGet("GetTotalRevenueByMonth")]
+        public async Task<IActionResult> GetTotalRevenueByMonth(int year, int month)
+        {
+            try
+            {
+                var GetTotal = await _adsPackageService.GetTotalRevenueByMonth(year, month);
+                return Ok(GetTotal);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi server nội bộ: {ex.Message}");
+            }
+        }
+        [HttpGet("GetDailyRevenueToDate")]
+        public async Task<IActionResult> GetDailyRevenueToDate()
+        {
+            try
+            {
+                var GetTotal = await _adsPackageService.GetDailyRevenueToDate();
+                return Ok(GetTotal);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi server nội bộ: {ex.Message}");
+            }
+        }
     }
 }

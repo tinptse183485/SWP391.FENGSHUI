@@ -11,6 +11,5 @@
         public string UserId { get; set; } = null!;
         public string ElementId { get; set; } = null!;
 
-
 	}
 }

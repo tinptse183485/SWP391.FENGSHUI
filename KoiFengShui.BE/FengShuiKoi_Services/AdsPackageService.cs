@@ -27,8 +27,9 @@ namespace FengShuiKoi_Services
         {
             return await iAdsPackageRepo.DeleteAdsPackage(AdID, Rank, CreateAt);
         }
+		public async Task<AdsPackage> GetAdsPackageByAdID(string AdID) => await iAdsPackageRepo.GetAdsPackageByAdID(AdID);
 
-        public async Task<AdsPackage> GetAdsPackageByAdIDRankTime(string AdID, string Rank, DateTime CreateAt)
+		public async Task<AdsPackage> GetAdsPackageByAdIDRankTime(string AdID, string Rank, DateTime CreateAt)
         {
             return await iAdsPackageRepo.GetAdsPackageByAdIDRankTime(AdID, Rank, CreateAt);
         }
@@ -50,9 +51,10 @@ namespace FengShuiKoi_Services
         {
             return await iAdsPackageRepo.UpdateAdsPackage(newAdsPackage);
         }
-        public Task<Dictionary<string, double>> GetTotalRevenueByMonth(int year, int month)
+        public async Task<Dictionary<string, double>> GetTotalRevenueByMonth(int year, int month)
         {
-            return AdsPackageDAO.Instance.GetTotalRevenueByMonth(year, month);
+            return await iAdsPackageRepo.GetTotalRevenueByMonth(year, month);
         }
+        public async Task<Dictionary<DateTime, double>> GetDailyRevenueToDate() => await iAdsPackageRepo.GetDailyRevenueToDate();
     }
 }

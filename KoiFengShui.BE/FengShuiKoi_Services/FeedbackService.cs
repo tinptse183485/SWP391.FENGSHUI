@@ -1,4 +1,5 @@
 ﻿using FengShuiKoi_BO;
+using FengShuiKoi_DAO;
 using FengShuiKoi_Repository;
 using System.Collections.Generic;
 using System.Threading.Tasks;

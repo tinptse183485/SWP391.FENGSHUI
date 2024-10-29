@@ -43,6 +43,7 @@ namespace FengShuiKoi_DAO
         {
             return await dbContext.Feedbacks.Where(f => f.AdId.Equals(AdId)).ToListAsync();
         }
+     
 
         public async Task<List<Feedback>> GetFeedbacks()
         {

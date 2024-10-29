@@ -34,21 +34,27 @@ namespace FengShuiKoi_DAO
             try
             {
                 var adsPackages = await dbContext.AdsPackages.AsNoTracking().ToListAsync();
+                Console.WriteLine($"Total Ads Packages: {adsPackages.Count}");
+
                 var revenueByPackage = new Dictionary<string, double>();
 
                 foreach (var package in adsPackages)
                 {
-                    if (!revenueByPackage.ContainsKey(package.Rank))
+                    var adver = await AdvertisementDAO.Instance.GetAdvertisementByAdID(package.AdId);
+                    if (adver != null && adver.Status.Equals("Approved"))
                     {
-                        revenueByPackage[package.Rank] = 0;
+                        if (!revenueByPackage.ContainsKey(package.Rank))
+                        {
+                            revenueByPackage[package.Rank] = 0;
+                        }
+                        revenueByPackage[package.Rank] += package.Total;
                     }
-                    revenueByPackage[package.Rank] += package.Total;
                 }
                 return revenueByPackage;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Lỗi trong GetRevenueByPackage: {ex.Message}");
+                Console.WriteLine($"Lỗi trong GetRevenueByPackage: {ex}");
                 return new Dictionary<string, double>();
             }
         }
@@ -62,6 +68,7 @@ namespace FengShuiKoi_DAO
         {
             return await dbContext.AdsPackages.SingleOrDefaultAsync(m => m.AdId.Equals(AdID) && m.Rank.Equals(Rank) && m.CreateAt.Equals(CreateAt));
         }
+        public async Task<AdsPackage> GetAdsPackageByAdID(string AdID) => await dbContext.AdsPackages.SingleOrDefaultAsync(m => m.AdId.Equals(AdID));
 
         public async Task<List<AdsPackage>> GetListAdsPackageByAdID(string AdID)
         {
@@ -70,12 +77,16 @@ namespace FengShuiKoi_DAO
 
         public async Task<List<AdsPackage>> GetListAdsPackageByRank(string Rank)
         {
-            return await dbContext.AdsPackages.Where(m => m.Rank.Equals(Rank)).ToListAsync();
+            var now = DateTime.Now;
+            return await dbContext.AdsPackages
+                .Where(m => m.Rank.Equals(Rank) && m.StartDate <= now && m.ExpiredDate >= now)
+                .OrderByDescending(m => m.StartDate)
+                .ToListAsync();
         }
 
         public async Task<bool> AddAdsPackage(AdsPackage ads)
         {
-            AdsPackage adsPackage = await this.GetAdsPackageByAdIDRankTime(ads.AdId, ads.Rank,ads.CreateAt);
+            AdsPackage adsPackage = await this.GetAdsPackageByAdIDRankTime(ads.AdId, ads.Rank, ads.CreateAt);
             if (adsPackage != null) return false;
 
             try
@@ -113,9 +124,9 @@ namespace FengShuiKoi_DAO
             }
         }
 
-        public async Task<bool> DeleteAdsPackage(string AdID, string Rank,DateTime CreateAt)
+        public async Task<bool> DeleteAdsPackage(string AdID, string Rank, DateTime CreateAt)
         {
-            AdsPackage ads = await this.GetAdsPackageByAdIDRankTime(AdID, Rank,CreateAt);
+            AdsPackage ads = await this.GetAdsPackageByAdIDRankTime(AdID, Rank, CreateAt);
             if (ads == null) return false;
 
             try
@@ -138,8 +149,13 @@ namespace FengShuiKoi_DAO
 
                 var TotalRevenueByRank = await dbContext.AdsPackages
                     .Where(p => p.CreateAt >= startDate && p.CreateAt < endDate)
-                    .GroupBy(p => p.Rank)
-                    .Select(g => new { Rank = g.Key, TongDoanhThu = g.Sum(p => p.Total) })
+                    .Join(dbContext.Advertisements,
+                          package => package.AdId,
+                          advertisement => advertisement.AdId,
+                          (package, advertisement) => new { package, advertisement })
+                    .Where(x => x.advertisement.Status == "Approved")
+                    .GroupBy(x => x.package.Rank)
+                    .Select(g => new { Rank = g.Key, TongDoanhThu = g.Sum(p => p.package.Total) })
                     .ToDictionaryAsync(x => x.Rank, x => x.TongDoanhThu);
 
                 return TotalRevenueByRank;
@@ -150,5 +166,45 @@ namespace FengShuiKoi_DAO
                 return new Dictionary<string, double>();
             }
         }
+        public async Task<Dictionary<DateTime, double>> GetDailyRevenueToDate()
+        {
+            try
+            {
+                var currentDate = DateTime.Now.Date;
+                var startDate = DateTime.Now.Date.AddDays(-7);
+
+                var dailyRevenue = await dbContext.AdsPackages
+                    .Join(dbContext.Advertisements, 
+                          package => package.AdId,
+                          advertisement => advertisement.AdId,
+                          (package, advertisement) => new { package, advertisement }) 
+                    .Where(x => x.package.CreateAt.Date <= currentDate && x.advertisement.Status == "Approved") 
+                    .GroupBy(x => x.package.CreateAt.Date)
+                    .Select(g => new { Date = g.Key, TotalRevenue = g.Sum(p => p.package.Total) })
+                    .OrderBy(x => x.Date)
+                    .ToDictionaryAsync(x => x.Date, x => x.TotalRevenue);
+
+                // Ensure all days are included in the dictionary, even those with no revenue
+                var result = new Dictionary<DateTime, double>();
+                for (var date = startDate; date <= currentDate; date = date.AddDays(1))
+                {
+                    if (dailyRevenue.TryGetValue(date, out double revenue))
+                    {
+                        result[date] = revenue;
+                    }
+                    else
+                    {
+                        result[date] = 0;
+                    }
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Lỗi trong GetDailyRevenueToDate: {ex.Message}");
+                return new Dictionary<DateTime, double>();
+            }
+        }
     }
-}
+    }

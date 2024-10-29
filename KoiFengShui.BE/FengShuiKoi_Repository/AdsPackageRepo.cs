@@ -8,48 +8,53 @@ namespace FengShuiKoi_Repository
 {
     public class AdsPackageRepo : IAdsPackageRepo
     {
-        public Task<bool> AddAdsPackage(AdsPackage ads)
+        public async Task<bool> AddAdsPackage(AdsPackage ads)
         {
-            return AdsPackageDAO.Instance.AddAdsPackage(ads);
+            return await AdsPackageDAO.Instance.AddAdsPackage(ads);
         }
 
-        public Task<bool> DeleteAdsPackage(string AdID, string Rank, DateTime CreateAt)
+        public async Task<bool> DeleteAdsPackage(string AdID, string Rank, DateTime CreateAt)
         {
-            return AdsPackageDAO.Instance.DeleteAdsPackage(AdID, Rank, CreateAt);
+            return await AdsPackageDAO.Instance.DeleteAdsPackage(AdID, Rank, CreateAt);
         }
 
-        public Task<AdsPackage> GetAdsPackageByAdIDRankTime(string AdID, string Rank, DateTime CreateAt)
+        public async Task<AdsPackage> GetAdsPackageByAdIDRankTime(string AdID, string Rank, DateTime CreateAt)
 		{
-            return AdsPackageDAO.Instance.GetAdsPackageByAdIDRankTime(AdID, Rank, CreateAt);
+            return await AdsPackageDAO.Instance.GetAdsPackageByAdIDRankTime(AdID, Rank, CreateAt);
         }
 
-        public Task<Dictionary<string, double>> GetRevenueByPackage()
+        public async Task<Dictionary<string, double>> GetRevenueByPackage()
         {
-            return AdsPackageDAO.Instance.GetRevenueByPackage();
+            return await AdsPackageDAO.Instance.GetRevenueByPackage();
         }
 
-        public Task<List<AdsPackage>> GetAdsPackages()
+        public async Task<List<AdsPackage>> GetAdsPackages()
         {
-            return AdsPackageDAO.Instance.GetAdsPackages();
+            return await AdsPackageDAO.Instance.GetAdsPackages();
         }
 
-        public Task<List<AdsPackage>> GetListAdsPackageByAdID(string AdID)
+        public async Task<List<AdsPackage>> GetListAdsPackageByAdID(string AdID)
         {
-            return AdsPackageDAO.Instance.GetListAdsPackageByAdID(AdID);
+            return await AdsPackageDAO.Instance.GetListAdsPackageByAdID(AdID);
+        }
+        public async Task<AdsPackage> GetAdsPackageByAdID(string AdID) => await AdsPackageDAO.Instance.GetAdsPackageByAdID(AdID);
+
+		public async  Task<List<AdsPackage>> GetListAdsPackageByRank(string Rank)
+        {
+            return await AdsPackageDAO.Instance.GetListAdsPackageByRank(Rank);
         }
 
-        public Task<List<AdsPackage>> GetListAdsPackageByRank(string Rank)
+        public async Task<bool> UpdateAdsPackage(AdsPackage newAdsPackage)
         {
-            return AdsPackageDAO.Instance.GetListAdsPackageByRank(Rank);
+            return await AdsPackageDAO.Instance.UpdateAdsPackage(newAdsPackage);
         }
-
-        public Task<bool> UpdateAdsPackage(AdsPackage newAdsPackage)
+        public async Task<Dictionary<string, double>> GetTotalRevenueByMonth(int year, int month)
         {
-            return AdsPackageDAO.Instance.UpdateAdsPackage(newAdsPackage);
+            return await AdsPackageDAO.Instance.GetTotalRevenueByMonth(year, month);
         }
-        public Task<Dictionary<string, double>> GetTotalRevenueByMonth(int year, int month)
+        public async Task<Dictionary<DateTime, double>> GetDailyRevenueToDate()
         {
-            return AdsPackageDAO.Instance.GetTotalRevenueByMonth(year, month);
+            return await AdsPackageDAO.Instance.GetDailyRevenueToDate();
         }
     }
 }
