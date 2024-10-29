@@ -34,7 +34,7 @@ import ResetPassword from "./page/Reset-Password";
 import PackageManagement from "./page/Admin-page/package";
 import Policies from "./page/Policies";
 function App() {
-  const ProtectedRoute = ({ children }) => {
+  const ProtectedRoute = ({ children, allowAdmin = false }) => {
     const location = useLocation();
     const userId = localStorage.getItem("userId");
     const userRole = localStorage.getItem("role");
@@ -47,7 +47,7 @@ function App() {
       localStorage.removeItem("role");
       return <Navigate to="/login" state={{ from: location }} replace />;
     }
-    if (userRole === "Admin") {
+    if (userRole === "Admin" && !allowAdmin) {
       toast.error("Admin không được phép đăng quảng cáo.");
       localStorage.removeItem("userId");
       localStorage.removeItem("token");
@@ -161,7 +161,7 @@ function App() {
     {
       path: "user-profile",
       element: (
-        <ProtectedRoute>
+        <ProtectedRoute allowAdmin={true}>
           <UserProfile />
         </ProtectedRoute>
       ),
@@ -169,7 +169,7 @@ function App() {
     {
       path: "create-ads",
       element: (
-        <ProtectedRoute>
+        <ProtectedRoute allowAdmin={false}>
           <CreateAds />
         </ProtectedRoute>
       ),
@@ -177,7 +177,7 @@ function App() {
     {
       path: "user-ads",
       element: (
-        <ProtectedRoute>
+        <ProtectedRoute allowAdmin={false}>
           <User_Ads />
         </ProtectedRoute>
       ),
