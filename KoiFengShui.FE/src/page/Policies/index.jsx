@@ -53,4 +53,9 @@ const Policies = () => {
         </div>
     );
   };
+<<<<<<< HEAD
+=======
+  
+
+>>>>>>> 8f601896338e038d395251009188d6841ebe579c
 export default Policies;

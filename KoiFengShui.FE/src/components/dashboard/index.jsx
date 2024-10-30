@@ -133,6 +133,20 @@ const Dashboard = () => {
         >
           {collapsed ? "" : "Trang chủ"}
         </Button>
+<<<<<<< HEAD
+=======
+        <Button
+          style={{
+            marginTop: "80px",
+          }}
+          type="primary"
+          icon={<LogoutOutlined />}
+          onClick={handleUserHome}
+        >
+          {collapsed ? "" : "User Home"}
+        </Button>
+
+>>>>>>> 8f601896338e038d395251009188d6841ebe579c
       </Sider>
 
       <Layout style={{ marginLeft: collapsed ? 80 : 250 }}>

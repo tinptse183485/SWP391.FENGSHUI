@@ -505,7 +505,15 @@ function ComputeCompability() {
       );
       // Also remove the fish point
     }
+<<<<<<< HEAD
   };
+=======
+  } catch (error) {
+    console.error("Error fetching fish point:", error);
+    toast.error("Vui lòng chọn ngày sinh và giới tính");
+  }
+}
+>>>>>>> 8f601896338e038d395251009188d6841ebe579c
 
   const handleSelectFish = async (fish) => {
     const validation = validateColorWeights(fish.koiType);
