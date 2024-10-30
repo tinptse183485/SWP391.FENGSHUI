@@ -108,12 +108,12 @@ function Consulting() {
         <div className="consulting-title">
           <h1>Thông tin tư vấn</h1>
         </div>
+       
         <div className="Guest-element">
-
-
-          <h2>Mệnh của bạn là {userElement} </h2>
-          <h2>Cung mệnh của bạn là {lifePalace} </h2>
+          <h2>Mệnh của bạn là <span style={{color: getElementColor(userElement) }}>{userElement} </span></h2>
+          <h2>Cung mệnh của bạn là <span style={{color: "purple"}  }>{lifePalace} </span></h2>
         </div>
+        <hr className="consulting-divider" /> {/* Added divider */}
 
         <div className="Header-fish">
           <h2>Các loại cá phù hợp</h2>
@@ -188,16 +188,14 @@ function Consulting() {
                     {Array.isArray(pond.eightMansions)
                       ? pond.eightMansions[0]
                       : pond.eightMansions}{" "}
-                    (hướng Thượng Cát): Đây là hướng mang lại may mắn nhất cho
-                    chủ nhà và tạo ra khí tốt.
+                    (hướng Thượng Cát): {pond.description}.
                   </p>
                 )}
                 {pond.pointOfDirection === 1 &&
                   Array.isArray(pond.eightMansions) &&
                   pond.eightMansions.length > 1 && (
                     <p>
-                      + {pond.eightMansions[1]} (hướng Thượng Cát): Đây là hướng
-                      mang lại may mắn nhất cho chủ nhà và tạo ra khí tốt.
+                      + {pond.eightMansions[1]} (hướng Thượng Cát): {pond.description}.
                     </p>
                   )}
               </div>

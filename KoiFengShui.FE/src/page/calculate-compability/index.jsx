@@ -52,6 +52,15 @@ function ComputeCompability() {
 
   const [shapePoint, setShapePoint] = useState(null);
   const [directionPoint, setDirectionPoint] = useState(null);
+
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const  getColor = (point) => {
+   if (point >=75) return "green";
+   else if (point >=50) return "blue";
+   else if (point >=25) return "orange";
+   else return "red";
+  }
   const fetchUserInfo = async (birthdate, gender) => {
     try {
       const userInfoResponse = await api.get("Fate/CalculateLife_Palace", {
@@ -69,7 +78,7 @@ function ComputeCompability() {
       setUserElement(userElementResponse.data);
     } catch (error) {
       console.error("Error fetching user info:", error);
-      toast.error("Error fetching user info");
+      toast.error("Không tải được thông tin người dùng");
     }
   };
 
@@ -79,36 +88,38 @@ function ComputeCompability() {
 
   useEffect(() => {
     const fetchFilteredFishList = async () => {
-      let tempFilteredFishList = [];
+      let tempFilteredFishList = fishList;
 
-      if (colorFilter === "all") {
-        // Nếu không chọn màu, chỉ lọc theo element
-        tempFilteredFishList = fishList.filter(
-          (fish) => elementFilter === "all" || fish.element === elementFilter
-        );
-      } else {
-        // Gọi API để lấy cá theo màu
+      // Apply color filter
+      if (colorFilter !== "all") {
         try {
-          const response = await api.get(
-            `KoiVariety/GetListKoiByColor?color=${colorFilter}`
-          );
-          const fishByColor = response.data;
-
-          // Lọc theo bảng mệnh sau khi có danh sách cá theo màu
-          tempFilteredFishList = fishByColor.filter(
-            (fish) => elementFilter === "all" || fish.element === elementFilter
-          );
+          const response = await api.get(`KoiVariety/GetListKoiByColor?color=${colorFilter}`);
+          tempFilteredFishList = response.data;
         } catch (error) {
-          toast.error("Error fetching fish by color");
-          return; // Trả về để không cập nhật danh sách cá nếu có lỗi
+          toast.error("Không tải được cá theo màu");
+          return;
         }
+      }
+
+      // Apply element filter
+      if (elementFilter !== "all") {
+        tempFilteredFishList = tempFilteredFishList.filter(
+          (fish) => fish.element === elementFilter
+        );
+      }
+
+      // Apply search term filter
+      if (searchTerm) {
+        tempFilteredFishList = tempFilteredFishList.filter((fish) =>
+          fish.koiType.toLowerCase().includes(searchTerm.toLowerCase())
+        );
       }
 
       setFilteredFishList(tempFilteredFishList);
     };
 
     fetchFilteredFishList();
-  }, [colorFilter, elementFilter, fishList]);
+  }, [colorFilter, elementFilter, fishList, searchTerm]);
 
   useEffect(() => {
     if (selectedFishDetail && colorWeights) {
@@ -162,7 +173,22 @@ function ComputeCompability() {
       toast.error("Error fetching data");
     }
   };
-
+  const getElementColor = (element) => {
+    switch (element) {
+      case "Hỏa":
+        return "red";
+      case "Thủy":
+        return "blue";
+      case "Mộc":
+        return "green";
+      case "Kim":
+        return "gold";
+      case "Thổ":
+        return "brown";
+      default:
+        return "black";
+    }
+  };
   const onFinish = async (values) => {
     try {
       const { birthdate, Gender, selectedPondShape, pondDirection } = values;
@@ -211,25 +237,21 @@ function ComputeCompability() {
       setUserElement(response1.data);
       setUserLifePalife(response2.data);
       if (response.data) {
-        toast.success("Calculation successful");
+        toast.success("Tính toán hoàn tất");
         setCompatibilityResult(response.data.compatibility);
 
         // Fetch advertisements
-<<<<<<< HEAD
         const adsResponse = await api.get("Advertisement/GetAllAdvertisement");
-=======
-        const adsResponse = await api.get('Advertisement/GetAllAdvertisement');
->>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
         const approvedAds = adsResponse.data.filter(
           (ad) => ad.status === "Approved"
         );
         setAdvertisements(approvedAds);
       } else {
-        toast.error("No data received from the server");
+        toast.error("Không có dữ liệu từ server");
       }
     } catch (error) {
       console.error("API error:", error);
-      toast.error(error.response?.data || "Error calculating compatibility");
+      toast.error(error.response?.data || "Lỗi tính toán tương thích");
       setCompatibilityResult(null);
       setAdvertisements([]);
     }
@@ -340,7 +362,7 @@ function ComputeCompability() {
         break;
       case "Hỏa":
         comment +=
-          "- Với gia chủ mang mệnh Hỏa, việc chọn cá Koi có màu sắc phù hợp sẽ giúp kích thích năng lượng tích cực, thúc đẩy sự may mắn và thành công. Các màu như đỏ, cam, hồng và tím là lựa chọn tuyệt vời cho mệnh Hỏa, bởi chúng tượng trưng cho ngọn lửa, sức mạnh và sự quyết tâm. Đặc biệt, việc kết hợp với những chú cá Koi có màu xanh lá cây hoặc xanh lục nhạt cũng rất có lợi cho người mệnh Hỏa. Màu xanh lá cây đại diện cho yếu tố Mộc, giúp gia tăng sức mạnh và hỗ trợ sự phát triển. Sự kết hợp này không chỉ tạo ra sự hài hòa mà còn kích thích năng lượng tích cực, giúp gia chủ đạt được thành công trong ọi lĩnh vực.";
+          "- Với gia chủ mang mệnh Hỏa, việc chọn cá Koi có màu sắc phù hợp sẽ giúp kích thích năng lượng tích cực, thúc đẩy sự may mắn và thành công. Các màu như đỏ, cam, hồng và tím là lựa chọn tuyệt vời cho mệnh Hỏa, bởi chúng tượng trưng cho ngọn lửa, sức mạnh và sự quyết tâm. Đặc biệt, việc kết hợp với những chú cá Koi có màu xanh lá cây hoặc xanh lục nhạt cũng rất có lợi cho người mệnh Hỏa. Màu xanh lá cây đại diện cho yếu tố Mộc, giúp gia tăng sức mạnh và hỗ trợ sự phát triển. Sự kết hợp này không chỉ tạo ra sự hài hòa mà còn kích thích năng lượng tích cực, giúp gia chủ đạt được thành công trong mọi lĩnh vực.";
         break;
       case "Thổ":
         comment +=
@@ -361,7 +383,7 @@ function ComputeCompability() {
       setIsModalVisible(true);
     } catch (error) {
       console.error("Error fetching fish details:", error);
-      toast.error("Error fetching fish details");
+      toast.error("Không tải được thông tin cá");
     }
   };
   const showFishColor = async (fish) => {
@@ -385,7 +407,7 @@ function ComputeCompability() {
       );
     } catch (error) {
       console.error("Error fetching fish details:", error);
-      toast.error("Error fetching fish details");
+      toast.error("Không tải được thông tin cá");
     }
   };
 
@@ -459,7 +481,7 @@ function ComputeCompability() {
       ))}
     </div>
   );
-  const handleResetColors = async (koiType) => {
+  const handleResetColors = (koiType) => {
     const originalColors = allFishColors[koiType].map((color) => ({
       ...color,
       percentage: color.originalPercentage || 0,
@@ -468,60 +490,21 @@ function ComputeCompability() {
       ...prev,
       [koiType]: originalColors,
     }));
-    // setFishPoints((prev) => {
-    //   const newPoints = { ...prev };
-    //   delete newPoints[koiType];
-    //   return newPoints;
-    // });
-      // Lấy ngày sinh từ form
-  const dob = form.getFieldValue("birthdate");
-  const formattedDob = dob ? dob.format("YYYY-MM-DD") : "";
-
-  // Chuẩn bị payload cho API
-  const payload = {
-    koiType: koiType,
-    colors: originalColors.map((color) => ({
-      colorId: color.colorId,
-      percentage: color.percentage,
-    })),
-  };
-
-  try {
-    // Gọi API để lấy điểm tương hợp mới
-    const response = await api.post(
-      "Compatibility/GetAttributeCustomColor",
-      payload,
-      {
-        params: { dob: formattedDob },
-      }
-    );
-    const newFishPoint = response.data;
-
-    // Cập nhật điểm tương hợp mới
-    setFishPoints((prev) => ({
-      ...prev,
-      [koiType]: newFishPoint,
-    }));
-
-    // Nếu cá này đã được chọn, cập nhật nó trong danh sách đã chọn
-    setSelectedFishes((prev) => {
-      const index = prev.findIndex((fish) => fish.koiType === koiType);
-      if (index !== -1) {
-        const updatedFish = {
-          ...prev[index],
-          colors: originalColors,
-        };
-        const newSelected = [...prev];
-        newSelected[index] = updatedFish;
-        return newSelected;
-      }
-      return prev;
+    setFishPoints((prev) => {
+      const newPoints = { ...prev };
+      delete newPoints[koiType];
+      return newPoints;
     });
-
-  } catch (error) {
-    console.error("Error fetching fish point after reset:", error);
-    toast.error("Error fetching fish point after reset");
-  }
+    const isSelected = selectedFishes.some(
+      (fish) => fish.koiType === koiType
+    );
+    if (isSelected) {
+      // If it's selected, remove it from selectedFishes
+      setSelectedFishes((prev) =>
+        prev.filter((fish) => fish.koiType !== koiType)
+      );
+      // Also remove the fish point
+    }
   };
 
   const handleSelectFish = async (fish) => {
@@ -584,7 +567,7 @@ function ComputeCompability() {
         });
       } catch (error) {
         console.error("Error fetching fish point:", error);
-        toast.error("Error fetching fish point");
+        toast.error("Vui lòng chọn ngày sinh và giới tính");
       }
     } else {
       toast.error(validation.message);
@@ -627,7 +610,7 @@ function ComputeCompability() {
         setShapePoint(response.data);
       } catch (error) {
         console.error("Error fetching shape point:", error);
-        toast.error("Error fetching shape point");
+        toast.error("Lỗi tải điểm hình dạng hồ");
       }
     }
   };
@@ -639,7 +622,7 @@ function ComputeCompability() {
       const gender = form.getFieldValue("Gender");
 
       if (!dob || !gender) {
-        toast.error("Please select date of birth and gender");
+        toast.error("Vui lòng chọn ngày sinh và giới tính");
         return;
       }
 
@@ -672,8 +655,8 @@ function ComputeCompability() {
 
       form.setFieldsValue({ pondDirection: direction || null });
     } catch (error) {
-      console.error("Error fetching direction point:", error);
-      toast.error("Error fetching direction point");
+      console.error("Lỗi tải điểm hướng:", error);
+      toast.error("Lỗi tải điểm hướng hồ ");
     }
   };
 
@@ -697,7 +680,6 @@ function ComputeCompability() {
               className="compatibility-form"
             >
               <div className="user-info">
-<<<<<<< HEAD
                 <div className="birthdate-gender-row">
                   <Form.Item
                     name="birthdate"
@@ -744,64 +726,14 @@ function ComputeCompability() {
                   <div className="user-info-section">
                     <h2 className="user-info-title">Thông tin người dùng</h2>
                     <p>
-                      <strong>Mệnh:</strong> {userElement}
+                      <strong>Mệnh:</strong> <span style={{color: getElementColor(userElement)}}>{userElement}</span>
                     </p>
                     <p>
-                      <strong>Cung mệnh:</strong> {userLifePalife}
+                      <strong>Cung mệnh:</strong> <span style={{color: "purple"}}>{userLifePalife}</span>
                     </p>
                   </div>
                 )}
               </div>
-=======
-              <div className="birthdate-gender-row">
-                <Form.Item
-                  name="birthdate"
-                  label="Ngày tháng năm sinh"
-                  rules={[
-                    { required: true, message: "Vui lòng chọn ngày sinh" },
-                  ]}
-                >
-                  <DatePicker 
-                    format="YYYY-MM-DD" 
-                    style={{ width: "100%" }} 
-                    onChange={(date) => {
-                      const gender = form.getFieldValue("Gender");
-                      if (date && gender) {
-                        fetchUserInfo(date, gender);
-                      }
-                    }}
-                  />
-                </Form.Item>
-                <Form.Item
-                  label="Giới tính"
-                  name="Gender"
-                  rules={[
-                    { required: true, message: "Hãy chọn giới tính của bạn!" },
-                  ]}
-                >
-                  <Radio.Group onChange={(e) => {
-                    const birthdate = form.getFieldValue("birthdate");
-                    if (birthdate && e.target.value) {
-                      fetchUserInfo(birthdate, e.target.value);
-                    }
-                  }}>
-                    <Radio value="male">Nam</Radio>
-                    <Radio value="female">Nữ</Radio>
-                  </Radio.Group>
-                </Form.Item>
-                
-              </div>
-              {userElement && userLifePalife && (
-  <div className="user-info-section">
-    <h2 className="user-info-title">Thông tin người dùng</h2>
-    <p><strong>Mệnh:</strong> {userElement}</p>
-    <p><strong>Cung mệnh:</strong> {userLifePalife}</p>
-  </div>
-)}
-</div>
-
->>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
-
               <Form.Item
                 label="Chọn loại cá"
                 name="selectedFishes"
@@ -814,7 +746,7 @@ function ComputeCompability() {
               >
                 <div className="filter-section">
                   <Form layout="inline">
-                    <Form.Item label="Bảng mệnh">
+                    <Form.Item label="Bản mệnh">
                       <Select value={elementFilter} onChange={setElementFilter}>
                         <Option value="all">Tất cả</Option>
                         {elements.map((element) => (
@@ -841,13 +773,8 @@ function ComputeCompability() {
                     <Form.Item label="Tên giống cá">
                       <Input
                         placeholder="Tìm kiếm theo tên giống cá"
-                        onChange={(e) => {
-                          const searchTerm = e.target.value.toLowerCase();
-                          const filtered = fishList.filter((fish) =>
-                            fish.koiType.toLowerCase().includes(searchTerm)
-                          );
-                          setFilteredFishList(filtered);
-                        }}
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                       />
                     </Form.Item>
                   </Form>
@@ -923,7 +850,7 @@ function ComputeCompability() {
                                 </p>
                               )}
                               {fishPoints[fish.koiType] !== undefined && (
-                                <p className="fish-point">
+                                <p style={{color: getColor((fishPoints[fish.koiType] * 100).toFixed(2)) }} className="fish-point">
                                   Độ tương hợp:{" "}
                                   {(fishPoints[fish.koiType] * 100).toFixed(2)}%
                                 </p>
@@ -1009,7 +936,7 @@ function ComputeCompability() {
                         <p>{shape.shapeId}</p>
                         {selectedPondShape === shape.shapeId &&
                           shapePoint !== null && (
-                            <p className="shape-point">
+                            <p className="shape-point" style={{color: getColor(shapePoint.toFixed(2))}}>
                               Điểm tương hợp: {shapePoint.toFixed(2)}%
                             </p>
                           )}
@@ -1042,7 +969,7 @@ function ComputeCompability() {
                   </Select>
                 </Form.Item>
                 {directionPoint !== null && (
-                  <div className="direction-point">
+                  <div className="direction-point" style={{color: getColor(directionPoint.toFixed(2))}}>
                     Điểm hướng: {directionPoint.toFixed(2)}%
                   </div>
                 )}
@@ -1058,11 +985,11 @@ function ComputeCompability() {
               <div className="result-section">
                 <h2 className="result-title">Kết quả tính toán</h2>
 
-                <p className="result-score">
-                  Độ tương hợp: {compatibilityResult}%
+                <p className="result-score" style={{color: getColor(compatibilityResult.toFixed(2))}}>
+                  Độ tương hợp: {compatibilityResult.toFixed(2)}%
                 </p>
                 <p className="result-comment">
-                  Nhận xét:
+                  <h3 style={{margin: 0}}>Nhận xét:</h3>
                   <br></br>
                   {getOverallCompatibilityComment(compatibilityResult)}
                   <br></br>

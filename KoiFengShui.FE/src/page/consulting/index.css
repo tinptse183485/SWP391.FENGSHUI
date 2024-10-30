@@ -16,14 +16,11 @@
     
   }
   .Guest-element{
-    
+    padding: 20px;
     align-items: center;
     color: blueviolet;
-<<<<<<< HEAD
     margin-bottom: 70px;
-=======
-    margin-bottom: 40px;
->>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
+    background-color: rgb(221, 234, 246);
   }
  
   .koi-cards {
@@ -119,4 +116,16 @@
   }
   
   
-  
+  .consulting-divider {
+    border: 0;
+    height: 1px;
+    background-color: #ccc;
+    
+    width: 80%;
+    
+  }
+  .direction-info p{
+    margin-bottom: 20px;
+    margin-left: 20px;
+    font-size: 18px;
+  }

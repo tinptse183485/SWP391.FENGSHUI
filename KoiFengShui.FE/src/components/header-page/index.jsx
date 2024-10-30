@@ -10,14 +10,17 @@ function HeaderTemplate() {
   const navigate = useNavigate();
   const [userId, setUserId] = useState(null);
   const [userRole, setUserRole] = useState(null);
+  const [userName, setUserName] = useState(null);
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
   useEffect(() => {
     const user = localStorage.getItem("userId");
     const role = localStorage.getItem("role");
+    const userName = localStorage.getItem("name");
     if (user) {
       setUserId(user);
       setUserRole(role);
+      setUserName(userName);
     }
   }, []);
 
@@ -25,6 +28,7 @@ function HeaderTemplate() {
     localStorage.removeItem("userId");
     localStorage.removeItem("token");
     localStorage.removeItem("role");
+    localStorage.removeItem("name");
     setUserId(null);
     navigate("/");
   };
@@ -43,13 +47,9 @@ function HeaderTemplate() {
           <Link to="/dashboard">Dashboard</Link>
         </Menu.Item>
       )}
-<<<<<<< HEAD
       <Menu.Item key="user-profile">
         <Link to="/user-profile">Thông tin người dùng</Link>
       </Menu.Item>
-=======
-      <Menu.Item key="user-profile"><Link to="/user-profile">Thông tin người dùng</Link></Menu.Item>
->>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
       <Menu.Item key="logout">Đăng xuất</Menu.Item>
     </Menu>
   );
@@ -58,20 +58,12 @@ function HeaderTemplate() {
     event.preventDefault();
     const section = document.getElementById(sectionId);
     if (section) {
-<<<<<<< HEAD
       const headerHeight = document.querySelector(".top-bar").offsetHeight;
       const sectionPosition =
         section.getBoundingClientRect().top + window.pageYOffset;
       window.scrollTo({
         top: sectionPosition - headerHeight,
         behavior: "smooth",
-=======
-      const headerHeight = document.querySelector('.top-bar').offsetHeight;
-      const sectionPosition = section.getBoundingClientRect().top + window.pageYOffset;
-      window.scrollTo({
-        top: sectionPosition - headerHeight,
-        behavior: 'smooth'
->>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
       });
     } else {
       navigate("/", { state: { scrollTo: sectionId } });
@@ -85,16 +77,8 @@ function HeaderTemplate() {
   const handleScrollToAdvertisements = handleScrollToSection("Advertisements");
   const handleScrollToBlog = handleScrollToSection("blog");
   const handleScrollToContact = handleScrollToSection("contact");
-<<<<<<< HEAD
   const handleScrollToTrendingFeature =
     handleScrollToSection("trending-feature");
-=======
-  const handleScrollToTrendingFeature = handleScrollToSection("trending-feature");
-  const handleLogin = () => {
-    navigate("/login");
-  };
->>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
-
   return (
     <div>
       <div className="top-bar">
@@ -115,7 +99,6 @@ function HeaderTemplate() {
           </div>
         </div>
         <nav className="main-nav">
-<<<<<<< HEAD
           <ul>
             <li>
               <Link to="/">
@@ -124,7 +107,7 @@ function HeaderTemplate() {
             </li>
             <li>
               <a href="#about-us" onClick={handleScrollToAboutUs}>
-                About Us
+                Giới thiệu
               </a>
             </li>
             <li>
@@ -152,31 +135,6 @@ function HeaderTemplate() {
             </li>
           </ul>
         </nav>
-=======
-            <ul>
-              <li>
-                <Link to="/">
-                  <a href="#home">Trang chủ</a>
-                </Link>
-              </li>
-              <li>
-                <a href="#about-us" onClick={handleScrollToAboutUs}>About Us</a>
-              </li>
-              <li>
-                <a href="#trending-feature" onClick={handleScrollToTrendingFeature}>Tính năng</a>
-              </li>
-              <li>
-                <a href="#Advertisements" onClick={handleScrollToAdvertisements}>Quảng cáo</a>
-              </li>
-              <li>
-                <a href="#blog" onClick={handleScrollToBlog}>Blog</a>
-              </li>
-              <li>
-                <a href="#contact" onClick={handleScrollToContact}>Liên hệ</a>
-              </li>
-            </ul>
-          </nav>
->>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
         <div className="user-actions">
           {userId ? (
             <Dropdown
@@ -186,7 +144,7 @@ function HeaderTemplate() {
               trigger={["click"]}
             >
               <Button className="user-button">
-                <UserOutlined /> {userId}
+                <UserOutlined /> {userName}
               </Button>
             </Dropdown>
           ) : (

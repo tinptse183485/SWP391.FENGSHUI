@@ -5,6 +5,8 @@ import api from '../../config/axios';
 import { Button, notification } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 import './index.css';
+import HeaderTemplate from '../../components/header-page';
+import FooterTemplate from '../../components/footer-page';
 
 const PaymentSuccess = () => {
   const location = useLocation();
@@ -75,12 +77,8 @@ const PaymentSuccess = () => {
           
         });
 
-<<<<<<< HEAD
         localStorage.setItem('paymentProcessed', 'true');
         setIsPaymentProcessed(true);
-=======
-        
->>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
         return;
       } catch (error) {
         console.error('Error creating advertisement:', error);
@@ -113,8 +111,6 @@ const PaymentSuccess = () => {
       console.log(paymentInfo);
     }
   }, [paymentInfo]);
-
-<<<<<<< HEAD
   useEffect(() => {
     const processed = localStorage.getItem('paymentProcessed') === 'true';
     setIsPaymentProcessed(processed);
@@ -153,9 +149,6 @@ const PaymentSuccess = () => {
       navigate('/');
     }
   }, [navigate]);
-
-=======
->>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
   const handleNavigateUserAds = () => {
     localStorage.removeItem('paymentProcessed');
     localStorage.removeItem('redirectToHome');
@@ -167,6 +160,8 @@ const PaymentSuccess = () => {
   }
 
   return (
+    <>
+    <HeaderTemplate/>
     <div className="payment-result-container">
       <Card title="Thông tin thanh toán" className="payment-result-info">
         <div className="payment-details">
@@ -212,6 +207,8 @@ const PaymentSuccess = () => {
         </Button>
       </Card>
     </div>
+    <FooterTemplate/>
+    </>
   );
 };
 

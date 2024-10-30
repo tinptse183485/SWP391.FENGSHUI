@@ -30,6 +30,8 @@ const User_Ads = () => {
   ];
   const userId = localStorage.getItem("userId");
 
+  
+
   useEffect(() => {
     fetchAdsPackages();
     fetchAdvertisements();
@@ -52,6 +54,29 @@ const User_Ads = () => {
       console.log(adsPackages);
     } catch (error) {
       console.error("Error fetching ads packages:", error);
+    }
+  };
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Draft": return "default";
+      case "Pending": return "#1890ff";
+      case "Approved": return "#52c41a";
+      case "Refunded": return "#faad14";
+      case "Canceled": return "#f5222d";
+      case "Expired": return "#f5222d"; 
+      default: return "black";
+    }
+  };
+
+  const getStatusText = (status) => {
+    switch (status) {
+      case "Draft": return "Bản nháp";
+      case "Pending": return "Chờ duyệt";
+      case "Approved": return "Đã duyệt";
+      case "Refunded": return "Đã hoàn tiền";
+      case "Canceled": return "Đã hủy";
+      case "Expired": return "Đã hết hạn";
+      default: return "Trạng thái khác";
     }
   };
 
@@ -112,6 +137,8 @@ const User_Ads = () => {
       setLoading(false);
     }
   };
+  
+
 
   const columns = [
     {
@@ -125,28 +152,25 @@ const User_Ads = () => {
       dataIndex: "status",
       key: "status",
       width: 120,
+      render: (status) => {
+        return <span style={{ color: getStatusColor(status)  }}>{getStatusText(status)}</span>;
+      },
     },
     {
       title: "Ngày bắt đầu",
       dataIndex: "startDate",
       key: "startDate",
-<<<<<<< HEAD
       width: 120,
-=======
->>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
       render: (startDate) =>
-        startDate ? moment(startDate).format("DD/MM/YY") : "N/A",
+        startDate ? moment(startDate).format("DD/MM/YY") : "Chưa có",
     },
     {
       title: "Ngày hết hạn",
       dataIndex: "expirationDate",
       key: "expirationDate",
-<<<<<<< HEAD
       width: 120,
-=======
->>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
       render: (expirationDate) => {
-        if (!expirationDate) return "N/A";
+        if (!expirationDate) return "Chưa có";
         const date = new Date(expirationDate);
         return date.toLocaleDateString("vi-VN", {
           year: "numeric",
@@ -158,7 +182,6 @@ const User_Ads = () => {
     {
       title: "Hành động",
       key: "action",
-<<<<<<< HEAD
       className: "action-cell",
       render: (_, record) => {
         const currentDate = new Date();
@@ -170,20 +193,6 @@ const User_Ads = () => {
         if (record.status === "Draft") {
           return (
             <div className="action-button">
-=======
-      render: (_, record) => {
-        const currentDate = new Date();
-        const expirationDate = new Date(record.expirationDate);
-        console.log(record.expirationDate);
-        const sevenDaysAfterExpiration = new Date(
-          expirationDate.getTime() + 7 * 24 * 60 * 60 * 1000
-        );
-        console.log(sevenDaysAfterExpiration);
-
-        if (record.status === "Draft") {
-          return (
-            <>
->>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
               <Button onClick={() => handleUpdateDraft(record)}>
                 Cập nhật bản nháp
               </Button>
@@ -201,11 +210,7 @@ const User_Ads = () => {
               >
                 <Button danger>Xóa bản nháp</Button>
               </Popconfirm>
-<<<<<<< HEAD
             </div>
-=======
-            </>
->>>>>>> fcc6ed334b5314b956076ceb0b29dd06c4373ed6
           );
         } else if (
           record.status === "Approved" &&

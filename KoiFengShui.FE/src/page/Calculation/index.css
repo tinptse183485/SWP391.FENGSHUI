@@ -19,4 +19,11 @@
 .datePicker{
   width: 100%;
 }
+.calculate-button{
+  border-radius: 11px !important;
+}
+.authen-template{
+  margin-top: 100px;
+}
+
 
