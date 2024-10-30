@@ -108,17 +108,29 @@ function CreateAds() {
     );
   };
 
-  const handleChange = ({ fileList: newFileList }) => {
+  const handleChange = async ({ fileList: newFileList }) => {
     setFileList(newFileList);
-    if (newFileList.length > 0) {
-      setAdData((prevData) => ({
-        ...prevData,
-        image: newFileList[0].url || newFileList[0].thumbUrl,
-      }));
+    
+    if (newFileList.length > 0 && newFileList[0].originFileObj) {
+      try {
+        // Upload file và lấy URL
+        const file = newFileList[0].originFileObj;
+        const imageUrl = await uploadFile(file);
+        
+        // Cập nhật adData với URL mới
+        setAdData((prevData) => ({
+          ...prevData,
+          image: imageUrl
+        }));
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        message.error("Có lỗi xảy ra khi tải ảnh lên. Vui lòng thử lại.");
+      }
     } else {
+      // Nếu không có ảnh, reset về rỗng
       setAdData((prevData) => ({
         ...prevData,
-        image: "",
+        image: ""
       }));
     }
   };
@@ -208,6 +220,8 @@ function CreateAds() {
           <Upload
             listType="picture-card"
             fileList={fileList}
+            name="image"
+            value={adData.image}
             onPreview={handlePreview}
             onChange={handleChange}
             beforeUpload={() => false}
