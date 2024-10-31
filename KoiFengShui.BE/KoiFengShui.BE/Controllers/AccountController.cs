@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace KoiFengShui.BE.Controllers
@@ -54,7 +55,8 @@ namespace KoiFengShui.BE.Controllers
                 Token = token,
                 Role = account.Role,
                 UserId = account.UserId,
-                Name = member.Name
+                Name = member.Name,
+                Status = account.Status, 
             });
         }
 
@@ -73,7 +75,12 @@ namespace KoiFengShui.BE.Controllers
                 {
                     return BadRequest("Email không được để trống");
                 }
-				if (string.IsNullOrWhiteSpace(Account.Password))
+                string emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+                if (!Regex.IsMatch(Account.Email, emailPattern))
+                {
+                    return BadRequest("Email không đúng định dạng");
+                }
+                if (string.IsNullOrWhiteSpace(Account.Password))
 				{
 					return BadRequest("Mật khẩu không được để trống");
 				}
@@ -211,6 +218,11 @@ namespace KoiFengShui.BE.Controllers
             {
                 return BadRequest("Email đã tồn tại");
             }
+            string emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+            if (!Regex.IsMatch(newAccount.Email, emailPattern))
+            {
+                return BadRequest("Email không đúng định dạng");
+            }
             var acc = new Account
             {
                 UserId = newAccount.UserID,
@@ -272,7 +284,8 @@ namespace KoiFengShui.BE.Controllers
                 Token = token,
                 Role = account.Role,
                 UserId = account.UserId,
-                Name = googleUser.Name
+                Name = googleUser.Name,
+                Status = account.Status,
             });
         }
         [HttpPost("forgot-password")]
