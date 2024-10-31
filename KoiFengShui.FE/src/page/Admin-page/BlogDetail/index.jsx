@@ -33,8 +33,6 @@ function BlogDetail() {
           <Spin size="large" />
         ) : (
           <>
-            <h1>{blogData.heading}</h1>
-            <img src={blogData.image} alt={blogData.heading} />
             <div dangerouslySetInnerHTML={{ __html: blogData.link }} />
           </>
         )}

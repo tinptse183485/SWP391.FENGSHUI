@@ -1,4 +1,6 @@
-.choose-package-container {
+  
+  
+  .choose-package-container {
     max-width: 1200px;
     margin: 120px auto;
     padding: 20px;
@@ -6,14 +8,16 @@
   
   .choose-package-container h1 {
     text-align: center;
-    margin-bottom: 20px;
-    color: #333;
-    font-size: 28px;
+    margin-bottom: 0px;
+    color: #0a0a0a;
+    font-size: 30px;
+    margin-top: 100px;
   }
   
   .package-layout {
     display: flex;
     gap: 100px;
+    margin-top: 40px;
   }
   
   .package-info-and-form {

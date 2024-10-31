@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./index.css";
-import koiImage from "./path-to-koi-image.jpg";
+import koiImage from "./logo.jpg";
 import { Button, Dropdown, Menu } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
@@ -10,14 +10,17 @@ function HeaderTemplate() {
   const navigate = useNavigate();
   const [userId, setUserId] = useState(null);
   const [userRole, setUserRole] = useState(null);
+  const [userName, setUserName] = useState(null);
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
   useEffect(() => {
     const user = localStorage.getItem("userId");
     const role = localStorage.getItem("role");
+    const userName = localStorage.getItem("name");
     if (user) {
       setUserId(user);
       setUserRole(role);
+      setUserName(userName);
     }
   }, []);
 
@@ -25,6 +28,7 @@ function HeaderTemplate() {
     localStorage.removeItem("userId");
     localStorage.removeItem("token");
     localStorage.removeItem("role");
+    localStorage.removeItem("name");
     setUserId(null);
     navigate("/");
   };
@@ -75,7 +79,6 @@ function HeaderTemplate() {
   const handleScrollToContact = handleScrollToSection("contact");
   const handleScrollToTrendingFeature =
     handleScrollToSection("trending-feature");
-
   return (
     <div>
       <div className="top-bar">
@@ -104,7 +107,7 @@ function HeaderTemplate() {
             </li>
             <li>
               <a href="#about-us" onClick={handleScrollToAboutUs}>
-                About Us
+                Giới thiệu
               </a>
             </li>
             <li>
@@ -141,7 +144,7 @@ function HeaderTemplate() {
               trigger={["click"]}
             >
               <Button className="user-button">
-                <UserOutlined /> {userId}
+                <UserOutlined /> {userName}
               </Button>
             </Dropdown>
           ) : (

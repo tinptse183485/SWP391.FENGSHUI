@@ -12,7 +12,7 @@ import {
 import { Breadcrumb, Button, Layout, Menu, theme } from "antd";
 import { Link, Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import KoiImage from './koi.jpg';
+import KoiImage from './logo.jpg';
 import "./index.css";
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -39,7 +39,7 @@ const items = [
   getItem("Quản lý Blog", "blog", <PieChartOutlined />),
   getItem("Quản lý cá Koi", "koi", <PieChartOutlined />),
   getItem("Quản lý hồ", "pond", <PieChartOutlined />),
-
+  getItem("Quản lý gói", "packageManagement", <PieChartOutlined />),
 ];
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -54,8 +54,11 @@ const Dashboard = () => {
     localStorage.removeItem("userId");
     localStorage.removeItem("token");
     localStorage.removeItem("role");
-
+    localStorage.removeItem("name");
     setUserId(null);
+    navigate("/");
+  };
+  const handleUserHome = () => {
     navigate("/");
   };
   const [collapsed, setCollapsed] = useState(false);
@@ -80,6 +83,7 @@ const Dashboard = () => {
           left: 0,
           top: 0,
           bottom: 0,
+          width: collapsed ? '60px' : '200px', // Tăng độ rộng khi mở rộng
         }}
       >
 
@@ -98,30 +102,39 @@ const Dashboard = () => {
           defaultSelectedKeys={["1"]}
           mode="inline"
           items={items}
-
           style={{
-            marginTop: "80px",
-            padding: '16px 0', 
-          }}
-          itemStyle={{
-            margin: '16px 0', // Thêm khoảng cách giữa các item
+            marginTop: "20px", // Giảm margin-top
+            padding: '8px 0',  // Giảm padding
           }}
         />
         
         <Button
           style={{
-            marginTop: "80px",
+            marginTop: "20px", // Giảm margin-top của các button
+            marginLeft: "16px",
+            width: 'calc(100% - 32px)',
           }}
           type="primary"
           icon={<LogoutOutlined />}
           onClick={handleLogout}
         >
-          {collapsed ? "" : "Logout"}
+          {collapsed ? "" : "Đăng xuất"}
         </Button>
-
+        <Button
+          style={{
+            marginTop: "10px",
+            marginLeft: "16px",
+            width: 'calc(100% - 32px)',
+          }}
+          type="primary"
+          icon={<LogoutOutlined />}
+          onClick={handleUserHome}
+        >
+          {collapsed ? "" : "Trang chủ"}
+        </Button>
       </Sider>
 
-      <Layout style={{ marginLeft: collapsed ? 80 : 210 }}>
+      <Layout style={{ marginLeft: collapsed ? 80 : 250 }}>
         <Header
           style={{
             padding: 0,
@@ -144,7 +157,7 @@ const Dashboard = () => {
           </Breadcrumb>
           <div
             style={{
-              padding: 24,
+              padding: 0,
               minHeight: 360,
               background: colorBgContainer,
               borderRadius: borderRadiusLG,

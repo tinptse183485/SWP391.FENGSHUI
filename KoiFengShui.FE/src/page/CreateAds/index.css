@@ -1,8 +1,15 @@
-.ads-container {
+.ads-create-container {
   max-width: 800px;
-  margin: 0 auto;
+  margin: 120px auto 80px !important;
   padding: 20px;
+  background-color: rgb(226, 240, 252);
+  border-radius: 30px;
+ 
 }
+.ads-create-title {
+  text-align: center;
+}
+
 
 
 .button-container {
@@ -17,6 +24,7 @@
   border: none;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
+  
 }
 
 .save-button {

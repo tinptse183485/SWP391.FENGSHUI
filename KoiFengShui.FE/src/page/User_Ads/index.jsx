@@ -30,6 +30,8 @@ const User_Ads = () => {
   ];
   const userId = localStorage.getItem("userId");
 
+  
+
   useEffect(() => {
     fetchAdsPackages();
     fetchAdvertisements();
@@ -52,6 +54,29 @@ const User_Ads = () => {
       console.log(adsPackages);
     } catch (error) {
       console.error("Error fetching ads packages:", error);
+    }
+  };
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Draft": return "default";
+      case "Pending": return "#1890ff";
+      case "Approved": return "#52c41a";
+      case "Refunded": return "#faad14";
+      case "Canceled": return "#f5222d";
+      case "Expired": return "#f5222d"; 
+      default: return "black";
+    }
+  };
+
+  const getStatusText = (status) => {
+    switch (status) {
+      case "Draft": return "Bản nháp";
+      case "Pending": return "Chờ duyệt";
+      case "Approved": return "Đã duyệt";
+      case "Refunded": return "Đã hoàn tiền";
+      case "Canceled": return "Đã hủy";
+      case "Expired": return "Đã hết hạn";
+      default: return "Trạng thái khác";
     }
   };
 
@@ -112,6 +137,8 @@ const User_Ads = () => {
       setLoading(false);
     }
   };
+  
+
 
   const columns = [
     {
@@ -125,6 +152,9 @@ const User_Ads = () => {
       dataIndex: "status",
       key: "status",
       width: 120,
+      render: (status) => {
+        return <span style={{ color: getStatusColor(status)  }}>{getStatusText(status)}</span>;
+      },
     },
     {
       title: "Ngày bắt đầu",
@@ -132,7 +162,7 @@ const User_Ads = () => {
       key: "startDate",
       width: 120,
       render: (startDate) =>
-        startDate ? moment(startDate).format("DD/MM/YY") : "N/A",
+        startDate ? moment(startDate).format("DD/MM/YY") : "Chưa có",
     },
     {
       title: "Ngày hết hạn",
@@ -140,7 +170,7 @@ const User_Ads = () => {
       key: "expirationDate",
       width: 120,
       render: (expirationDate) => {
-        if (!expirationDate) return "N/A";
+        if (!expirationDate) return "Chưa có";
         const date = new Date(expirationDate);
         return date.toLocaleDateString("vi-VN", {
           year: "numeric",

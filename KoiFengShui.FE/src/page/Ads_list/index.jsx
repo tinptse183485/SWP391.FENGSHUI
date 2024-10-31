@@ -67,7 +67,7 @@ const Ads_list = () => {
     <>
       <HeaderTemplate />
       <div className="advertisements-container">
-        <h1 className="ads-title">Our Advertisements</h1>
+        <h1 className="ads-title"> Quảng cáo</h1>
         
         {featuredAd && (
           <div className="featured-ad">
@@ -75,7 +75,7 @@ const Ads_list = () => {
             <div className="featured-ad-content">
               <h2 className="featured-ad-title">{featuredAd.heading}</h2>
               <p className="featured-ad-description">{featuredAd.description}</p>
-              <Link to={`/advertisement-detail/${featuredAd.adId}`} className="view-details-btn">View Details</Link>
+              <Link to={`/advertisement-detail/${featuredAd.adId}`} className="view-details-btn">Xem chi tiết</Link>
 
               <p className="ad-item-date">
                   {formatTimeAgo(featuredAd.createAt)}
@@ -91,7 +91,7 @@ const Ads_list = () => {
               <img src={ad.image} alt={ad.heading} className="ad-item-image" />
               <div className="ad-item-content">
                 <h3 className="ad-item-title">{ad.heading}</h3>
-                <Link to={`/advertisement-detail/${ad.adId}`} className="view-details-link">View Details</Link>
+                <Link to={`/advertisement-detail/${ad.adId}`} className="view-details-link">Xem chi tiết</Link>
                 <p className="ad-item-date">
                   {formatTimeAgo(ad.createAt)}
                 </p>
