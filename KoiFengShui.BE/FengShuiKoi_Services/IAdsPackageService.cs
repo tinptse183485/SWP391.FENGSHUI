@@ -20,6 +20,6 @@ namespace FengShuiKoi_Services
         Task<AdsPackage> GetAdsPackageByAdID(string AdID);
 		Task<bool> DeleteAdsPackage(string AdID, string Rank, DateTime CreateAt);
         Task<Dictionary<string, double>> GetTotalRevenueByMonth(int year, int month);
-        Task<Dictionary<DateTime, double>> GetDailyRevenueToDate();
+        Task<Dictionary<string, double>> GetDailyRevenueToDate(int year, int month, int day);
     }
 }

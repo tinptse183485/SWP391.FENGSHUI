@@ -1,11 +1,15 @@
 ﻿using FengShuiKoi_BO;
 using FengShuiKoi_Services;
+using KoiFengShui.BE.Attributes;
 using KoiFengShui.BE.Model;
 using KoiFengShui.BE.TokenService;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
 using System.Collections.Generic;
+using System.Data;
+using System.Security.Principal;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace KoiFengShui.BE.Controllers
@@ -37,7 +41,6 @@ namespace KoiFengShui.BE.Controllers
         public async Task<IActionResult> Login(LoginDTO loginAccount)
         {
             var account = await _accountService.GetAccountByUserID(loginAccount.UserId);
-
             if (account == null || account.Password != loginAccount.Password)
             {
                 return Unauthorized("Thông tin đăng nhập không hợp lệ");
@@ -47,14 +50,16 @@ namespace KoiFengShui.BE.Controllers
             {
                 return Unauthorized("Tài khoản không hoạt động");
             }
-
+            Member member = await _memberService.GetMemberByUserID(loginAccount.UserId);
             var token = _tokenService.CreateToken(account);
 
             return Ok(new
             {
                 Token = token,
                 Role = account.Role,
-                UserId = account.UserId
+                UserId = account.UserId,
+                Name = member.Name,
+                Status = account.Status, 
             });
         }
 
@@ -73,7 +78,12 @@ namespace KoiFengShui.BE.Controllers
                 {
                     return BadRequest("Email không được để trống");
                 }
-				if (string.IsNullOrWhiteSpace(Account.Password))
+                string emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+                if (!Regex.IsMatch(Account.Email, emailPattern))
+                {
+                    return BadRequest("Email không đúng định dạng");
+                }
+                if (string.IsNullOrWhiteSpace(Account.Password))
 				{
 					return BadRequest("Mật khẩu không được để trống");
 				}
@@ -113,6 +123,7 @@ namespace KoiFengShui.BE.Controllers
             }
         }
 
+        [AuthorizeRoles("Admin")]
         [HttpPut("UpdateAccountAdmin")]
         public async Task<IActionResult> UpdateAccountAdmin(AccountDTO Account)
         {
@@ -211,6 +222,11 @@ namespace KoiFengShui.BE.Controllers
             {
                 return BadRequest("Email đã tồn tại");
             }
+            string emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+            if (!Regex.IsMatch(newAccount.Email, emailPattern))
+            {
+                return BadRequest("Email không đúng định dạng");
+            }
             var acc = new Account
             {
                 UserId = newAccount.UserID,
@@ -271,7 +287,9 @@ namespace KoiFengShui.BE.Controllers
             {
                 Token = token,
                 Role = account.Role,
-                UserId = account.UserId
+                UserId = account.UserId,
+                Name = googleUser.Name,
+                Status = account.Status,
             });
         }
         [HttpPost("forgot-password")]

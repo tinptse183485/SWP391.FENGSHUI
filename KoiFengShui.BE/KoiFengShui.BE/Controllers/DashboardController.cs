@@ -71,12 +71,15 @@ namespace KoiFengShui.BE.Controllers
             }
         }
         [HttpGet("GetDailyRevenueToDate")]
-        public async Task<IActionResult> GetDailyRevenueToDate()
+        public async Task<IActionResult> GetDailyRevenueToDate(int year, int month, int day)
         {
             try
             {
-                var GetTotal = await _adsPackageService.GetDailyRevenueToDate();
-                return Ok(GetTotal);
+                
+                
+
+                var getTotal = await _adsPackageService.GetDailyRevenueToDate(year, month, day);
+                return Ok(getTotal);
             }
             catch (Exception ex)
             {

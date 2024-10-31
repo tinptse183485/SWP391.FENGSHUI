@@ -84,7 +84,27 @@ namespace KoiFengShui.BE.Controllers
             }
         }
 
-        [HttpGet("GetAdvertisementByAdId")]
+        [AuthorizeRoles("Admin")]
+        [HttpGet("GetAdvertisementsWithPackageSortedAdmin")]
+		public async Task<IActionResult> GetAdvertisementsWithPackageSortedAdmin()
+		{
+			try
+			{
+				var listAdvertisement = await _advertisementService.GetAdvertisementsWithPackageSortedAdmin();
+				if (listAdvertisement == null)
+				{
+					return NotFound("Không có quảng cáo nào.");
+				}
+				return Ok(listAdvertisement);
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Lỗi server: {ex.Message}");
+			}
+		}
+
+
+		[HttpGet("GetAdvertisementByAdId")]
         public async Task<IActionResult> GetAdvertisementByAdId(string adId)
         {
             try
@@ -103,7 +123,7 @@ namespace KoiFengShui.BE.Controllers
         }
 
 
-
+        [Authorize ()]
         [HttpGet("GetAdvertisementByUserId")]
         public async Task<IActionResult> GetAdvertisementByUserId(string UserId)
         {
@@ -189,6 +209,7 @@ namespace KoiFengShui.BE.Controllers
             }
         }
 
+        [AuthorizeRoles("Admin")]
         [HttpGet("GetAdvertisementByStatusAdmin")]
         public async Task<IActionResult> GetAdvertisementByStatusAdmin(string status)
         {
@@ -356,6 +377,7 @@ namespace KoiFengShui.BE.Controllers
             }
         }
 
+        [AuthorizeRoles("Admin")]
         [HttpPut("ApproveAdvertisement")]
         public async Task<IActionResult> ApproveAdvertisement(string adId, string elementID, string status)
         {
@@ -448,11 +470,6 @@ namespace KoiFengShui.BE.Controllers
             }
         }
 
-
-
-
-
-
         [HttpPut("UpdateAdvertisement")]
         public async Task<IActionResult> UpdateAdvertisement(AdvertisementDTO advertisement, string Rank, string Status, DateTime startDate, DateTime CreateAt, int quantity, float total)
 
@@ -505,7 +522,6 @@ namespace KoiFengShui.BE.Controllers
         }
 
         [HttpPost("CreateAdvertisement")]
-
         public async Task<IActionResult> CreateAdvertisement(AdvertisementDTO advertisement, string Rank, DateTime startDate, DateTime CreateAt, int quantity, float total, string TransactionCode, string BankCode)
 
         {
@@ -658,7 +674,7 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
-
+        [AuthorizeRoles("Admin")]
         [HttpDelete("DeleteAdvertisement/{adId}")]
         public async Task<IActionResult> DeleteAdvertisement(string adId)
         {

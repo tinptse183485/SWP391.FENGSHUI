@@ -29,7 +29,7 @@ namespace FengShuiKoi_DAO
             dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
         }
 
-        public async Task<Dictionary<string, double>> GetRevenueByPackage()
+         public async Task<Dictionary<string, double>> GetRevenueByPackage()
         {
             try
             {
@@ -64,23 +64,23 @@ namespace FengShuiKoi_DAO
         }
         public async Task<AdsPackage> GetAdsPackageByAdID(string AdID) => await dbContext.AdsPackages.SingleOrDefaultAsync(m => m.AdId.Equals(AdID));
 
-		public async Task<List<AdsPackage>> GetListAdsPackageByAdID(string AdID)
+        public async Task<List<AdsPackage>> GetListAdsPackageByAdID(string AdID)
         {
             return await dbContext.AdsPackages.Where(m => m.AdId.Equals(AdID)).ToListAsync();
         }
 
-		public async Task<List<AdsPackage>> GetListAdsPackageByRank(string Rank)
-		{
-			var now = DateTime.Now;
-			return await dbContext.AdsPackages
-				.Where(m => m.Rank.Equals(Rank) && m.StartDate <= now && m.ExpiredDate >= now)
-				.OrderByDescending(m => m.StartDate)
-				.ToListAsync();
-		}
-
-		public async Task<bool> AddAdsPackage(AdsPackage ads)
+        public async Task<List<AdsPackage>> GetListAdsPackageByRank(string Rank)
         {
-            AdsPackage adsPackage = await this.GetAdsPackageByAdIDRankTime(ads.AdId, ads.Rank,ads.CreateAt);
+            var now = DateTime.Now;
+            return await dbContext.AdsPackages
+                .Where(m => m.Rank.Equals(Rank) && m.StartDate <= now && m.ExpiredDate >= now)
+                .OrderByDescending(m => m.StartDate)
+                .ToListAsync();
+        }
+
+        public async Task<bool> AddAdsPackage(AdsPackage ads)
+        {
+            AdsPackage adsPackage = await this.GetAdsPackageByAdIDRankTime(ads.AdId, ads.Rank, ads.CreateAt);
             if (adsPackage != null) return false;
 
             try
@@ -118,9 +118,9 @@ namespace FengShuiKoi_DAO
             }
         }
 
-        public async Task<bool> DeleteAdsPackage(string AdID, string Rank,DateTime CreateAt)
+        public async Task<bool> DeleteAdsPackage(string AdID, string Rank, DateTime CreateAt)
         {
-            AdsPackage ads = await this.GetAdsPackageByAdIDRankTime(AdID, Rank,CreateAt);
+            AdsPackage ads = await this.GetAdsPackageByAdIDRankTime(AdID, Rank, CreateAt);
             if (ads == null) return false;
 
             try
@@ -143,8 +143,13 @@ namespace FengShuiKoi_DAO
 
                 var TotalRevenueByRank = await dbContext.AdsPackages
                     .Where(p => p.CreateAt >= startDate && p.CreateAt < endDate)
-                    .GroupBy(p => p.Rank)
-                    .Select(g => new { Rank = g.Key, TongDoanhThu = g.Sum(p => p.Total) })
+                    .Join(dbContext.Advertisements,
+                          package => package.AdId,
+                          advertisement => advertisement.AdId,
+                          (package, advertisement) => new { package, advertisement })
+                    .Where(x => x.advertisement.Status == "Approved" || x.advertisement.Status == "Expired")
+                    .GroupBy(x => x.package.Rank)
+                    .Select(g => new { Rank = g.Key, TongDoanhThu = g.Sum(p => p.package.Total) })
                     .ToDictionaryAsync(x => x.Rank, x => x.TongDoanhThu);
 
                 return TotalRevenueByRank;
@@ -155,40 +160,48 @@ namespace FengShuiKoi_DAO
                 return new Dictionary<string, double>();
             }
         }
-        public async Task<Dictionary<DateTime, double>> GetDailyRevenueToDate()
+        public async Task<Dictionary<string, double>> GetDailyRevenueToDate(int year, int month, int day)
         {
             try
             {
-                var currentDate = DateTime.Now.Date;
-                var startDate = dbContext.AdsPackages.Min(p => p.CreateAt).Date;
+               
+
+                var specifiedDate = new DateTime(year, month, day);
+                var startDate = specifiedDate.AddDays(-7); 
+                var currentDate = specifiedDate; 
 
                 var dailyRevenue = await dbContext.AdsPackages
-                    .Where(p => p.CreateAt.Date <= currentDate)
-                    .GroupBy(p => p.CreateAt.Date)
-                    .Select(g => new { Date = g.Key, TotalRevenue = g.Sum(p => p.Total) })
+                    .Join(dbContext.Advertisements,
+                          package => package.AdId,
+                          advertisement => advertisement.AdId,
+                          (package, advertisement) => new { package, advertisement })
+                    .Where(x => x.package.CreateAt.Date <= currentDate.Date &&
+                                (x.advertisement.Status == "Approved" || x.advertisement.Status == "Expired"))
+                    .GroupBy(x => x.package.CreateAt.Date)
+                    .Select(g => new { Date = g.Key, TotalRevenue = g.Sum(p => p.package.Total) })
                     .OrderBy(x => x.Date)
-                    .ToDictionaryAsync(x => x.Date, x => x.TotalRevenue);
+                    .ToDictionaryAsync(x => x.Date.ToShortDateString(), x => x.TotalRevenue); 
 
-                // Đảm bảo tất cả các ngày đều có trong dictionary, kể cả ngày không có doanh thu
-                var result = new Dictionary<DateTime, double>();
-                for (var date = startDate; date <= currentDate; date = date.AddDays(1))
+             
+                var result = new Dictionary<string, double>();
+                for (var date = startDate; date <= currentDate.Date; date = date.AddDays(1))
                 {
-                    if (dailyRevenue.TryGetValue(date, out double revenue))
+                    if (dailyRevenue.TryGetValue(date.ToShortDateString(), out double revenue))
                     {
-                        result[date] = revenue;
+                        result[date.ToShortDateString()] = revenue;
                     }
                     else
                     {
-                        result[date] = 0;
+                        result[date.ToShortDateString()] = 0; 
                     }
                 }
 
-                return result;
+                return result; 
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Lỗi trong GetDailyRevenueToDate: {ex.Message}");
-                return new Dictionary<DateTime, double>();
+                Console.WriteLine($"Lỗi trong GetDailyRevenueFromSpecifiedDate: {ex.Message}");
+                return new Dictionary<string, double>(); // Return an empty dictionary on error
             }
         }
     }

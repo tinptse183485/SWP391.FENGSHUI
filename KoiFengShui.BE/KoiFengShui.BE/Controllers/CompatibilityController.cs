@@ -265,9 +265,7 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
-
-
-
+        
         [HttpPost("GetTheCompatibilityOfUser")]
         public async Task<IActionResult> GetTheCompatibilityOfUser([FromBody] List<CustomKoiTypeColor>? customKoiTypes, string? ShapeID, string? Direction, string DOB, string Gender)
         {
@@ -328,7 +326,7 @@ namespace KoiFengShui.BE.Controllers
                 }
                 else if (s2Result != null && s3Result != null)
                 {
-                    compa = (0.6 * s2 + 0.4 * s3);
+                    compa = (0.4 * s2 + 0.6 * s3);
                 }
                 else if (s1Result != null)
                 {
