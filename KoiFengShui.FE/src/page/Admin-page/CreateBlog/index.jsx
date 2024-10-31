@@ -75,13 +75,20 @@ function CreateBlog() {
     setPreviewOpen(true);
   };
 
-  const handleChange = ({ fileList: newFileList }) => {
+  const handleChange = async ({ fileList: newFileList }) => {
     setFileList(newFileList);
-    if (newFileList.length > 0) {
-      setBlogData((prevData) => ({
-        ...prevData,
-        image: newFileList[0].url || newFileList[0].thumbUrl,
-      }));
+    if (newFileList.length > 0 && newFileList[0].originFileObj) {
+      try {
+        const file = newFileList[0].originFileObj;
+        const imageUrl = await uploadFile(file);
+        setBlogData((prevData) => ({
+          ...prevData,
+          image: imageUrl,
+        }));
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        message.error("Có lỗi xảy ra khi tải ảnh lên. Vui lòng thử lại.");
+      }
     } else {
       setBlogData((prevData) => ({
         ...prevData,
@@ -105,16 +112,9 @@ function CreateBlog() {
   const handleSave = async (status) => {
     try {
       setIsLoading(true);
-      let imageUrl = blogData.image;
-      if (fileList.length > 0 && fileList[0].originFileObj) {
-        const file = fileList[0].originFileObj;
-        imageUrl = await uploadFile(file);
-      }
-
       const updatedBlogData = {
         ...blogData,
         status: status,
-        image: imageUrl
       };
 
       let response;

@@ -47,6 +47,7 @@ function App() {
       localStorage.removeItem("role");
       return <Navigate to="/login" state={{ from: location }} replace />;
     }
+
     if (userRole === "Admin" && !allowAdmin) {
       toast.error("Admin không được phép đăng quảng cáo.");
       localStorage.removeItem("userId");

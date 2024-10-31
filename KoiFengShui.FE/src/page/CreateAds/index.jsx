@@ -135,8 +135,6 @@ function CreateAds() {
     }
   };
 
-  const handleCancel = () => setPreviewOpen(false);
-
   const uploadButton = (
     <button
       style={{
@@ -152,20 +150,9 @@ function CreateAds() {
 
   const handleSave = async () => {
     try {
-      let imageUrl = adData.image;
-      if (fileList.length > 0 && fileList[0].originFileObj) {
-        const file = fileList[0].originFileObj;
-        imageUrl = await uploadFile(file);
-      }
-
-      const adDataToSave = {
-        ...adData,
-        image: imageUrl,
-      };
-
       const response = await api.post(
         "Advertisement/SaveAdvertisementDraft",
-        adDataToSave
+        adData
       );
       console.log("Response:", response.data);
       message.success("Quảng cáo đã được lưu thành công!");
