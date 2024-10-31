@@ -59,7 +59,6 @@ const User_Ads = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case "Draft": return "default";
-<<<<<<< HEAD
       case "Pending": return "#1890ff";
       case "Approved": return "#52c41a";
       case "Refunded": return "#faad14";
@@ -78,11 +77,6 @@ const User_Ads = () => {
       case "Canceled": return "Đã hủy";
       case "Expired": return "Đã hết hạn";
       default: return "Trạng thái khác";
-=======
-      case "Pending": return "processing";
-      case "Approved": return "success";
-      default: return "default";
->>>>>>> 8f601896338e038d395251009188d6841ebe579c
     }
   };
 
@@ -159,11 +153,7 @@ const User_Ads = () => {
       key: "status",
       width: 120,
       render: (status) => {
-<<<<<<< HEAD
         return <span style={{ color: getStatusColor(status)  }}>{getStatusText(status)}</span>;
-=======
-        return <span style={{ color: getStatusColor(status)  }}>{status}</span>;
->>>>>>> 8f601896338e038d395251009188d6841ebe579c
       },
     },
     {

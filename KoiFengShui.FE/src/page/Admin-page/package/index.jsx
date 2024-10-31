@@ -96,11 +96,7 @@ function PackageManagement() {
             <Input disabled />
           </Form.Item>
           <Form.Item name="description" label="Giới thiệu gói">
-<<<<<<< HEAD
             <Input.TextArea disabled />
-=======
-            <Input disabled />
->>>>>>> 8f601896338e038d395251009188d6841ebe579c
           </Form.Item>
           <Form.Item
             name="duration"

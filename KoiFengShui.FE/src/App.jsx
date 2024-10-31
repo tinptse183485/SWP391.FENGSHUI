@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> 8f601896338e038d395251009188d6841ebe579c
 import {
   RouterProvider,
   createBrowserRouter,
@@ -9,11 +5,6 @@ import {
   useLocation,
 } from "react-router-dom";
 import { toast } from "react-toastify";
-<<<<<<< HEAD
-=======
-import { RouterProvider, createBrowserRouter, Navigate, useLocation } from "react-router-dom";
-import { toast } from 'react-toastify';
->>>>>>> 8f601896338e038d395251009188d6841ebe579c
 import Home from "./page/home";
 import Login from "./page/login";
 import Register from "./page/register";
@@ -45,13 +36,6 @@ import Policies from "./page/Policies";
 function App() {
   const ProtectedRoute = ({ children, allowAdmin = false }) => {
     const location = useLocation();
-<<<<<<< HEAD
-=======
-    const userId = localStorage.getItem('userId');
-
-    if (!userId) {
-      toast.error('Vui lòng đăng nhập để truy cập trang này.');
->>>>>>> 8f601896338e038d395251009188d6841ebe579c
     const userId = localStorage.getItem("userId");
     const userRole = localStorage.getItem("role");
 
@@ -59,7 +43,6 @@ function App() {
       toast.error("Vui lòng đăng nhập để truy cập trang này.");
       localStorage.removeItem("userId");
       localStorage.removeItem("token");
-<<<<<<< HEAD
       localStorage.removeItem("name");
       localStorage.removeItem("role");
       return <Navigate to="/login" state={{ from: location }} replace />;
@@ -69,17 +52,6 @@ function App() {
       localStorage.removeItem("userId");
       localStorage.removeItem("token");
       localStorage.removeItem("name");
-=======
-      localStorage.removeItem("Name");
-      localStorage.removeItem("role");
-      return <Navigate to="/login" state={{ from: location }} replace />;
-    }
-    if (userRole === "Admin" ) {
-      toast.error("Admin không được phép đăng quảng cáo.");
-      localStorage.removeItem("userId");
-      localStorage.removeItem("token");
-      localStorage.removeItem("Name");
->>>>>>> 8f601896338e038d395251009188d6841ebe579c
       localStorage.removeItem("role");
       return <Navigate to="/login" state={{ from: location }} replace />;
     }
@@ -88,28 +60,16 @@ function App() {
   };
 
   const ProtectedRouteAdmin = ({ children }) => {
-<<<<<<< HEAD
-=======
-    const userId = localStorage.getItem('userId');
-    const userRole = localStorage.getItem('role');
->>>>>>> 8f601896338e038d395251009188d6841ebe579c
     const userId = localStorage.getItem("userId");
     const userRole = localStorage.getItem("role");
     if (userId && userRole === "Admin") {
       return children;
     }
-<<<<<<< HEAD
     toast.error("Vui lòng đăng nhập để truy cập trang này.");
     localStorage.removeItem("userId");
     localStorage.removeItem("token");
     localStorage.removeItem("name");
     localStorage.removeItem("role");
-=======
-    toast.error('Vui lòng đăng nhập để truy cập trang này.');
-      return <Navigate to="/login"  replace />;
-  }
-    toast.error("Vui lòng đăng nhập để truy cập trang này.");
->>>>>>> 8f601896338e038d395251009188d6841ebe579c
     return <Navigate to="/login" replace />;
   };
   const router = createBrowserRouter([
@@ -140,10 +100,6 @@ function App() {
           <Dashboard />
         </ProtectedRouteAdmin>
       ),
-<<<<<<< HEAD
-=======
-      element:<ProtectedRouteAdmin><Dashboard/></ProtectedRouteAdmin> ,
->>>>>>> 8f601896338e038d395251009188d6841ebe579c
       children: [
         {
           path: "AdminDashboard",
@@ -209,7 +165,6 @@ function App() {
           <UserProfile />
         </ProtectedRoute>
       ),
-      element: <ProtectedRoute><UserProfile /></ProtectedRoute>,
     },
     {
       path: "create-ads",

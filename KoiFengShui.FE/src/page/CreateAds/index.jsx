@@ -6,14 +6,11 @@ import api from "../../config/axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./index.css";
 import uploadFile from "../../utils/file"; // Đảm bảo import đúng đường dẫn
-<<<<<<< HEAD
 
 import HeaderTemplate from "../../components/header-page";
 import FooterTemplate from "../../components/footer-page";
 
 
-=======
->>>>>>> 8f601896338e038d395251009188d6841ebe579c
 function CreateAds() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -32,12 +29,6 @@ function CreateAds() {
 
   const [fileList, setFileList] = useState([]);
   const [previewOpen, setPreviewOpen] = useState(false);
-<<<<<<< HEAD
-=======
-
-  const [previewImage, setPreviewImage] = useState('');
-  const [previewTitle, setPreviewTitle] = useState('');
->>>>>>> 8f601896338e038d395251009188d6841ebe579c
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
 
@@ -176,16 +167,11 @@ function CreateAds() {
   const handleChoosePackage = () => {
     const updatedAdData = {
       ...adData,
-<<<<<<< HEAD
       heading:
         adData.heading || document.querySelector('input[name="heading"]').value,
       image:
         adData.image ||
         (fileList.length > 0 ? fileList[0].url || fileList[0].thumbUrl : ""),
-=======
-      heading: adData.heading || document.querySelector('input[name="heading"]').value,
-      image: adData.image || (fileList.length > 0 ? fileList[0].url || fileList[0].thumbUrl : ''),
->>>>>>> 8f601896338e038d395251009188d6841ebe579c
 
       link: adData.link || editorRef.current.getContent(),
       userId: localStorage.getItem("userId"),
@@ -211,15 +197,10 @@ function CreateAds() {
   };
 
   return (
-<<<<<<< HEAD
     <>
     <HeaderTemplate/>
     <div className="ads-create-container">
       <h1 className="ads-create-title">
-=======
-    <div className="ads-container">
-      <h1>
->>>>>>> 8f601896338e038d395251009188d6841ebe579c
         {adData.adId !== "." ? "Chỉnh sửa quảng cáo" : "Đăng quảng cáo mới"}
       </h1>
       <div className="input-container">

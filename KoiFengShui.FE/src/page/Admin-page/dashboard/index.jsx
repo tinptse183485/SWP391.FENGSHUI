@@ -35,11 +35,7 @@ const AdminDashboard = () => {
     ageGroups: {},
     fish: [],
     monthlyRevenue: {},
-<<<<<<< HEAD
     dailyRevenue: {},
-=======
-    dailyRevenue: {}, // Thêm state mới này
->>>>>>> 8f601896338e038d395251009188d6841ebe579c
   });
   const chartRefs = useRef([]);
   const currentYear = new Date().getFullYear();
@@ -97,131 +93,8 @@ const AdminDashboard = () => {
       return newData;
     });
   };
-<<<<<<< HEAD
 
   const fetchDailyRevenueData = async (year, month, day) => {
-=======
-  const countItems = (items, key) => {
-    return items.reduce((acc, item) => {
-      const value = item[key];
-      acc[value] = (acc[value] || 0) + 1;
-      return acc;
-    }, {});
-  };
-
-  const createChartData = (labels, data, label, colors) => ({
-    labels,
-    datasets: [
-      {
-        label,
-        data,
-        backgroundColor: colors.bg,
-        borderColor: colors.border,
-        borderWidth: 1,
-      },
-    ],
-  });
-     
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { position: "top" } },
-  };
-
-  const fishChartData = createChartData(
-    Object.keys(countItems(data.fish, "element")),
-    Object.values(countItems(data.fish, "element")),
-    "Số lượng cá theo mệnh",
-    { bg: "rgba(92, 245, 39, 0.8)", border: "rgba(92, 245, 39, 0.8)" }
-  );
-
-  const userChartData = createChartData(
-    Object.keys(
-      countItems(
-        data.ads.filter((ad) => ad.status === "Approved"),
-        "userId"
-      )
-    ),
-    Object.values(
-      countItems(
-        data.ads.filter((ad) => ad.status === "Approved"),
-        "userId"
-      )
-    ),
-    "Số lượng quảng cáo",
-    { bg: "rgba(255, 99, 132, 0.6)", border: "rgba(255, 99, 132, 1)" }
-  );
-
-  const revenueChartData = {
-    labels: Object.keys(data.revenue),
-    datasets: [
-      {
-        label: "Tỉ lệ doanh thu theo gói",
-        data: Object.values(data.revenue),
-        backgroundColor: [
-          "rgba(75, 192, 192, 0.6)",
-          "rgba(255, 99, 132, 0.6)",
-          "rgba(54, 162, 235, 0.6)",
-          "rgba(255, 206, 86, 0.6)",
-          "rgba(153, 102, 255, 0.6)",
-        ],
-        borderColor: [
-          "rgba(75, 192, 192, 1)",
-          "rgba(255, 99, 132, 1)",
-          "rgba(54, 162, 235, 1)",
-          "rgba(255, 206, 86, 1)",
-          "rgba(153, 102, 255, 1)",
-        ],
-        borderWidth: 1,
-      },
-    ],
-  };
-
-  const monthlyRevenueChartData = {
-    labels: Object.keys(data.monthlyRevenue || {}).map((month) => {
-      const date = new Date(currentYear, month - 1, 1);
-      return date.toLocaleString("default", { month: "long", year: "numeric" });
-    }),
-    datasets: [
-      {
-        label: "Tổng doanh thu theo tháng",
-        data: Object.values(data.monthlyRevenue || {}),
-        fill: true,
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-        borderColor: "rgb(75, 192, 192)",
-        borderWidth: 3,
-        tension: 0.1,
-        pointRadius: 5,
-        pointHoverRadius: 7,
-      },
-    ],
-  };
-  console.log("Monthly revenue chart data:", monthlyRevenueChartData);
-
-  const renderChart = (
-    condition,
-    ChartComponent,
-    chartData,
-    options,
-    index
-  ) => {
-    console.log(`Rendering chart ${index}:`, { condition, chartData });
-    if (!condition) {
-      console.log(`Chart ${index} not rendered due to condition:`, condition);
-      return <p>Loading data...</p>;
-    }
-    return (
-      <ChartComponent
-        data={chartData}
-        options={options}
-        ref={(el) => (chartRefs.current[index] = el)}
-      />
-    );
-  };
-
-  // Add this new function to fetch daily revenue data
-  const fetchDailyRevenueData = async () => {
->>>>>>> 8f601896338e038d395251009188d6841ebe579c
     try {
       const response = await api.get(`/Dashboard/GetDailyRevenueToDate?year=${year}&month=${month}&day=${day}`);
       console.log("Daily revenue data:", response.data);
@@ -248,7 +121,6 @@ const AdminDashboard = () => {
     };
   };
 
-<<<<<<< HEAD
   useEffect(() => {
     const currentDate = new Date();
     const year = currentDate.getFullYear();
@@ -379,8 +251,6 @@ const AdminDashboard = () => {
 
   const totalRevenueForYear = Object.values(data.monthlyRevenue).reduce((sum, value) => sum + value, 0);
 
-=======
->>>>>>> 8f601896338e038d395251009188d6841ebe579c
   return (
     <div className="dashboard-container">
       <h2>Dashboard</h2>
@@ -392,13 +262,7 @@ const AdminDashboard = () => {
           </div>
           <div className="overview-card" style={{ backgroundColor: "#ff9800" }}>
             <h3>Tổng doanh thu</h3>
-<<<<<<< HEAD
             <p>{totalRevenueForYear || 0}</p>
-=======
-            <p>
-              {Object.values(data.revenue).reduce((acc, curr) => acc + curr, 0)}
-            </p>
->>>>>>> 8f601896338e038d395251009188d6841ebe579c
           </div>
         </div>
         <div className="chart-container">
@@ -546,10 +410,6 @@ const AdminDashboard = () => {
               }}
             />
           ) : (
-<<<<<<< HEAD
-=======
-
->>>>>>> 8f601896338e038d395251009188d6841ebe579c
             <p>Đang tải dữ liệu doanh thu 7 ngày gần nhất...</p>
           )}
         </div>
