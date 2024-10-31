@@ -147,7 +147,7 @@ namespace FengShuiKoi_DAO
                           package => package.AdId,
                           advertisement => advertisement.AdId,
                           (package, advertisement) => new { package, advertisement })
-                    .Where(x => x.advertisement.Status == "Approved" || x.advertisement.Status == "Expired")
+                    .Where(x => x.advertisement.Status == "Approved" || x.advertisement.Status == "Expired" || x.advertisement.Status == "Pending" )
                     .GroupBy(x => x.package.Rank)
                     .Select(g => new { Rank = g.Key, TongDoanhThu = g.Sum(p => p.package.Total) })
                     .ToDictionaryAsync(x => x.Rank, x => x.TongDoanhThu);
@@ -176,7 +176,7 @@ namespace FengShuiKoi_DAO
                           advertisement => advertisement.AdId,
                           (package, advertisement) => new { package, advertisement })
                     .Where(x => x.package.CreateAt.Date <= currentDate.Date &&
-                                (x.advertisement.Status == "Approved" || x.advertisement.Status == "Expired"))
+                                (x.advertisement.Status == "Approved" || x.advertisement.Status == "Expired" || x.advertisement.Status == "Pending"))
                     .GroupBy(x => x.package.CreateAt.Date)
                     .Select(g => new { Date = g.Key, TotalRevenue = g.Sum(p => p.package.Total) })
                     .OrderBy(x => x.Date)
