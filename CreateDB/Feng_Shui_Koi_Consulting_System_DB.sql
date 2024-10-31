@@ -45,9 +45,6 @@ FROM INFORMATION_SCHEMA.TABLES
 WHERE TABLE_TYPE = 'BASE TABLE'
 EXEC Sp_executesql @sql2 
 GO
-
--- (Thêm mã tạo bảng và các đối tượng khác ở đây nếu cần)
-
 CREATE TABLE [dbo].[Account](
 	[UserID] [nvarchar](50) NOT NULL,
 	[Password] [nvarchar](500) NOT NULL,
@@ -60,7 +57,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Ads_Package]    Script Date: 31/10/2024 7:41:35 CH ******/
+/****** Object:  Table [dbo].[Ads_Package]    Script Date: 31/10/2024 10:29:15 CH ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -81,7 +78,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Advertisement]    Script Date: 31/10/2024 7:41:35 CH ******/
+/****** Object:  Table [dbo].[Advertisement]    Script Date: 31/10/2024 10:29:15 CH ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -100,7 +97,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Blog]    Script Date: 31/10/2024 7:41:35 CH ******/
+/****** Object:  Table [dbo].[Blog]    Script Date: 31/10/2024 10:29:15 CH ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -117,7 +114,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Color]    Script Date: 31/10/2024 7:41:35 CH ******/
+/****** Object:  Table [dbo].[Color]    Script Date: 31/10/2024 10:29:15 CH ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -130,7 +127,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Direction]    Script Date: 31/10/2024 7:41:35 CH ******/
+/****** Object:  Table [dbo].[Direction]    Script Date: 31/10/2024 10:29:15 CH ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -143,7 +140,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Element]    Script Date: 31/10/2024 7:41:35 CH ******/
+/****** Object:  Table [dbo].[Element]    Script Date: 31/10/2024 10:29:15 CH ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -157,7 +154,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Element_Color]    Script Date: 31/10/2024 7:41:35 CH ******/
+/****** Object:  Table [dbo].[Element_Color]    Script Date: 31/10/2024 10:29:15 CH ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -173,7 +170,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Feedback]    Script Date: 31/10/2024 7:41:35 CH ******/
+/****** Object:  Table [dbo].[Feedback]    Script Date: 31/10/2024 10:29:15 CH ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -190,7 +187,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Koi_Variety]    Script Date: 31/10/2024 7:41:35 CH ******/
+/****** Object:  Table [dbo].[Koi_Variety]    Script Date: 31/10/2024 10:29:15 CH ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -206,7 +203,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[LifePalace]    Script Date: 31/10/2024 7:41:35 CH ******/
+/****** Object:  Table [dbo].[LifePalace]    Script Date: 31/10/2024 10:29:15 CH ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -219,7 +216,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[LifePalace_Direction]    Script Date: 31/10/2024 7:41:35 CH ******/
+/****** Object:  Table [dbo].[LifePalace_Direction]    Script Date: 31/10/2024 10:29:15 CH ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -237,7 +234,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Member]    Script Date: 31/10/2024 7:41:35 CH ******/
+/****** Object:  Table [dbo].[Member]    Script Date: 31/10/2024 10:29:15 CH ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -252,7 +249,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Package]    Script Date: 31/10/2024 7:41:35 CH ******/
+/****** Object:  Table [dbo].[Package]    Script Date: 31/10/2024 10:29:15 CH ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -268,7 +265,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[PointOfShape]    Script Date: 31/10/2024 7:41:35 CH ******/
+/****** Object:  Table [dbo].[PointOfShape]    Script Date: 31/10/2024 10:29:15 CH ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -284,7 +281,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[QuantityOfFish]    Script Date: 31/10/2024 7:41:35 CH ******/
+/****** Object:  Table [dbo].[QuantityOfFish]    Script Date: 31/10/2024 10:29:15 CH ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -298,7 +295,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Shape]    Script Date: 31/10/2024 7:41:35 CH ******/
+/****** Object:  Table [dbo].[Shape]    Script Date: 31/10/2024 10:29:15 CH ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -312,7 +309,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Type_Color]    Script Date: 31/10/2024 7:41:35 CH ******/
+/****** Object:  Table [dbo].[Type_Color]    Script Date: 31/10/2024 10:29:15 CH ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1032,6 +1029,47 @@ INSERT [dbo].[Element_Color] ([ElementID], [ColorID], [ColorPoint]) VALUES (N'Th
 INSERT [dbo].[Element_Color] ([ElementID], [ColorID], [ColorPoint]) VALUES (N'Thủy', N'Vàng', 0.25)
 INSERT [dbo].[Element_Color] ([ElementID], [ColorID], [ColorPoint]) VALUES (N'Thủy', N'Xanh lục', 0.5)
 GO
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB001', N'vị trí thoáng,cá nhiều,cà phê sữa ngon,có khu vui chơi dành cho trẻ e.', N'AD081', 5, N'hau')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB002', N'chú bảo vệ rất nhiệt tình ', N'AD081', 5, N'huy')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB003', N'Cá tuyệt đẹp . Nuôi trại lớn được đầu tư cực kì bài bản
+', N'AD723', 5, N'nhan')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB004', N'Mấy dòng khác khá đẹp nhưng kohaku hơi cam ko dc đỏ', N'AD189', 5, N'tin')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB005', N'Cá KOI siêu to khổng lồ, ngắm rất thích. Nhưng chỗ này không phải quán cafe, mà chuyên trưng bày và bán cá KOI là chủ yếu. Khách có thể vào nghỉ ngơi uống cafe xem cá nhưng thức uống chỉ có cafe, nước cam và chanh dây.', N'AD363', 5, N'huy')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB006', N'Đã được qua xem thực tế, thực sự rất đẹp. Mấy bé rất chất lượng. Dịch vụ rất okila
+', N'AD363', 5, N'khoa')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB007', N'Trang trí hồ cá rất đẹp, shop bán hàng uy tín, anh chủ dễ thương nhiệt tình 🥰🥰 …', N'AD820', 5, N'after')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB008', N'Dịch vụ rất tốt , làm việc sạch sẽ gọn gàng . Nhân viên thân thiện . Lần sau cần đến sẽ tiếp tục sử dụng dịch vụ bên mình . Cảm thấy hài lòng .', N'AD820', 5, N'huy')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB009', N'một sự hợp tác tuyệt vời ', N'AD126', 5, N'nhan')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB010', N'cá koi phong phú nhiều màu sắc, nhân viên nhiệt tình.', N'AD126', 5, N'nhan')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB011', N'chất lượng tốt ', N'AD997', 5, N'hau')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB012', N'cá koi phong phú, nhiều màu sắc rực rỡ.', N'AD997', 5, N'tin')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB013', N'quy trình làm việc chuyên nghiệp', N'AD483', 5, N'khoa')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB014', N' Chương trình khuyến mãi hấp dẫn, giảm giá 20% cho cám cá Koi. Đây là cơ hội tốt cho những ai nuôi cá Koi, giúp tiết kiệm chi phí.', N'AD759', 5, N'huy')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB015', N'loại cám dành cho cá koi chất lượng cao, giá thành hợp lí', N'AD483', 5, N'nhan')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB016', N'Dịch vụ thiết kế và thi công hồ cá Koi mini rất phù hợp cho những không gian nhỏ. Thông tin chi tiết về dịch vụ sẽ giúp khách hàng dễ dàng lựa chọn.', N'AD483', 5, N'huy')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB017', N'hình dáng của hồ khi nhìn từ bên ngoài rất đẹp ', N'AD419', 5, N'tin')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB018', N'Cung cấp cá Koi Nhật Bản chất lượng, phù hợp cho những ai đang tìm kiếm cá Koi đẹp và khỏe mạnh.', N'AD065', 5, N'hau')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB019', N'Cung cấp cá Koi chất lượng cao không chỉ thu hút những người nuôi cá mà còn là cơ hội cho những nhà đầu tư trong lĩnh vực cá cảnh.', N'AD762', 5, N'khoa')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB020', N'Dịch vụ thiết kế hồ cá Koi tại Sơn La mở rộng cơ hội cho những người yêu thích cá Koi ở khu vực này. Cần thêm thông tin về chất lượng dịch vụ.', N'AD083', 5, N'khoa')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB021', N'Dịch vụ này không chỉ mang lại giá trị thẩm mỹ mà còn tạo ra một môi trường sống lý tưởng cho cá Koi, giúp chúng phát triển khỏe mạnh.', N'AD551', 5, N'nhan')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB022', N'Cung cấp cá Koi Nhật Bản chất lượng, phù hợp cho những ai đang tìm kiếm cá Koi đẹp và khỏe mạnh.', N'AD551', 5, N'tin')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB023', N'Cung cấp cá Koi chất lượng cao không chỉ thu hút những người nuôi cá mà còn là cơ hội cho những nhà đầu tư trong lĩnh vực cá cảnh.', N'AD419', 5, N'tin')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB024', N'Trang trại này có thể tổ chức các sự kiện hoặc hội thảo về chăm sóc cá Koi, giúp người nuôi có thêm kiến thức và kinh nghiệm.', N'AD065', 5, N'hau')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB025', N'Trang trại Koi hàng đầu, có thể cung cấp nhiều loại cá Koi khác nhau. Thông tin chi tiết sẽ giúp khách hàng hiểu rõ hơn về sản phẩm.', N'AD065', 5, N'nhan')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB026', N'Một địa điểm thú vị để thư giãn và thưởng thức cà phê trong không gian có cá Koi. Rất thích hợp cho những ai yêu thích thiên nhiên.', N'AD762', 5, N'after')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB027', N'Không gian quán cà phê không chỉ đẹp mà còn mang lại cảm giác thư giãn, giúp khách hàng thoát khỏi nhịp sống hối hả hàng ngày.
+', N'AD762', 5, N'huy')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB028', N'Trang trại này có thể cung cấp dịch vụ tư vấn cho những người mới bắt đầu nuôi cá Koi, giúp họ có những lựa chọn đúng đắn ngay từ đầu.
+', N'AD083', 5, N'nhan')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB029', N'Trang trại cá Koi lớn, cung cấp nhiều loại cá Koi cho khách hàng. Đây là điểm đến lý tưởng cho những người yêu thích cá Koi tại Hà Nội.', N'AD083', 5, N'huy')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB030', N' Không gian thư giãn với cá Koi, rất thích hợp cho những buổi gặp gỡ bạn bè hoặc gia đình. Cần thêm thông tin về menu và dịch vụ.', N'AD004', 5, N'tin')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB031', N'Không gian thư giãn này có thể trở thành điểm đến lý tưởng cho các buổi hẹn hò hoặc gặp gỡ bạn bè, tạo ra những kỷ niệm đáng nhớ.
+', N'AD878', 5, N'khoa')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB032', N' Sử dụng đá tự nhiên, cây thủy sinh và các yếu tố tự nhiên khác để tạo ra một môi trường sống gần gũi với thiên nhiên. Cây cối không chỉ làm đẹp mà còn giúp cải thiện chất lượng nước.', N'AD878', 5, N'tin')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB033', N' Ánh sáng cũng rất quan trọng; sử dụng đèn LED dưới nước có thể tạo ra hiệu ứng lung linh, làm nổi bật vẻ đẹp của cá và cảnh quan xung quanh.', N'AD551', 5, N'huy')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB034', N'Quán cafe koi là một không gian lý tưởng để thư giãn và thưởng thức cà phê trong khi ngắm nhìn những chú cá koi bơi lội. Để tạo ra một quán cafe koi hấp dẫn, bạn nên xem xét các yếu tố ', N'AD551', 5, N'nhan')
+INSERT [dbo].[Feedback] ([FbID], [Description], [AdID], [Rate], [UserID]) VALUES (N'FB035', N'Không gian quán nên được thiết kế mở, với nhiều cửa sổ để khách hàng có thể dễ dàng nhìn thấy hồ cá. Sử dụng các vật liệu tự nhiên như gỗ và đá để tạo cảm giác gần gũi và ấm cúng.', N'AD551', 5, N'khoa')
+GO
 INSERT [dbo].[Koi_Variety] ([KoiType], [Image], [Element], [Description]) VALUES (N'Asagi', N'https://firebasestorage.googleapis.com/v0/b/swp391-koifengshuiconsult.appspot.com/o/asagi.jpg?alt=media&token=d7db3c27-ead9-422a-9277-09e0ee7ab66b', N'Thủy', N'Asagi chính là giống sản sinh ra Nishikigoi, chúng bắt nguồn từ loài cá chép đen thường sinh sống ở những vùng sông hoặc suối, những chú cá chép đen có sự tiến hóa vượt bậc và được người dân Nhật chọn lựa những chú cá có màu sắc như Trắng, Xanh dương và màu đỏ và giữ lại trong hồ.')
 INSERT [dbo].[Koi_Variety] ([KoiType], [Image], [Element], [Description]) VALUES (N'Beni Kumonryu', N'https://firebasestorage.googleapis.com/v0/b/swp391-koifengshuiconsult.appspot.com/o/Beni_Kumonryu.jpg?alt=media&token=de20399f-5096-4b07-9de0-ff67e850ab0f', N'Hỏa', N'Koi Beni Kumonryu là một biến thể hiếm hoi của Kumonryu, chúng thường có ba màu là đỏ, đen và trắng.')
 INSERT [dbo].[Koi_Variety] ([KoiType], [Image], [Element], [Description]) VALUES (N'Gin Rin Yamato Nishiki', N'https://firebasestorage.googleapis.com/v0/b/swp391-koifengshuiconsult.appspot.com/o/GinRinYamatoNishiKi.jpg?alt=media&token=d452d1c9-15ec-4dcf-8217-a2927639a9b5', N'Hỏa', N'Gin Rin Yamato nishiki koi là loài cá được lai tạo khoảng thời gian sau này của giống koi sanke. Có thể nói cá koi yamato nishiki giúp vẻ đẹp màu sắc Gin Rin tiến đến một tầm mới hơn khi phủ lên mình cá một lớp ánh kim loại lấp lánh.')
@@ -1242,7 +1280,7 @@ INSERT [dbo].[Type_Color] ([KoiType], [ColorID], [Percentage]) VALUES (N'Ushutim
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__Account__A9D10534B0611E0B]    Script Date: 31/10/2024 7:41:35 CH ******/
+/****** Object:  Index [UQ__Account__A9D10534DB62F89A]    Script Date: 31/10/2024 10:29:15 CH ******/
 ALTER TABLE [dbo].[Account] ADD UNIQUE NONCLUSTERED 
 (
 	[Email] ASC
