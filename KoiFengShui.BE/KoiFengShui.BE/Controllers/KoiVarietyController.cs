@@ -48,7 +48,6 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Lỗi máy chủ: {ex.Message}");
             }
         }
-
         [HttpGet("GetListKoiByDOBOrder")]
         public async Task<IActionResult> GetListKoiByDOBOrder(string dob)
         {
@@ -243,11 +242,6 @@ namespace KoiFengShui.BE.Controllers
                     Description = koiFish.Description,
                     Element = koiFish.Element,
                 };
-
-
-
-              
-
                 bool koiTypeAdded = await _koiVarietyService.AddKoiVariety(newKoiType);
                 if (!koiTypeAdded)
                 {

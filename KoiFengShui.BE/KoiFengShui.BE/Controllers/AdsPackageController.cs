@@ -38,32 +38,6 @@ namespace KoiFengShui.BE.Controllers
             {
                 return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
-        }
-
-        [HttpPost("AddAdsPackage")]
-        public async Task<IActionResult> AddAdsPackage(AdsPackage adsPackage)
-        {
-            try
-            {
-                if (adsPackage == null)
-                {
-                    return BadRequest("AdsPackage is null.");
-                }
-                bool isSuccess = await _adsPackageService.AddAdsPackage(adsPackage);
-                if (isSuccess)
-                {
-                    return Ok("Thêm AdsPackage thành công");
-                }
-                else
-                {
-                    return BadRequest("Thêm AdsPackage thất bại");
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Lỗi server: {ex.Message}");
-            }
-        }
-       
+        } 
     }
 }
