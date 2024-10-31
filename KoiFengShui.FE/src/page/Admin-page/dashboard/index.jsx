@@ -60,11 +60,18 @@ const AdminDashboard = () => {
       fetchData(url, (newData) => {
         console.log(`Received ${key} data:`, newData);
         setData((prev) => ({ ...prev, [key]: newData }));
+
+        if (key === "ads") {
+          const currentDate = new Date();
+          const year = currentDate.getFullYear();
+          const month = currentDate.getMonth() + 1; // Tháng bắt đầu từ 0
+          const day = currentDate.getDate();
+          fetchDailyRevenueData(year, month, day);
+        }
       })
     );
 
     fetchMonthlyRevenueData();
-
 
     console.log("Initial data state:", data);
 
@@ -109,26 +116,22 @@ const AdminDashboard = () => {
       .sort((a, b) => new Date(a) - new Date(b))
       .slice(-7); // Lấy 7 ngày gần nhất
 
+    const today = new Date().toISOString().split('T')[0]; 
+
+    const lastAvailableDate = last7Days[last7Days.length - 1];
+    const filteredDays = last7Days.filter(date => date <= lastAvailableDate);
+
     return {
-      labels: last7Days.map(date => format(new Date(date), 'dd/MM')),
+      labels: filteredDays.map(date => format(new Date(date), 'dd/MM')),
       datasets: [{
         label: 'Doanh thu hàng ngày',
-        data: last7Days.map(date => data.dailyRevenue[date]),
+        data: filteredDays.map(date => data.dailyRevenue[date]),
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
         tension: 0.1
       }]
     };
   };
-
-  useEffect(() => {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth() + 1; // Tháng bắt đầu từ 0
-    const day = currentDate.getDate();
-
-    fetchDailyRevenueData(year, month, day);
-  }, []);
 
   const countItems = (items, key) => {
     return items.reduce((acc, item) => {
