@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./index.css";
-import koiImage from "./path-to-koi-image.jpg";
+import koiImage from "./logo.jpg";
 import { Button, Dropdown, Menu } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";

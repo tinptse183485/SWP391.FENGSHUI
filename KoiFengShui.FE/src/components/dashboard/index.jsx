@@ -12,7 +12,7 @@ import {
 import { Breadcrumb, Button, Layout, Menu, theme } from "antd";
 import { Link, Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import KoiImage from './koi.jpg';
+import KoiImage from './logo.jpg';
 import "./index.css";
 
 const { Header, Content, Footer, Sider } = Layout;
