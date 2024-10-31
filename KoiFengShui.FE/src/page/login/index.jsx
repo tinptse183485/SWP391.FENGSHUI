@@ -46,7 +46,7 @@ function Login() {
   const handleLogin = async (values) => {
     try {
       const response = await api.post("/Account/login", values);
-      const { role, token, userId, name } = response.data;
+      const { role, token, userId, name, status } = response.data;
       localStorage.setItem("token", token);
       localStorage.setItem("userId", userId);
       localStorage.setItem("role", role);
@@ -100,7 +100,7 @@ function Login() {
       localStorage.setItem("token", token);
       localStorage.setItem("userId", userId);
       localStorage.setItem("name", name);
-
+      localStorage.setItem("role", role); 
       if (role === "ADMIN") {
         navigate("/dashboard");
       } else {
