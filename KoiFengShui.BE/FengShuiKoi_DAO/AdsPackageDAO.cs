@@ -138,6 +138,7 @@ namespace FengShuiKoi_DAO
         {
             try
             {
+                dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
                 var startDate = new DateTime(year, month, 1);
                 var endDate = startDate.AddMonths(1);
 
@@ -164,8 +165,7 @@ namespace FengShuiKoi_DAO
         {
             try
             {
-               
-
+                dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
                 var specifiedDate = new DateTime(year, month, day);
                 var startDate = specifiedDate.AddDays(-7); 
                 var currentDate = specifiedDate; 
