@@ -29,11 +29,12 @@ namespace FengShuiKoi_DAO
             dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
         }
 
-         public async Task<Dictionary<string, double>> GetRevenueByPackage()
+         public Dictionary<string, double> GetRevenueByPackage()
         {
             try
             {
-                var adsPackages = await dbContext.AdsPackages.AsNoTracking().ToListAsync();
+                dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
+                var adsPackages = dbContext.AdsPackages.AsNoTracking().ToList();
                 var revenueByPackage = new Dictionary<string, double>();
 
                 foreach (var package in adsPackages)
@@ -134,53 +135,58 @@ namespace FengShuiKoi_DAO
                 throw new Exception(ex.Message);
             }
         }
-        public async Task<Dictionary<string, double>> GetTotalRevenueByMonth(int year, int month)
+        public Dictionary<string, double> GetTotalRevenueByMonth(int year)
         {
             try
             {
-                var startDate = new DateTime(year, month, 1);
-                var endDate = startDate.AddMonths(1);
+                dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
+                var totalRevenueByMonth = new Dictionary<string, double>();
 
-                var TotalRevenueByRank = await dbContext.AdsPackages
-                    .Where(p => p.CreateAt >= startDate && p.CreateAt < endDate)
-                    .Join(dbContext.Advertisements,
-                          package => package.AdId,
-                          advertisement => advertisement.AdId,
-                          (package, advertisement) => new { package, advertisement })
-                    .Where(x => x.advertisement.Status == "Approved" || x.advertisement.Status == "Expired")
-                    .GroupBy(x => x.package.Rank)
-                    .Select(g => new { Rank = g.Key, TongDoanhThu = g.Sum(p => p.package.Total) })
-                    .ToDictionaryAsync(x => x.Rank, x => x.TongDoanhThu);
+                for (int month = 1; month <= 12; month++)
+                {
+                    var startDate = new DateTime(year, month, 1);
+                    var endDate = startDate.AddMonths(1);
 
-                return TotalRevenueByRank;
+                    var monthlyRevenue = dbContext.AdsPackages
+                        .Where(p => p.CreateAt >= startDate && p.CreateAt < endDate)
+                        .Join(dbContext.Advertisements,
+                              package => package.AdId,
+                              advertisement => advertisement.AdId,
+                              (package, advertisement) => new { package, advertisement })
+                        .Where(x => x.advertisement.Status == "Approved" || x.advertisement.Status == "Expired" || x.advertisement.Status == "Pending")
+                        .Sum(p => p.package.Total);
+
+                    totalRevenueByMonth[$"{month}/{year}"] = monthlyRevenue;
+                }
+
+                return totalRevenueByMonth;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Lỗi trong LayDoanhThuTheoThangVaRank: {ex.Message}");
-                return new Dictionary<string, double>();
+                Console.WriteLine($"Lỗi trong LayDoanhThuTheoNam: {ex.Message}");
+                return new Dictionary<string, double>(); // Return an empty dictionary in case of an error
             }
         }
-        public async Task<Dictionary<string, double>> GetDailyRevenueToDate(int year, int month, int day)
+        public Dictionary<string, double> GetDailyRevenueToDate(int year, int month, int day)
         {
             try
             {
-               
-
+                dbContext = new SWP391_FengShuiKoiConsulting_DBContext();
                 var specifiedDate = new DateTime(year, month, day);
                 var startDate = specifiedDate.AddDays(-7); 
                 var currentDate = specifiedDate; 
 
-                var dailyRevenue = await dbContext.AdsPackages
+                var dailyRevenue =  dbContext.AdsPackages
                     .Join(dbContext.Advertisements,
                           package => package.AdId,
                           advertisement => advertisement.AdId,
                           (package, advertisement) => new { package, advertisement })
                     .Where(x => x.package.CreateAt.Date <= currentDate.Date &&
-                                (x.advertisement.Status == "Approved" || x.advertisement.Status == "Expired"))
+                                (x.advertisement.Status == "Approved" || x.advertisement.Status == "Expired" || x.advertisement.Status == "Pending"))
                     .GroupBy(x => x.package.CreateAt.Date)
                     .Select(g => new { Date = g.Key, TotalRevenue = g.Sum(p => p.package.Total) })
                     .OrderBy(x => x.Date)
-                    .ToDictionaryAsync(x => x.Date.ToShortDateString(), x => x.TotalRevenue); 
+                    .ToDictionary(x => x.Date.ToShortDateString(), x => x.TotalRevenue); 
 
              
                 var result = new Dictionary<string, double>();

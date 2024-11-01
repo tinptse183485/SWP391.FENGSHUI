@@ -13,13 +13,13 @@ namespace FengShuiKoi_Services
 
         Task<List<AdsPackage>> GetListAdsPackageByAdID(string AdID);
         Task<List<AdsPackage>> GetListAdsPackageByRank(string Rank);
-        Task<Dictionary<string, double>> GetRevenueByPackage();
+        Dictionary<string, double> GetRevenueByPackage();
         Task<List<AdsPackage>> GetAdsPackages();
         Task<bool> AddAdsPackage(AdsPackage ads);
         Task<bool> UpdateAdsPackage(AdsPackage newAdsPackage);
         Task<AdsPackage> GetAdsPackageByAdID(string AdID);
 		Task<bool> DeleteAdsPackage(string AdID, string Rank, DateTime CreateAt);
-        Task<Dictionary<string, double>> GetTotalRevenueByMonth(int year, int month);
-        Task<Dictionary<string, double>> GetDailyRevenueToDate(int year, int month, int day);
+     Dictionary<string, double> GetTotalRevenueByMonth(int year);
+        Dictionary<string, double> GetDailyRevenueToDate(int year, int month, int day);
     }
 }

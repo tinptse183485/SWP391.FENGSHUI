@@ -27,7 +27,7 @@ namespace KoiFengShui.BE.Controllers
         {
             try
             {
-                var RevenueByPackage = await _adsPackageService.GetRevenueByPackage();
+                var RevenueByPackage =  _adsPackageService.GetRevenueByPackage();
                 if (RevenueByPackage == null || !RevenueByPackage.Any())
                 {
                     return NotFound("Không tìm thấy dữ liệu doanh thu");
@@ -58,12 +58,19 @@ namespace KoiFengShui.BE.Controllers
             }
         }
         [HttpGet("GetTotalRevenueByMonth")]
-        public async Task<IActionResult> GetTotalRevenueByMonth(int year, int month)
+        public IActionResult GetTotalRevenueByMonth(int year)
         {
             try
-            {
-                var GetTotal = await _adsPackageService.GetTotalRevenueByMonth(year, month);
-                return Ok(GetTotal);
+            {   if (year >= 1754)
+                {
+                    var GetTotal = _adsPackageService.GetTotalRevenueByMonth(year);
+                    return Ok(GetTotal);
+                }
+                else
+                {
+                    return BadRequest("Tại Năm này chưa có dữ liệu !");
+                }
+               
             }
             catch (Exception ex)
             {
@@ -71,14 +78,14 @@ namespace KoiFengShui.BE.Controllers
             }
         }
         [HttpGet("GetDailyRevenueToDate")]
-        public async Task<IActionResult> GetDailyRevenueToDate(int year, int month, int day)
+        public IActionResult GetDailyRevenueToDate(int year, int month, int day)
         {
             try
             {
                 
                 
 
-                var getTotal = await _adsPackageService.GetDailyRevenueToDate(year, month, day);
+                var getTotal =  _adsPackageService.GetDailyRevenueToDate(year, month, day);
                 return Ok(getTotal);
             }
             catch (Exception ex)
