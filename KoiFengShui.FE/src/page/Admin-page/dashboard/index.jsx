@@ -60,38 +60,33 @@ const AdminDashboard = () => {
       fetchData(url, (newData) => {
         console.log(`Received ${key} data:`, newData);
         setData((prev) => ({ ...prev, [key]: newData }));
+
+        if (key === "ads") {
+          const currentDate = new Date();
+          const year = currentDate.getFullYear();
+          const month = currentDate.getMonth() + 1; // Tháng bắt đầu từ 0
+          const day = currentDate.getDate();
+          fetchDailyRevenueData(year, month, day);
+        }
       })
+      
     );
 
-    fetchMonthlyRevenueData();
-
+    fetchMonthlyRevenueData(currentYear);
 
     console.log("Initial data state:", data);
 
     return () => chartRefs.current.forEach((chart) => chart?.destroy?.());
   }, []);
 
-  const fetchMonthlyRevenueData = async () => {
-    const monthlyData = {};
-    for (let month = 1; month <= 12; month++) {
-      const response = await api.get(
-        `Dashboard/GetTotalRevenueByMonth?year=${currentYear}&month=${month
-          .toString()
-          .padStart(2, "0")}`
-      );
-      console.log(`Month ${month} data:`, response.data);
-      const totalRevenue = Object.values(response.data).reduce(
-        (sum, value) => sum + value,
-        0
-      );
-      monthlyData[month] = totalRevenue;
+  const fetchMonthlyRevenueData = async (year) => {
+    try {
+      const response = await api.get(`/Dashboard/GetTotalRevenueByMonth?year=${year}`);
+      console.log("Monthly revenue data:", response.data);
+        setData(prev => ({ ...prev, monthlyRevenue: response.data }));
+    } catch (error) {
+      console.error("Error fetching monthly revenue data:", error);
     }
-    console.log("Final monthly revenue data:", monthlyData);
-    setData((prev) => {
-      const newData = { ...prev, monthlyRevenue: monthlyData };
-      console.log("Updated data state:", newData);
-      return newData;
-    });
   };
 
   const fetchDailyRevenueData = async (year, month, day) => {
@@ -107,28 +102,22 @@ const AdminDashboard = () => {
   const createDailyRevenueChartData = () => {
     const last7Days = Object.keys(data.dailyRevenue)
       .sort((a, b) => new Date(a) - new Date(b))
-      .slice(-7); // Lấy 7 ngày gần nhất
+      .slice(-7);
+
+    const lastAvailableDate = last7Days[last7Days.length - 1];
+    const filteredDays = last7Days.filter(date => date <= lastAvailableDate);
 
     return {
-      labels: last7Days.map(date => format(new Date(date), 'dd/MM')),
+      labels: filteredDays.map(date => format(new Date(date), 'dd/MM')),
       datasets: [{
         label: 'Doanh thu hàng ngày',
-        data: last7Days.map(date => data.dailyRevenue[date]),
+        data: filteredDays.map(date => data.dailyRevenue[date]),
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
         tension: 0.1
       }]
     };
   };
-
-  useEffect(() => {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth() + 1; // Tháng bắt đầu từ 0
-    const day = currentDate.getDate();
-
-    fetchDailyRevenueData(year, month, day);
-  }, []);
 
   const countItems = (items, key) => {
     return items.reduce((acc, item) => {
