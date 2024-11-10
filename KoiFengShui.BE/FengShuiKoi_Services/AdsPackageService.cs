@@ -18,9 +18,9 @@ namespace FengShuiKoi_Services
         {
             return await iAdsPackageRepo.AddAdsPackage(ads);
         }
-        public async Task<Dictionary<string, double>> GetRevenueByPackage()
+        public  Dictionary<string, double> GetRevenueByPackage()
         {
-            return await iAdsPackageRepo.GetRevenueByPackage();
+            return  iAdsPackageRepo.GetRevenueByPackage();
         }
 
         public async Task<bool> DeleteAdsPackage(string AdID, string Rank, DateTime CreateAt)
@@ -51,10 +51,10 @@ namespace FengShuiKoi_Services
         {
             return await iAdsPackageRepo.UpdateAdsPackage(newAdsPackage);
         }
-        public async Task<Dictionary<string, double>> GetTotalRevenueByMonth(int year, int month)
+        public Dictionary<string, double> GetTotalRevenueByMonth(int year)
         {
-            return await iAdsPackageRepo.GetTotalRevenueByMonth(year, month);
+            return  iAdsPackageRepo.GetTotalRevenueByMonth(year);
         }
-         public async Task<Dictionary<string, double>> GetDailyRevenueToDate(int year, int month, int day) => await iAdsPackageRepo.GetDailyRevenueToDate(year,month,day);
+         public Dictionary<string, double> GetDailyRevenueToDate(int year, int month, int day) =>  iAdsPackageRepo.GetDailyRevenueToDate(year,month,day);
     }
 }
