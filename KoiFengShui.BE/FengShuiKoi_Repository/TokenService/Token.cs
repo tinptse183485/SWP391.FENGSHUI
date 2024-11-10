@@ -43,7 +43,7 @@ namespace KoiFengShui.BE.TokenService
 			var tokenDescriptor = new SecurityTokenDescriptor
 			{
 				Subject = new ClaimsIdentity(authClaims),
-				Expires = DateTime.UtcNow.AddMinutes(15), // Short-lived token
+				Expires = DateTime.UtcNow.AddMinutes(1440), // Short-lived token
 				Issuer = _issuer,
 				Audience = _audience,
 				SigningCredentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256Signature)

@@ -50,18 +50,18 @@ const User = () => {
 
   const columns = [
     {
-      title: "User ID",
+      title: "Tài khoản người dùng",
       dataIndex: "userID",
       key: "userID",
     },
     {
-      title: "Password",
+      title: "Mật khẩu",
       dataIndex: "password",
       key: "password",
       render: () => "***",
     },
     {
-      title: "Name",
+      title: "Tên",
       dataIndex: "name",
       key: "name",
     },
@@ -71,12 +71,12 @@ const User = () => {
       key: "email",
     },
     {
-      title: "Role",
+      title: "Vai trò",
       dataIndex: "role",
       key: "role",
     },
     {
-      title: "Status",
+      title: "Trạng thái",
       dataIndex: "status",
       key: "status",
       render: (text, record) =>
@@ -87,31 +87,31 @@ const User = () => {
               setEditingUser({ ...editingUser, status: value })
             }
           >
-            <Option value="Active">Active</Option>
-            <Option value="Banned">Banned</Option>
+            <Option value="Active">Hoạt động</Option>
+            <Option value="Banned">Bị cấm</Option>
           </Select>
         ) : (
           text
         ),
     },
     {
-      title: "Birthday",
+      title: "Ngày sinh",
       dataIndex: "birthday",
       key: "birthday",
       render: (birthday) => new Date(birthday).toLocaleDateString(),
     },
     {
-      title: "Action",
+      title: "Hành động",
       key: "action",
       render: (text, record) => (
         <Space direction="horizontal">
           {editingUser?.userID === record.userID ? (
             <Button type="primary" onClick={() => handleSave(record.userID)}>
-              Save
+              Lưu
             </Button>
           ) : (
             <Button type="primary" onClick={() => handleEdit(record)}>
-              Update
+              Cập nhật
             </Button>
           )}
         </Space>
@@ -127,13 +127,13 @@ const User = () => {
 
   return (
     <div className="dashboard-container">
-      <h2>Manage User</h2>
+      <h2>Quản lí người dùng</h2>
       <div className="dashboard-content">
         <div className="search-container">
           {" "}
           {/* Thêm container cho ô tìm kiếm */}
           <div className="search-select-container">
-            <h3>Search by Role: </h3>
+            <h3>Tìm kiếm theo Role: </h3>
             <Select
               className="search-select" // Thêm lớp cho ô chọn Role
               placeholder="Filter:"
@@ -146,7 +146,7 @@ const User = () => {
             </Select>
           </div>
           <div className="search-input-container">
-            <h3>Search by UserID: </h3>
+            <h3>Tìm kiếm tài khoản người dùng: </h3>
             <Input
               className="search-input" // Thêm lớp cho ô tìm kiếm UserID
               placeholder="Search UserID"

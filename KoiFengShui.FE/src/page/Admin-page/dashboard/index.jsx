@@ -247,6 +247,10 @@ const AdminDashboard = () => {
     );
   };
 
+  const formatCurrency = (amount) => {
+    return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VNĐ";
+  };
+
   const totalRevenueForYear = Object.values(data.monthlyRevenue).reduce(
     (sum, value) => sum + value,
     0
@@ -263,7 +267,7 @@ const AdminDashboard = () => {
           </div>
           <div className="overview-card" style={{ backgroundColor: "#ff9800" }}>
             <h3>Tổng doanh thu</h3>
-            <p>{totalRevenueForYear || 0}</p>
+            <p>{formatCurrency(totalRevenueForYear || 0)}</p>
           </div>
         </div>
         <div className="chart-container">
