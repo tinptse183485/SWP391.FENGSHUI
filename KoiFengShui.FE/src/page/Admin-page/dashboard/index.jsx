@@ -90,11 +90,9 @@ const AdminDashboard = () => {
 
   const fetchDailyRevenueData = async (year, month, day) => {
     try {
-      const response = await api.get(
-        `/Dashboard/GetDailyRevenueToDate?year=${year}&month=${month}&day=${day}`
-      );
+      const response = await api.get(`/Dashboard/GetDailyRevenueToDate?year=${year}&month=${month}&day=${day}`);
       console.log("Daily revenue data:", response.data);
-      setData((prev) => ({ ...prev, dailyRevenue: response.data }));
+      setData(prev => ({ ...prev, dailyRevenue: response.data }));
     } catch (error) {
       console.error("Error fetching daily revenue data:", error);
     }
@@ -103,24 +101,17 @@ const AdminDashboard = () => {
   const createDailyRevenueChartData = () => {
     const last7Days = Object.keys(data.dailyRevenue)
       .sort((a, b) => new Date(a) - new Date(b))
-      .slice(-7);
-
-    const lastAvailableDate = last7Days[last7Days.length - 1];
-    const filteredDays = last7Days.filter((date) => date <= lastAvailableDate);
-
-    const today = new Date().toISOString().split("T")[0];
+      .slice(-7); // Lấy 7 ngày gần nhất
 
     return {
-      labels: filteredDays.map((date) => format(new Date(date), "dd/MM")),
-      datasets: [
-        {
-          label: "Doanh thu hàng ngày",
-          data: filteredDays.map((date) => data.dailyRevenue[date]),
-          fill: false,
-          borderColor: "rgb(75, 192, 192)",
-          tension: 0.1,
-        },
-      ],
+      labels: last7Days.map(date => format(new Date(date), 'dd/MM')),
+      datasets: [{
+        label: 'Doanh thu hàng ngày',
+        data: last7Days.map(date => data.dailyRevenue[date]),
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1
+      }]
     };
   };
 
@@ -395,7 +386,7 @@ const AdminDashboard = () => {
             <p>No monthly revenue data available</p>
           )}
         </div>
-        <div className="chart-container" style={{ height: "400px" }}>
+        <div className="chart-container" style={{ height: '400px' }}>
           {data.dailyRevenue && Object.keys(data.dailyRevenue).length > 0 ? (
             <Line
               data={createDailyRevenueChartData()}
@@ -405,18 +396,18 @@ const AdminDashboard = () => {
                 plugins: {
                   title: {
                     display: true,
-                    text: "Doanh thu 7 ngày gần nhất",
-                  },
+                    text: 'Doanh thu 7 ngày gần nhất'
+                  }
                 },
                 scales: {
                   y: {
                     beginAtZero: true,
-                    title: { display: true, text: "Doanh thu (VNĐ)" },
+                    title: { display: true, text: 'Doanh thu (VNĐ)' }
                   },
                   x: {
-                    title: { display: true, text: "Ngày" },
-                  },
-                },
+                    title: { display: true, text: 'Ngày' }
+                  }
+                }
               }}
             />
           ) : (
