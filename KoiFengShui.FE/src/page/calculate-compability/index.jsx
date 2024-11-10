@@ -717,8 +717,8 @@ function ComputeCompability() {
                         }
                       }}
                     >
-                      <Radio value="male">Nam</Radio>
-                      <Radio value="female">Nữ</Radio>
+                      <Radio value="Male">Nam</Radio>
+                      <Radio value="Female">Nữ</Radio>
                     </Radio.Group>
                   </Form.Item>
                 </div>

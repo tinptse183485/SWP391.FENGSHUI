@@ -137,8 +137,8 @@ const Calculation = () => {
           rules={[{ required: true, message: "Hãy chọn giới tính của bạn!" }]}
         >
           <Radio.Group>
-            <Radio value="male">Nam</Radio>
-            <Radio value="female">Nữ</Radio>
+            <Radio value="Male">Nam</Radio>
+            <Radio value="Female">Nữ</Radio>
           </Radio.Group>
         </Form.Item>
 
