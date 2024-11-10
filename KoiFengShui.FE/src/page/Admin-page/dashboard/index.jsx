@@ -108,10 +108,7 @@ const AdminDashboard = () => {
     const lastAvailableDate = last7Days[last7Days.length - 1];
     const filteredDays = last7Days.filter((date) => date <= lastAvailableDate);
 
-    const today = new Date().toISOString().split('T')[0]; 
-
-    const lastAvailableDate = last7Days[last7Days.length - 1];
-    const filteredDays = last7Days.filter(date => date <= lastAvailableDate);
+    const today = new Date().toISOString().split("T")[0];
 
     return {
       labels: filteredDays.map((date) => format(new Date(date), "dd/MM")),

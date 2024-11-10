@@ -674,7 +674,7 @@ namespace KoiFengShui.BE.Controllers
                 return StatusCode(500, $"Lỗi server: {ex.Message}");
             }
         }
-        [AuthorizeRoles("Admin")]
+
         [HttpDelete("DeleteAdvertisement/{adId}")]
         public async Task<IActionResult> DeleteAdvertisement(string adId)
         {
