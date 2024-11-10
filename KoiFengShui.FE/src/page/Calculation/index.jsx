@@ -70,7 +70,6 @@ const Calculation = () => {
         params: { dob: values.YOB.format("YYYY-MM-DD") },
       });
       
-
       // Navigate to consulting page with all data
       navigate("/consulting", {
         state: {
