@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 
 namespace FengShuiKoi_BO
 {
@@ -10,7 +11,10 @@ namespace FengShuiKoi_BO
         public SWP391_FengShuiKoiConsulting_DBContext()
         {
         }
-
+        public SWP391_FengShuiKoiConsulting_DBContext(string connectionString)
+        {
+            this.Database.SetConnectionString(connectionString);
+        }
         public SWP391_FengShuiKoiConsulting_DBContext(DbContextOptions<SWP391_FengShuiKoiConsulting_DBContext> options)
             : base(options)
         {
@@ -40,10 +44,19 @@ namespace FengShuiKoi_BO
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-
-                optionsBuilder.UseSqlServer("Server=DESKTOP-QQRNGCE\\SQLEXPRESS;Database=SWP391_FengShuiKoiConsulting_DB;Uid=sa;Pwd=12345;");
+                optionsBuilder.UseSqlServer(GetConnectionString());
 
             }
+        }
+        private string GetConnectionString()
+        {
+            IConfiguration config = new ConfigurationBuilder()
+                 .SetBasePath(Directory.GetCurrentDirectory())
+                        .AddJsonFile("appsettings.json", true, true)
+                        .Build();
+            var strConn = config["ConnectionStrings:DefaultConnectionStringDB"];
+
+            return strConn;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

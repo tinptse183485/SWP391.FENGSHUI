@@ -158,7 +158,6 @@ namespace FengShuiKoi_DAO
 
                     totalRevenueByMonth[$"{month}/{year}"] = monthlyRevenue;
                 }
-
                 return totalRevenueByMonth;
             }
             catch (Exception ex)
