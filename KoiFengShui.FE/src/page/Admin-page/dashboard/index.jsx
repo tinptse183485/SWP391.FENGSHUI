@@ -70,42 +70,31 @@ const AdminDashboard = () => {
         }
       })
     );
-
-    fetchMonthlyRevenueData();
-
+    fetchMonthlyRevenueData(currentYear);
     console.log("Initial data state:", data);
 
     return () => chartRefs.current.forEach((chart) => chart?.destroy?.());
   }, []);
 
-  const fetchMonthlyRevenueData = async () => {
-    const monthlyData = {};
-    for (let month = 1; month <= 12; month++) {
+  const fetchMonthlyRevenueData = async (year) => {
+    try {
       const response = await api.get(
-        `Dashboard/GetTotalRevenueByMonth?year=${currentYear}&month=${month
-          .toString()
-          .padStart(2, "0")}`
+        `/Dashboard/GetTotalRevenueByMonth?year=${year}`
       );
-      console.log(`Month ${month} data:`, response.data);
-      const totalRevenue = Object.values(response.data).reduce(
-        (sum, value) => sum + value,
-        0
-      );
-      monthlyData[month] = totalRevenue;
+      console.log("Monthly revenue data:", response.data);
+      setData((prev) => ({ ...prev, monthlyRevenue: response.data }));
+    } catch (error) {
+      console.error("Error fetching monthly revenue data:", error);
     }
-    console.log("Final monthly revenue data:", monthlyData);
-    setData((prev) => {
-      const newData = { ...prev, monthlyRevenue: monthlyData };
-      console.log("Updated data state:", newData);
-      return newData;
-    });
   };
 
   const fetchDailyRevenueData = async (year, month, day) => {
     try {
-      const response = await api.get(`/Dashboard/GetDailyRevenueToDate?year=${year}&month=${month}&day=${day}`);
+      const response = await api.get(
+        `/Dashboard/GetDailyRevenueToDate?year=${year}&month=${month}&day=${day}`
+      );
       console.log("Daily revenue data:", response.data);
-      setData(prev => ({ ...prev, dailyRevenue: response.data }));
+      setData((prev) => ({ ...prev, dailyRevenue: response.data }));
     } catch (error) {
       console.error("Error fetching daily revenue data:", error);
     }
@@ -114,7 +103,10 @@ const AdminDashboard = () => {
   const createDailyRevenueChartData = () => {
     const last7Days = Object.keys(data.dailyRevenue)
       .sort((a, b) => new Date(a) - new Date(b))
-      .slice(-7); // Lấy 7 ngày gần nhất
+      .slice(-7);
+
+    const lastAvailableDate = last7Days[last7Days.length - 1];
+    const filteredDays = last7Days.filter((date) => date <= lastAvailableDate);
 
     const today = new Date().toISOString().split('T')[0]; 
 
@@ -122,14 +114,16 @@ const AdminDashboard = () => {
     const filteredDays = last7Days.filter(date => date <= lastAvailableDate);
 
     return {
-      labels: filteredDays.map(date => format(new Date(date), 'dd/MM')),
-      datasets: [{
-        label: 'Doanh thu hàng ngày',
-        data: filteredDays.map(date => data.dailyRevenue[date]),
-        fill: false,
-        borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1
-      }]
+      labels: filteredDays.map((date) => format(new Date(date), "dd/MM")),
+      datasets: [
+        {
+          label: "Doanh thu hàng ngày",
+          data: filteredDays.map((date) => data.dailyRevenue[date]),
+          fill: false,
+          borderColor: "rgb(75, 192, 192)",
+          tension: 0.1,
+        },
+      ],
     };
   };
 
@@ -153,11 +147,25 @@ const AdminDashboard = () => {
       },
     ],
   });
-     
+
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: { legend: { position: "top" } },
+    plugins: {
+      legend: { position: "top" },
+      tooltip: {
+        callbacks: {
+          title: function (tooltipItems) {
+            const monthIndex = tooltipItems[0].dataIndex; // Lấy chỉ số tháng
+            const date = new Date(currentYear, monthIndex, 1);
+            return date.toLocaleString("default", {
+              month: "long",
+              year: "numeric",
+            }); // Trả về tên tháng
+          },
+        },
+      },
+    },
   };
 
   const fishChartData = createChartData(
@@ -251,8 +259,10 @@ const AdminDashboard = () => {
     );
   };
 
-
-  const totalRevenueForYear = Object.values(data.monthlyRevenue).reduce((sum, value) => sum + value, 0);
+  const totalRevenueForYear = Object.values(data.monthlyRevenue).reduce(
+    (sum, value) => sum + value,
+    0
+  );
 
   return (
     <div className="dashboard-container">
@@ -388,7 +398,7 @@ const AdminDashboard = () => {
             <p>No monthly revenue data available</p>
           )}
         </div>
-        <div className="chart-container" style={{ height: '400px' }}>
+        <div className="chart-container" style={{ height: "400px" }}>
           {data.dailyRevenue && Object.keys(data.dailyRevenue).length > 0 ? (
             <Line
               data={createDailyRevenueChartData()}
@@ -398,18 +408,18 @@ const AdminDashboard = () => {
                 plugins: {
                   title: {
                     display: true,
-                    text: 'Doanh thu 7 ngày gần nhất'
-                  }
+                    text: "Doanh thu 7 ngày gần nhất",
+                  },
                 },
                 scales: {
                   y: {
                     beginAtZero: true,
-                    title: { display: true, text: 'Doanh thu (VNĐ)' }
+                    title: { display: true, text: "Doanh thu (VNĐ)" },
                   },
                   x: {
-                    title: { display: true, text: 'Ngày' }
-                  }
-                }
+                    title: { display: true, text: "Ngày" },
+                  },
+                },
               }}
             />
           ) : (
